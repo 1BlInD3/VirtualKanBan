@@ -1,0 +1,3 @@
+include ':DataCollection'
+include ':app'
+rootProject.name = "VirtualKanBan"
