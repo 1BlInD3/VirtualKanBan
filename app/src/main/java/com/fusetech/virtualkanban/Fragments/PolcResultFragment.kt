@@ -30,7 +30,7 @@ class PolcResultFragment : Fragment() {
         recyclerView.adapter = PolcItemAdapter(myPolcList)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
         recyclerView.setHasFixedSize(true)
-        
+
         return view
     }
     private fun loadPolcItems() {

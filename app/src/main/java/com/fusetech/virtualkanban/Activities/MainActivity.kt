@@ -5,12 +5,14 @@ import android.util.Log
 import android.view.KeyEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.fusetech.virtualkanban.Fragments.CikklekerdezesFragment
-import com.fusetech.virtualkanban.Fragments.LoginFragment
-import com.fusetech.virtualkanban.Fragments.MenuFragment
+import androidx.core.view.isVisible
+import com.fusetech.virtualkanban.DataItems.CikkItems
+import com.fusetech.virtualkanban.DataItems.PolcItems
+import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.R
 import com.honeywell.aidc.*
 import com.honeywell.aidc.BarcodeReader.BarcodeListener
+import kotlinx.android.synthetic.main.fragment_menu.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -28,7 +30,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
     private lateinit var loginFragment : LoginFragment
     private lateinit var dolgKod : String
     private lateinit var connection : Connection
+    private var cikkItems: ArrayList<CikkItems> = ArrayList()
+    private var polcItems: ArrayList<PolcItems> = ArrayList()
     private val TAG = "MainActivity"
+    private val cikklekerdezesFragment = CikklekerdezesFragment()
     private val url = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,18 +85,23 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, menuFragment,"MENU").commit()
     }
     fun loadCikklekerdezesFragment(){
-        val cikklekerdezesFragment = CikklekerdezesFragment()
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, cikklekerdezesFragment,"CIKK").addToBackStack(null).commit()
     }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread{
             barcodeData = p0?.barcodeData!!
-            if (loginFragment.isVisible) {
+            if (loginFragment != null && loginFragment.isVisible) {
                 loginFragment.SetId(barcodeData)
                 dolgKod = barcodeData
                 loginFragment.StartSpinning()
                 CoroutineScope(IO).launch {
                     checkRightSql()
+                }
+            }else if(cikklekerdezesFragment != null && cikklekerdezesFragment.isVisible){
+                cikkItems.clear()
+                polcItems.clear()
+                CoroutineScope(IO).launch {
+                    cikkPolcQuery(barcodeData)
                 }
             }
         }
@@ -144,6 +154,64 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
                 loginFragment.StopSpinning()
                 loginFragment.SetId("Hiaba lépett fel a feldolgozás során")
             }
+        }
+    }
+
+    private fun cikkPolcQuery(code : String) {
+        val polcResultFragment = PolcResultFragment()
+        val cikkResultFragment = CikkResultFragment()
+        val bundle = Bundle()
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try {
+            connection = DriverManager.getConnection(url)
+            if (connection != null){
+                val preparedStatement: PreparedStatement = connection.prepareStatement(resources.getString(R.string.isPolc))
+                preparedStatement.setString(1,code)
+                val resultSet: ResultSet = preparedStatement.executeQuery()
+                if(!resultSet.next()){
+                    val preparedStatement1: PreparedStatement = connection.prepareStatement(resources.getString(R.string.cikkSql))
+                    preparedStatement1.setString(1,code)
+                    val resultSet1: ResultSet = preparedStatement1.executeQuery()
+                    if(!resultSet1.next()){
+                        val loadFragment = LoadFragment()
+                        supportFragmentManager.beginTransaction().replace(R.id.cikk_container,loadFragment).commit()
+                    }else{
+                        val megjegyzes1: String = resultSet1.getString("Description1")
+                        val megjegyzes2: String = resultSet1.getString("Description2")
+                        val unit: String = resultSet1.getString("Unit")
+                        val intrem: String = resultSet1.getString("IntRem")
+                        do{
+                            cikkItems.add(CikkItems(resultSet1.getDouble("BalanceQty"),resultSet1.getString("BinNumber"), resultSet1.getString("Warehouse"), resultSet1.getString("QcCategory")))
+                        }while (resultSet1.next())
+                        bundle.putSerializable("cikk",cikkItems)
+                        bundle.putString("megjegyzes", megjegyzes1)
+                        bundle.putString("megjegyzes2", megjegyzes2)
+                        bundle.putString("unit", unit)
+                        bundle.putString("intrem", intrem)
+                        cikkResultFragment.arguments = bundle
+                        supportFragmentManager.beginTransaction().replace(R.id.cikk_container,cikkResultFragment).commit()
+                    }
+                }
+                else{
+                    val preparedStatement2: PreparedStatement = connection.prepareStatement(resources.getString(R.string.polcSql))
+                    preparedStatement2.setString(1,code)
+                    val resultSet2: ResultSet = preparedStatement2.executeQuery()
+                    if(!resultSet2.next()){
+                        val loadFragment = LoadFragment()
+                        supportFragmentManager.beginTransaction().replace(R.id.cikk_container,loadFragment).commit()
+                    }else{
+                        do {
+                            polcItems.add(PolcItems(resultSet2.getDouble("BalanceQty"), resultSet2.getString("Unit"), resultSet2.getString("Description1"), resultSet2.getString("Description2"), resultSet2.getString("IntRem"), resultSet2.getString("QcCategory")))
+
+                        }while (resultSet2.next())
+                        bundle.putSerializable("polc",polcItems)
+                        polcResultFragment.arguments = bundle
+                        supportFragmentManager.beginTransaction().replace(R.id.cikk_container,polcResultFragment).commit()
+                    }
+                }
+            }
+        }catch (e: Exception){
+            Log.d(TAG, "$e")
         }
     }
 
