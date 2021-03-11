@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#415A80</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorAccent">#415A80</color>
     <color name="pocakszin1">#A5D4DC</color>
     <color name="pocakszin2">#D7E2E9</color>
     <color name="pocakszin3">#F2F4F8</color>
