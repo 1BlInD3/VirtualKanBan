@@ -51,7 +51,8 @@ class CikkResultFragment : Fragment() {
         recyclerView.adapter = CikkItemAdapter(myCikkItems)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
         recyclerView.setHasFixedSize(true)
-
+        recyclerView.isFocusable = false
+        frameLayout.isFocusable = false
 
         return view
     }

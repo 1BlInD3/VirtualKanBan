@@ -34,6 +34,8 @@ class PolcResultFragment : Fragment() {
         recyclerView.adapter = PolcItemAdapter(myPolcList)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
         recyclerView.setHasFixedSize(true)
+        recyclerView.isFocusable = false
+        frameLayout.isFocusable = false
 
         return view
     }
