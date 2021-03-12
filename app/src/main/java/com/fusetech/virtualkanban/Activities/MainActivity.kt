@@ -5,14 +5,12 @@ import android.util.Log
 import android.view.KeyEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import com.fusetech.virtualkanban.DataItems.CikkItems
 import com.fusetech.virtualkanban.DataItems.PolcItems
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.R
 import com.honeywell.aidc.*
 import com.honeywell.aidc.BarcodeReader.BarcodeListener
-import kotlinx.android.synthetic.main.fragment_menu.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -24,8 +22,8 @@ import java.sql.ResultSet
 
 class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment.SetItemOrBinManually {
 
-    private lateinit var manager : AidcManager
-    private lateinit var barcodeReader : BarcodeReader
+    private var manager : AidcManager? = null
+    private var barcodeReader : BarcodeReader? = null
     private lateinit var barcodeData : String
     private lateinit var loginFragment : LoginFragment
     private lateinit var dolgKod : String
@@ -42,17 +40,17 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         AidcManager.create(this) { aidcManager ->
             manager = aidcManager
             try {
-                barcodeReader = manager.createBarcodeReader()
-                barcodeReader.claim()
+                barcodeReader = manager?.createBarcodeReader()
+                barcodeReader?.claim()
             } catch (e: ScannerUnavailableException) {
                 e.printStackTrace()
             } catch (e: InvalidScannerNameException) {
                 e.printStackTrace()
             }
             try {
-                barcodeReader.setProperty(BarcodeReader.PROPERTY_CODE_39_ENABLED, true)
-                barcodeReader.setProperty(BarcodeReader.PROPERTY_DATAMATRIX_ENABLED, true)
-                barcodeReader.setProperty(
+                barcodeReader?.setProperty(BarcodeReader.PROPERTY_CODE_39_ENABLED, true)
+                barcodeReader?.setProperty(BarcodeReader.PROPERTY_DATAMATRIX_ENABLED, true)
+                barcodeReader?.setProperty(
                     BarcodeReader.PROPERTY_TRIGGER_CONTROL_MODE,
                     BarcodeReader.TRIGGER_CONTROL_MODE_AUTO_CONTROL
                 )
@@ -64,7 +62,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
                     Toast.LENGTH_SHORT
                 ).show()
             }
-            barcodeReader.addBarcodeListener(this@MainActivity)
+            barcodeReader?.addBarcodeListener(this@MainActivity)
         }
         loginFragment = LoginFragment()
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, loginFragment,"LOGIN").commit()
@@ -87,8 +85,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
     private fun loadCikklekerdezesFragment(){
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, cikklekerdezesFragment,"CIKK").addToBackStack(null).commit()
     }
-    private fun loadLoadFragment(){
-        val loadFragment = LoadFragment()
+    private fun loadLoadFragment(value: String){
+        val loadFragment = LoadFragment.newInstance(value)
         supportFragmentManager.beginTransaction().replace(R.id.cikk_container,loadFragment).commit()
     }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
@@ -102,7 +100,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
                     checkRightSql()
                 }
             }else if(cikklekerdezesFragment != null && cikklekerdezesFragment.isVisible){
-                loadLoadFragment()
+                loadLoadFragment("Várom az eredményt")
                 cikkItems.clear()
                 polcItems.clear()
                 cikklekerdezesFragment.setBinOrItem(barcodeData)
@@ -134,8 +132,36 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         }
         return super.onKeyDown(keyCode, event)
     }
+    override fun onResume() {
+        super.onResume()
+        if (barcodeReader != null) {
+            try {
+                barcodeReader?.claim()
+            } catch (e: ScannerUnavailableException) {
+                e.printStackTrace()
+                Toast.makeText(this, "Scanner unavailable", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    override fun onPause() {
+        super.onPause()
+        if (barcodeReader != null) {
+            barcodeReader?.release()
+        }
+        Log.d(TAG, "onPause: ")
+    }
 
-     fun checkRightSql(){
+    override fun onDestroy() {
+        super.onDestroy()
+        polcItems.clear()
+        cikkItems.clear()
+        if(barcodeReader != null) {
+            barcodeReader?.removeBarcodeListener(this)
+            barcodeReader?.close()
+        }
+    }
+
+    private fun checkRightSql(){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try{
             connection = DriverManager.getConnection(url)
@@ -179,7 +205,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
                     preparedStatement1.setString(1,code)
                     val resultSet1: ResultSet = preparedStatement1.executeQuery()
                     if(!resultSet1.next()){
-                        val loadFragment = LoadFragment()
+                        val loadFragment = LoadFragment.newInstance("Nincs ilyen kód a rendszerben")
                         supportFragmentManager.beginTransaction().replace(R.id.cikk_container,loadFragment).commit()
                     }else{
                         val megjegyzes1: String? = resultSet1.getString("Description1")
@@ -218,16 +244,22 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
             }
         }catch (e: Exception){
             Log.d(TAG, "$e")
+            val loadFragment = LoadFragment.newInstance("A feldolgozás során hiba lépett fel")
+            supportFragmentManager.beginTransaction().replace(R.id.cikk_container,loadFragment).commit()
         }
     }
 
     override fun setValue(value: String) {
-        loadLoadFragment()
-        cikkItems.clear()
-        polcItems.clear()
-        cikklekerdezesFragment.setBinOrItem(value)
-        CoroutineScope(IO).launch {
-            cikkPolcQuery(value)
+        if(value.isNotEmpty()) {
+            loadLoadFragment("Várom az eredményt")
+            cikkItems.clear()
+            polcItems.clear()
+            cikklekerdezesFragment.setBinOrItem(value)
+            CoroutineScope(IO).launch {
+                cikkPolcQuery(value)
+            }
+        }else{
+            loadLoadFragment("")
         }
     }
 }
