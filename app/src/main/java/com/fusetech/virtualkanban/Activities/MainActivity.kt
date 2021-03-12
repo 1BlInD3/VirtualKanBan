@@ -73,8 +73,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
     private fun getMenuFragment(): Boolean
     {
         val fragmentManager = supportFragmentManager
-        var menuFragment = fragmentManager.findFragmentByTag("MENU")
-        if(menuFragment != null && menuFragment?.isVisible!!)
+        val menuFragment = fragmentManager.findFragmentByTag("MENU")
+        if(menuFragment != null && menuFragment.isVisible)
         {
             return true
         }
@@ -84,8 +84,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         val menuFragment : MenuFragment = MenuFragment.newInstance(hasRight)
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, menuFragment,"MENU").commit()
     }
-    fun loadCikklekerdezesFragment(){
+    private fun loadCikklekerdezesFragment(){
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, cikklekerdezesFragment,"CIKK").addToBackStack(null).commit()
+    }
+    private fun loadLoadFragment(){
+        val loadFragment = LoadFragment()
+        supportFragmentManager.beginTransaction().replace(R.id.cikk_container,loadFragment).commit()
     }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread{
@@ -98,8 +102,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
                     checkRightSql()
                 }
             }else if(cikklekerdezesFragment != null && cikklekerdezesFragment.isVisible){
+                loadLoadFragment()
                 cikkItems.clear()
                 polcItems.clear()
+                cikklekerdezesFragment.setBinOrItem(barcodeData)
                 CoroutineScope(IO).launch {
                     cikkPolcQuery(barcodeData)
                 }
@@ -129,7 +135,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         return super.onKeyDown(keyCode, event)
     }
 
-    private fun checkRightSql(){
+     fun checkRightSql(){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try{
             connection = DriverManager.getConnection(url)
@@ -176,10 +182,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
                         val loadFragment = LoadFragment()
                         supportFragmentManager.beginTransaction().replace(R.id.cikk_container,loadFragment).commit()
                     }else{
-                        val megjegyzes1: String = resultSet1.getString("Description1")
-                        val megjegyzes2: String = resultSet1.getString("Description2")
-                        val unit: String = resultSet1.getString("Unit")
-                        val intrem: String = resultSet1.getString("IntRem")
+                        val megjegyzes1: String? = resultSet1.getString("Description1")
+                        val megjegyzes2: String? = resultSet1.getString("Description2")
+                        val unit: String? = resultSet1.getString("Unit")
+                        val intrem: String? = resultSet1.getString("IntRem")
                         do{
                             cikkItems.add(CikkItems(resultSet1.getDouble("BalanceQty"),resultSet1.getString("BinNumber"), resultSet1.getString("Warehouse"), resultSet1.getString("QcCategory")))
                         }while (resultSet1.next())
@@ -216,57 +222,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
     }
 
     override fun setValue(value: String) {
-
+        loadLoadFragment()
+        cikkItems.clear()
+        polcItems.clear()
+        cikklekerdezesFragment.setBinOrItem(value)
+        CoroutineScope(IO).launch {
+            cikkPolcQuery(value)
+        }
     }
-    /*override fun onResume() {
-       super.onResume()
-           barcodeReader = manager.createBarcodeReader()
-           try {
-               barcodeReader.claim()
-           } catch (e: ScannerUnavailableException) {
-               e.printStackTrace()
-               Toast.makeText(this, "Scanner unavailable", Toast.LENGTH_SHORT).show()
-           }
-   }*/
-    /* override fun onPause() {
-        super.onPause()
-            barcodeReader.release()
-
-    }*/
-    /* override fun onDestroy() {
-        super.onDestroy()
-        barcodeReader.removeBarcodeListener(this)
-        barcodeReader.close()
-    }*/
-    /*
-     private fun sql()
-     {
-         Class.forName("net.sourceforge.jtds.jdbc.Driver")
-         val connection = DriverManager.getConnection(URL)
-         if(connection!=null){
-             val statement : Statement = connection.createStatement()
-             var resultSet : ResultSet = statement.executeQuery(resources.getString(R.string.allData))
-             while (resultSet.next())
-             {
-                 var a = resultSet.getString("Cikkszam")
-                 var b = resultSet.getString("Mennyiseg")
-                 var c = resultSet.getString("Dolgozo")
-                 var d = resultSet.getString("RaktHely")
-                 myList.add(
-                     ProbaClass(
-                         a,
-                         b,
-                         c,
-                         d
-                     )
-                 )
-
-             }
-             var bundle = Bundle()
-             bundle.putSerializable("Lista",myList)
-             val firstKotlinFragment  = FirstKotlinFragment()
-             firstKotlinFragment.arguments = bundle
-             supportFragmentManager.beginTransaction().replace(R.id.frame_container,firstKotlinFragment).commit()
-         }
-     }*/
 }

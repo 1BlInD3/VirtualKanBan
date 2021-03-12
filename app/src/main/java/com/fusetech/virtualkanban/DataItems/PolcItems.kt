@@ -5,4 +5,4 @@ data class PolcItems(val mMennyiseg: Double,
                      val mMegnevezes1: String,
                      val mMegnevezes2: String,
                      val mIntRem: String,
-                     val mAllapot: String) {}
+                     val mAllapot: String?) {}

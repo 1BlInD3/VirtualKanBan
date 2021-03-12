@@ -49,4 +49,10 @@ class CikklekerdezesFragment : Fragment() {
             throw RuntimeException(context.toString() + "must implement")
         }
     }
+    fun setBinOrItem(code: String){
+        editText.setText(code)
+        editText.setSelection(editText.text.length)
+        editText.selectAll()
+        editText.requestFocus()
+    }
 }

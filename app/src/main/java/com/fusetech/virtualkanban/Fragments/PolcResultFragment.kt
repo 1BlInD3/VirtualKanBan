@@ -23,6 +23,10 @@ class PolcResultFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_polc_result, container, false)
 
+        val frameLayout = view.polcHeaderFrame
+        val child = layoutInflater.inflate(R.layout.polc_header,null)
+        frameLayout.addView(child)
+
         recyclerView = view.polcRecycler
 
         myPolcList.clear()
