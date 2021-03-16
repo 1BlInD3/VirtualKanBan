@@ -89,6 +89,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         val loadFragment = LoadFragment.newInstance(value)
         supportFragmentManager.beginTransaction().replace(R.id.cikk_container,loadFragment).commit()
     }
+    private fun loadPolcHelyezesFragment(){
+        val polcHelyezesFragment = PolcraHelyezesFragment()
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container,polcHelyezesFragment,"POLC").addToBackStack("POLC").commit()
+    }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread{
             barcodeData = p0?.barcodeData!!
@@ -99,7 +103,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
                 CoroutineScope(IO).launch {
                     checkRightSql()
                 }
-            }else if(cikklekerdezesFragment != null && cikklekerdezesFragment.isVisible){
+            }else if(cikklekerdezesFragment != null && cikklekerdezesFragment.isVisible) {
                 loadLoadFragment("Várom az eredményt")
                 cikkItems.clear()
                 polcItems.clear()
@@ -119,7 +123,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         if(getMenuFragment())
         {
            when(keyCode){
-               8 -> Log.d(TAG, "onKeyDown: $keyCode")
+               8 -> loadPolcHelyezesFragment()
                9 -> Log.d(TAG, "onKeyDown: $keyCode")
                10 -> Log.d(TAG, "onKeyDown: $keyCode")
                11 -> Log.d(TAG, "onKeyDown: $keyCode")
@@ -212,6 +216,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
                         val megjegyzes2: String? = resultSet1.getString("Description2")
                         val unit: String? = resultSet1.getString("Unit")
                         val intrem: String? = resultSet1.getString("IntRem")
+                        cikkItems.clear()
                         do{
                             cikkItems.add(CikkItems(resultSet1.getDouble("BalanceQty"),resultSet1.getString("BinNumber"), resultSet1.getString("Warehouse"), resultSet1.getString("QcCategory")))
                         }while (resultSet1.next())
