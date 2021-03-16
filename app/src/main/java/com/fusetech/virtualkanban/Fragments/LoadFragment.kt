@@ -31,6 +31,10 @@ class LoadFragment : Fragment() {
             errorText.text = "Hibás bevitel"
             progressBar.visibility = View.GONE
         }
+        else if(param1 == "A feldolgozás során hiba lépett fel"){
+            errorText.text = param1
+            progressBar.visibility = View.GONE
+        }
         else{
             errorText.text = param1
             progressBar.visibility = View.VISIBLE

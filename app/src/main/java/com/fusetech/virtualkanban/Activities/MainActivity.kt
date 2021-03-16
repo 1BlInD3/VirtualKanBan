@@ -93,6 +93,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         val polcHelyezesFragment = PolcraHelyezesFragment()
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,polcHelyezesFragment,"POLC").addToBackStack("POLC").commit()
     }
+    fun loadPolcLocation(){
+        val loadPolc = PolcLocationFragment()
+        supportFragmentManager.beginTransaction().replace(R.id.side_container,loadPolc,"LOCATION").addToBackStack("LOCATION").commit()
+    }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread{
             barcodeData = p0?.barcodeData!!
