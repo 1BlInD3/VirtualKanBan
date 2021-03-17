@@ -13,6 +13,7 @@ class PolcLocationAdapter(private var locationItems: ArrayList<PolcLocation>): R
     class PolcLocationHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val polcHely: TextView = itemView.polcNameText
         val darabszam: TextView = itemView.dbTxt
+        val datum: TextView = itemView.bevetelezesDate
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PolcLocationHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.polc_location_view,parent,false)
@@ -22,6 +23,7 @@ class PolcLocationAdapter(private var locationItems: ArrayList<PolcLocation>): R
         val currentItem = locationItems[position]
         holder.polcHely.text = currentItem.polc
         holder.darabszam.text = currentItem.mennyiseg
+        holder.datum.text = currentItem.bevDate
     }
     override fun getItemCount() = locationItems.size
 }

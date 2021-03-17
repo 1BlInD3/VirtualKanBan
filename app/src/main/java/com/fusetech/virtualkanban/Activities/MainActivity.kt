@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.Activities
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -11,17 +12,22 @@ import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.R
 import com.honeywell.aidc.*
 import com.honeywell.aidc.BarcodeReader.BarcodeListener
+import kotlinx.android.synthetic.main.fragment_menu.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 
-class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment.SetItemOrBinManually {
-
+class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment.SetItemOrBinManually,PolcraHelyezesFragment.SendCode {
+// 1-es pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
+    //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
+    // át kell rakni máshova
+    //egyszerre csak egy ember dolgozhasson a cikk felrakásánál
     private var manager : AidcManager? = null
     private var barcodeReader : BarcodeReader? = null
     private lateinit var barcodeData : String
@@ -30,6 +36,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
     private lateinit var connection : Connection
     private var cikkItems: ArrayList<CikkItems> = ArrayList()
     private var polcItems: ArrayList<PolcItems> = ArrayList()
+    private val polcHelyezesFragment = PolcraHelyezesFragment()
     private val TAG = "MainActivity"
     private val cikklekerdezesFragment = CikklekerdezesFragment()
     private val url = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10"
@@ -89,10 +96,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         val loadFragment = LoadFragment.newInstance(value)
         supportFragmentManager.beginTransaction().replace(R.id.cikk_container,loadFragment).commit()
     }
+
     private fun loadPolcHelyezesFragment(){
-        val polcHelyezesFragment = PolcraHelyezesFragment()
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,polcHelyezesFragment,"POLC").addToBackStack("POLC").commit()
     }
+
     fun loadPolcLocation(){
         val loadPolc = PolcLocationFragment()
         supportFragmentManager.beginTransaction().replace(R.id.side_container,loadPolc,"LOCATION").addToBackStack("LOCATION").commit()
@@ -118,11 +126,13 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
             }
         }
     }
+
     override fun onFailureEvent(p0: BarcodeFailureEvent?) {
         runOnUiThread{
             Toast.makeText(this@MainActivity, "Nem sikerült leolvasni",Toast.LENGTH_SHORT).show()
         }
     }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if(getMenuFragment())
         {
@@ -140,6 +150,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         }
         return super.onKeyDown(keyCode, event)
     }
+
     override fun onResume() {
         super.onResume()
         if (barcodeReader != null) {
@@ -151,6 +162,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
             }
         }
     }
+
     override fun onPause() {
         super.onPause()
         if (barcodeReader != null) {
@@ -194,6 +206,36 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
                 loginFragment.StopSpinning()
                 loginFragment.SetId("Hiaba lépett fel a feldolgozás során")
             }
+        }
+    }
+
+    private fun checkTrannzit(code: String){
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try {
+            connection = DriverManager.getConnection(url)
+            val statement: PreparedStatement = connection.prepareStatement(resources.getString(R.string.tranzitCheck))
+            statement.setString(1,code)
+            val resultSet: ResultSet = statement.executeQuery()
+            if(!resultSet.next()){
+                Log.d(TAG, "checkTrannzit: Hülyeség nincs a tranzitban")
+                CoroutineScope(Main).launch {
+                    setAlert("A cikk vagy zárolt, vagy nincs a tranzit raktárban!")
+                }
+            }
+            else{
+                val desc1: String? = resultSet.getString("Description1")
+                val desc2: String? = resultSet.getString("Description2")
+                val intRem: String? = resultSet.getString("InternRem1")
+                val unit: String? = resultSet.getString("Description")
+                Log.d(TAG, "checkTrannzit: 0")
+                CoroutineScope(Main).launch {
+                   polcHelyezesFragment.setTextViews(desc1.toString(),desc2.toString(),intRem.toString(),unit.toString())
+                    Log.d(TAG, "checkTrannzit: 1")
+                }
+                Log.d(TAG, "checkTrannzit: 2")
+            }
+        }catch (e: java.lang.Exception){
+            Log.d(TAG, "checkTrannzit: $e")
         }
     }
 
@@ -258,6 +300,14 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         }
     }
 
+    private fun setAlert(text: String){
+        val builder = AlertDialog.Builder(this@MainActivity)
+        builder.setTitle("Figyelem")
+            .setMessage(text)
+        builder.create()
+        builder.show()
+    }
+
     override fun setValue(value: String) {
         if(value.isNotEmpty()) {
             loadLoadFragment("Várom az eredményt")
@@ -269,6 +319,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
             }
         }else{
             loadLoadFragment("")
+        }
+    }
+
+    override fun sendCode(code: String) {
+        CoroutineScope(IO).launch {
+            checkTrannzit(code)
         }
     }
 }
