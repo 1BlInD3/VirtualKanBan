@@ -11,15 +11,15 @@
         android:id="@+id/button"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/buttn"
         android:backgroundTint="@android:color/holo_red_dark"
         android:text="Kilépés"
-        android:elevation="0dp"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.085"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView5"
@@ -72,79 +72,51 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="30dp"
-        android:text="Dátum"
-        android:textColor="@android:color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
-
-    <TextView
-        android:id="@+id/dateTxt"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="80dp"
-        android:background="@drawable/editbuttn2"
-        android:paddingStart="4dp"
-        android:paddingTop="2dp"
-        android:paddingEnd="4dp"
-        android:paddingBottom="2dp"
-        android:text="2021.30.01"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
-
-    <TextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="18dp"
         android:text="Cikkszám"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <EditText
         android:id="@+id/cikkEditTxt"
         android:layout_width="140dp"
         android:layout_height="30dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="26dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/editbuttn"
         android:ems="10"
         android:inputType="textPersonName"
         android:maxLength="35"
         android:paddingStart="4dp"
-        android:paddingEnd="4dp"
         android:paddingTop="4dp"
+        android:paddingEnd="4dp"
         android:paddingBottom="4dp"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toEndOf="@+id/textView13"
-        app:layout_constraintTop_toBottomOf="@+id/dateTxt" />
+        app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
     <TextView
         android:id="@+id/textView14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
         android:text="Mennyiség"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
         android:id="@+id/mennyisegTxt"
         android:layout_width="80dp"
         android:layout_height="30dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="84dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/editbuttn"
         android:ems="10"
         android:inputType="numberDecimal"
@@ -154,14 +126,14 @@
         android:paddingBottom="4dp"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toEndOf="@+id/textView14"
-        app:layout_constraintTop_toBottomOf="@+id/cikkEditTxt" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
 
     <TextView
         android:id="@+id/textView15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="34dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="22dp"
         android:text="Polc"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toStartOf="parent"
@@ -171,8 +143,8 @@
         android:id="@+id/polcTxt"
         android:layout_width="80dp"
         android:layout_height="30dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="26dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/editbuttn"
         android:ems="10"
         android:inputType="textPersonName"
@@ -208,9 +180,9 @@
         android:id="@+id/description1Txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         android:textColor="@android:color/black"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cikkEditTxt" />
 
@@ -218,19 +190,20 @@
         android:id="@+id/description2Txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         android:textColor="@android:color/black"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description1Txt" />
+        app:layout_constraintTop_toBottomOf="@+id/description1Txt"
+        tools:text="TEST1TEST1TEST1TEST1TEST1" />
 
     <TextView
         android:id="@+id/intremTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         android:textColor="@android:color/black"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description2Txt" />
 
@@ -244,23 +217,42 @@
         app:layout_constraintStart_toEndOf="@+id/mennyisegTxt"
         app:layout_constraintTop_toTopOf="@+id/mennyisegTxt" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+    <FrameLayout
+        android:id="@+id/side_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="86dp"
+        android:text="Tranzit mennyiség "
+        android:textColor="@android:color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/constraintLayout">
+        app:layout_constraintTop_toBottomOf="@+id/cikkEditTxt" />
 
-        <FrameLayout
-            android:id="@+id/side_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        android:layout_width="80dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="80dp"
+        android:background="@drawable/editbuttn2"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:paddingStart="4dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="4dp"
+        android:paddingBottom="4dp"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/cikkEditTxt" />
 
-        </FrameLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

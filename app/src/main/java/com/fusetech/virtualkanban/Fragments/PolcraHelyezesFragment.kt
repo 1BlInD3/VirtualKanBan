@@ -16,7 +16,6 @@ import java.util.*
 
 
 class PolcraHelyezesFragment : Fragment() {
-    private lateinit var dateText: TextView
     private lateinit var cikkText: EditText
     private lateinit var mainActivity: MainActivity
     private lateinit var sendCode: SendCode
@@ -34,15 +33,12 @@ class PolcraHelyezesFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_polcra_helyezes, container, false)
         mainActivity = activity as MainActivity
-        val simpleDate = SimpleDateFormat("yyyy.MM.dd",Locale.getDefault())
-        val currentDate = simpleDate.format(Date())
         megjegyzes1Text = view.description1Txt
+        megjegyzes1Text?.text = "TEST1TEST1TEST1TEST1TEST1"
         megjegyzes2Text = view.description2Txt
         intremText = view.intremTxt
         unitText = view.unitTxt
         mennyisegText = view.mennyisegTxt
-        dateText = view.dateTxt
-        dateText.text = currentDate
         cikkText = view.cikkEditTxt
         cikkText.requestFocus()
 
@@ -53,7 +49,7 @@ class PolcraHelyezesFragment : Fragment() {
             }
         }
         mennyisegText.setOnClickListener {
-            mainActivity.loadPolcLocation()
+           // mainActivity.loadPolcLocation()
         }
         return view
     }

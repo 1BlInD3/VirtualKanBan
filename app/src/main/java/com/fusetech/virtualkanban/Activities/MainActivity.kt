@@ -28,6 +28,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
     // át kell rakni máshova
     //egyszerre csak egy ember dolgozhasson a cikk felrakásánál
+
+    //TELKES timi gépét a tarcsira
     private var manager : AidcManager? = null
     private var barcodeReader : BarcodeReader? = null
     private lateinit var barcodeData : String
@@ -98,12 +100,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
     }
 
     private fun loadPolcHelyezesFragment(){
-        supportFragmentManager.beginTransaction().replace(R.id.frame_container,polcHelyezesFragment,"POLC").addToBackStack("POLC").commit()
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container,polcHelyezesFragment,"POLC").addToBackStack(null).commit()
     }
 
     fun loadPolcLocation(){
         val loadPolc = PolcLocationFragment()
-        supportFragmentManager.beginTransaction().replace(R.id.side_container,loadPolc,"LOCATION").addToBackStack("LOCATION").commit()
+        supportFragmentManager.beginTransaction().replace(R.id.side_container,loadPolc,"LOCATION").commit()
     }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread{
@@ -233,6 +235,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
                     Log.d(TAG, "checkTrannzit: 1")
                 }
                 Log.d(TAG, "checkTrannzit: 2")
+                loadPolcLocation()
             }
         }catch (e: java.lang.Exception){
             Log.d(TAG, "checkTrannzit: $e")

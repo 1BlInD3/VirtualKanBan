@@ -8,7 +8,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView7"
-        android:layout_width="100dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
         android:layout_marginTop="2dp"
@@ -32,11 +32,13 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView8"
-        android:layout_width="100dp"
+        android:layout_width="70dp"
         android:layout_height="0dp"
         android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
         app:cardBackgroundColor="@color/pocakszin4"
         app:cardCornerRadius="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cardView7"
         app:layout_constraintTop_toTopOf="@+id/cardView7">
 
@@ -45,29 +47,8 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:paddingStart="4dp"
-            android:text="Darabszám "
+            android:text="Menny."
             android:textAlignment="textStart"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView9"
-        android:layout_width="113dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:layout_marginEnd="2dp"
-        app:cardBackgroundColor="@color/pocakszin4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cardView8"
-        app:layout_constraintTop_toTopOf="@+id/cardView8">
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="4dp"
-            android:text="Betárolva"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
     </androidx.cardview.widget.CardView>

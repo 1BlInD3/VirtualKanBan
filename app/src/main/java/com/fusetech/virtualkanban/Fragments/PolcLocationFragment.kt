@@ -28,8 +28,16 @@ class PolcLocationFragment : Fragment() {
 
         recyclerView = view.polcRecycler
         myItems.clear()
-        myItems.add(PolcLocation("H220","5","2021-20-20"))
-        myItems.add(PolcLocation("H221","51","2021-20-20"))
+        myItems.add(PolcLocation("H220","5"))
+        myItems.add(PolcLocation("H221","51"))
+        myItems.add(PolcLocation("H221","51"))
+        myItems.add(PolcLocation("H221","51"))
+        myItems.add(PolcLocation("H221","51"))
+        myItems.add(PolcLocation("H220","5"))
+        myItems.add(PolcLocation("H221","51"))
+        myItems.add(PolcLocation("H221","51"))
+        myItems.add(PolcLocation("H221","51"))
+        myItems.add(PolcLocation("H221","51"))
         recyclerView.adapter = PolcLocationAdapter(myItems)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
         recyclerView.setHasFixedSize(true)
