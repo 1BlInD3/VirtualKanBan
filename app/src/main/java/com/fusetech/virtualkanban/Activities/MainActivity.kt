@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.fusetech.virtualkanban.DataItems.CikkItems
 import com.fusetech.virtualkanban.DataItems.PolcItems
+import com.fusetech.virtualkanban.DataItems.PolcLocation
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.R
 import com.honeywell.aidc.*
@@ -41,6 +42,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
     private val polcHelyezesFragment = PolcraHelyezesFragment()
     private val TAG = "MainActivity"
     private val cikklekerdezesFragment = CikklekerdezesFragment()
+    private var polcLocation: ArrayList<PolcLocation>? = ArrayList()
     private val url = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,12 +79,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, loginFragment,"LOGIN").commit()
 
     }
-    private fun getMenuFragment(): Boolean
-    {
+    private fun getMenuFragment(): Boolean{
         val fragmentManager = supportFragmentManager
         val menuFragment = fragmentManager.findFragmentByTag("MENU")
-        if(menuFragment != null && menuFragment.isVisible)
-        {
+        if(menuFragment != null && menuFragment.isVisible){
             return true
         }
         return false
@@ -214,6 +214,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
     private fun checkTrannzit(code: String){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
+            CoroutineScope(Main).launch {
+                polcHelyezesFragment.setContainerOff()
+                polcHelyezesFragment.setProgressBarOn()
+            }
+            removeLocationFragment()
+            polcLocation?.clear()
             connection = DriverManager.getConnection(url)
             val statement: PreparedStatement = connection.prepareStatement(resources.getString(R.string.tranzitCheck))
             statement.setString(1,code)
@@ -229,16 +235,44 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
                 val desc2: String? = resultSet.getString("Description2")
                 val intRem: String? = resultSet.getString("InternRem1")
                 val unit: String? = resultSet.getString("Description")
+                val balance: Int? = resultSet.getInt("BalanceQty")
                 Log.d(TAG, "checkTrannzit: 0")
                 CoroutineScope(Main).launch {
-                   polcHelyezesFragment.setTextViews(desc1.toString(),desc2.toString(),intRem.toString(),unit.toString())
-                    Log.d(TAG, "checkTrannzit: 1")
+                   polcHelyezesFragment.setTextViews(desc1.toString(),desc2.toString(),intRem.toString(),unit.toString(),balance.toString())
+                   Log.d(TAG, "checkTrannzit: 1")
                 }
                 Log.d(TAG, "checkTrannzit: 2")
-                loadPolcLocation()
+                val statement1: PreparedStatement = connection.prepareStatement(resources.getString(R.string.raktarCheck))
+                statement1.setString(1,code)
+                val resultSet1: ResultSet = statement1.executeQuery()
+                if (!resultSet1.next()){
+                    CoroutineScope(Main).launch {
+                        polcHelyezesFragment.setProgressBarOff()
+                    }
+                    Log.d(TAG, "checkTrannzit: Nincs a 02-es raktárban")
+                }
+                else{
+                    CoroutineScope(Main).launch {
+                        polcHelyezesFragment.setContainerOn()
+                        polcHelyezesFragment.setProgressBarOff()
+                    }
+                    do{
+                        val binNumber: String? = resultSet1.getString("BinNumber")
+                        val balanceQty: Int? = resultSet1.getInt("BalanceQty")
+                        polcLocation?.add(PolcLocation(binNumber,balanceQty.toString()))
+                    }while (resultSet1.next())
+                    var bundle: Bundle = Bundle()
+                    bundle.putSerializable("02RAKTAR",polcLocation)
+                    val polcLocation = PolcLocationFragment()
+                    polcLocation.arguments = bundle
+                    supportFragmentManager.beginTransaction().replace(R.id.side_container,polcLocation,"LOC").commit()
+                }
             }
         }catch (e: java.lang.Exception){
             Log.d(TAG, "checkTrannzit: $e")
+            CoroutineScope(Main).launch {
+                polcHelyezesFragment.setProgressBarOff()
+            }
         }
     }
 
@@ -328,6 +362,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
     override fun sendCode(code: String) {
         CoroutineScope(IO).launch {
             checkTrannzit(code)
+        }
+    }
+    private fun removeLocationFragment(){
+        val isLocFragment = supportFragmentManager.findFragmentByTag("LOC")
+        if(isLocFragment != null && isLocFragment.isVisible){
+            supportFragmentManager.beginTransaction().remove(isLocFragment).commit()
         }
     }
 }

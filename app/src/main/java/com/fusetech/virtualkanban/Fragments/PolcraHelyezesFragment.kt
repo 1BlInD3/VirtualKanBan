@@ -7,12 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_polcra_helyezes.view.*
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 class PolcraHelyezesFragment : Fragment() {
@@ -20,6 +21,9 @@ class PolcraHelyezesFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
     private lateinit var sendCode: SendCode
     private lateinit var mennyisegText: TextView
+    private lateinit var tranzitQtyText: TextView
+    private lateinit var sideContainer: FrameLayout
+    private lateinit var progressBar: ProgressBar
     var megjegyzes1Text: TextView? = null
     var megjegyzes2Text: TextView? = null
     var intremText: TextView? = null
@@ -34,10 +38,15 @@ class PolcraHelyezesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_polcra_helyezes, container, false)
         mainActivity = activity as MainActivity
         megjegyzes1Text = view.description1Txt
-        megjegyzes1Text?.text = "TEST1TEST1TEST1TEST1TEST1"
         megjegyzes2Text = view.description2Txt
         intremText = view.intremTxt
         unitText = view.unitTxt
+        tranzitQtyText = view.tranzitQtyTxt
+        sideContainer = view.side_container
+       // setContainerOff()
+        progressBar = view.polcProgressBar
+        setProgressBarOff()
+        tranzitQtyText.isFocusable = false
         mennyisegText = view.mennyisegTxt
         cikkText = view.cikkEditTxt
         cikkText.requestFocus()
@@ -54,11 +63,12 @@ class PolcraHelyezesFragment : Fragment() {
         return view
     }
 
-    fun setTextViews(megjegyzes1: String,megjegyzes2: String,intrem: String,unit: String){
+    fun setTextViews(megjegyzes1: String,megjegyzes2: String,intrem: String,unit: String,mennyiseg: String){
         megjegyzes1Text?.text = megjegyzes1
         megjegyzes2Text?.text = megjegyzes2
         intremText?.text = intrem
         unitText?.text = unit
+        tranzitQtyText.text = mennyiseg
         mennyisegText.requestFocus()
     }
     override fun onAttach(context: Context) {
@@ -68,5 +78,17 @@ class PolcraHelyezesFragment : Fragment() {
         }else{
             throw RuntimeException(context.toString() + "must implement")
         }
+    }
+    fun setContainerOn(){
+        sideContainer.setBackgroundResource(R.drawable.editbuttn2)
+    }
+    fun setContainerOff(){
+        sideContainer.setBackgroundResource(R.color.pocakszin2)
+    }
+    fun setProgressBarOn(){
+        progressBar.visibility = View.VISIBLE
+    }
+    fun setProgressBarOff(){
+        progressBar.visibility = View.GONE
     }
 }
