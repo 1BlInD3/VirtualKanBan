@@ -25,13 +25,17 @@ class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListen
 
         val frameLayout = view.myFrameLayout
         val child = layoutInflater.inflate(R.layout.polc_location_header,null)
-       // frameLayout.addView(child)
+        frameLayout.addView(child)
 
         recyclerView = view.polcRecycler
         myItems.clear()
        // loadData()
         myItems.add(PolcLocation("H220","20"))
         myItems.add(PolcLocation("H220","21"))
+        myItems.add(PolcLocation("H220","22"))
+        myItems.add(PolcLocation("H220","23"))
+        myItems.add(PolcLocation("H220","24"))
+        myItems.add(PolcLocation("H220","25"))
         recyclerView.adapter = PolcLocationAdapter(myItems, this)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
         recyclerView.setHasFixedSize(true)
