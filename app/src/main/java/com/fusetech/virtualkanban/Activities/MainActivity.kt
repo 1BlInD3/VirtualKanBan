@@ -2,8 +2,10 @@ package com.fusetech.virtualkanban.Activities
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.KeyEvent
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.fusetech.virtualkanban.DataItems.CikkItems
@@ -42,7 +44,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
     // jön a cikk (megnézzük h van e), beírjuk a 4dolgot mint mindig
     // mennyiség elfogadása enterrel, kéri a következő cikket ÉS beleír a [Leltar].[dbo].kontener_tetel-be (fénykép)
     // a [Leltar].[dbo]. kontener beíródik a statusz = 1, igenyelve = datetime
-    
+
     private var manager : AidcManager? = null
     private var barcodeReader : BarcodeReader? = null
     private lateinit var barcodeData : String
@@ -111,7 +113,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         supportFragmentManager.beginTransaction().replace(R.id.cikk_container,loadFragment).commit()
     }
 
-    private fun loadPolcHelyezesFragment(){
+     fun loadPolcHelyezesFragment(){
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,polcHelyezesFragment,"POLC").addToBackStack(null).commit()
     }
 
@@ -252,6 +254,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
                 Log.d(TAG, "checkTrannzit: 0")
                 CoroutineScope(Main).launch {
                    polcHelyezesFragment.setTextViews(desc1.toString(),desc2.toString(),intRem.toString(),unit.toString(),balance.toString())
+                   polcHelyezesFragment.focusToQty()
                    Log.d(TAG, "checkTrannzit: 1")
                 }
                 Log.d(TAG, "checkTrannzit: 2")
@@ -384,7 +387,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         }
     }
 
-    override fun setPolcLocation(binNumber: String) {
+    override fun setPolcLocation(binNumber: String?) {
         polcHelyezesFragment.setBinNumber(binNumber)
+        polcHelyezesFragment.focusToBin()
     }
 }

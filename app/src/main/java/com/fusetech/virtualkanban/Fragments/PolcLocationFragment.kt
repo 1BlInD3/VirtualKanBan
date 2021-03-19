@@ -2,6 +2,7 @@ package com.fusetech.virtualkanban.Fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +21,7 @@ class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListen
     private lateinit var setPolcLocation: SetPolcLocation
 
     interface SetPolcLocation{
-        fun setPolcLocation(binNumber: String)
+        fun setPolcLocation(binNumber: String?)
     }
 
     override fun onCreateView(
@@ -53,7 +54,8 @@ class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListen
 
     override fun polcItemClick(position: Int) {
         //Toast.makeText(view?.context,"Positiion $position",Toast.LENGTH_SHORT).show()
-        setPolcLocation.setPolcLocation(myItems[position].polc.toString())
+        val value = myItems[position].polc
+        setPolcLocation.setPolcLocation(value)
     }
 
     override fun onAttach(context: Context) {

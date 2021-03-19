@@ -2,6 +2,7 @@ package com.fusetech.virtualkanban.Fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +22,7 @@ class PolcraHelyezesFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
     private lateinit var sendCode: SendCode
     private lateinit var mennyisegText: TextView
-    private lateinit var polcText: TextView
+    private lateinit var polcText: EditText
     private lateinit var tranzitQtyText: TextView
     private lateinit var sideContainer: FrameLayout
     private lateinit var progressBar: ProgressBar
@@ -52,6 +53,9 @@ class PolcraHelyezesFragment : Fragment() {
         mennyisegText = view.mennyisegTxt
         cikkText = view.cikkEditTxt
         cikkText.requestFocus()
+        sideContainer.visibility = View.GONE
+        mennyisegText.isEnabled = false
+        polcText.isEnabled = false
 
         cikkText.setOnClickListener{
             if(!cikkText.text.isBlank()){
@@ -60,7 +64,16 @@ class PolcraHelyezesFragment : Fragment() {
             }
         }
         mennyisegText.setOnClickListener {
-           // mainActivity.loadPolcLocation()
+            if(sideContainer.visibility == View.VISIBLE){
+                mennyisegText.isEnabled = false
+                sideContainer.requestFocus()
+                polcText.isEnabled = true
+            }
+            else{
+                polcText.isEnabled = true
+                polcText.requestFocus()
+                mennyisegText.isEnabled = false
+            }
         }
         return view
     }
@@ -82,10 +95,11 @@ class PolcraHelyezesFragment : Fragment() {
         }
     }
     fun setContainerOn(){
-        sideContainer.setBackgroundResource(R.drawable.container)
+        sideContainer.visibility = View.VISIBLE
+        sideContainer.isEnabled = false
     }
     fun setContainerOff(){
-        sideContainer.setBackgroundResource(R.color.pocakszin2)
+        sideContainer.visibility = View.GONE
     }
     fun setProgressBarOn(){
         progressBar.visibility = View.VISIBLE
@@ -93,7 +107,19 @@ class PolcraHelyezesFragment : Fragment() {
     fun setProgressBarOff(){
         progressBar.visibility = View.GONE
     }
-    fun setBinNumber(binNumber: String){
-        polcText.text = binNumber
+    fun setBinNumber(binNumber: String?){
+        polcText.setText(binNumber)
+        polcText.requestFocus()
+        polcText.selectAll()
+    }
+    fun focusToQty(){
+        mennyisegText.isEnabled = true
+        mennyisegText.requestFocus()
+        cikkText.isEnabled = false
+    }
+    fun focusToBin(){
+        polcText.isEnabled = true
+        polcText.selectAll()
+        polcText.requestFocus()
     }
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_menu.view.*
 
@@ -22,6 +23,7 @@ class MenuFragment : Fragment() {
     private lateinit var tobbletOssze : Button
     private lateinit var tobbletKihelyez : Button
     private lateinit var cikkLekerdezes : Button
+    private lateinit var mainActivity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +37,7 @@ class MenuFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_menu, container, false)
-
+        mainActivity = activity as MainActivity
         polcHelyezes = view.polcraHelyezes
         igenyOssze = view.kontenerOsszelaalitas
         igenyLezar = view.kontenerLezaras
@@ -48,8 +50,8 @@ class MenuFragment : Fragment() {
 
         if(!param1!!)
         {
-            polcHelyezes.isEnabled = false
-            polcHelyezes.setBackgroundResource(R.drawable.disabled)
+           // polcHelyezes.isEnabled = false
+            //polcHelyezes.setBackgroundResource(R.drawable.disabled)
             igenyOssze.isEnabled = false
             igenyOssze.setBackgroundResource(R.drawable.disabled)
             igenyLezar.isEnabled = false
@@ -64,6 +66,10 @@ class MenuFragment : Fragment() {
             tobbletOssze.setBackgroundResource(R.drawable.disabled)
             tobbletKihelyez.isEnabled = false
             tobbletKihelyez.setBackgroundResource(R.drawable.disabled)
+        }
+
+        polcHelyezes.setOnClickListener {
+            mainActivity.loadPolcHelyezesFragment()
         }
         return view
     }
