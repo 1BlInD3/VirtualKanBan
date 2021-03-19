@@ -228,6 +228,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
                 Log.d(TAG, "checkTrannzit: Hülyeség nincs a tranzitban")
                 CoroutineScope(Main).launch {
                     setAlert("A cikk vagy zárolt, vagy nincs a tranzit raktárban!")
+                    polcHelyezesFragment.setProgressBarOff()
                 }
             }
             else{

@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@android:color/black">
+    android:background="@drawable/highlight_selected">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/polcName"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="1dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
         app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="1dp"
         app:layout_constraintBottom_toBottomOf="parent"

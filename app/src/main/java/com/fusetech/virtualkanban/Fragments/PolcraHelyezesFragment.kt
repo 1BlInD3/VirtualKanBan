@@ -43,7 +43,7 @@ class PolcraHelyezesFragment : Fragment() {
         unitText = view.unitTxt
         tranzitQtyText = view.tranzitQtyTxt
         sideContainer = view.side_container
-       // setContainerOff()
+        setContainerOff()
         progressBar = view.polcProgressBar
         setProgressBarOff()
         tranzitQtyText.isFocusable = false
@@ -80,7 +80,7 @@ class PolcraHelyezesFragment : Fragment() {
         }
     }
     fun setContainerOn(){
-        sideContainer.setBackgroundResource(R.drawable.editbuttn2)
+        sideContainer.setBackgroundResource(R.drawable.container)
     }
     fun setContainerOff(){
         sideContainer.setBackgroundResource(R.color.pocakszin2)
