@@ -35,6 +35,14 @@ class LoadFragment : Fragment() {
             errorText.text = param1
             progressBar.visibility = View.GONE
         }
+        else if(param1 == "A polc üres"){
+            errorText.text = param1
+            progressBar.visibility = View.GONE
+        }
+        else if(param1 == "Nincs ilyen kód a rendszerben"){
+            errorText.text = param1
+            progressBar.visibility = View.GONE
+        }
         else{
             errorText.text = param1
             progressBar.visibility = View.VISIBLE

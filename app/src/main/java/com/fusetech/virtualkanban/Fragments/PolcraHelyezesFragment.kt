@@ -21,6 +21,7 @@ class PolcraHelyezesFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
     private lateinit var sendCode: SendCode
     private lateinit var mennyisegText: TextView
+    private lateinit var polcText: TextView
     private lateinit var tranzitQtyText: TextView
     private lateinit var sideContainer: FrameLayout
     private lateinit var progressBar: ProgressBar
@@ -41,6 +42,7 @@ class PolcraHelyezesFragment : Fragment() {
         megjegyzes2Text = view.description2Txt
         intremText = view.intremTxt
         unitText = view.unitTxt
+        polcText = view.polcTxt
         tranzitQtyText = view.tranzitQtyTxt
         sideContainer = view.side_container
         setContainerOff()
@@ -90,5 +92,8 @@ class PolcraHelyezesFragment : Fragment() {
     }
     fun setProgressBarOff(){
         progressBar.visibility = View.GONE
+    }
+    fun setBinNumber(binNumber: String){
+        polcText.text = binNumber
     }
 }

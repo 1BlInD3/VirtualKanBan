@@ -24,13 +24,25 @@ import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 
-class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment.SetItemOrBinManually,PolcraHelyezesFragment.SendCode {
+class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment.SetItemOrBinManually,PolcraHelyezesFragment.SendCode,PolcLocationFragment.SetPolcLocation {
 // 1-es pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
     // át kell rakni máshova
     //egyszerre csak egy ember dolgozhasson a cikk felrakásánál
 
     //TELKES timi gépét a tarcsira
+
+
+    //2) megnézem, hogy van e konténer a "atado" és "statusz = 0"
+    // amikor megnyitom az igény konténer összeállítását, akkor [Leltar].[dbo]. kontener-be beírom a atado(1GU),statusz(0),kontener_tipus(1)
+    //kontener 0000+id (összvissz 10karakterig)
+    //aztán megjelenítem a "kontener"
+
+    //A polcál csak a 01-es raktárokat fogadja el (ilyen van a polcCheck stringbe) és ha jó akkor beírja a [Leltar].[dbo]. kontener-be termeles_raktar = 01, termeles_rakhely = polc
+    // jön a cikk (megnézzük h van e), beírjuk a 4dolgot mint mindig
+    // mennyiség elfogadása enterrel, kéri a következő cikket ÉS beleír a [Leltar].[dbo].kontener_tetel-be (fénykép)
+    // a [Leltar].[dbo]. kontener beíródik a statusz = 1, igenyelve = datetime
+    
     private var manager : AidcManager? = null
     private var barcodeReader : BarcodeReader? = null
     private lateinit var barcodeData : String
@@ -318,7 +330,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
                     preparedStatement2.setString(1,code)
                     val resultSet2: ResultSet = preparedStatement2.executeQuery()
                     if(!resultSet2.next()){
-                        val loadFragment = LoadFragment()
+                        val loadFragment = LoadFragment.newInstance("A polc üres")
                         supportFragmentManager.beginTransaction().replace(R.id.cikk_container,loadFragment).commit()
                     }else{
                         do {
@@ -370,5 +382,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         if(isLocFragment != null && isLocFragment.isVisible){
             supportFragmentManager.beginTransaction().remove(isLocFragment).commit()
         }
+    }
+
+    override fun setPolcLocation(binNumber: String) {
+        polcHelyezesFragment.setBinNumber(binNumber)
     }
 }
