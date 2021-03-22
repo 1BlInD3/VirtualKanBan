@@ -264,8 +264,21 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
                 if (!resultSet1.next()){
                     CoroutineScope(Main).launch {
                         polcHelyezesFragment.setProgressBarOff()
+                        polcHelyezesFragment.setContainerOn()
                     }
                     Log.d(TAG, "checkTrannzit: Nincs a 02-es raktárban")
+                    //ezt aztán kitörölni
+                    polcLocation?.add(PolcLocation("H221","151"))
+                    polcLocation?.add(PolcLocation("H222","152"))
+                    polcLocation?.add(PolcLocation("H223","153"))
+                    polcLocation?.add(PolcLocation("H224","154"))
+                    polcLocation?.add(PolcLocation("H225","155"))
+                    polcLocation?.add(PolcLocation("H226","156"))
+                    var bundle: Bundle = Bundle()
+                    bundle.putSerializable("02RAKTAR",polcLocation)
+                    val polcLocation = PolcLocationFragment()
+                    polcLocation.arguments = bundle
+                    supportFragmentManager.beginTransaction().replace(R.id.side_container,polcLocation,"LOC").commit()
                 }
                 else{
                     CoroutineScope(Main).launch {
@@ -353,7 +366,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         }
     }
 
-    private fun setAlert(text: String){
+    fun setAlert(text: String){
         val builder = AlertDialog.Builder(this@MainActivity)
         builder.setTitle("Figyelem")
             .setMessage(text)

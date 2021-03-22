@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.R
+import kotlinx.android.synthetic.main.fragment_polcra_helyezes.*
 import kotlinx.android.synthetic.main.fragment_polcra_helyezes.view.*
 
 
@@ -21,7 +22,7 @@ class PolcraHelyezesFragment : Fragment() {
     private lateinit var cikkText: EditText
     private lateinit var mainActivity: MainActivity
     private lateinit var sendCode: SendCode
-    private lateinit var mennyisegText: TextView
+    private lateinit var mennyisegText: EditText
     private lateinit var polcText: EditText
     private lateinit var tranzitQtyText: TextView
     private lateinit var sideContainer: FrameLayout
@@ -65,14 +66,26 @@ class PolcraHelyezesFragment : Fragment() {
         }
         mennyisegText.setOnClickListener {
             if(sideContainer.visibility == View.VISIBLE){
+                var trQty = tranzitQtyText.text.toString().toInt()
+                var qty = mennyisegText.text.toString().toInt()
+                if(trQty < qty){
+                    mainActivity.setAlert("Túl sokat akarsz feltenni")
+                    mennyisegText.selectAll()
+                }else{
                 mennyisegText.isEnabled = false
                 sideContainer.requestFocus()
                 polcText.isEnabled = true
+                }
             }
             else{
                 polcText.isEnabled = true
                 polcText.requestFocus()
                 mennyisegText.isEnabled = false
+            }
+        }
+        polcText.setOnClickListener {
+            if(!polcText.text.isBlank()){
+              var bin = polcText.text
             }
         }
         return view

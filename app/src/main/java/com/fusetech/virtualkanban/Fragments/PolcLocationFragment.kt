@@ -55,6 +55,8 @@ class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListen
     override fun polcItemClick(position: Int) {
         //Toast.makeText(view?.context,"Positiion $position",Toast.LENGTH_SHORT).show()
         val value = myItems[position].polc
+        var isSelected = true
+        var pos = position
         setPolcLocation.setPolcLocation(value)
     }
 
