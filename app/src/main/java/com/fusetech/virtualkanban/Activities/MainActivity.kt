@@ -197,6 +197,24 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
             barcodeReader?.close()
         }
     }
+    private fun checkPolc(code: String){
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try{
+            connection= DriverManager.getConnection(url)
+            val statement: PreparedStatement = connection.prepareStatement(resources.getString(R.string.isPolc))
+            statement.setString(1,code)
+            val resultSet: ResultSet = statement.executeQuery()
+            if(!resultSet.next()){
+                setAlert("Nem polc")
+            }else{
+                CoroutineScope(Main).launch {
+
+                }
+            }
+        }catch (e: Exception){
+            Log.d(TAG, "checkPolc: visszajött hibával")
+        }
+    }
 
     private fun checkRightSql(){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -406,5 +424,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
     }
     fun setRecOn(){
         polcLocationFragment.setRecyclerOn()
+    }
+    fun setRecData(position: Int, value: Int){
+        polcLocationFragment.getDataFromList(position,value)
+    }
+    fun checkIfContainsBin(falseBin: String){
+        polcLocationFragment.checkBinIsInTheList(falseBin)
     }
 }

@@ -2,10 +2,13 @@ package com.fusetech.virtualkanban.Fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.media.session.MediaSessionCompat
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Adapters.PolcLocationAdapter
@@ -17,6 +20,7 @@ class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListen
    private lateinit var recyclerView: RecyclerView
     private var myItems: ArrayList<PolcLocation> = ArrayList()
     private lateinit var setPolcLocation: SetPolcLocation
+    private val TAG = "PolcLocationFragment"
 
     interface SetPolcLocation{
         fun setPolcLocation(binNumber: String?,selected: Boolean,position: Int)
@@ -71,5 +75,23 @@ class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListen
     }
     fun setRecyclerOn(){
         recyclerView.isEnabled = true
+    }
+    fun getDataFromList(position: Int, value: Int){
+        var quantity = myItems[position].mennyiseg?.toInt()
+        myItems[position].mennyiseg = (quantity?.plus(value)).toString()
+        recyclerView.adapter?.notifyDataSetChanged()
+    }
+    fun checkBinIsInTheList(falseBin: String){
+        for (i in 0 until myItems.size){
+            if(myItems[i].polc == falseBin){
+                myItems[i].mennyiseg = 666.toString()
+                Log.d(TAG, "checkBinIsInTheList: van ilyen")
+                recyclerView.adapter?.notifyDataSetChanged()
+                break
+            }
+            else{
+                Log.d(TAG, "checkBinIsInTheList: nincs ilyen")
+            }
+        }
     }
 }

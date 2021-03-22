@@ -3,6 +3,7 @@ package com.fusetech.virtualkanban.Fragments
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +28,7 @@ class PolcraHelyezesFragment : Fragment() {
     private lateinit var tranzitQtyText: TextView
     private lateinit var sideContainer: FrameLayout
     private lateinit var progressBar: ProgressBar
+    private val TAG = "PolcraHelyezesFragment"
     private var binSelected: Boolean = false
     private var binPos: Int = -1
     private var binValue: String? = ""
@@ -110,12 +112,11 @@ class PolcraHelyezesFragment : Fragment() {
                             mennyisegText.isEnabled = true
                             mennyisegText.selectAll()
                             mennyisegText.requestFocus()
-                            //ide egy interface hogy letöröljük a listából
+                            mainActivity.setRecData(binPos,qty)
                         }
                         else if(trQty == qty) {
                             tranzitQtyTxt.setText("0")
-                            //ide egy interface hogy letöröljük a listából
-                            // ???
+                            mainActivity.setRecData(binPos,qty)
                             mennyisegText.setText("")
                             tranzitQtyText.text = ""
                             polcText.setText("")
@@ -133,12 +134,14 @@ class PolcraHelyezesFragment : Fragment() {
                     }
                     else{
                         //ide ha útközbe kitörölte és kell az isPolc sql
+                        Log.d(TAG, "onCreateView: megvaltoztattam utkozbe")
                         binValue = ""
                         binPos = -1
                         binSelected = false
                         if(trQty>qty){
                            // tranzitQtyTxt.setText(trQty-qty)
                             tranzitQtyTxt.setText((trQty-qty).toString())
+                            mainActivity.checkIfContainsBin(polcText.text.toString())
                             polcText.setText("")
                             polcText.isEnabled = false
                             mennyisegText.isEnabled = true
@@ -168,6 +171,9 @@ class PolcraHelyezesFragment : Fragment() {
                 }
                 else{
                     //ide ha útközbe kitörölte és kell az isPolc sql
+                    var bin = polcText.text.toString()
+                    var trQty = tranzitQtyText.text.toString().toInt()
+                    var qty = mennyisegText.text.toString().toInt()
                     binValue = ""
                     binPos = -1
                     binSelected = false
@@ -182,9 +188,7 @@ class PolcraHelyezesFragment : Fragment() {
                     }
                     else if(trQty == qty) {
                         tranzitQtyTxt.setText("0")
-                        tranzitQtyTxt.setText("0")
                         //ide egy interface hogy letöröljük a listából
-                        // ???
                         mennyisegText.setText("")
                         tranzitQtyText.text = ""
                         polcText.setText("")
@@ -253,5 +257,8 @@ class PolcraHelyezesFragment : Fragment() {
         binSelected = selected
         binPos = pos
         binValue = value
+    }
+    fun polcCheck(){
+       
     }
 }
