@@ -17,6 +17,7 @@ import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_polcra_helyezes.*
 import kotlinx.android.synthetic.main.fragment_polcra_helyezes.view.*
+import java.lang.Exception
 
 
 class PolcraHelyezesFragment : Fragment() {
@@ -103,7 +104,6 @@ class PolcraHelyezesFragment : Fragment() {
               var bin = polcText.text.toString()
               var trQty = tranzitQtyText.text.toString().toInt()
               var qty = mennyisegText.text.toString().toInt()
-                if(binSelected){ //Ha a listából választottam
                     if(bin == binValue){ //és nem változattta meg a kedves user
                         if(trQty>qty){
                         tranzitQtyTxt.setText((trQty-qty).toString())
@@ -134,78 +134,11 @@ class PolcraHelyezesFragment : Fragment() {
                     }
                     else{
                         //ide ha útközbe kitörölte és kell az isPolc sql
-                        Log.d(TAG, "onCreateView: megvaltoztattam utkozbe")
-                        binValue = ""
-                        binPos = -1
-                        binSelected = false
-                        if(trQty>qty){
-                           // tranzitQtyTxt.setText(trQty-qty)
-                            tranzitQtyTxt.setText((trQty-qty).toString())
-                            mainActivity.checkIfContainsBin(polcText.text.toString())
-                            polcText.setText("")
-                            polcText.isEnabled = false
-                            mennyisegText.isEnabled = true
-                            mennyisegText.selectAll()
-                            mennyisegText.requestFocus()
-                        }
-                        else if(trQty == qty) {
-                            tranzitQtyTxt.setText("0")
-                            tranzitQtyTxt.setText("0")
-                            //ide egy interface hogy letöröljük a listából
-                            // ???
-                            mennyisegText.setText("")
-                            tranzitQtyText.text = ""
-                            polcText.setText("")
-                            megjegyzes1Text?.text = ""
-                            megjegyzes2Text?.text = ""
-                            intremText?.text = ""
-                            unitText?.text = ""
-                            mennyisegText.isEnabled = false
-                            polcText.isEnabled = false
-                            cikkText.isEnabled = true
-                            cikkText.setText("")
-                            cikkText.requestFocus()
-                            setContainerOff()
-                        }
-                    }
-                }
-                else{
-                    //ide ha útközbe kitörölte és kell az isPolc sql
-                    var bin = polcText.text.toString()
-                    var trQty = tranzitQtyText.text.toString().toInt()
-                    var qty = mennyisegText.text.toString().toInt()
-                    binValue = ""
-                    binPos = -1
-                    binSelected = false
-                    if(trQty>qty){
-                        // tranzitQtyTxt.setText(trQty-qty)
-                        tranzitQtyTxt.setText((trQty-qty).toString())
-                        polcText.setText("")
-                        polcText.isEnabled = false
-                        mennyisegText.isEnabled = true
-                        mennyisegText.selectAll()
-                        mennyisegText.requestFocus()
-                    }
-                    else if(trQty == qty) {
-                        tranzitQtyTxt.setText("0")
-                        //ide egy interface hogy letöröljük a listából
-                        mennyisegText.setText("")
-                        tranzitQtyText.text = ""
-                        polcText.setText("")
-                        megjegyzes1Text?.text = ""
-                        megjegyzes2Text?.text = ""
-                        intremText?.text = ""
-                        unitText?.text = ""
-                        mennyisegText.isEnabled = false
-                        polcText.isEnabled = false
-                        cikkText.isEnabled = true
-                        cikkText.setText("")
-                        cikkText.requestFocus()
-                        setContainerOff()
+                        mainActivity.polcCheckIO(polcText.text.toString())
+
                     }
                 }
             }
-        }
         return view
     }
 
@@ -259,6 +192,47 @@ class PolcraHelyezesFragment : Fragment() {
         binValue = value
     }
     fun polcCheck(){
-       
+        var bin = polcText.text.toString()
+        var trQty = tranzitQtyText.text.toString().toInt()
+        var qty = mennyisegText.text.toString().toInt()
+        binValue = ""
+        binPos = -1
+        binSelected = false
+        if(trQty>qty){
+            // tranzitQtyTxt.setText(trQty-qty)
+            try {
+                mainActivity.checkIfContainsBin(polcText.text.toString(),qty)
+            }catch(e: Exception){
+                Log.d(TAG, "polcCheck: $e")
+            }
+            tranzitQtyTxt.setText((trQty-qty).toString())
+            polcText.setText("")
+            polcText.isEnabled = false
+            mennyisegText.isEnabled = true
+            mennyisegText.selectAll()
+            mennyisegText.requestFocus()
+        }
+        else if(trQty == qty) {
+            tranzitQtyTxt.setText("0")
+            //ide egy interface hogy letöröljük a listából
+            try {
+                mainActivity.checkIfContainsBin(polcText.text.toString(),qty)
+            }catch(e: Exception){
+                Log.d(TAG, "polcCheck: $e")
+            }
+            mennyisegText.setText("")
+            tranzitQtyText.text = ""
+            polcText.setText("")
+            megjegyzes1Text?.text = ""
+            megjegyzes2Text?.text = ""
+            intremText?.text = ""
+            unitText?.text = ""
+            mennyisegText.isEnabled = false
+            polcText.isEnabled = false
+            cikkText.isEnabled = true
+            cikkText.setText("")
+            cikkText.requestFocus()
+            setContainerOff()
+        }
     }
 }

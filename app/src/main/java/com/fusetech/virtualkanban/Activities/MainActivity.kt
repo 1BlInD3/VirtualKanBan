@@ -205,10 +205,13 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
             statement.setString(1,code)
             val resultSet: ResultSet = statement.executeQuery()
             if(!resultSet.next()){
-                setAlert("Nem polc")
+                CoroutineScope(Main).launch {
+                    setAlert("Nem polc")
+                    polcHelyezesFragment.focusToBin()
+                }
             }else{
                 CoroutineScope(Main).launch {
-
+                    polcHelyezesFragment.polcCheck()
                 }
             }
         }catch (e: Exception){
@@ -425,10 +428,18 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
     fun setRecOn(){
         polcLocationFragment.setRecyclerOn()
     }
+
     fun setRecData(position: Int, value: Int){
         polcLocationFragment.getDataFromList(position,value)
     }
-    fun checkIfContainsBin(falseBin: String){
-        polcLocationFragment.checkBinIsInTheList(falseBin)
+
+    fun checkIfContainsBin(falseBin: String, value: Int){
+        polcLocationFragment.checkBinIsInTheList(falseBin, value)
+    }
+
+    fun polcCheckIO(code: String){
+        CoroutineScope(IO).launch {
+            checkPolc(code)
+        }
     }
 }

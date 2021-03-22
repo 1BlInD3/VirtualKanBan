@@ -81,10 +81,11 @@ class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListen
         myItems[position].mennyiseg = (quantity?.plus(value)).toString()
         recyclerView.adapter?.notifyDataSetChanged()
     }
-    fun checkBinIsInTheList(falseBin: String){
+    fun checkBinIsInTheList(falseBin: String, value: Int){
         for (i in 0 until myItems.size){
             if(myItems[i].polc == falseBin){
-                myItems[i].mennyiseg = 666.toString()
+                var quantity = myItems[i].mennyiseg?.toInt()
+                myItems[i].mennyiseg =(quantity?.plus(value)).toString()
                 Log.d(TAG, "checkBinIsInTheList: van ilyen")
                 recyclerView.adapter?.notifyDataSetChanged()
                 break
