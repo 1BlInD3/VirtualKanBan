@@ -27,6 +27,9 @@ class PolcraHelyezesFragment : Fragment() {
     private lateinit var tranzitQtyText: TextView
     private lateinit var sideContainer: FrameLayout
     private lateinit var progressBar: ProgressBar
+    private var binSelected: Boolean = false
+    private var binPos: Int = -1
+    private var binValue: String? = ""
     var megjegyzes1Text: TextView? = null
     var megjegyzes2Text: TextView? = null
     var intremText: TextView? = null
@@ -66,26 +69,137 @@ class PolcraHelyezesFragment : Fragment() {
         }
         mennyisegText.setOnClickListener {
             if(sideContainer.visibility == View.VISIBLE){
-                var trQty = tranzitQtyText.text.toString().toInt()
-                var qty = mennyisegText.text.toString().toInt()
-                if(trQty < qty){
-                    mainActivity.setAlert("Túl sokat akarsz feltenni")
-                    mennyisegText.selectAll()
-                }else{
-                mennyisegText.isEnabled = false
-                sideContainer.requestFocus()
-                polcText.isEnabled = true
+                if(!mennyisegText.text.isBlank()) {
+                    var trQty = tranzitQtyText.text.toString().toInt()
+                    var qty = mennyisegText.text.toString().toInt()
+                    if (trQty < qty) {
+                        mainActivity.setAlert("Túl sokat akarsz feltenni")
+                        mennyisegText.selectAll()
+                    } else {
+                        mennyisegText.isEnabled = false
+                        sideContainer.requestFocus()
+                        polcText.isEnabled = true
+                        mainActivity.setRecOn()
+                    }
                 }
             }
             else{
-                polcText.isEnabled = true
-                polcText.requestFocus()
-                mennyisegText.isEnabled = false
+                var trQty = tranzitQtyText.text.toString().toInt()
+                var qty = mennyisegText.text.toString().toInt()
+                if (trQty < qty) {
+                    mainActivity.setAlert("Túl sokat akarsz feltenni")
+                    mennyisegText.selectAll()
+                } else {
+                    mennyisegText.isEnabled = false
+                    polcText.isEnabled = true
+                    polcText.requestFocus()
+                }
             }
         }
         polcText.setOnClickListener {
             if(!polcText.text.isBlank()){
-              var bin = polcText.text
+              var bin = polcText.text.toString()
+              var trQty = tranzitQtyText.text.toString().toInt()
+              var qty = mennyisegText.text.toString().toInt()
+                if(binSelected){ //Ha a listából választottam
+                    if(bin == binValue){ //és nem változattta meg a kedves user
+                        if(trQty>qty){
+                        tranzitQtyTxt.setText((trQty-qty).toString())
+                            polcText.setText("")
+                            polcText.isEnabled = false
+                            mennyisegText.isEnabled = true
+                            mennyisegText.selectAll()
+                            mennyisegText.requestFocus()
+                            //ide egy interface hogy letöröljük a listából
+                        }
+                        else if(trQty == qty) {
+                            tranzitQtyTxt.setText("0")
+                            //ide egy interface hogy letöröljük a listából
+                            // ???
+                            mennyisegText.setText("")
+                            tranzitQtyText.text = ""
+                            polcText.setText("")
+                            megjegyzes1Text?.text = ""
+                            megjegyzes2Text?.text = ""
+                            intremText?.text = ""
+                            unitText?.text = ""
+                            mennyisegText.isEnabled = false
+                            polcText.isEnabled = false
+                            cikkText.isEnabled = true
+                            cikkText.setText("")
+                            cikkText.requestFocus()
+                            setContainerOff()
+                        }
+                    }
+                    else{
+                        //ide ha útközbe kitörölte és kell az isPolc sql
+                        binValue = ""
+                        binPos = -1
+                        binSelected = false
+                        if(trQty>qty){
+                           // tranzitQtyTxt.setText(trQty-qty)
+                            tranzitQtyTxt.setText((trQty-qty).toString())
+                            polcText.setText("")
+                            polcText.isEnabled = false
+                            mennyisegText.isEnabled = true
+                            mennyisegText.selectAll()
+                            mennyisegText.requestFocus()
+                        }
+                        else if(trQty == qty) {
+                            tranzitQtyTxt.setText("0")
+                            tranzitQtyTxt.setText("0")
+                            //ide egy interface hogy letöröljük a listából
+                            // ???
+                            mennyisegText.setText("")
+                            tranzitQtyText.text = ""
+                            polcText.setText("")
+                            megjegyzes1Text?.text = ""
+                            megjegyzes2Text?.text = ""
+                            intremText?.text = ""
+                            unitText?.text = ""
+                            mennyisegText.isEnabled = false
+                            polcText.isEnabled = false
+                            cikkText.isEnabled = true
+                            cikkText.setText("")
+                            cikkText.requestFocus()
+                            setContainerOff()
+                        }
+                    }
+                }
+                else{
+                    //ide ha útközbe kitörölte és kell az isPolc sql
+                    binValue = ""
+                    binPos = -1
+                    binSelected = false
+                    if(trQty>qty){
+                        // tranzitQtyTxt.setText(trQty-qty)
+                        tranzitQtyTxt.setText((trQty-qty).toString())
+                        polcText.setText("")
+                        polcText.isEnabled = false
+                        mennyisegText.isEnabled = true
+                        mennyisegText.selectAll()
+                        mennyisegText.requestFocus()
+                    }
+                    else if(trQty == qty) {
+                        tranzitQtyTxt.setText("0")
+                        tranzitQtyTxt.setText("0")
+                        //ide egy interface hogy letöröljük a listából
+                        // ???
+                        mennyisegText.setText("")
+                        tranzitQtyText.text = ""
+                        polcText.setText("")
+                        megjegyzes1Text?.text = ""
+                        megjegyzes2Text?.text = ""
+                        intremText?.text = ""
+                        unitText?.text = ""
+                        mennyisegText.isEnabled = false
+                        polcText.isEnabled = false
+                        cikkText.isEnabled = true
+                        cikkText.setText("")
+                        cikkText.requestFocus()
+                        setContainerOff()
+                    }
+                }
             }
         }
         return view
@@ -134,5 +248,10 @@ class PolcraHelyezesFragment : Fragment() {
         polcText.isEnabled = true
         polcText.selectAll()
         polcText.requestFocus()
+    }
+    fun getAll(selected: Boolean,pos: Int, value: String?){
+        binSelected = selected
+        binPos = pos
+        binValue = value
     }
 }

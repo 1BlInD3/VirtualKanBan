@@ -2,12 +2,10 @@ package com.fusetech.virtualkanban.Fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Adapters.PolcLocationAdapter
@@ -21,7 +19,7 @@ class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListen
     private lateinit var setPolcLocation: SetPolcLocation
 
     interface SetPolcLocation{
-        fun setPolcLocation(binNumber: String?)
+        fun setPolcLocation(binNumber: String?,selected: Boolean,position: Int)
     }
 
     override fun onCreateView(
@@ -35,6 +33,7 @@ class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListen
         frameLayout.addView(child)
 
         recyclerView = view.polcRecycler
+        recyclerView.isEnabled = false
         myItems.clear()
         loadData()
         recyclerView.adapter = PolcLocationAdapter(myItems, this)
@@ -54,10 +53,12 @@ class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListen
 
     override fun polcItemClick(position: Int) {
         //Toast.makeText(view?.context,"Positiion $position",Toast.LENGTH_SHORT).show()
-        val value = myItems[position].polc
-        var isSelected = true
-        var pos = position
-        setPolcLocation.setPolcLocation(value)
+        if(recyclerView.isEnabled){
+            val value: String? = myItems[position].polc
+            var isSelected = true
+            var pos = position
+            setPolcLocation.setPolcLocation(value,isSelected,pos)
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -67,5 +68,8 @@ class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListen
         }else{
             throw RuntimeException(context.toString() + "must implement")
         }
+    }
+    fun setRecyclerOn(){
+        recyclerView.isEnabled = true
     }
 }

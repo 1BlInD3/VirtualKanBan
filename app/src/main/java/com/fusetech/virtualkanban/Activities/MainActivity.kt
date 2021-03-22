@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
     private val polcHelyezesFragment = PolcraHelyezesFragment()
     private val TAG = "MainActivity"
     private val cikklekerdezesFragment = CikklekerdezesFragment()
+    val polcLocationFragment = PolcLocationFragment()
     private var polcLocation: ArrayList<PolcLocation>? = ArrayList()
     private val url = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10"
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -274,11 +275,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
                     polcLocation?.add(PolcLocation("H224","154"))
                     polcLocation?.add(PolcLocation("H225","155"))
                     polcLocation?.add(PolcLocation("H226","156"))
-                    var bundle: Bundle = Bundle()
+                    var bundle = Bundle()
                     bundle.putSerializable("02RAKTAR",polcLocation)
-                    val polcLocation = PolcLocationFragment()
-                    polcLocation.arguments = bundle
-                    supportFragmentManager.beginTransaction().replace(R.id.side_container,polcLocation,"LOC").commit()
+                    polcLocationFragment.arguments = bundle
+                    supportFragmentManager.beginTransaction().replace(R.id.side_container,polcLocationFragment,"LOC").commit()
                 }
                 else{
                     CoroutineScope(Main).launch {
@@ -292,9 +292,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
                     }while (resultSet1.next())
                     var bundle: Bundle = Bundle()
                     bundle.putSerializable("02RAKTAR",polcLocation)
-                    val polcLocation = PolcLocationFragment()
-                    polcLocation.arguments = bundle
-                    supportFragmentManager.beginTransaction().replace(R.id.side_container,polcLocation,"LOC").commit()
+                    polcLocationFragment.arguments = bundle
+                    supportFragmentManager.beginTransaction().replace(R.id.side_container,polcLocationFragment,"LOC").commit()
                 }
             }
         }catch (e: java.lang.Exception){
@@ -400,8 +399,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         }
     }
 
-    override fun setPolcLocation(binNumber: String?) {
+    override fun setPolcLocation(binNumber: String?,selected: Boolean,position: Int) {
         polcHelyezesFragment.setBinNumber(binNumber)
+        polcHelyezesFragment.getAll(selected,position,binNumber)
         polcHelyezesFragment.focusToBin()
+    }
+    fun setRecOn(){
+        polcLocationFragment.setRecyclerOn()
     }
 }
