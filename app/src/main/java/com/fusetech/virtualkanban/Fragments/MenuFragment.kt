@@ -51,8 +51,8 @@ class MenuFragment : Fragment() {
         if(!param1!!)
         {
            // polcHelyezes.isEnabled = false
-            //polcHelyezes.setBackgroundResource(R.drawable.disabled)
-            igenyOssze.isEnabled = false
+            polcHelyezes.setBackgroundResource(R.drawable.disabled)
+            //igenyOssze.isEnabled = false
             igenyOssze.setBackgroundResource(R.drawable.disabled)
             igenyLezar.isEnabled = false
             igenyLezar.setBackgroundResource(R.drawable.disabled)
@@ -70,6 +70,9 @@ class MenuFragment : Fragment() {
 
         polcHelyezes.setOnClickListener {
             mainActivity.loadPolcHelyezesFragment()
+        }
+        igenyOssze.setOnClickListener {
+            mainActivity.loadIgenyOsszeallitasFragment()
         }
         return view
     }

@@ -148,6 +148,7 @@
         android:background="@drawable/editbuttn"
         android:ems="10"
         android:inputType="textPersonName"
+        android:textAllCaps="true"
         android:paddingStart="4dp"
         android:paddingTop="4dp"
         android:paddingEnd="4dp"

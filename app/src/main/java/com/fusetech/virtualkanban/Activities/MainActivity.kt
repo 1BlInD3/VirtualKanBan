@@ -2,10 +2,8 @@ package com.fusetech.virtualkanban.Activities
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.text.Editable
 import android.util.Log
 import android.view.KeyEvent
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.fusetech.virtualkanban.DataItems.CikkItems
@@ -15,11 +13,9 @@ import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.R
 import com.honeywell.aidc.*
 import com.honeywell.aidc.BarcodeReader.BarcodeListener
-import kotlinx.android.synthetic.main.fragment_menu.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.sql.Connection
 import java.sql.DriverManager
@@ -117,10 +113,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
      fun loadPolcHelyezesFragment(){
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,polcHelyezesFragment,"POLC").addToBackStack(null).commit()
     }
-
-    fun loadPolcLocation(){
-        val loadPolc = PolcLocationFragment()
-        supportFragmentManager.beginTransaction().replace(R.id.side_container,loadPolc,"LOCATION").commit()
+    fun loadIgenyOsszeallitasFragment(){
+        val igenyFragment = IgenyKontenerOsszeallitasFragment()
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyFragment,"IGENY").addToBackStack(null).commit()
     }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread{
@@ -155,7 +150,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         {
            when(keyCode){
                8 -> loadPolcHelyezesFragment()
-               9 -> Log.d(TAG, "onKeyDown: $keyCode")
+               9 -> loadIgenyOsszeallitasFragment()
                10 -> Log.d(TAG, "onKeyDown: $keyCode")
                11 -> Log.d(TAG, "onKeyDown: $keyCode")
                12 -> Log.d(TAG, "onKeyDown: $keyCode")
@@ -197,6 +192,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
             barcodeReader?.close()
         }
     }
+    
     private fun checkPolc(code: String){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try{
