@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Adapters.PolcLocationAdapter
 import com.fusetech.virtualkanban.DataItems.PolcLocation
 import com.fusetech.virtualkanban.R
@@ -19,6 +20,7 @@ class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListen
     private var myItems: ArrayList<PolcLocation> = ArrayList()
     private lateinit var setPolcLocation: SetPolcLocation
     private val TAG = "PolcLocationFragment"
+    private lateinit var mainActivity: MainActivity
 
     interface SetPolcLocation{
         fun setPolcLocation(binNumber: String?,selected: Boolean,position: Int)
@@ -29,7 +31,7 @@ class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListen
         savedInstanceState: Bundle?
     ): View? {
         val view =  inflater.inflate(R.layout.fragment_polc_location, container, false)
-
+        mainActivity = activity as MainActivity
         val frameLayout = view.myFrameLayout
         val child = layoutInflater.inflate(R.layout.polc_location_header,null)
         frameLayout.addView(child)
@@ -56,7 +58,7 @@ class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListen
     override fun polcItemClick(position: Int) {
         //Toast.makeText(view?.context,"Positiion $position",Toast.LENGTH_SHORT).show()
         if(recyclerView.isEnabled){
-            val value: String? = myItems[position].polc
+            val value: String? = myItems[position].polc?.trim()
             var isSelected = true
             var pos = position
             setPolcLocation.setPolcLocation(value,isSelected,pos)
@@ -81,7 +83,7 @@ class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListen
     }
     fun checkBinIsInTheList(falseBin: String, value: Int){
         for (i in 0 until myItems.size){
-            if(myItems[i].polc == falseBin){
+            if(myItems[i].polc?.trim() == falseBin){
                 var quantity = myItems[i].mennyiseg?.toInt()
                 myItems[i].mennyiseg =(quantity?.plus(value)).toString()
                 Log.d(TAG, "checkBinIsInTheList: van ilyen")
@@ -89,8 +91,14 @@ class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListen
                 break
             }
             else{
-                Log.d(TAG, "checkBinIsInTheList: nincs ilyen")
+                Log.d(TAG, "checkBinIsInTheList: nincs ilyen ${myItems[i].polc}\tfasle bin =  $falseBin")
             }
         }
+    }
+    fun checkList(bin: String): Boolean{
+        for (i in 0 until myItems.size){
+            return myItems[i].polc?.trim() == bin
+        }
+        return false
     }
 }

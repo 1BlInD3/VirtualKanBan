@@ -3,6 +3,7 @@ package com.fusetech.virtualkanban.Fragments
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -63,7 +64,7 @@ class PolcraHelyezesFragment : Fragment() {
         sideContainer.visibility = View.GONE
         mennyisegText.isEnabled = false
         polcText.isEnabled = false
-
+        polcText.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
         cikkText.setOnClickListener{
             if(!cikkText.text.isBlank()){
                 cikkText.selectAll()
@@ -104,7 +105,7 @@ class PolcraHelyezesFragment : Fragment() {
               var bin = polcText.text.toString()
               var trQty = tranzitQtyText.text.toString().toInt()
               var qty = mennyisegText.text.toString().toInt()
-                    if(bin == binValue){ //és nem változattta meg a kedves user
+                    if(mainActivity.checkList(bin)){
                         if(trQty>qty){
                         tranzitQtyTxt.setText((trQty-qty).toString())
                             polcText.setText("")
@@ -112,9 +113,10 @@ class PolcraHelyezesFragment : Fragment() {
                             mennyisegText.isEnabled = true
                             mennyisegText.selectAll()
                             mennyisegText.requestFocus()
-                            mainActivity.setRecData(binPos,qty)
+                            mainActivity.checkIfContainsBin(bin,qty)
                         }
                         else if(trQty == qty) {
+                            mainActivity.checkIfContainsBin(bin,qty)
                             tranzitQtyTxt.setText("0")
                             mainActivity.setRecData(binPos,qty)
                             mennyisegText.setText("")
@@ -131,11 +133,8 @@ class PolcraHelyezesFragment : Fragment() {
                             cikkText.requestFocus()
                             setContainerOff()
                         }
-                    }
-                    else{
-                        //ide ha útközbe kitörölte és kell az isPolc sql
-                        mainActivity.polcCheckIO(polcText.text.toString())
-
+                    }else{
+                        mainActivity.polcCheckIO(bin)
                     }
                 }
             }
@@ -201,7 +200,7 @@ class PolcraHelyezesFragment : Fragment() {
         if(trQty>qty){
             // tranzitQtyTxt.setText(trQty-qty)
             try {
-                mainActivity.checkIfContainsBin(polcText.text.toString(),qty)
+                mainActivity.checkIfContainsBin(bin,qty)
             }catch(e: Exception){
                 Log.d(TAG, "polcCheck: $e")
             }

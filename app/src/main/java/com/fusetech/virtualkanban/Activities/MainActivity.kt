@@ -497,7 +497,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     }
 
     fun checkIfContainsBin(falseBin: String, value: Int){
-        polcLocationFragment.checkBinIsInTheList(falseBin, value)
+            polcLocationFragment.checkBinIsInTheList(falseBin, value)
     }
 
     fun polcCheckIO(code: String){
@@ -515,5 +515,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         CoroutineScope(IO).launch {
             checkItem(code)
         }
+    }
+    fun checkList(code: String):Boolean{
+        return polcLocationFragment.checkList(code)
     }
 }

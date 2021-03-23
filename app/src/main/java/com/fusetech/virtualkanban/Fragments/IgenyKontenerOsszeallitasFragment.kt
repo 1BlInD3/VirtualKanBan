@@ -2,6 +2,7 @@ package com.fusetech.virtualkanban.Fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.text.InputFilter
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -60,6 +61,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment() {
         megjegyzes2_igeny2.text = ""
         intrem_igeny2.text = ""
         unit_igeny2.text = ""
+        polcTextIgeny.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
         setBinFocusOn()
         setProgressBarOff()
 
