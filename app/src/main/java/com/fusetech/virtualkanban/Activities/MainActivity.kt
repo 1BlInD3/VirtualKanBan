@@ -22,7 +22,11 @@ import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 
-class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment.SetItemOrBinManually,PolcraHelyezesFragment.SendCode,PolcLocationFragment.SetPolcLocation {
+class MainActivity : AppCompatActivity(), BarcodeListener,
+    CikklekerdezesFragment.SetItemOrBinManually,
+    PolcraHelyezesFragment.SendCode,
+    PolcLocationFragment.SetPolcLocation,
+    IgenyKontenerOsszeallitasFragment.SendBinCode{
 // 1-es pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
     // át kell rakni máshova
@@ -50,6 +54,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
     private var cikkItems: ArrayList<CikkItems> = ArrayList()
     private var polcItems: ArrayList<PolcItems> = ArrayList()
     private val polcHelyezesFragment = PolcraHelyezesFragment()
+    private val igenyFragment = IgenyKontenerOsszeallitasFragment()
     private val TAG = "MainActivity"
     private val cikklekerdezesFragment = CikklekerdezesFragment()
     val polcLocationFragment = PolcLocationFragment()
@@ -114,7 +119,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,polcHelyezesFragment,"POLC").addToBackStack(null).commit()
     }
     fun loadIgenyOsszeallitasFragment(){
-        val igenyFragment = IgenyKontenerOsszeallitasFragment()
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyFragment,"IGENY").addToBackStack(null).commit()
     }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
@@ -192,7 +196,70 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
             barcodeReader?.close()
         }
     }
-    
+    private fun checkItem(code: String){
+        CoroutineScope(Main).launch {
+            igenyFragment.setProgressBarOn()
+        }
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try{
+            connection = DriverManager.getConnection(url)
+            val statement = connection.prepareStatement(resources.getString(R.string.cikkSql))
+            statement.setString(1,code)
+            val resultSet = statement.executeQuery()
+            if(!resultSet.next()){
+                CoroutineScope(Main).launch {
+                    setAlert("Nincs ilyen cikk a rendszerben")
+                    igenyFragment.setProgressBarOff()
+                    igenyFragment.setFocusToItem()
+                }
+            }else{
+                val megjegyzes_igeny: String = resultSet.getString("Description1")
+                val megjegyzes2_igeny: String = resultSet.getString("Description2")
+                val intrem_igeny: String = resultSet.getString("IntRem")
+                val unit_igeny: String = resultSet.getString("Unit")
+                CoroutineScope(Main).launch {
+                    igenyFragment.setInfo(megjegyzes_igeny,megjegyzes2_igeny,intrem_igeny,unit_igeny)
+                    igenyFragment.setProgressBarOff()
+                    igenyFragment.setFocusToQuantity()
+                }
+            }
+        }catch (e: Exception){
+            Log.d(TAG, "checkItem: $e")
+            CoroutineScope(Main).launch {
+                igenyFragment.setProgressBarOff()
+            }
+        }
+    }
+    private fun check01(code: String){
+        CoroutineScope(Main).launch {
+            igenyFragment.setProgressBarOn()
+        }
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try{
+            connection = DriverManager.getConnection(url)
+            val statement = connection.prepareStatement(resources.getString(R.string.is01))
+            statement.setString(1,code)
+            val resultSet = statement.executeQuery()
+            if(!resultSet.next()){
+                CoroutineScope(Main).launch {
+                    setAlert("A polc nem a 01 raktárban található")
+                    igenyFragment.setBinFocusOn()
+                    igenyFragment.setProgressBarOff()
+                }
+            }else{
+                CoroutineScope(Main).launch {
+                    igenyFragment.setFocusToItem()
+                    igenyFragment.setProgressBarOff()
+                }
+            }
+        }catch (e: Exception){
+            Log.d(TAG, "check01: $e")
+            CoroutineScope(Main).launch {
+                igenyFragment.setProgressBarOff()
+            }
+        }
+    }
+
     private fun checkPolc(code: String){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try{
@@ -436,6 +503,17 @@ class MainActivity : AppCompatActivity(), BarcodeListener,CikklekerdezesFragment
     fun polcCheckIO(code: String){
         CoroutineScope(IO).launch {
             checkPolc(code)
+        }
+    }
+
+    override fun sendBinCode(code: String) {
+       CoroutineScope(IO).launch {
+           check01(code)
+       }
+    }
+    fun isItem(code: String){
+        CoroutineScope(IO).launch {
+            checkItem(code)
         }
     }
 }
