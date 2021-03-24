@@ -88,12 +88,17 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         mennyiseg_igeny2.setOnClickListener {
             igenyList.add(IgenyItem(cikkItem_igeny.text.toString().trim(), megjegyzes1_igeny.text.toString().trim(),
                 mennyiseg_igeny2.text.toString().trim()))
-            (recyclerView.adapter as IgenyItemAdapter).notifyDataSetChanged()
+            igenyList.reverse()
+            recyclerView.adapter?.notifyDataSetChanged()
             cikkItem_igeny.isEnabled = true
             cikkItem_igeny.selectAll()
             cikkItem_igeny.requestFocus()
             mennyiseg_igeny2.setText("")
             mennyiseg_igeny2.isEnabled = false
+            megjegyzes2_igeny2.text = ""
+            intrem_igeny2.text = ""
+            unit_igeny2.text = ""
+            megjegyzes1_igeny.text = ""
         }
         return view
     }
