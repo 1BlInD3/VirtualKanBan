@@ -349,7 +349,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 if (!resultSet1.next()){
                     CoroutineScope(Main).launch {
                         polcHelyezesFragment.setProgressBarOff()
-                        polcHelyezesFragment.setContainerOn()
+                       // polcHelyezesFragment.setContainerOn()
                     }
                     Log.d(TAG, "checkTrannzit: Nincs a 02-es raktárban")
                     //ezt aztán kitörölni
@@ -362,7 +362,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     var bundle = Bundle()
                     bundle.putSerializable("02RAKTAR",polcLocation)
                     polcLocationFragment.arguments = bundle
-                    supportFragmentManager.beginTransaction().replace(R.id.side_container,polcLocationFragment,"LOC").commit()
+                    //supportFragmentManager.beginTransaction().replace(R.id.side_container,polcLocationFragment,"LOC").commit()
                 }
                 else{
                     CoroutineScope(Main).launch {
