@@ -4,16 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@android:color/black">
+    android:background="@drawable/highlight_selected">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/polcName"
-        android:layout_width="80dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
         app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -31,7 +32,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="0dp"
         android:layout_marginStart="2dp"
         android:layout_marginEnd="2dp"
@@ -55,10 +56,10 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="2dp"
         android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cardView"
         app:layout_constraintTop_toTopOf="@+id/cardView">
@@ -67,10 +68,10 @@
             android:id="@+id/mert_igeny"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="mért.egys"
             android:paddingStart="4dp"
+            android:text="mért.egys"
             android:textColor="@android:color/black"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

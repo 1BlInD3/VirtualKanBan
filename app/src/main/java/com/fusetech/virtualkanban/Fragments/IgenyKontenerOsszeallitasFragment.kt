@@ -3,6 +3,7 @@ package com.fusetech.virtualkanban.Fragments
 import android.content.Context
 import android.os.Bundle
 import android.text.InputFilter
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,11 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Activities.MainActivity
+import com.fusetech.virtualkanban.Adapters.IgenyItemAdapter
+import com.fusetech.virtualkanban.DataItems.IgenyItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_osszeallitas.*
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_osszeallitas.view.*
@@ -28,8 +33,10 @@ private lateinit var mainActivity: MainActivity
 private lateinit var sendBinCode : IgenyKontenerOsszeallitasFragment.SendBinCode
 private lateinit var cikkItem_igeny: EditText
 private lateinit var mennyiseg_igeny2: EditText
+private lateinit var recyclerView: RecyclerView
+private var igenyList: ArrayList<IgenyItem> = ArrayList()
 
-class IgenyKontenerOsszeallitasFragment : Fragment() {
+class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItemClick {
     private var param1: String? = null
     private var param2: String? = null
     interface SendBinCode{
@@ -62,14 +69,30 @@ class IgenyKontenerOsszeallitasFragment : Fragment() {
         intrem_igeny2.text = ""
         unit_igeny2.text = ""
         polcTextIgeny.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
+        unit_igeny2.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
         setBinFocusOn()
         setProgressBarOff()
+        recyclerView = view.recycler_igeny
+        recyclerView.adapter = IgenyItemAdapter(igenyList,this)
+        recyclerView.layoutManager = LinearLayoutManager(view.context)
+        recyclerView.setHasFixedSize(true)
+
 
         polcTextIgeny.setOnClickListener {
            sendBinCode.sendBinCode(polcTextIgeny.text.toString())
         }
         cikkItem_igeny.setOnClickListener {
             mainActivity.isItem(cikkItem_igeny.text.toString())
+        }
+        mennyiseg_igeny2.setOnClickListener {
+            igenyList.add(IgenyItem(cikkItem_igeny.text.toString().trim(), megjegyzes1_igeny.text.toString().trim(),
+                mennyiseg_igeny2.text.toString().trim()))
+            (recyclerView.adapter as IgenyItemAdapter).notifyDataSetChanged()
+            cikkItem_igeny.isEnabled = true
+            cikkItem_igeny.selectAll()
+            cikkItem_igeny.requestFocus()
+            megjegyzes2_igeny.text = ""
+            megjegyzes2_igeny2.isEnabled = false
         }
         return view
     }
@@ -118,5 +141,9 @@ class IgenyKontenerOsszeallitasFragment : Fragment() {
         megjegyzes2_igeny2.text = megj2
         intrem_igeny2.text = intRem
         unit_igeny2.text = unit
+    }
+
+    override fun igenyClick(position: Int) {
+        Log.d("igenyitem", "igenyClick: $position")
     }
 }
