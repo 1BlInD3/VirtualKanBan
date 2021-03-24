@@ -91,8 +91,8 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
             cikkItem_igeny.isEnabled = true
             cikkItem_igeny.selectAll()
             cikkItem_igeny.requestFocus()
-            megjegyzes2_igeny.text = ""
-            megjegyzes2_igeny2.isEnabled = false
+            mennyiseg_igeny2.setText("")
+            mennyiseg_igeny2.isEnabled = false
         }
         return view
     }
