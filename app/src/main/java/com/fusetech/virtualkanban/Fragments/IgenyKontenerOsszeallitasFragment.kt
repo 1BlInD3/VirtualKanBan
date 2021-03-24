@@ -73,6 +73,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         setBinFocusOn()
         setProgressBarOff()
         recyclerView = view.recycler_igeny
+        recyclerView.isEnabled = false
         recyclerView.adapter = IgenyItemAdapter(igenyList,this)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
         recyclerView.setHasFixedSize(true)
@@ -113,8 +114,9 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         polcTextIgeny.isEnabled = false
     }
     fun setFocusToQuantity(){
-        mennyiseg_igeny2.requestFocus()
+        mennyiseg_igeny2.isEnabled = true
         mennyiseg_igeny2.selectAll()
+        mennyiseg_igeny2.requestFocus()
         cikkItem_igeny.isEnabled = false
     }
     companion object {
