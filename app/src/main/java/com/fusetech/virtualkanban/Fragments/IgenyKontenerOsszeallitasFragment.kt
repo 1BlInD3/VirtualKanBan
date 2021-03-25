@@ -35,6 +35,7 @@ private lateinit var cikkItem_igeny: EditText
 private lateinit var mennyiseg_igeny2: EditText
 private lateinit var recyclerView: RecyclerView
 private var igenyList: ArrayList<IgenyItem> = ArrayList()
+private var igenyReveresed: ArrayList<IgenyItem> = ArrayList()
 
 class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItemClick {
     private var param1: String? = null
@@ -74,7 +75,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         setProgressBarOff()
         recyclerView = view.recycler_igeny
         recyclerView.isEnabled = false
-        recyclerView.adapter = IgenyItemAdapter(igenyList,this)
+        recyclerView.adapter = IgenyItemAdapter(igenyReveresed,this)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
         recyclerView.setHasFixedSize(true)
 
@@ -88,8 +89,10 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         mennyiseg_igeny2.setOnClickListener {
             igenyList.add(IgenyItem(cikkItem_igeny.text.toString().trim(), megjegyzes1_igeny.text.toString().trim(),
                 mennyiseg_igeny2.text.toString().trim()))
-            igenyList.reverse()
+           // igenyReveresed = igenyList.reverse()
+
             recyclerView.adapter?.notifyDataSetChanged()
+            igenyReveresed.clear()
             cikkItem_igeny.isEnabled = true
             cikkItem_igeny.selectAll()
             cikkItem_igeny.requestFocus()
