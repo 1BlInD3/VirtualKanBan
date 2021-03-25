@@ -7,6 +7,7 @@ import android.view.KeyEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.fusetech.virtualkanban.DataItems.CikkItems
+import com.fusetech.virtualkanban.DataItems.IgenyItem
 import com.fusetech.virtualkanban.DataItems.PolcItems
 import com.fusetech.virtualkanban.DataItems.PolcLocation
 import com.fusetech.virtualkanban.Fragments.*
@@ -54,7 +55,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private var cikkItems: ArrayList<CikkItems> = ArrayList()
     private var polcItems: ArrayList<PolcItems> = ArrayList()
     private val polcHelyezesFragment = PolcraHelyezesFragment()
-    private val igenyFragment = IgenyKontenerOsszeallitasFragment()
+    private lateinit var igenyFragment: IgenyKontenerOsszeallitasFragment
     private val TAG = "MainActivity"
     private val cikklekerdezesFragment = CikklekerdezesFragment()
     val polcLocationFragment = PolcLocationFragment()
@@ -66,6 +67,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
+        igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance("","")
         AidcManager.create(this) { aidcManager ->
             manager = aidcManager
             try {
@@ -120,7 +122,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
      fun loadPolcHelyezesFragment(){
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,polcHelyezesFragment,"POLC").addToBackStack(null).commit()
     }
-    fun loadIgenyOsszeallitasFragment(){
+    fun loadIgenyOsszeallitasFragment(kontener: String, polc: String?){
+        igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance(kontener,polc)
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyFragment,"IGENY").addToBackStack(null).commit()
     }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
@@ -155,8 +158,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         if(getMenuFragment())
         {
            when(keyCode){
-               8 -> containerCheck("1GU")//loadPolcHelyezesFragment()
-               9 -> loadIgenyOsszeallitasFragment()
+               8 -> loadPolcHelyezesFragment()
+               9 -> containerCheck("1GU")
                10 -> Log.d(TAG, "onKeyDown: $keyCode")
                11 -> Log.d(TAG, "onKeyDown: $keyCode")
                12 -> Log.d(TAG, "onKeyDown: $keyCode")
@@ -438,6 +441,29 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 }
             }else{
                 Log.d(TAG, "containerManagement: van konténer")
+                val kontener = containerResult.getString("kontener")
+                val rakhely:String? = containerResult.getString("termeles_rakhely")
+                Log.d(TAG, "containerManagement: $rakhely")
+                val igenyItemCheck = connection.prepareStatement(resources.getString(R.string.loadIgenyItemsToList))
+                igenyItemCheck.setInt(1,201134)
+                val loadIgenyListResult = igenyItemCheck.executeQuery()
+                if(!loadIgenyListResult.next()){
+                    Log.d(TAG, "containerManagement: Üres")
+                }else{
+                    val listIgenyItems: ArrayList<IgenyItem> = ArrayList()
+                    do {
+                        val cikk = loadIgenyListResult.getString("cikkszam")
+                        val megjegyzes = loadIgenyListResult.getString("megjegyzes")
+                        val darabszam = loadIgenyListResult.getString("igenyelt_mennyiseg")
+                        listIgenyItems.add(IgenyItem(cikk, megjegyzes, darabszam))
+                    }while(loadIgenyListResult.next())
+                    val bundle = Bundle()
+                    bundle.putSerializable("IGENY",listIgenyItems)
+                    igenyFragment.arguments = bundle
+                    CoroutineScope(Main).launch {
+                        loadIgenyOsszeallitasFragment(kontener,"NNG02")
+                    }
+                }
             }
         }catch (e: Exception){
             CoroutineScope(Main).launch{

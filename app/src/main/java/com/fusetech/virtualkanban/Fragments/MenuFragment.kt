@@ -72,7 +72,7 @@ class MenuFragment : Fragment() {
             mainActivity.loadPolcHelyezesFragment()
         }
         igenyOssze.setOnClickListener {
-            mainActivity.loadIgenyOsszeallitasFragment()
+            mainActivity.loadIgenyOsszeallitasFragment("","")
         }
         return view
     }
