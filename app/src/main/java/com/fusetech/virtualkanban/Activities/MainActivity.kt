@@ -60,6 +60,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     val polcLocationFragment = PolcLocationFragment()
     private var polcLocation: ArrayList<PolcLocation>? = ArrayList()
     private val url = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10"
+    private val connectionString ="jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -153,7 +155,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         if(getMenuFragment())
         {
            when(keyCode){
-               8 -> loadPolcHelyezesFragment()
+               8 -> containerCheck("1GU")//loadPolcHelyezesFragment()
                9 -> loadIgenyOsszeallitasFragment()
                10 -> Log.d(TAG, "onKeyDown: $keyCode")
                11 -> Log.d(TAG, "onKeyDown: $keyCode")
@@ -388,6 +390,62 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
 
+    private fun containerManagement(id: String){
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try{
+            connection = DriverManager.getConnection(connectionString)
+            val isContainer = connection.prepareStatement(resources.getString(R.string.containerCheck))
+            isContainer.setString(1,id)
+            isContainer.setInt(2,0)
+            val containerResult = isContainer.executeQuery()
+            if(!containerResult.next()){
+                Log.d(TAG, "containerManagement: Nincs konténer")
+                val insertContainer = connection.prepareStatement(resources.getString(R.string.openContainer))
+                insertContainer.setString(1,id)
+                insertContainer.setInt(2,0)
+                insertContainer.setInt(3,1)
+                insertContainer.executeUpdate()
+                Log.d(TAG, "containerManagement: Konténer létrehozva")
+                try{
+                    Log.d(TAG, "containerManagement: Betöltöm az adatot")
+                    val getName = connection.prepareStatement(resources.getString(R.string.containerCheck))
+                    getName.setString(1,id)
+                    getName.setInt(2,0)
+                    val getNameResult = isContainer.executeQuery()
+                    if(!getNameResult.next()){
+                        CoroutineScope(Main).launch {
+                            setAlert("Valami nagy hiba van")
+                        }
+                    }else{
+                        var kontener: String = getNameResult.getInt("id").toString()
+                        var zeroString = ""
+                        if(kontener.length<10){
+                            val charLength = 10 - kontener.length
+                            for(i in 0 until charLength){
+                                zeroString += "0"
+                            }
+                            kontener = """$zeroString$kontener"""
+                        }
+                        val updateContainer = connection.prepareStatement(resources.getString(R.string.updateContainerValue))
+                        updateContainer.setString(1,kontener)
+                        updateContainer.setString(2,id)
+                        updateContainer.setInt(3,0)
+                        updateContainer.executeUpdate()
+                        Log.d(TAG, "containerManagement: visszaírtam a konténer értéket")
+                    }
+                }catch (e: Exception){
+
+                }
+            }else{
+                Log.d(TAG, "containerManagement: van konténer")
+            }
+        }catch (e: Exception){
+            CoroutineScope(Main).launch{
+                setAlert("Valahol baj van $e")
+            }
+        }
+    }
+
     private fun cikkPolcQuery(code : String) {
         val polcResultFragment = PolcResultFragment()
         val cikkResultFragment = CikkResultFragment()
@@ -518,5 +576,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     }
     fun checkList(code: String):Boolean{
         return polcLocationFragment.checkList(code)
+    }
+    fun containerCheck(id: String){
+        CoroutineScope(IO).launch {
+            containerManagement(id)
+        }
     }
 }

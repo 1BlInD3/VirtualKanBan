@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -36,6 +37,7 @@ private lateinit var mennyiseg_igeny2: EditText
 private lateinit var recyclerView: RecyclerView
 private var igenyList: ArrayList<IgenyItem> = ArrayList()
 private var igenyReveresed: ArrayList<IgenyItem> = ArrayList()
+private lateinit var kilepButton: Button
 
 class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItemClick {
     private var param1: String? = null
@@ -65,6 +67,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         unit_igeny2 = view.unit_igeny
         cikkItem_igeny = view.cikk_igeny
         mennyiseg_igeny2 = view.mennyiseg_igeny
+        kilepButton = view.kilep_igeny_button
         megjegyzes1_igeny.text = ""
         megjegyzes2_igeny2.text = ""
         intrem_igeny2.text = ""
@@ -111,7 +114,24 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
             unit_igeny2.text = ""
             megjegyzes1_igeny.text = ""
         }
+
+        kilepButton.setOnClickListener {
+            clearAll()
+        }
         return view
+    }
+
+    fun clearAll(){
+        igenyList.clear()
+        igenyReveresed.clear()
+        recyclerView.adapter?.notifyDataSetChanged()
+        megjegyzes1_igeny.text = ""
+        megjegyzes2_igeny2.text = ""
+        unit_igeny2.text = ""
+        intrem_igeny2.text = ""
+        polcTextIgeny.setText("")
+        cikkItem_igeny.setText("")
+        mainActivity.loadMenuFragment(true)
     }
 
     fun setProgressBarOff(){
