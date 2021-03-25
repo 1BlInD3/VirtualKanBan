@@ -4,13 +4,13 @@ import android.content.Context
 import android.os.Bundle
 import android.text.InputFilter
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Activities.MainActivity
@@ -89,10 +89,18 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         mennyiseg_igeny2.setOnClickListener {
             igenyList.add(IgenyItem(cikkItem_igeny.text.toString().trim(), megjegyzes1_igeny.text.toString().trim(),
                 mennyiseg_igeny2.text.toString().trim()))
-           // igenyReveresed = igenyList.reverse()
-
-            recyclerView.adapter?.notifyDataSetChanged()
-            igenyReveresed.clear()
+            if(igenyList.size == 1){
+                igenyReveresed.clear()
+                igenyReveresed.add(IgenyItem(igenyList[0].cikkszam,igenyList[0].megnevezes,igenyList[0].mennyiseg))
+                recyclerView.adapter?.notifyDataSetChanged()
+            }
+            else if(igenyList.size > 1){
+                igenyReveresed.clear()
+                for(i in igenyList.size downTo 1){
+                    igenyReveresed.add(IgenyItem(igenyList[i-1].cikkszam,igenyList[i-1].megnevezes,igenyList[i-1].mennyiseg))
+                }
+                recyclerView.adapter?.notifyDataSetChanged()
+            }
             cikkItem_igeny.isEnabled = true
             cikkItem_igeny.selectAll()
             cikkItem_igeny.requestFocus()
