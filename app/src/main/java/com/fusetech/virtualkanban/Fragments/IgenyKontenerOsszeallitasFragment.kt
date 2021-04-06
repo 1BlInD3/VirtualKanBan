@@ -43,6 +43,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
     private var param2: String? = null
     interface SendBinCode{
         fun sendBinCode(code: String)
+        fun sendDetails(cikkszam: String, mennyiseg: Double, term_rakhely: String, unit: String)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,7 +92,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         intrem_igeny2.text = ""
         unit_igeny2.text = ""
         polcTextIgeny.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
-        unit_igeny2.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
+       // unit_igeny2.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
         setProgressBarOff()
         polcTextIgeny.setOnClickListener {
            sendBinCode.sendBinCode(polcTextIgeny.text.toString())
@@ -114,6 +115,8 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
                 }
                 recyclerView.adapter?.notifyDataSetChanged()
             }
+            sendBinCode.sendDetails(cikkItem_igeny.text.toString().trim(), mennyiseg_igeny2.text.toString().toDouble(),
+                polcTextIgeny.text.toString().trim(), unit_igeny2.text.toString())
             cikkItem_igeny.isEnabled = true
             cikkItem_igeny.selectAll()
             cikkItem_igeny.requestFocus()

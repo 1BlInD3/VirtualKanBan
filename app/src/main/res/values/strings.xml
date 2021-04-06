@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">VirtualKanBan</string>
+    <string name="app_name">KanBan</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="allData">Select * from [leltar].[dbo].Leltaradat</string>
     <string name="jog">SELECT LeltarKuty_Jog as Jog FROM [Fusetech].[dbo].Jogok WHERE Pecset = ?</string>
@@ -11,6 +11,8 @@
     <string name="is01">SELECT WarehouseID, BinNumber, InternalName FROM [ScaCompDB].[dbo].VF_SC360300_StockBinNo left outer join [ScaCompDB].[dbo].VF_SC230300_WarehouseInfo ON WarehouseID = Warehouse Where BinNumber = ? and WarehouseID = \'01\'</string>
     <string name="containerCheck">SELECT id,kontener,termeles_rakhely FROM [leltar].[dbo].kontener where atado = ? and statusz = ?</string>
     <string name="openContainer">INSERT INTO [leltar].[dbo].kontener (atado,statusz,kontener_tipus,termeles_raktar) Values(?,?,?,?)</string>
+    <string name="insertItem">INSERT INTO [leltar].[dbo].kontener_tetel
+        (kontener_id,cikkszam,statusz,igenyelt_mennyiseg,mozgatott_mennyiseg,termeles_raktar,termeles_rakhely,igenyelt_mennyiseg_egyseg) Values(?,?,?,?,?,?,?,?)</string>
     <string name="updateContainerValue">UPDATE [leltar].[dbo].kontener SET kontener = ? where atado = ? and statusz = ?</string>
     <string name="updateBin">UPDATE [leltar].[dbo].kontener SET termeles_rakhely = ? where atado = ? and statusz = ?</string>
     <string name="loadIgenyItemsToList">SELECT cikkszam, igenyelt_mennyiseg,cikk.[SC01002] as megjegyzes FROM [leltar].[dbo].[kontener_tetel] left outer join [ScaCompDB].[dbo].SC010300 as cikk on cikk.SC01001 = [leltar].[dbo].[kontener_tetel].cikkszam where kontener_id = ?</string>

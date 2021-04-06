@@ -201,6 +201,23 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             barcodeReader?.close()
         }
     }
+    private fun uploadItem(cikk: String, menny: Double, term: String, unit: String){
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try{
+            connection = DriverManager.getConnection(connectionString)
+            val statement = connection.prepareStatement(resources.getString(R.string.insertItem))
+            statement.setInt(1,255022)
+            statement.setString(2,cikk)
+            statement.setInt(3,0)
+            statement.setDouble(4,menny)
+            statement.setInt(5,0)
+            statement.setString(6,"01")
+            statement.setString(7,term)
+            statement.setString(8,unit)
+        }catch (e: Exception){
+            Log.d(TAG, "uploadItem: $e")
+        }
+    }
     private fun checkItem(code: String){
         CoroutineScope(Main).launch {
             igenyFragment.setProgressBarOn()
@@ -235,6 +252,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }
     }
+
     private fun check01(code: String){
         CoroutineScope(Main).launch {
             igenyFragment.setProgressBarOn()
@@ -607,6 +625,16 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
            check01(code)
        }
     }
+
+    override fun sendDetails(
+        cikkszam: String,
+        mennyiseg: Double,
+        term_rakhely: String,
+        unit: String
+    ) {
+
+    }
+
     fun isItem(code: String){
         CoroutineScope(IO).launch {
             checkItem(code)
