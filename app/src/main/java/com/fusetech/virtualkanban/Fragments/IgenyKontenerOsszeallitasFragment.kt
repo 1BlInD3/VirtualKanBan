@@ -7,10 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -61,6 +58,11 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
     ): View? {
         val view = inflater.inflate(R.layout.fragment_igeny_kontener_osszeallitas, container, false)
         mainActivity = activity as MainActivity
+        recyclerView = view.recycler_igeny
+        recyclerView.isEnabled = false
+        recyclerView.adapter = IgenyItemAdapter(igenyReveresed,this)
+        recyclerView.layoutManager = LinearLayoutManager(view.context)
+        recyclerView.setHasFixedSize(true)
         kontenerText = view.container_igeny
         progressBar = view.progressBar_igeny
         polcTextIgeny = view.bin_igeny
@@ -71,14 +73,18 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         cikkItem_igeny = view.cikk_igeny
         mennyiseg_igeny2 = view.mennyiseg_igeny
         kilepButton = view.kilep_igeny_button
-        kontenerText.text = param1
-        polcTextIgeny.setText(param2)
+        kontenerText.text = arguments?.getString("KONTENER")
+        polcTextIgeny.setText(arguments?.getString("TERMRAKH"))
         setBinFocusOn()
         if(!polcTextIgeny.text.isEmpty()){
             polcTextIgeny.isEnabled = false
             cikkItem_igeny.isEnabled = true
             cikkItem_igeny.requestFocus()
-            //getDataFromList()
+            try {
+                getDataFromList()
+            }catch (e: Exception){
+                Toast.makeText(view.context,"Nincs felvett tétel",Toast.LENGTH_SHORT).show()
+            }
         }
         megjegyzes1_igeny.text = ""
         megjegyzes2_igeny2.text = ""
@@ -87,13 +93,6 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         polcTextIgeny.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
         unit_igeny2.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
         setProgressBarOff()
-        recyclerView = view.recycler_igeny
-        recyclerView.isEnabled = false
-        recyclerView.adapter = IgenyItemAdapter(igenyReveresed,this)
-        recyclerView.layoutManager = LinearLayoutManager(view.context)
-        recyclerView.setHasFixedSize(true)
-
-
         polcTextIgeny.setOnClickListener {
            sendBinCode.sendBinCode(polcTextIgeny.text.toString())
         }
@@ -197,9 +196,20 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
     }
     fun getDataFromList(){
         val myList: ArrayList<IgenyItem> = arguments?.getSerializable("IGENY") as ArrayList<IgenyItem>
-        for(i in 0 until myList.size){
-            igenyReveresed.add(IgenyItem(myList[i].cikkszam,myList[i].megnevezes,myList[i].mennyiseg))
+        if(myList.size == 0){
+            return
         }
-        recyclerView.adapter?.notifyDataSetChanged()
+        else {
+            for (i in 0 until myList.size) {
+                igenyReveresed.add(
+                    IgenyItem(
+                        myList[i].cikkszam,
+                        myList[i].megnevezes,
+                        myList[i].mennyiseg
+                    )
+                )
+            }
+            recyclerView.adapter?.notifyDataSetChanged()
+        }
     }
 }

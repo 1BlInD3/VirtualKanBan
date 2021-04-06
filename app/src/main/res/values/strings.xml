@@ -10,7 +10,8 @@
     <string name="tranzitCheck">SELECT [StockItem],[BalanceQty],[QCCategory],SC01.Description1,SC01.Description2,SC01.InternRem1,SCU.Description FROM [ScaCompDB].[dbo].[VF_SC330300_StockBatch_Tranzit_Szabad] as SC33 left outer join [ScaCompDB].[dbo].[VF_SC010300_Stockfile] as SC01 on SC33.StockItem = SC01.StockCode left join [ScaCompDB].[dbo].[VF_SCUN0300_UnitCode] as SCU on SC01.UnitCodeStoc = SCU.UnitCode WHERE StockItem= ? AND BalanceQty &lt;&gt; 0 AND left(SC33.StockItem,1) &lt; &gt; \'N\'</string>
     <string name="is01">SELECT WarehouseID, BinNumber, InternalName FROM [ScaCompDB].[dbo].VF_SC360300_StockBinNo left outer join [ScaCompDB].[dbo].VF_SC230300_WarehouseInfo ON WarehouseID = Warehouse Where BinNumber = ? and WarehouseID = \'01\'</string>
     <string name="containerCheck">SELECT id,kontener,termeles_rakhely FROM [leltar].[dbo].kontener where atado = ? and statusz = ?</string>
-    <string name="openContainer">INSERT INTO [leltar].[dbo].kontener (atado,statusz,kontener_tipus) Values(?,?,?)</string>
+    <string name="openContainer">INSERT INTO [leltar].[dbo].kontener (atado,statusz,kontener_tipus,termeles_raktar) Values(?,?,?,?)</string>
     <string name="updateContainerValue">UPDATE [leltar].[dbo].kontener SET kontener = ? where atado = ? and statusz = ?</string>
+    <string name="updateBin">UPDATE [leltar].[dbo].kontener SET termeles_rakhely = ? where atado = ? and statusz = ?</string>
     <string name="loadIgenyItemsToList">SELECT cikkszam, igenyelt_mennyiseg,cikk.[SC01002] as megjegyzes FROM [leltar].[dbo].[kontener_tetel] left outer join [ScaCompDB].[dbo].SC010300 as cikk on cikk.SC01001 = [leltar].[dbo].[kontener_tetel].cikkszam where kontener_id = ?</string>
 </resources>

@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 dolgKod = barcodeData
                 loginFragment.StartSpinning()
                 CoroutineScope(IO).launch {
-                    checkRightSql()
+                    checkRightSql(dolgKod)
                 }
             }else if(cikklekerdezesFragment != null && cikklekerdezesFragment.isVisible) {
                 loadLoadFragment("Várom az eredményt")
@@ -252,6 +252,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     igenyFragment.setProgressBarOff()
                 }
             }else{
+                val statement1 = connection.prepareStatement(resources.getString(R.string.updateBin))
+                statement1.setString(1,code)
+                statement1.setString(2,dolgKod)
+                statement1.setString(3,"0")
+                statement1.executeUpdate()
                 CoroutineScope(Main).launch {
                     igenyFragment.setFocusToItem()
                     igenyFragment.setProgressBarOff()
@@ -287,12 +292,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
 
-    private fun checkRightSql(){
+    private fun checkRightSql(code: String){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try{
-            connection = DriverManager.getConnection(url)
+            connection = DriverManager.getConnection(connectionString)
             val statement : PreparedStatement = connection.prepareStatement(resources.getString(R.string.jog))
-            statement.setString(1,barcodeData)
+            statement.setString(1,code)
             val resultSet : ResultSet = statement.executeQuery()
             if (!resultSet.next()){
                 Log.d(TAG, "checkRightSql: hülyeséggel lép be")
@@ -407,6 +412,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 insertContainer.setString(1,id)
                 insertContainer.setInt(2,0)
                 insertContainer.setInt(3,1)
+                insertContainer.setString(4,"01")
                 insertContainer.executeUpdate()
                 Log.d(TAG, "containerManagement: Konténer létrehozva")
                 try{
@@ -441,14 +447,20 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 }
             }else{
                 Log.d(TAG, "containerManagement: van konténer")
+                val id = containerResult.getInt("id")
                 val kontener = containerResult.getString("kontener")
                 val rakhely:String? = containerResult.getString("termeles_rakhely")
                 Log.d(TAG, "containerManagement: $rakhely")
                 val igenyItemCheck = connection.prepareStatement(resources.getString(R.string.loadIgenyItemsToList))
-                igenyItemCheck.setInt(1,201134)
+                igenyItemCheck.setInt(1,id)//ez a számot át kell írni majd a "kontener"-re
                 val loadIgenyListResult = igenyItemCheck.executeQuery()
                 if(!loadIgenyListResult.next()){
                     Log.d(TAG, "containerManagement: Üres")
+                    val bundle1 = Bundle()
+                    bundle1.putString("KONTENER",kontener)
+                    bundle1.putString("TERMRAKH",rakhely)
+                    igenyFragment.arguments = bundle1
+                    supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyFragment).addToBackStack(null).commit()
                 }else{
                     val listIgenyItems: ArrayList<IgenyItem> = ArrayList()
                     do {
@@ -458,11 +470,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         listIgenyItems.add(IgenyItem(cikk, megjegyzes, darabszam))
                     }while(loadIgenyListResult.next())
                     val bundle = Bundle()
-                    bundle.putSerializable("IGENY",listIgenyItems)
+                        bundle.putSerializable("IGENY", listIgenyItems)
+                        bundle.putString("KONTENER", kontener)
+                        bundle.putString("TERMRAKH", rakhely)
                     igenyFragment.arguments = bundle
-                    CoroutineScope(Main).launch {
-                        loadIgenyOsszeallitasFragment(kontener,"NNG02")
-                    }
+                        supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyFragment).addToBackStack(null).commit()
                 }
             }
         }catch (e: Exception){

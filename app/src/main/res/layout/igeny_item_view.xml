@@ -72,6 +72,7 @@
             android:paddingStart="4dp"
             android:text="mért.egys"
             android:textColor="@android:color/black"
+            android:maxLength = "9"
             android:textSize="16sp" />
     </androidx.cardview.widget.CardView>
 
