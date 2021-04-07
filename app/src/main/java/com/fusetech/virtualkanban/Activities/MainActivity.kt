@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.fusetech.virtualkanban.DataItems.CikkItems
@@ -67,6 +68,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         supportActionBar?.hide()
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance("","")
         AidcManager.create(this) { aidcManager ->
@@ -202,6 +204,19 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             barcodeReader?.close()
         }
     }
+    private fun closeContainerSql(statusz: Int, datum: String){
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try {
+            connection = DriverManager.getConnection(connectionString)
+            val statement = connection.prepareStatement(resources.getString(R.string.closeContainer))
+            statement.setInt(1,statusz)
+            statement.setString(2,datum)
+            statement.setString(3,kontener)
+            statement.executeUpdate()
+        }catch (e: Exception){
+            Log.d(TAG, "closeContainerSql: $e")
+        }
+    }
     private fun uploadItem(cikk: String, menny: Double, term: String, unit: String){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try{
@@ -237,12 +252,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     igenyFragment.setFocusToItem()
                 }
             }else{
-                val megjegyzes_igeny: String = resultSet.getString("Description1")
-                val megjegyzes2_igeny: String = resultSet.getString("Description2")
-                val intrem_igeny: String = resultSet.getString("IntRem")
-                val unit_igeny: String = resultSet.getString("Unit")
+                val megjegyzesIgeny: String = resultSet.getString("Description1")
+                val megjegyzes2Igeny: String = resultSet.getString("Description2")
+                val intremIgeny: String = resultSet.getString("IntRem")
+                val unitIgeny: String = resultSet.getString("Unit")
                 CoroutineScope(Main).launch {
-                    igenyFragment.setInfo(megjegyzes_igeny,megjegyzes2_igeny,intrem_igeny,unit_igeny)
+                    igenyFragment.setInfo(megjegyzesIgeny,megjegyzes2Igeny,intremIgeny,unitIgeny)
                     igenyFragment.setProgressBarOff()
                     igenyFragment.setFocusToQuantity()
                 }
@@ -261,7 +276,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try{
-            connection = DriverManager.getConnection(url)
+            connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(resources.getString(R.string.is01))
             statement.setString(1,code)
             val resultSet = statement.executeQuery()
@@ -389,7 +404,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     polcLocation?.add(PolcLocation("H224","154"))
                     polcLocation?.add(PolcLocation("H225","155"))
                     polcLocation?.add(PolcLocation("H226","156"))
-                    var bundle = Bundle()
+                    val bundle = Bundle()
                     bundle.putSerializable("02RAKTAR",polcLocation)
                     polcLocationFragment.arguments = bundle
                     //supportFragmentManager.beginTransaction().replace(R.id.side_container,polcLocationFragment,"LOC").commit()
@@ -404,7 +419,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         val balanceQty: Int? = resultSet1.getInt("BalanceQty")
                         polcLocation?.add(PolcLocation(binNumber,balanceQty.toString()))
                     }while (resultSet1.next())
-                    var bundle: Bundle = Bundle()
+                    val bundle = Bundle()
                     bundle.putSerializable("02RAKTAR",polcLocation)
                     polcLocationFragment.arguments = bundle
                     supportFragmentManager.beginTransaction().replace(R.id.side_container,polcLocationFragment,"LOC").commit()
@@ -461,9 +476,13 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         updateContainer.setInt(3,0)
                         updateContainer.executeUpdate()
                         Log.d(TAG, "containerManagement: visszaírtam a konténer értéket")
+                        val bundle = Bundle()
+                        bundle.putString("KONTENER",nullasKontener)
+                        igenyFragment.arguments = bundle
+                        supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyFragment).addToBackStack(null).commit()
                     }
                 }catch (e: Exception){
-
+                    Log.d(TAG, "containerManagement: $e")
                 }
             }else{
                 Log.d(TAG, "containerManagement: van konténer")
@@ -511,51 +530,49 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             connection = DriverManager.getConnection(url)
-            if (connection != null){
-                val preparedStatement: PreparedStatement = connection.prepareStatement(resources.getString(R.string.isPolc))
-                preparedStatement.setString(1,code)
-                val resultSet: ResultSet = preparedStatement.executeQuery()
-                if(!resultSet.next()){
-                    val preparedStatement1: PreparedStatement = connection.prepareStatement(resources.getString(R.string.cikkSql))
-                    preparedStatement1.setString(1,code)
-                    val resultSet1: ResultSet = preparedStatement1.executeQuery()
-                    if(!resultSet1.next()){
-                        val loadFragment = LoadFragment.newInstance("Nincs ilyen kód a rendszerben")
-                        supportFragmentManager.beginTransaction().replace(R.id.cikk_container,loadFragment).commit()
-                    }else{
-                        val megjegyzes1: String? = resultSet1.getString("Description1")
-                        val megjegyzes2: String? = resultSet1.getString("Description2")
-                        val unit: String? = resultSet1.getString("Unit")
-                        val intrem: String? = resultSet1.getString("IntRem")
-                        cikkItems.clear()
-                        do{
-                            cikkItems.add(CikkItems(resultSet1.getDouble("BalanceQty"),resultSet1.getString("BinNumber"), resultSet1.getString("Warehouse"), resultSet1.getString("QcCategory")))
-                        }while (resultSet1.next())
-                        bundle.putSerializable("cikk",cikkItems)
-                        bundle.putString("megjegyzes", megjegyzes1)
-                        bundle.putString("megjegyzes2", megjegyzes2)
-                        bundle.putString("unit", unit)
-                        bundle.putString("intrem", intrem)
-                        cikkResultFragment.arguments = bundle
-                        supportFragmentManager.beginTransaction().replace(R.id.cikk_container,cikkResultFragment).commit()
-                    }
+            val preparedStatement: PreparedStatement = connection.prepareStatement(resources.getString(R.string.isPolc))
+            preparedStatement.setString(1,code)
+            val resultSet: ResultSet = preparedStatement.executeQuery()
+            if(!resultSet.next()){
+                val preparedStatement1: PreparedStatement = connection.prepareStatement(resources.getString(R.string.cikkSql))
+                preparedStatement1.setString(1,code)
+                val resultSet1: ResultSet = preparedStatement1.executeQuery()
+                if(!resultSet1.next()){
+                    val loadFragment = LoadFragment.newInstance("Nincs ilyen kód a rendszerben")
+                    supportFragmentManager.beginTransaction().replace(R.id.cikk_container,loadFragment).commit()
+                }else{
+                    val megjegyzes1: String? = resultSet1.getString("Description1")
+                    val megjegyzes2: String? = resultSet1.getString("Description2")
+                    val unit: String? = resultSet1.getString("Unit")
+                    val intrem: String? = resultSet1.getString("IntRem")
+                    cikkItems.clear()
+                    do{
+                        cikkItems.add(CikkItems(resultSet1.getDouble("BalanceQty"),resultSet1.getString("BinNumber"), resultSet1.getString("Warehouse"), resultSet1.getString("QcCategory")))
+                    }while (resultSet1.next())
+                    bundle.putSerializable("cikk",cikkItems)
+                    bundle.putString("megjegyzes", megjegyzes1)
+                    bundle.putString("megjegyzes2", megjegyzes2)
+                    bundle.putString("unit", unit)
+                    bundle.putString("intrem", intrem)
+                    cikkResultFragment.arguments = bundle
+                    supportFragmentManager.beginTransaction().replace(R.id.cikk_container,cikkResultFragment).commit()
                 }
-                else{
-                    val preparedStatement2: PreparedStatement = connection.prepareStatement(resources.getString(R.string.polcSql))
-                    preparedStatement2.setString(1,code)
-                    val resultSet2: ResultSet = preparedStatement2.executeQuery()
-                    if(!resultSet2.next()){
-                        val loadFragment = LoadFragment.newInstance("A polc üres")
-                        supportFragmentManager.beginTransaction().replace(R.id.cikk_container,loadFragment).commit()
-                    }else{
-                        do {
-                            polcItems.add(PolcItems(resultSet2.getDouble("BalanceQty"), resultSet2.getString("Unit"), resultSet2.getString("Description1"), resultSet2.getString("Description2"), resultSet2.getString("IntRem"), resultSet2.getString("QcCategory")))
+            }
+            else{
+                val preparedStatement2: PreparedStatement = connection.prepareStatement(resources.getString(R.string.polcSql))
+                preparedStatement2.setString(1,code)
+                val resultSet2: ResultSet = preparedStatement2.executeQuery()
+                if(!resultSet2.next()){
+                    val loadFragment = LoadFragment.newInstance("A polc üres")
+                    supportFragmentManager.beginTransaction().replace(R.id.cikk_container,loadFragment).commit()
+                }else{
+                    do {
+                        polcItems.add(PolcItems(resultSet2.getDouble("BalanceQty"), resultSet2.getString("Unit"), resultSet2.getString("Description1"), resultSet2.getString("Description2"), resultSet2.getString("IntRem"), resultSet2.getString("QcCategory")))
 
-                        }while (resultSet2.next())
-                        bundle.putSerializable("polc",polcItems)
-                        polcResultFragment.arguments = bundle
-                        supportFragmentManager.beginTransaction().replace(R.id.cikk_container,polcResultFragment).commit()
-                    }
+                    }while (resultSet2.next())
+                    bundle.putSerializable("polc",polcItems)
+                    polcResultFragment.arguments = bundle
+                    supportFragmentManager.beginTransaction().replace(R.id.cikk_container,polcResultFragment).commit()
                 }
             }
         }catch (e: Exception){
@@ -639,6 +656,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
 
+    override fun closeContainer(statusz: Int, datum: String) {
+        CoroutineScope(IO).launch {
+            closeContainerSql(statusz,datum)
+        }
+    }
+
     fun isItem(code: String){
         CoroutineScope(IO).launch {
             checkItem(code)
@@ -647,7 +670,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     fun checkList(code: String):Boolean{
         return polcLocationFragment.checkList(code)
     }
-    fun containerCheck(id: String){
+    private fun containerCheck(id: String){
         CoroutineScope(IO).launch {
             containerManagement(id)
         }

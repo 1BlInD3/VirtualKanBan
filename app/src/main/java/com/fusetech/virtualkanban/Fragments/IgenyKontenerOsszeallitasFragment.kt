@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.Fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.InputFilter
@@ -17,9 +18,10 @@ import com.fusetech.virtualkanban.DataItems.IgenyItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_osszeallitas.*
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_osszeallitas.view.*
-import org.w3c.dom.Text
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private lateinit var kontenerText: TextView
@@ -34,9 +36,11 @@ private lateinit var sendBinCode : IgenyKontenerOsszeallitasFragment.SendBinCode
 private lateinit var cikkItem_igeny: EditText
 private lateinit var mennyiseg_igeny2: EditText
 private lateinit var recyclerView: RecyclerView
+private lateinit var lezarButton: Button
 private var igenyList: ArrayList<IgenyItem> = ArrayList()
 private var igenyReveresed: ArrayList<IgenyItem> = ArrayList()
 private lateinit var kilepButton: Button
+private const val TAG = "IgenyKontenerOsszeallit"
 
 class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItemClick {
     private var param1: String? = null
@@ -44,6 +48,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
     interface SendBinCode{
         fun sendBinCode(code: String)
         fun sendDetails(cikkszam: String, mennyiseg: Double, term_rakhely: String, unit: String)
+        fun closeContainer(statusz: Int, datum: String)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +58,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,6 +70,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         recyclerView.adapter = IgenyItemAdapter(igenyReveresed,this)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
         recyclerView.setHasFixedSize(true)
+        lezarButton = view.lezar_igeny
         kontenerText = view.container_igeny
         progressBar = view.progressBar_igeny
         polcTextIgeny = view.bin_igeny
@@ -76,8 +83,10 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         kilepButton = view.kilep_igeny_button
         kontenerText.text = arguments?.getString("KONTENER")
         polcTextIgeny.setText(arguments?.getString("TERMRAKH"))
+        Log.d(TAG, "onCreateView: ${arguments?.getString("KONTENER")}")
+        Log.d(TAG, "onCreateView: ${arguments?.getString("TERMRAKH")}")
         setBinFocusOn()
-        if(!polcTextIgeny.text.isEmpty()){
+        if(polcTextIgeny.text.isNotEmpty()){
             polcTextIgeny.isEnabled = false
             cikkItem_igeny.isEnabled = true
             cikkItem_igeny.requestFocus()
@@ -131,10 +140,27 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         kilepButton.setOnClickListener {
             clearAll()
         }
+        lezarButton.setOnClickListener {
+           val currentDateAndTime =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+            Log.d(TAG, "onCreateView: $currentDateAndTime")
+            if(polcTextIgeny.text.isEmpty()&& igenyReveresed.size == 0) {
+                sendBinCode.closeContainer(5, currentDateAndTime) // ezt 1esre kéne hagyni
+                clearAll()
+                mainActivity.loadMenuFragment(true)
+                Log.d(TAG, "onCreateView: lezártam az üreset")
+            }
+            else{
+                sendBinCode.closeContainer(1, currentDateAndTime) // ezt 1esre kéne hagyni
+                clearAll()
+                mainActivity.loadMenuFragment(true)
+                Log.d(TAG, "onCreateView: lezártam amibe volt adat")
+            }
+        }
         return view
     }
 
-    fun clearAll(){
+    private fun clearAll(){
+        kontenerText.text = ""
         igenyList.clear()
         igenyReveresed.clear()
         recyclerView.adapter?.notifyDataSetChanged()
@@ -142,8 +168,8 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         megjegyzes2_igeny2.text = ""
         unit_igeny2.text = ""
         intrem_igeny2.text = ""
-        polcTextIgeny.setText("")
         cikkItem_igeny.setText("")
+        polcTextIgeny.setText("")
         mainActivity.loadMenuFragment(true)
     }
 
@@ -182,7 +208,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
     override fun onAttach(context: Context) {
         super.onAttach(context)
         sendBinCode = if(context is SendBinCode){
-            context as SendBinCode
+            context //as SendBinCode
         }else{
             throw RuntimeException(context.toString() + "must implement")
         }
@@ -212,7 +238,17 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
                     )
                 )
             }
+            for(i in igenyReveresed.size downTo 1){
+                igenyList.add(IgenyItem(igenyReveresed[i-1].cikkszam,
+                    igenyReveresed[i-1].megnevezes, igenyReveresed[i-1].mennyiseg))
+            }
             recyclerView.adapter?.notifyDataSetChanged()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        kontenerText.text = arguments?.getString("KONTENER")
+        polcTextIgeny.setText(arguments?.getString("TERMRAKH"))
     }
 }
