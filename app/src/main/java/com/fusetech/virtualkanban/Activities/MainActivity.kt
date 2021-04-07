@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private val cikklekerdezesFragment = CikklekerdezesFragment()
     val polcLocationFragment = PolcLocationFragment()
     private var polcLocation: ArrayList<PolcLocation>? = ArrayList()
+    private var kontener = ""
     private val url = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10"
     private val connectionString ="jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
 
@@ -206,7 +207,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         try{
             connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(resources.getString(R.string.insertItem))
-            statement.setInt(1,255022)
+            statement.setString(1,kontener)
             statement.setString(2,cikk)
             statement.setInt(3,0)
             statement.setDouble(4,menny)
@@ -214,6 +215,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             statement.setString(6,"01")
             statement.setString(7,term)
             statement.setString(8,unit)
+            statement.executeUpdate()
         }catch (e: Exception){
             Log.d(TAG, "uploadItem: $e")
         }
@@ -444,17 +446,17 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                             setAlert("Valami nagy hiba van")
                         }
                     }else{
-                        var kontener: String = getNameResult.getInt("id").toString()
+                        var nullasKontener: String = getNameResult.getInt("id").toString()
                         var zeroString = ""
-                        if(kontener.length<10){
-                            val charLength = 10 - kontener.length
+                        if(nullasKontener.length<10){
+                            val charLength = 10 - nullasKontener.length
                             for(i in 0 until charLength){
                                 zeroString += "0"
                             }
-                            kontener = """$zeroString$kontener"""
+                            nullasKontener = """$zeroString$nullasKontener"""
                         }
                         val updateContainer = connection.prepareStatement(resources.getString(R.string.updateContainerValue))
-                        updateContainer.setString(1,kontener)
+                        updateContainer.setString(1,nullasKontener)
                         updateContainer.setString(2,id)
                         updateContainer.setInt(3,0)
                         updateContainer.executeUpdate()
@@ -466,7 +468,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }else{
                 Log.d(TAG, "containerManagement: van konténer")
                 val id = containerResult.getInt("id")
-                val kontener = containerResult.getString("kontener")
+                kontener = containerResult.getString("kontener")
                 val rakhely:String? = containerResult.getString("termeles_rakhely")
                 Log.d(TAG, "containerManagement: $rakhely")
                 val igenyItemCheck = connection.prepareStatement(resources.getString(R.string.loadIgenyItemsToList))
@@ -488,7 +490,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         listIgenyItems.add(IgenyItem(cikk, megjegyzes, darabszam))
                     }while(loadIgenyListResult.next())
                     val bundle = Bundle()
-                        bundle.putSerializable("IGENY", listIgenyItems)
+                        bundle.putSerializable("IGENY",listIgenyItems)
                         bundle.putString("KONTENER", kontener)
                         bundle.putString("TERMRAKH", rakhely)
                     igenyFragment.arguments = bundle
@@ -632,7 +634,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         term_rakhely: String,
         unit: String
     ) {
-
+        CoroutineScope(IO).launch {
+            uploadItem(cikkszam,mennyiseg,term_rakhely,unit)
+        }
     }
 
     fun isItem(code: String){
