@@ -2,18 +2,13 @@ package com.fusetech.virtualkanban.Fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
 import android.text.InputFilter
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.FrameLayout
-import android.widget.ProgressBar
-import android.widget.TextView
-import androidx.core.view.isVisible
+import android.widget.*
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_polcra_helyezes.*
@@ -30,6 +25,7 @@ class PolcraHelyezesFragment : Fragment() {
     private lateinit var tranzitQtyText: TextView
     private lateinit var sideContainer: FrameLayout
     private lateinit var progressBar: ProgressBar
+    private lateinit var kilepButton: Button
     private val TAG = "PolcraHelyezesFragment"
     private var binSelected: Boolean = false
     private var binPos: Int = -1
@@ -47,6 +43,7 @@ class PolcraHelyezesFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_polcra_helyezes, container, false)
         mainActivity = activity as MainActivity
+        kilepButton = view.kilep_polc_btn
         megjegyzes1Text = view.description1Txt
         megjegyzes2Text = view.description2Txt
         intremText = view.intremTxt
@@ -74,8 +71,8 @@ class PolcraHelyezesFragment : Fragment() {
         mennyisegText.setOnClickListener {
             if(sideContainer.visibility == View.VISIBLE){
                 if(!mennyisegText.text.isBlank()) {
-                    var trQty = tranzitQtyText.text.toString().toInt()
-                    var qty = mennyisegText.text.toString().toInt()
+                    val trQty = tranzitQtyText.text.toString().toInt()
+                    val qty = mennyisegText.text.toString().toInt()
                     if (trQty < qty) {
                         mainActivity.setAlert("Túl sokat akarsz feltenni")
                         mennyisegText.selectAll()
@@ -88,8 +85,8 @@ class PolcraHelyezesFragment : Fragment() {
                 }
             }
             else{
-                var trQty = tranzitQtyText.text.toString().toInt()
-                var qty = mennyisegText.text.toString().toInt()
+                val trQty = tranzitQtyText.text.toString().toInt()
+                val qty = mennyisegText.text.toString().toInt()
                 if (trQty < qty) {
                     mainActivity.setAlert("Túl sokat akarsz feltenni")
                     mennyisegText.selectAll()
@@ -102,9 +99,9 @@ class PolcraHelyezesFragment : Fragment() {
         }
         polcText.setOnClickListener {
             if(!polcText.text.isBlank()){
-              var bin = polcText.text.toString()
-              var trQty = tranzitQtyText.text.toString().toInt()
-              var qty = mennyisegText.text.toString().toInt()
+              val bin = polcText.text.toString()
+              val trQty = tranzitQtyText.text.toString().toInt()
+              val qty = mennyisegText.text.toString().toInt()
                     if(mainActivity.checkList(bin)){
                         if(trQty>qty){
                         tranzitQtyTxt.setText((trQty-qty).toString())
@@ -138,6 +135,18 @@ class PolcraHelyezesFragment : Fragment() {
                     }
                 }
             }
+        kilepButton.setOnClickListener {
+            mainActivity.loadMenuFragment(true)
+            cikkText.setText("")
+            mennyisegText.setText("")
+            megjegyzes1Text?.text = ""
+            megjegyzes2Text?.text = ""
+            intremText?.text = ""
+            unitText?.text = ""
+            polcText.setText("")
+            tranzitQtyText.text = ""
+
+        }
         return view
     }
 
@@ -152,7 +161,7 @@ class PolcraHelyezesFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         sendCode = if(context is SendCode){
-            context as SendCode
+            context //as SendCode
         }else{
             throw RuntimeException(context.toString() + "must implement")
         }
@@ -191,9 +200,9 @@ class PolcraHelyezesFragment : Fragment() {
         binValue = value
     }
     fun polcCheck(){
-        var bin = polcText.text.toString()
-        var trQty = tranzitQtyText.text.toString().toInt()
-        var qty = mennyisegText.text.toString().toInt()
+        val bin = polcText.text.toString()
+        val trQty = tranzitQtyText.text.toString().toInt()
+        val qty = mennyisegText.text.toString().toInt()
         binValue = ""
         binPos = -1
         binSelected = false
