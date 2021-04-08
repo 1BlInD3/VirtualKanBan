@@ -45,13 +45,14 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     val polcLocationFragment = PolcLocationFragment()
     private var polcLocation: ArrayList<PolcLocation>? = ArrayList()
     private var kontener = ""
+    private lateinit var menuFragment : MenuFragment
     private val url = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10"
     private val connectionString ="jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance("","")
         AidcManager.create(this) { aidcManager ->
@@ -94,7 +95,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         return false
     }
     fun loadMenuFragment(hasRight : Boolean?){
-        val menuFragment : MenuFragment = MenuFragment.newInstance(hasRight)
+        menuFragment = MenuFragment.newInstance(hasRight)
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, menuFragment,"MENU").commit()
     }
     private fun loadCikklekerdezesFragment(){
@@ -111,6 +112,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     fun loadIgenyOsszeallitasFragment(kontener: String, polc: String?){
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance(kontener,polc)
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyFragment,"IGENY").addToBackStack(null).commit()
+    }
+    fun loadIgenyLezarasFragment(){
+        val igenyLezaras = IgenyKontenerLezarasFragment()
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyLezaras,"IGENYLEZAR").addToBackStack(null).commit()
     }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread{
@@ -145,8 +150,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         {
            when(keyCode){
                8 -> loadPolcHelyezesFragment()
-               9 -> containerCheck("1GU")
-               10 -> Log.d(TAG, "onKeyDown: $keyCode")
+               9 -> {
+                   menuFragment.setMenuProgressOn()
+                   containerCheck("1GU")
+                   menuFragment.setMenuProgressOff()
+               }
+               10 -> loadIgenyLezarasFragment()//Log.d(TAG, "onKeyDown: $keyCode")
                11 -> Log.d(TAG, "onKeyDown: $keyCode")
                12 -> Log.d(TAG, "onKeyDown: $keyCode")
                13 -> Log.d(TAG, "onKeyDown: $keyCode")
@@ -486,12 +495,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 }
             }else{
                 Log.d(TAG, "containerManagement: van konténer")
-                val id = containerResult.getInt("id")
+                val id1 = containerResult.getInt("id")
                 kontener = containerResult.getString("kontener")
                 val rakhely:String? = containerResult.getString("termeles_rakhely")
                 Log.d(TAG, "containerManagement: $rakhely")
                 val igenyItemCheck = connection.prepareStatement(resources.getString(R.string.loadIgenyItemsToList))
-                igenyItemCheck.setInt(1,id)//ez a számot át kell írni majd a "kontener"-re
+                igenyItemCheck.setInt(1,id1)//ez a számot át kell írni majd a "kontener"-re
                 val loadIgenyListResult = igenyItemCheck.executeQuery()
                 if(!loadIgenyListResult.next()){
                     Log.d(TAG, "containerManagement: Üres")

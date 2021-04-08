@@ -101,7 +101,6 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         intrem_igeny2.text = ""
         unit_igeny2.text = ""
         polcTextIgeny.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
-       // unit_igeny2.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
         setProgressBarOff()
         polcTextIgeny.setOnClickListener {
            sendBinCode.sendBinCode(polcTextIgeny.text.toString())
@@ -141,16 +140,19 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
             clearAll()
         }
         lezarButton.setOnClickListener {
+            setProgressBarOn()
            val currentDateAndTime =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
             Log.d(TAG, "onCreateView: $currentDateAndTime")
             if(polcTextIgeny.text.isEmpty()&& igenyReveresed.size == 0) {
-                sendBinCode.closeContainer(5, currentDateAndTime) // ezt 1esre kéne hagyni
+                sendBinCode.closeContainer(5, currentDateAndTime)
+                setProgressBarOff()
                 clearAll()
                 mainActivity.loadMenuFragment(true)
                 Log.d(TAG, "onCreateView: lezártam az üreset")
             }
             else{
                 sendBinCode.closeContainer(5, currentDateAndTime) // ezt 1esre kéne hagyni
+                setProgressBarOff()
                 clearAll()
                 mainActivity.loadMenuFragment(true)
                 Log.d(TAG, "onCreateView: lezártam amibe volt adat")

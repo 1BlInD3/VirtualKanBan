@@ -182,7 +182,7 @@
         android:layout_marginStart="6dp"
         android:layout_marginTop="14dp"
         android:textColor="@android:color/black"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/mennyiseg_igeny"
         app:layout_constraintTop_toBottomOf="@+id/intrem_igeny" />
