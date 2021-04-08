@@ -150,7 +150,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
                 Log.d(TAG, "onCreateView: lezártam az üreset")
             }
             else{
-                sendBinCode.closeContainer(1, currentDateAndTime) // ezt 1esre kéne hagyni
+                sendBinCode.closeContainer(5, currentDateAndTime) // ezt 1esre kéne hagyni
                 clearAll()
                 mainActivity.loadMenuFragment(true)
                 Log.d(TAG, "onCreateView: lezártam amibe volt adat")

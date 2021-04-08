@@ -29,23 +29,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     PolcraHelyezesFragment.SendCode,
     PolcLocationFragment.SetPolcLocation,
     IgenyKontenerOsszeallitasFragment.SendBinCode{
-// 1-es pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
-    //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
-    // át kell rakni máshova
-    //egyszerre csak egy ember dolgozhasson a cikk felrakásánál
-
-    //TELKES timi gépét a tarcsira
-
-
-    //2) megnézem, hogy van e konténer a "atado" és "statusz = 0"
-    // amikor megnyitom az igény konténer összeállítását, akkor [Leltar].[dbo]. kontener-be beírom a atado(1GU),statusz(0),kontener_tipus(1)
-    //kontener 0000+id (összvissz 10karakterig)
-    //aztán megjelenítem a "kontener"
-
-    //A polcál csak a 01-es raktárokat fogadja el (ilyen van a polcCheck stringbe) és ha jó akkor beírja a [Leltar].[dbo]. kontener-be termeles_raktar = 01, termeles_rakhely = polc
-    // jön a cikk (megnézzük h van e), beírjuk a 4dolgot mint mindig
-    // mennyiség elfogadása enterrel, kéri a következő cikket ÉS beleír a [Leltar].[dbo].kontener_tetel-be (fénykép)
-    // a [Leltar].[dbo]. kontener beíródik a statusz = 1, igenyelve = datetime
 
     private var manager : AidcManager? = null
     private var barcodeReader : BarcodeReader? = null
@@ -213,6 +196,20 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             statement.setString(2,datum)
             statement.setString(3,kontener)
             statement.executeUpdate()
+            Log.d(TAG, "closeContainerSql: sikeres lezárás")
+            CoroutineScope(Main).launch {
+                setAlert("Sikeres konténer lezárás!")
+            }
+            val statement1 = connection.prepareStatement(resources.getString(R.string.updateItemStatus))
+            statement1.setString(1,kontener)
+            try{
+                statement1.executeUpdate()
+            }catch (e: Exception){
+                Log.d(TAG, "closeContainerSql: $e")
+                CoroutineScope(Main).launch {
+                    setAlert("A cikk státuszok felülírásánál hiba lépett fel, gyere az IT-re")
+                }
+            }
         }catch (e: Exception){
             Log.d(TAG, "closeContainerSql: $e")
         }
@@ -224,7 +221,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             val statement = connection.prepareStatement(resources.getString(R.string.insertItem))
             statement.setString(1,kontener)
             statement.setString(2,cikk)
-            statement.setInt(3,0)
+            statement.setInt(3,0) //ez a státusz
             statement.setDouble(4,menny)
             statement.setInt(5,0)
             statement.setString(6,"01")
@@ -233,6 +230,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             statement.executeUpdate()
         }catch (e: Exception){
             Log.d(TAG, "uploadItem: $e")
+            CoroutineScope(Main).launch {
+                setAlert("Hiba történt, lépj vissza a 'Kilépés' gombbal a menübe, majd vissza, hogy megnézd mi lett utoljára felvéve")
+            }
         }
     }
     private fun checkItem(code: String){

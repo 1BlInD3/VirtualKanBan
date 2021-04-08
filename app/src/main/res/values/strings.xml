@@ -15,6 +15,7 @@
         (kontener_id,cikkszam,statusz,igenyelt_mennyiseg,mozgatott_mennyiseg,termeles_raktar,termeles_rakhely,igenyelt_mennyiseg_egyseg) Values(?,?,?,?,?,?,?,?)</string>
     <string name="updateContainerValue">UPDATE [leltar].[dbo].kontener SET kontener = ? where atado = ? and statusz = ?</string>
     <string name="updateBin">UPDATE [leltar].[dbo].kontener SET termeles_rakhely = ? where atado = ? and statusz = ?</string>
+    <string name="updateItemStatus">UPDATE [leltar].[dbo].[kontener_tetel] SET statusz = 1 where kontener_id = ?</string>
     <string name="closeContainer">UPDATE [leltar].[dbo].kontener SET statusz = ?, igenyelve = ? where id = ?</string>
     <string name="loadIgenyItemsToList">SELECT cikkszam, igenyelt_mennyiseg,cikk.[SC01002] as megjegyzes FROM [leltar].[dbo].[kontener_tetel] left outer join [ScaCompDB].[dbo].SC010300 as cikk on cikk.SC01001 = [leltar].[dbo].[kontener_tetel].cikkszam where kontener_id = ? order by id desc</string>
 </resources>
