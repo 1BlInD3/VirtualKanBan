@@ -117,6 +117,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         val igenyLezaras = IgenyKontenerLezarasFragment()
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyLezaras,"IGENYLEZAR").addToBackStack(null).commit()
     }
+    fun loadIgenyKiszedesFragment(){
+        val igenyKiszedes = IgenyKontenerKiszedesFragment()
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKiszedes,"IGENYKISZEDES").addToBackStack(null).commit()
+    }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread{
             barcodeData = p0?.barcodeData!!
@@ -156,7 +160,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                    menuFragment.setMenuProgressOff()
                }
                10 -> loadIgenyLezarasFragment()//Log.d(TAG, "onKeyDown: $keyCode")
-               11 -> Log.d(TAG, "onKeyDown: $keyCode")
+               11 -> loadIgenyKiszedesFragment()//Log.d(TAG, "onKeyDown: $keyCode")
                12 -> Log.d(TAG, "onKeyDown: $keyCode")
                13 -> Log.d(TAG, "onKeyDown: $keyCode")
                14 -> Log.d(TAG, "onKeyDown: $keyCode")

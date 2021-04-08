@@ -11,18 +11,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Adapters.KontenerAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerItem
 import com.fusetech.virtualkanban.R
-import kotlinx.android.synthetic.main.fragment_igeny_kontener_lezaras.view.*
+import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes.view.*
 import kotlinx.android.synthetic.main.konteneres_view.view.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+private lateinit var childFrame: FrameLayout
+private lateinit var childRecycler: RecyclerView
+private var kontenerList: ArrayList<KontenerItem> = ArrayList()
 
-class IgenyKontenerLezarasFragment : Fragment() {
-    private lateinit var dataFrame: FrameLayout
-    private lateinit var childRecycler: RecyclerView
-    private var kontenerList: ArrayList<KontenerItem> = ArrayList()
+class IgenyKontenerKiszedesFragment : Fragment() {
+
     private var param1: String? = null
     private var param2: String? = null
 
@@ -38,37 +37,29 @@ class IgenyKontenerLezarasFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_igeny_kontener_lezaras, container, false)
-        dataFrame = view.data_frame1
+       val view = inflater.inflate(R.layout.fragment_igeny_kontener_kiszedes, container, false)
+        childFrame = view.data_frame2
         val child = layoutInflater.inflate(R.layout.konteneres_view,null)
-        dataFrame.addView(child)
+        childFrame.addView(child)
+
+        kontenerList.clear()
         childRecycler = child.child_recycler
         childRecycler.adapter = KontenerAdapter(kontenerList)
         childRecycler.layoutManager = LinearLayoutManager(child.context)
         childRecycler.setHasFixedSize(true)
 
         kontenerList.add(KontenerItem("255653","NNG02","2021.04.01 14:52:02",5))
-        kontenerList.add(KontenerItem("255653","NNG02","2021.04.01 14:52:02",5))
-        kontenerList.add(KontenerItem("255653","NNG02","2021.04.01 14:52:02",5))
 
         childRecycler.adapter?.notifyDataSetChanged()
 
-        return view
+
+       return view
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment IgenyKontenerLezarasFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            IgenyKontenerLezarasFragment().apply {
+            IgenyKontenerKiszedesFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
