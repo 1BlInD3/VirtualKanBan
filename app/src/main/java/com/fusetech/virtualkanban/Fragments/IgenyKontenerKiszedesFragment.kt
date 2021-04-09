@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Adapters.KontenerAdapter
@@ -20,7 +21,7 @@ private lateinit var childFrame: FrameLayout
 private lateinit var childRecycler: RecyclerView
 private var kontenerList: ArrayList<KontenerItem> = ArrayList()
 
-class IgenyKontenerKiszedesFragment : Fragment() {
+class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClickListener {
 
     private var param1: String? = null
     private var param2: String? = null
@@ -44,7 +45,7 @@ class IgenyKontenerKiszedesFragment : Fragment() {
 
         kontenerList.clear()
         childRecycler = child.child_recycler
-        childRecycler.adapter = KontenerAdapter(kontenerList)
+        childRecycler.adapter = KontenerAdapter(kontenerList,this)
         childRecycler.layoutManager = LinearLayoutManager(child.context)
         childRecycler.setHasFixedSize(true)
 
@@ -65,5 +66,9 @@ class IgenyKontenerKiszedesFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onKontenerClick(position: Int) {
+        Toast.makeText(view?.context, "itt mas jelenik meg", Toast.LENGTH_SHORT).show()
     }
 }

@@ -3,18 +3,28 @@ package com.fusetech.virtualkanban.Adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.DataItems.KontenerItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.konteneres_item.view.*
 
-class KontenerAdapter(var kontenerItem: ArrayList<KontenerItem>) : RecyclerView.Adapter<KontenerAdapter.KontenerHolder>() {
-    class KontenerHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class KontenerAdapter(var kontenerItem: ArrayList<KontenerItem>, val listener: onKontenerClickListener) : RecyclerView.Adapter<KontenerAdapter.KontenerHolder>(){
+    inner class KontenerHolder(itemView: View) : RecyclerView.ViewHolder(itemView),View.OnClickListener {
         val kontenerText = itemView.child_kontener_text
         val polcText = itemView.child_polc_text
         val idoText = itemView.child_ido_text
         val tetelText = itemView.child_tetelszam_text
+
+        init{
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            val position: Int = adapterPosition
+            if(position != RecyclerView.NO_POSITION) {
+                listener.onKontenerClick(position)
+            }
+        }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KontenerHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.konteneres_item,parent,false)
@@ -31,4 +41,7 @@ class KontenerAdapter(var kontenerItem: ArrayList<KontenerItem>) : RecyclerView.
 
     override fun getItemCount() = kontenerItem.size
 
+    interface onKontenerClickListener{
+        fun onKontenerClick(position: Int)
+    }
 }

@@ -7,10 +7,7 @@ import android.view.KeyEvent
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.fusetech.virtualkanban.DataItems.CikkItems
-import com.fusetech.virtualkanban.DataItems.IgenyItem
-import com.fusetech.virtualkanban.DataItems.PolcItems
-import com.fusetech.virtualkanban.DataItems.PolcLocation
+import com.fusetech.virtualkanban.DataItems.*
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.R
 import com.honeywell.aidc.*
@@ -29,7 +26,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     PolcraHelyezesFragment.SendCode,
     PolcLocationFragment.SetPolcLocation,
     IgenyKontenerOsszeallitasFragment.SendBinCode{
-
+    /*
+    * 3as opció
+    * csak azok a konténerek legyenek megjelenítve, amelyek KanBan státusza 1 ÉS A státusza 0 (írja ki amit ki kell írni) illetve a tételek státusza is 0
+    * a lezárás a másik fülön átírja a tételeknél a státuszt 1-re, a konténereknél a státusz is 1 lesz és beírja az igénylés dátumát
+    * */
     private var manager : AidcManager? = null
     private var barcodeReader : BarcodeReader? = null
     private lateinit var barcodeData : String
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private var polcItems: ArrayList<PolcItems> = ArrayList()
     private val polcHelyezesFragment = PolcraHelyezesFragment()
     private lateinit var igenyFragment: IgenyKontenerOsszeallitasFragment
+    private lateinit var igenyLezarasFragment: IgenyKontenerLezarasFragment
     private val TAG = "MainActivity"
     private val cikklekerdezesFragment = CikklekerdezesFragment()
     val polcLocationFragment = PolcLocationFragment()
@@ -55,6 +57,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance("","")
+        igenyLezarasFragment = IgenyKontenerLezarasFragment()
         AidcManager.create(this) { aidcManager ->
             manager = aidcManager
             try {
@@ -159,7 +162,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                    containerCheck("1GU")
                    menuFragment.setMenuProgressOff()
                }
-               10 -> loadIgenyLezarasFragment()//Log.d(TAG, "onKeyDown: $keyCode")
+               10 -> {
+                   menuFragment.setMenuProgressOn()
+                   igenyKontenerCheck()
+                   menuFragment.setMenuProgressOff()
+               }
                11 -> loadIgenyKiszedesFragment()//Log.d(TAG, "onKeyDown: $keyCode")
                12 -> Log.d(TAG, "onKeyDown: $keyCode")
                13 -> Log.d(TAG, "onKeyDown: $keyCode")
@@ -198,6 +205,32 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         if(barcodeReader != null) {
             barcodeReader?.removeBarcodeListener(this)
             barcodeReader?.close()
+        }
+    }
+    private fun loadIgenyLezaras(){
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try {
+            connection = DriverManager.getConnection(url)
+            val statement = connection.prepareStatement(resources.getString(R.string.igenyKontenerLezarasKontenerBeolvas))
+            val resultSet = statement.executeQuery()
+            if(!resultSet.next()){
+                Log.d(TAG, "loadIgenyLezaras: Nincs ilyen konténer")
+            }else{
+                val kontenerList: ArrayList<KontenerItem> = ArrayList()
+                do {
+                    val kontener: String? = resultSet.getString("kontener")
+                    val polc: String? = resultSet.getString("polc")
+                    val datum: String? = resultSet.getString("igenyelve")
+                    val tetelszam = resultSet.getInt("tetelszam")
+                    kontenerList.add(KontenerItem(kontener,polc,datum,tetelszam))
+                }while(resultSet.next())
+                val bundle = Bundle()
+                bundle.putSerializable("KONTENERLISTA",kontenerList)
+                igenyLezarasFragment.arguments = bundle
+                supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyLezarasFragment,"IGENYLEZARAS").addToBackStack(null).commit()
+            }
+        }catch (e: Exception){
+            Log.d(TAG, "loadIgenyLezaras: $e")
         }
     }
     private fun closeContainerSql(statusz: Int, datum: String){
@@ -686,6 +719,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private fun containerCheck(id: String){
         CoroutineScope(IO).launch {
             containerManagement(id)
+        }
+    }
+    private fun igenyKontenerCheck(){
+        CoroutineScope(IO).launch {
+            loadIgenyLezaras()
         }
     }
 }
