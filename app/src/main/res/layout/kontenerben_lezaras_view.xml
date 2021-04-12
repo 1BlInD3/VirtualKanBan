@@ -34,7 +34,7 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView7"
-                    android:layout_width="120dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="1dp"
                     android:layout_marginTop="1dp"
@@ -46,21 +46,20 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        android:id="@+id/child_kontener"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:maxLines="1"
                         android:paddingStart="10dp"
                         android:paddingEnd="5dp"
-                        android:text="Konténer"
+                        android:text="Cikkszám"
                         android:textAlignment="textStart"
                         android:textColor="@android:color/white"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView8"
-                    android:layout_width="80dp"
+                    android:layout_width="120dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="2dp"
                     app:cardBackgroundColor="@color/pocakszin4"
@@ -69,21 +68,21 @@
                     app:layout_constraintTop_toTopOf="@+id/cardView7">
 
                     <TextView
-                        android:id="@+id/child_polc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
                         android:paddingStart="10dp"
                         android:paddingEnd="5dp"
-                        android:text="Polc"
+                        android:text="Megjegyzés1"
                         android:textAlignment="textStart"
                         android:textColor="@android:color/white"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
+
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView9"
-                    android:layout_width="180dp"
+                    android:layout_width="120dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="2dp"
                     app:cardBackgroundColor="@color/pocakszin4"
@@ -92,21 +91,21 @@
                     app:layout_constraintTop_toTopOf="@+id/cardView8">
 
                     <TextView
-                        android:id="@+id/child_ido"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
                         android:paddingStart="10dp"
                         android:paddingEnd="5dp"
-                        android:text="Igénylés ideje"
+                        android:text="Megjegyzés2"
                         android:textAlignment="textStart"
                         android:textColor="@android:color/white"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
+
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView10"
-                    android:layout_width="120dp"
+                    android:layout_width="80dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="2dp"
                     app:cardBackgroundColor="@color/pocakszin4"
@@ -115,17 +114,59 @@
                     app:layout_constraintTop_toTopOf="@+id/cardView9">
 
                     <TextView
-                        android:id="@+id/child_tetelszam"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:maxLines="1"
                         android:paddingStart="10dp"
                         android:paddingEnd="5dp"
-                        android:text="Tételszám"
+                        android:text="IntRem"
                         android:textAlignment="textStart"
                         android:textColor="@android:color/white"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
 
+
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView12"
+                    android:layout_width="80dp"
+                    android:layout_height="0dp"
+
+                    app:layout_constraintStart_toEndOf="@+id/cardview11"
+                    app:layout_constraintTop_toTopOf="@+id/cardView7"
+                    app:cardBackgroundColor="@color/pocakszin4"
+                    app:cardCornerRadius="1dp">
+
+                    <TextView
+                        android:id="@+id/textView12"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:maxLines="1"
+                        android:layout_marginStart="1dp"
+                        android:paddingStart="10dp"
+                        android:text="Mozgatott"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"/>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardview11"
+                    android:layout_width="80dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="1dp"
+                    app:layout_constraintStart_toEndOf="@+id/cardView10"
+                    app:layout_constraintTop_toTopOf="@+id/cardView7"
+                    app:cardBackgroundColor="@color/pocakszin4"
+                    app:cardCornerRadius="1dp">
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Igényelt"
+                        android:paddingStart="10dp"
+                        android:maxLines="1"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"/>
                 </androidx.cardview.widget.CardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -136,11 +177,13 @@
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
+                app:layout_constraintVertical_bias="0.0">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/child_recycler"
+                    android:id="@+id/child_recycler2"
                     android:layout_width="wrap_content"
                     android:layout_height="250dp"
                     android:paddingBottom="3dp"
@@ -153,18 +196,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </HorizontalScrollView>
-
-    <Button
-        android:id="@+id/exit3Button"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/buttn"
-        android:backgroundTint="@android:color/holo_red_dark"
-        android:text="Kilépés"
-        android:textColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

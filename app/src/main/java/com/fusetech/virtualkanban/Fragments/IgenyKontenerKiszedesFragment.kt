@@ -49,7 +49,7 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
         childRecycler.layoutManager = LinearLayoutManager(child.context)
         childRecycler.setHasFixedSize(true)
 
-        kontenerList.add(KontenerItem("255653","NNG02","2021.04.01 14:52:02",5))
+        kontenerList.add(KontenerItem("255653","NNG02","2021.04.01 14:52:02",5,"546"))
 
         childRecycler.adapter?.notifyDataSetChanged()
 

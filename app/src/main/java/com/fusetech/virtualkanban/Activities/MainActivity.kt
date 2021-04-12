@@ -25,7 +25,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     CikklekerdezesFragment.SetItemOrBinManually,
     PolcraHelyezesFragment.SendCode,
     PolcLocationFragment.SetPolcLocation,
-    IgenyKontenerOsszeallitasFragment.SendBinCode{
+    IgenyKontenerOsszeallitasFragment.SendBinCode,
+    IgenyKontenerLezarasFragment.IgenyKontnerLezaras{
     /*
     * 3as opció
     * csak azok a konténerek legyenek megjelenítve, amelyek KanBan státusza 1 ÉS A státusza 0 (írja ki amit ki kell írni) illetve a tételek státusza is 0
@@ -124,6 +125,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         val igenyKiszedes = IgenyKontenerKiszedesFragment()
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKiszedes,"IGENYKISZEDES").addToBackStack(null).commit()
     }
+    fun loadIgenyLezarasCikkLezaras(){
+        val cikkLezaras = IgenyKontenerLezarasCikkLezaras()
+        supportFragmentManager.beginTransaction().replace(R.id.data_frame1,cikkLezaras,"CIKKLEZARAS").addToBackStack(null).commit()
+    }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread{
             barcodeData = p0?.barcodeData!!
@@ -207,6 +212,37 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             barcodeReader?.close()
         }
     }
+    private fun loadKontenerCikkek(kontener_id: String){
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try {
+            connection = DriverManager.getConnection(url)
+            val statement = connection.prepareStatement(resources.getString(R.string.igenyKontenerLezarasCikkLezaras))
+            statement.setInt(1,kontener_id.toInt())
+            val resultSet = statement.executeQuery()
+            if(!resultSet.next()){
+                Log.d(TAG, "loadKontenerCikkek: HIBA VAN")
+            }else{
+                val kontenerCikkLezar: ArrayList<KontenerbenLezarasItem> = ArrayList()
+                do {
+                    val cikk = resultSet.getString("cikkszam")
+                    val megj1 = resultSet.getString("Description1")
+                    val megj2 = resultSet.getString("Description2")
+                    val intrem = resultSet.getString("InternRem1")
+                    val igeny = resultSet.getDouble("igenyelt_mennyiseg")
+                    val mozgatott = resultSet.getDouble("mozgatott_mennyiseg")
+                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott))
+                }while (resultSet.next())
+                val bundle = Bundle()
+                bundle.putSerializable("CIKKLEZAR",kontenerCikkLezar)
+                bundle.putString("KONTENER_ID",kontener_id)
+                val cikkLezaras = IgenyKontenerLezarasCikkLezaras()
+                cikkLezaras.arguments = bundle
+                supportFragmentManager.beginTransaction().replace(R.id.data_frame1,cikkLezaras,"CIKKLEZARASFRAGMENT").addToBackStack(null).commit()
+            }
+        }catch (e: Exception){
+            Log.d(TAG, "loadKontenerCikkek: $e")
+        }
+    }
     private fun loadIgenyLezaras(){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -222,7 +258,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     val polc: String? = resultSet.getString("polc")
                     val datum: String? = resultSet.getString("igenyelve")
                     val tetelszam = resultSet.getInt("tetelszam")
-                    kontenerList.add(KontenerItem(kontener,polc,datum,tetelszam))
+                    val id: String? = resultSet.getString("id")
+                    kontenerList.add(KontenerItem(kontener,polc,datum,tetelszam,id))
                 }while(resultSet.next())
                 val bundle = Bundle()
                 bundle.putSerializable("KONTENERLISTA",kontenerList)
@@ -231,6 +268,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }catch (e: Exception){
             Log.d(TAG, "loadIgenyLezaras: $e")
+            CoroutineScope(Main).launch {
+                setAlert("Hálózati probléma! Próbáld újra")
+            }
         }
     }
     private fun closeContainerSql(statusz: Int, datum: String){
@@ -724,6 +764,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private fun igenyKontenerCheck(){
         CoroutineScope(IO).launch {
             loadIgenyLezaras()
+        }
+    }
+
+    override fun sendContainer(container: String) {
+        CoroutineScope(IO).launch {
+            loadKontenerCikkek(container)
         }
     }
 }
