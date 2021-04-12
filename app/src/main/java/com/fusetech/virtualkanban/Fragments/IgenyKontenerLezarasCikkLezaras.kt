@@ -38,6 +38,7 @@ class IgenyKontenerLezarasCikkLezaras : Fragment() {
         recycler.adapter = KontenerbenLezarasAdapter(kontItem)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
+        recycler.requestFocus()
         kontItem.clear()
         loadData()
 

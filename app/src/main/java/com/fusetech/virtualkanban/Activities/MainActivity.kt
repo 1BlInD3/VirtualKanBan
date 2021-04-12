@@ -221,6 +221,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             val resultSet = statement.executeQuery()
             if(!resultSet.next()){
                 Log.d(TAG, "loadKontenerCikkek: HIBA VAN")
+                CoroutineScope(Main).launch {
+                    setAlert("A konténerben nincs 0 státuszú cikk")
+                }
             }else{
                 val kontenerCikkLezar: ArrayList<KontenerbenLezarasItem> = ArrayList()
                 do {

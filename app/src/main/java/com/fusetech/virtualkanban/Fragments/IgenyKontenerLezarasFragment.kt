@@ -75,7 +75,6 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
     }
 
     override fun onKontenerClick(position: Int) {
-        Toast.makeText(view?.context, "$position", Toast.LENGTH_SHORT).show()
         Log.d(TAG, "onKontenerClick: ${kontenerList[position].kontner_id}")
         igenyKontener.sendContainer(kontenerList[position].kontner_id.toString())
     }
