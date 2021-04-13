@@ -10,7 +10,6 @@
         android:id="@+id/horizontalScrollView3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="150dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -126,26 +125,27 @@
 
 
                 </androidx.cardview.widget.CardView>
+
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView12"
                     android:layout_width="80dp"
                     android:layout_height="0dp"
-
-                    app:layout_constraintStart_toEndOf="@+id/cardview11"
-                    app:layout_constraintTop_toTopOf="@+id/cardView7"
+                    android:layout_marginStart="1dp"
                     app:cardBackgroundColor="@color/pocakszin4"
-                    app:cardCornerRadius="1dp">
+                    app:cardCornerRadius="1dp"
+                    app:layout_constraintStart_toEndOf="@+id/cardview11"
+                    app:layout_constraintTop_toTopOf="@+id/cardView7">
 
                     <TextView
                         android:id="@+id/textView12"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:maxLines="1"
                         android:layout_marginStart="1dp"
+                        android:maxLines="1"
                         android:paddingStart="10dp"
-                        android:text="Mozgatott"
+                        android:text="Kiadva"
                         android:textColor="@android:color/white"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
@@ -153,20 +153,20 @@
                     android:layout_width="80dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="1dp"
-                    app:layout_constraintStart_toEndOf="@+id/cardView10"
-                    app:layout_constraintTop_toTopOf="@+id/cardView7"
                     app:cardBackgroundColor="@color/pocakszin4"
-                    app:cardCornerRadius="1dp">
+                    app:cardCornerRadius="1dp"
+                    app:layout_constraintStart_toEndOf="@+id/cardView10"
+                    app:layout_constraintTop_toTopOf="@+id/cardView7">
 
                     <TextView
                         android:id="@+id/textView3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Igényelt"
-                        android:paddingStart="10dp"
                         android:maxLines="1"
+                        android:paddingStart="10dp"
+                        android:text="Igényelt"
                         android:textColor="@android:color/white"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
                 </androidx.cardview.widget.CardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -185,8 +185,9 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/child_recycler2"
                     android:layout_width="wrap_content"
-                    android:layout_height="250dp"
+                    android:layout_height="0dp"
                     android:paddingBottom="3dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/constant"
                     app:layout_constraintTop_toTopOf="@+id/constant" />
 

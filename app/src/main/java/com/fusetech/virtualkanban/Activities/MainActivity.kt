@@ -742,11 +742,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         polcLocationFragment.setRecyclerOn()
     }
 
-    fun setRecData(position: Int, value: Int){
+    fun setRecData(position: Int, value: Double){
         polcLocationFragment.getDataFromList(position,value)
     }
 
-    fun checkIfContainsBin(falseBin: String, value: Int){
+    fun checkIfContainsBin(falseBin: String, value: Double){
             polcLocationFragment.checkBinIsInTheList(falseBin, value)
     }
 

@@ -3,17 +3,18 @@ package com.fusetech.virtualkanban.Fragments
 import android.content.Context
 import android.os.Bundle
 import android.text.InputFilter
+import android.text.Spanned
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.fragment.app.Fragment
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_polcra_helyezes.*
 import kotlinx.android.synthetic.main.fragment_polcra_helyezes.view.*
-import java.lang.Exception
+import java.util.regex.Pattern
 
 
 class PolcraHelyezesFragment : Fragment() {
@@ -56,6 +57,7 @@ class PolcraHelyezesFragment : Fragment() {
         setProgressBarOff()
         tranzitQtyText.isFocusable = false
         mennyisegText = view.mennyisegTxt
+        mennyisegText.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(9, 2))
         cikkText = view.cikkEditTxt
         cikkText.requestFocus()
         sideContainer.visibility = View.GONE
@@ -71,8 +73,8 @@ class PolcraHelyezesFragment : Fragment() {
         mennyisegText.setOnClickListener {
             if(sideContainer.visibility == View.VISIBLE){
                 if(!mennyisegText.text.isBlank()) {
-                    val trQty = tranzitQtyText.text.toString().toInt()
-                    val qty = mennyisegText.text.toString().toInt()
+                    val trQty = tranzitQtyText.text.toString().toDouble()
+                    val qty = mennyisegText.text.toString().toDouble()
                     if (trQty < qty) {
                         mainActivity.setAlert("Túl sokat akarsz feltenni")
                         mennyisegText.selectAll()
@@ -100,8 +102,8 @@ class PolcraHelyezesFragment : Fragment() {
         polcText.setOnClickListener {
             if(!polcText.text.isBlank()){
               val bin = polcText.text.toString()
-              val trQty = tranzitQtyText.text.toString().toInt()
-              val qty = mennyisegText.text.toString().toInt()
+              val trQty = tranzitQtyText.text.toString().toDouble()
+              val qty = mennyisegText.text.toString().toDouble()
                     if(mainActivity.checkList(bin)){
                         if(trQty>qty){
                         tranzitQtyTxt.setText((trQty-qty).toString())
@@ -201,8 +203,8 @@ class PolcraHelyezesFragment : Fragment() {
     }
     fun polcCheck(){
         val bin = polcText.text.toString()
-        val trQty = tranzitQtyText.text.toString().toInt()
-        val qty = mennyisegText.text.toString().toInt()
+        val trQty = tranzitQtyText.text.toString().toDouble()
+        val qty = mennyisegText.text.toString().toDouble()
         binValue = ""
         binPos = -1
         binSelected = false
@@ -241,6 +243,26 @@ class PolcraHelyezesFragment : Fragment() {
             cikkText.setText("")
             cikkText.requestFocus()
             setContainerOff()
+        }
+    }
+    class DecimalDigitsInputFilter(digitsBeforeZero: Int, digitsAfterZero: Int) :
+        InputFilter {
+        var mPattern: Pattern
+        override fun filter(
+            source: CharSequence,
+            start: Int,
+            end: Int,
+            dest: Spanned,
+            dstart: Int,
+            dend: Int
+        ): CharSequence? {
+            val matcher = mPattern.matcher(dest)
+            return if (!matcher.matches()) "" else null
+        }
+
+        init {
+            mPattern =
+                Pattern.compile("[0-9]{0," + (digitsBeforeZero - 1) + "}+((\\.[0-9]{0," + (digitsAfterZero - 1) + "})?)||(\\.)?")
         }
     }
 }

@@ -23,9 +23,6 @@ class PolcLocationAdapter(private var locationItems: ArrayList<PolcLocation>, pr
             val position = adapterPosition
             if(position!= RecyclerView.NO_POSITION) {
                 listener.polcItemClick(position)
-                notifyItemChanged(selectedPos)
-                selectedPos = layoutPosition
-                notifyItemChanged(selectedPos)
             }
         }
     }
