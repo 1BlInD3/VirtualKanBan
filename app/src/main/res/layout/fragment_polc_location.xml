@@ -20,6 +20,7 @@
         android:id="@+id/polcRecycler"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
+        android:layout_marginStart="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

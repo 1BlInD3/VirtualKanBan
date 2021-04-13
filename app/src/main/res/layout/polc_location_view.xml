@@ -6,53 +6,33 @@
     android:layout_height="wrap_content"
     android:background="@drawable/highlight_selected2">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/polcName"
+    <TextView
+        android:id="@+id/polcNameText"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp"
-        app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:maxLines="1"
+        android:paddingStart="10dp"
+        android:paddingEnd="4dp"
+        android:text="Polchely"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/polcNameText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:maxLines="1"
-            android:paddingStart="4dp"
-            android:text="Polchely"
-            android:textAlignment="textStart"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/darabSzam"
+    <TextView
+        android:id="@+id/dbTxt"
         android:layout_width="70dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
-        android:layout_marginEnd="2dp"
-        app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="1dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/polcName"
-        app:layout_constraintTop_toTopOf="@+id/polcName">
-
-        <TextView
-            android:id="@+id/dbTxt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:paddingStart="4dp"
-            android:text="Darabszám "
-            android:textAlignment="textStart"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-    </androidx.cardview.widget.CardView>
+        android:maxLines="1"
+        android:paddingStart="10dp"
+        android:paddingEnd="4dp"
+        android:text="Darabszám "
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/polcNameText"
+        app:layout_constraintTop_toTopOf="@+id/polcNameText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.InputFilter
+import android.text.Spanned
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,7 @@ import kotlinx.android.synthetic.main.fragment_igeny_kontener_osszeallitas.*
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_osszeallitas.view.*
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Pattern
 import kotlin.collections.ArrayList
 
 private const val ARG_PARAM1 = "param1"
@@ -80,6 +82,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         unit_igeny2 = view.unit_igeny
         cikkItem_igeny = view.cikk_igeny
         mennyiseg_igeny2 = view.mennyiseg_igeny
+        mennyiseg_igeny2.filters = arrayOf<InputFilter>(PolcraHelyezesFragment.DecimalDigitsInputFilter(9,2))
         kilepButton = view.kilep_igeny_button
         kontenerText.text = arguments?.getString("KONTENER")
         polcTextIgeny.setText(arguments?.getString("TERMRAKH"))
@@ -151,7 +154,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
                 Log.d(TAG, "onCreateView: lezártam az üreset")
             }
             else{
-                sendBinCode.closeContainer(5, currentDateAndTime) // ezt 1esre kéne hagyni
+                sendBinCode.closeContainer(5, currentDateAndTime) // ezt 1esre kéne átírni
                 setProgressBarOff()
                 clearAll()
                 mainActivity.loadMenuFragment(true)
@@ -252,5 +255,25 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         super.onResume()
         kontenerText.text = arguments?.getString("KONTENER")
         polcTextIgeny.setText(arguments?.getString("TERMRAKH"))
+    }
+    class DecimalDigitsInputFilter(digitsBeforeZero: Int, digitsAfterZero: Int) :
+        InputFilter {
+        var mPattern: Pattern
+        override fun filter(
+            source: CharSequence,
+            start: Int,
+            end: Int,
+            dest: Spanned,
+            dstart: Int,
+            dend: Int
+        ): CharSequence? {
+            val matcher = mPattern.matcher(dest)
+            return if (!matcher.matches()) "" else null
+        }
+
+        init {
+            mPattern =
+                Pattern.compile("[0-9]{0," + (digitsBeforeZero - 1) + "}+((\\.[0-9]{0," + (digitsAfterZero - 1) + "})?)||(\\.)?")
+        }
     }
 }
