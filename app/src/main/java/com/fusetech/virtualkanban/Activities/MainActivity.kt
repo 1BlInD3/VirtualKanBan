@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private var polcLocation: ArrayList<PolcLocation>? = ArrayList()
     private var kontener = ""
     private lateinit var menuFragment : MenuFragment
+    private var lezarandoKontener = ""
     private val url = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10"
     private val connectionString ="jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
 
@@ -210,6 +211,33 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         if(barcodeReader != null) {
             barcodeReader?.removeBarcodeListener(this)
             barcodeReader?.close()
+        }
+    }
+    private fun updateKontener(kontener_id: String){
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try{
+            connection = DriverManager.getConnection(connectionString)
+            val statment = connection.prepareStatement(resources.getString(R.string.updateContainerStatus))
+            statment.setString(1,kontener_id)
+            statment.executeUpdate()
+            Log.d(TAG, "updateCikkAndKontener: Konténer lezárva")
+            lezarandoKontener = ""
+        }catch (e: Exception){
+            Log.d(TAG, "updateKontener: $e")
+            setAlert("Probléma van\n $e")
+        }
+    }
+    private fun updateCikk(kontener_id: String){
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try{
+            connection = DriverManager.getConnection(connectionString)
+            val statement = connection.prepareStatement(resources.getString(R.string.updateItemStatus))
+            statement.setString(1,kontener_id)
+            statement.executeUpdate()
+            Log.d(TAG, "updateCikkAndKontener: Cikkek lezárva")
+        }catch (e: Exception){
+            Log.d(TAG, "updateCikkAndKontener: $e")
+            setAlert("Probléma van\n $e")
         }
     }
     private fun loadKontenerCikkek(kontener_id: String){
@@ -771,8 +799,15 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     }
 
     override fun sendContainer(container: String) {
+        lezarandoKontener = container
         CoroutineScope(IO).launch {
             loadKontenerCikkek(container)
+        }
+    }
+    fun closeContainerAndItem(){
+        CoroutineScope(IO).launch {
+            updateCikk(lezarandoKontener)
+            updateKontener(lezarandoKontener)
         }
     }
 }

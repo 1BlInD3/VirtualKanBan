@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +31,7 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
     private lateinit var mainActivity: MainActivity
     private lateinit var igenyKontener: IgenyKontnerLezaras
     private val TAG = "IgenyKontenerLezarasFra"
+    private lateinit var exitBtn : Button
 
     interface IgenyKontnerLezaras{
         fun sendContainer(container: String)
@@ -52,6 +54,7 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         dataFrame = view.data_frame1
         val child = layoutInflater.inflate(R.layout.konteneres_view,null)
         dataFrame.addView(child)
+        exitBtn = child.exit3Button
         childRecycler = child.child_recycler
         childRecycler.adapter = KontenerAdapter(kontenerList,this)
         childRecycler.layoutManager = LinearLayoutManager(child.context)
@@ -59,6 +62,11 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         kontenerList.clear()
         loadData()
         childRecycler.adapter?.notifyDataSetChanged()
+
+        exitBtn.setOnClickListener{
+            kontenerList.clear()
+            mainActivity.loadMenuFragment(true)
+        }
 
         return view
     }

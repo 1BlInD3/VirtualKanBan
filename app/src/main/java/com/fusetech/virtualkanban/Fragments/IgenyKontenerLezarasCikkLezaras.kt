@@ -5,8 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Adapters.KontenerbenLezarasAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerbenLezarasItem
 import com.fusetech.virtualkanban.R
@@ -16,6 +18,9 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private lateinit var recycler: RecyclerView
 private val kontItem: ArrayList<KontenerbenLezarasItem> = ArrayList()
+private lateinit var exitBtn: Button
+private lateinit var lezarBtn: Button
+private lateinit var mainActivity: MainActivity
 
 class IgenyKontenerLezarasCikkLezaras : Fragment() {
     private var param1: String? = null
@@ -34,7 +39,10 @@ class IgenyKontenerLezarasCikkLezaras : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.kontenerben_lezaras_view,container,false)
+        mainActivity = activity as MainActivity
         recycler = view.child_recycler2
+        exitBtn = view.exit3CikkButton
+        lezarBtn = view.lezar3Button
         recycler.adapter = KontenerbenLezarasAdapter(kontItem)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
@@ -44,6 +52,15 @@ class IgenyKontenerLezarasCikkLezaras : Fragment() {
 
         recycler.adapter?.notifyDataSetChanged()
 
+        exitBtn.setOnClickListener {
+            kontItem.clear()
+            mainActivity.loadMenuFragment(true)
+        }
+        lezarBtn.setOnClickListener {
+            mainActivity.closeContainerAndItem()
+            kontItem.clear()
+            mainActivity.loadMenuFragment(true)
+        }
         return view
     }
 
