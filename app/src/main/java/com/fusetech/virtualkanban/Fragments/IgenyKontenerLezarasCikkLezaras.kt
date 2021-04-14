@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +26,7 @@ private lateinit var lezarBtn: Button
 private lateinit var mainActivity: MainActivity
 private lateinit var kontenerNev: TextView
 private const val TAG = "IgenyKontenerLezarasCik"
+private lateinit var progress: ProgressBar
 
 class IgenyKontenerLezarasCikkLezaras : Fragment() {
     private var param1: String? = null
@@ -48,6 +50,8 @@ class IgenyKontenerLezarasCikkLezaras : Fragment() {
         exitBtn = view.exit3CikkButton
         lezarBtn = view.lezar3Button
         kontenerNev = view.kontenerNameLezaras
+        progress = view.cikkLezarasProgress
+        setProgressBarOff()
         recycler.adapter = KontenerbenLezarasAdapter(kontItem)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
@@ -63,6 +67,7 @@ class IgenyKontenerLezarasCikkLezaras : Fragment() {
             mainActivity.igenyKontenerCheck()
         }
         lezarBtn.setOnClickListener {
+            setProgressBarOn()
             mainActivity.closeContainerAndItem()
             kontItem.clear()
             mainActivity.loadMenuFragment(true)
@@ -91,5 +96,11 @@ class IgenyKontenerLezarasCikkLezaras : Fragment() {
             Log.d(TAG, "loadData: $e")
         }
 
+    }
+    fun setProgressBarOff(){
+        progress.visibility = View.GONE
+    }
+    fun setProgressBarOn(){
+        progress.visibility = View.VISIBLE
     }
 }

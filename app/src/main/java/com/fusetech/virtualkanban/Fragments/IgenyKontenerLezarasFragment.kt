@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +33,7 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
     private lateinit var igenyKontener: IgenyKontnerLezaras
     private val TAG = "IgenyKontenerLezarasFra"
     private lateinit var exitBtn : Button
+    private lateinit var progress: ProgressBar
 
     interface IgenyKontnerLezaras{
         fun sendContainer(container: String)
@@ -55,6 +57,8 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         val child = layoutInflater.inflate(R.layout.konteneres_view,null)
         dataFrame.addView(child)
         exitBtn = child.exit3Button
+        progress = child.konteneresProgress
+        setProgressBarOff()
         childRecycler = child.child_recycler
         childRecycler.adapter = KontenerAdapter(kontenerList,this)
         childRecycler.layoutManager = LinearLayoutManager(child.context)
@@ -84,7 +88,9 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
 
     override fun onKontenerClick(position: Int) {
         Log.d(TAG, "onKontenerClick: ${kontenerList[position].kontner_id}")
+        setProgressBarOn()
         igenyKontener.sendContainer(kontenerList[position].kontner_id.toString())
+       // setProgressBarOff()
     }
     private fun loadData(){
         val myList: ArrayList<KontenerItem> = arguments?.getSerializable("KONTENERLISTA") as ArrayList<KontenerItem>
@@ -100,5 +106,11 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         }else{
             throw RuntimeException(context.toString() + "must implement")
         }
+    }
+    fun setProgressBarOff(){
+        progress.visibility = View.GONE
+    }
+    fun setProgressBarOn(){
+        progress.visibility = View.VISIBLE
     }
 }

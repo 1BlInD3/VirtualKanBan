@@ -119,17 +119,15 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance(kontener,polc)
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyFragment,"IGENY").addToBackStack(null).commit()
     }
-    fun loadIgenyLezarasFragment(){
-        val igenyLezaras = IgenyKontenerLezarasFragment()
-        supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyLezaras,"IGENYLEZAR").addToBackStack(null).commit()
-    }
     fun loadIgenyKiszedesFragment(){
         val igenyKiszedes = IgenyKontenerKiszedesFragment()
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKiszedes,"IGENYKISZEDES").addToBackStack(null).commit()
     }
-    fun loadIgenyLezarasCikkLezaras(){
-        val cikkLezaras = IgenyKontenerLezarasCikkLezaras()
-        supportFragmentManager.beginTransaction().replace(R.id.data_frame1,cikkLezaras,"CIKKLEZARAS").addToBackStack(null).commit()
+    fun removeIgenyFragment(){
+        val fragment : Fragment? = supportFragmentManager.findFragmentByTag("IGENYLEZARAS")
+        if (fragment != null) {
+            supportFragmentManager.beginTransaction().remove(fragment).commit()
+        }
     }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread{
@@ -273,12 +271,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }catch (e: Exception){
             Log.d(TAG, "loadKontenerCikkek: $e")
-        }
-    }
-    fun removeIgenyFragment(){
-        val fragment : Fragment? = supportFragmentManager.findFragmentByTag("IGENYLEZARAS")
-        if (fragment != null) {
-            supportFragmentManager.beginTransaction().remove(fragment).commit()
         }
     }
     private fun loadIgenyLezaras(){
