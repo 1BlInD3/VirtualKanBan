@@ -28,6 +28,20 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     PolcLocationFragment.SetPolcLocation,
     IgenyKontenerOsszeallitasFragment.SendBinCode,
     IgenyKontenerLezarasFragment.IgenyKontnerLezaras{
+    // 1es opció pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
+    //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
+    // át kell rakni máshova
+    //egyszerre csak egy ember dolgozhasson a cikk felrakásánál
+
+    //2es opció  megnézem, hogy van e konténer a "atado" és "statusz = 0"
+    // amikor megnyitom az igény konténer összeállítását, akkor [Leltar].[dbo]. kontener-be beírom a atado(1GU),statusz(0),kontener_tipus(1)
+    //kontener 0000+id (összvissz 10karakterig)
+    //aztán megjelenítem a "kontener"
+
+    //A polcál csak a 01-es raktárokat fogadja el (ilyen van a polcCheck stringbe) és ha jó akkor beírja a [Leltar].[dbo]. kontener-be termeles_raktar = 01, termeles_rakhely = polc
+    // jön a cikk (megnézzük h van e), beírjuk a 4dolgot mint mindig
+    // mennyiség elfogadása enterrel, kéri a következő cikket ÉS beleír a [Leltar].[dbo].kontener_tetel-be (fénykép)
+    // a [Leltar].[dbo]. kontener beíródik a statusz = 1, igenyelve = datetime
     /*
     * 3as opció
     * csak azok a konténerek legyenek megjelenítve, amelyek KanBan státusza 1 ÉS A státusza 0 (írja ki amit ki kell írni) illetve a tételek státusza is 0
