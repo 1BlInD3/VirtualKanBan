@@ -7,6 +7,7 @@ import android.view.KeyEvent
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.fusetech.virtualkanban.DataItems.*
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.R
@@ -272,6 +273,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }catch (e: Exception){
             Log.d(TAG, "loadKontenerCikkek: $e")
+        }
+    }
+    fun removeIgenyFragment(){
+        val fragment : Fragment? = supportFragmentManager.findFragmentByTag("IGENYLEZARAS")
+        if (fragment != null) {
+            supportFragmentManager.beginTransaction().remove(fragment).commit()
         }
     }
     private fun loadIgenyLezaras(){
@@ -792,9 +799,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             containerManagement(id)
         }
     }
-    private fun igenyKontenerCheck(){
+    fun igenyKontenerCheck(){
         CoroutineScope(IO).launch {
             loadIgenyLezaras()
+            Log.d(TAG, "igenyKontenerCheck: Lefutott")
         }
     }
 
