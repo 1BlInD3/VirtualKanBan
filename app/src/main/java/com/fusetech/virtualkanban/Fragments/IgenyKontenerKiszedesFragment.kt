@@ -1,6 +1,7 @@
 package com.fusetech.virtualkanban.Fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,7 @@ private lateinit var childFrame: FrameLayout
 private lateinit var childRecycler: RecyclerView
 private var kontenerList: ArrayList<KontenerItem> = ArrayList()
 private lateinit var progress: ProgressBar
+private const val TAG = "IgenyKontenerKiszedesFr"
 
 class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClickListener {
 
@@ -53,7 +55,6 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
         childRecycler.layoutManager = LinearLayoutManager(child.context)
         childRecycler.setHasFixedSize(true)
 
-        //kontenerList.add(KontenerItem("255653","NNG02","2021.04.01 14:52:02",5,"546"))
         kontenerList.clear()
         loadData()
         childRecycler.adapter?.notifyDataSetChanged()
@@ -77,9 +78,13 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
         Toast.makeText(view?.context, "itt mas jelenik meg", Toast.LENGTH_SHORT).show()
     }
     private fun loadData(){
-        val myList: ArrayList<KontenerItem> = arguments?.getSerializable("KISZEDESLISTA") as ArrayList<KontenerItem>
-        for(i in 0 until myList.size){
-            kontenerList.add(KontenerItem(myList[i].kontener,myList[i].polc,myList[i].datum,myList[i].tetelszam,myList[i].kontner_id))
+        try {
+            val myList: ArrayList<KontenerItem> = arguments?.getSerializable("KISZEDESLISTA") as ArrayList<KontenerItem>
+            for(i in 0 until myList.size){
+                kontenerList.add(KontenerItem(myList[i].kontener,myList[i].polc,myList[i].datum,myList[i].tetelszam,myList[i].kontner_id))
+            }
+        }catch (e: Exception){
+            Log.d(TAG, "loadData: ")
         }
     }
     fun setProgressBarOff(){

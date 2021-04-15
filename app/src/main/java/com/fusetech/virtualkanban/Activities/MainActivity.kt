@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private var kontener = ""
     private lateinit var menuFragment : MenuFragment
     private var lezarandoKontener = ""
+    private var igenyLezarCikkVisible: Boolean = false
     private val url = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10"
     private val connectionString ="jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
 
@@ -112,6 +113,13 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         val fragmentManager = supportFragmentManager
         val menuFragment = fragmentManager.findFragmentByTag("MENU")
         if(menuFragment != null && menuFragment.isVisible){
+            return true
+        }
+        return false
+    }
+    private fun getIgenyLezaras(): Boolean{
+        val myFrag = supportFragmentManager.findFragmentByTag("IGENYLEZARAS")
+        if(myFrag != null && myFrag.isVisible){
             return true
         }
         return false
@@ -220,6 +228,21 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             barcodeReader?.close()
         }
     }
+
+    private fun chechIfPolcHasChanged(kontener: String): Boolean {
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try {
+            connection = DriverManager.getConnection(url)
+            val statement = connection.prepareStatement(resources.getString(R.string.kontenerEllenorzes))
+            statement.setString(1,kontener)
+            statement.setInt(2,0)
+            val resultSet = statement.executeQuery()
+            return resultSet.next()
+        }catch (e: Exception){
+            return false
+        }
+    }
+
     private fun updateKontener(kontener_id: String){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try{
@@ -250,6 +273,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private fun loadKontenerCikkek(kontener_id: String){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
+            CoroutineScope(Main).launch {
+                igenyLezarasFragment.setProgressBarOn()
+            }
             connection = DriverManager.getConnection(url)
             val statement = connection.prepareStatement(resources.getString(R.string.igenyKontenerLezarasCikkLezaras))
             statement.setInt(1,kontener_id.toInt())
@@ -258,8 +284,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 Log.d(TAG, "loadKontenerCikkek: HIBA VAN")
                 CoroutineScope(Main).launch {
                     setAlert("A konténerben nincs 0 státuszú cikk")
+                    igenyLezarasFragment.setProgressBarOff()
                 }
             }else{
+                igenyLezarCikkVisible = true
                 val kontenerCikkLezar: ArrayList<KontenerbenLezarasItem> = ArrayList()
                 do {
                     val cikk = resultSet.getString("cikkszam")
@@ -276,9 +304,15 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 val cikkLezaras = IgenyKontenerLezarasCikkLezaras()
                 cikkLezaras.arguments = bundle
                 supportFragmentManager.beginTransaction().replace(R.id.data_frame1,cikkLezaras,"CIKKLEZARASFRAGMENT").addToBackStack(null).commit()
+                CoroutineScope(Main).launch {
+                    igenyLezarasFragment.setProgressBarOff()
+                }
             }
         }catch (e: Exception){
             Log.d(TAG, "loadKontenerCikkek: $e")
+            CoroutineScope(Main).launch {
+                igenyLezarasFragment.setProgressBarOff()
+            }
         }
     }
     private fun loadIgenyKiszedes(){
@@ -289,9 +323,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             statement.setInt(1,1)
             val resultSet = statement.executeQuery()
             if(!resultSet.next()){
-                CoroutineScope(Main).launch {
+                supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKiszedesFragment,"KISZEDES").addToBackStack(null).commit()
+                /*CoroutineScope(Main).launch {
                     setAlert("Nincs aktív konténer")
-                }
+                }*/
             }else{
                 val kontenerList: ArrayList<KontenerItem> = ArrayList()
                 do{
@@ -868,13 +903,35 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     }
     fun closeContainerAndItem(){
         CoroutineScope(IO).launch {
-            updateCikk(lezarandoKontener)
-            updateKontener(lezarandoKontener)
+            if(chechIfPolcHasChanged(lezarandoKontener)) {
+                updateCikk(lezarandoKontener)
+                updateKontener(lezarandoKontener)
+            }else{
+                igenyKontenerCheck()
+                CoroutineScope(Main).launch {
+                    setAlert("A konténer státusza már megváltozott")
+                }
+            }
         }
     }
+
     private fun igenyKontenerKiszedes(){
         CoroutineScope(IO).launch {
             loadIgenyKiszedes()
         }
+    }
+
+    override fun onBackPressed() {
+
+        if(getIgenyLezaras()) {
+            if (igenyLezarCikkVisible) {
+                igenyLezarCikkVisible = false
+                loadMenuFragment(true)
+                CoroutineScope(IO).launch {
+                    loadIgenyLezaras()
+                }
+            }
+        }
+        super.onBackPressed()
     }
 }

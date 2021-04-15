@@ -34,6 +34,7 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
     private val TAG = "IgenyKontenerLezarasFra"
     private lateinit var exitBtn : Button
     private lateinit var progress: ProgressBar
+    private lateinit var megnyitottBtn: Button
 
     interface IgenyKontnerLezaras{
         fun sendContainer(container: String)
@@ -56,6 +57,8 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         dataFrame = view.data_frame1
         val child = layoutInflater.inflate(R.layout.konteneres_view,null)
         dataFrame.addView(child)
+        megnyitottBtn = child.megnyitottKontenerButton
+        megnyitottBtn.visibility = View.GONE
         exitBtn = child.exit3Button
         progress = child.konteneresProgress
         setProgressBarOff()
@@ -88,9 +91,7 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
 
     override fun onKontenerClick(position: Int) {
         Log.d(TAG, "onKontenerClick: ${kontenerList[position].kontner_id}")
-        setProgressBarOn()
         igenyKontener.sendContainer(kontenerList[position].kontner_id.toString())
-        setProgressBarOff()
     }
     private fun loadData(){
         val myList: ArrayList<KontenerItem> = arguments?.getSerializable("KONTENERLISTA") as ArrayList<KontenerItem>
