@@ -90,7 +90,7 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         Log.d(TAG, "onKontenerClick: ${kontenerList[position].kontner_id}")
         setProgressBarOn()
         igenyKontener.sendContainer(kontenerList[position].kontner_id.toString())
-       // setProgressBarOff()
+        setProgressBarOff()
     }
     private fun loadData(){
         val myList: ArrayList<KontenerItem> = arguments?.getSerializable("KONTENERLISTA") as ArrayList<KontenerItem>

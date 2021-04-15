@@ -55,15 +55,15 @@ class IgenyKontenerLezarasCikkLezaras : Fragment() {
         recycler.adapter = KontenerbenLezarasAdapter(kontItem)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
-        recycler.requestFocus()
         kontItem.clear()
         kontenerNev.text = ""
         loadData()
         recycler.adapter?.notifyDataSetChanged()
+        recycler.requestFocus()
 
         exitBtn.setOnClickListener {
             kontItem.clear()
-            mainActivity.removeIgenyFragment()
+            mainActivity.loadMenuFragment(true)
             mainActivity.igenyKontenerCheck()
         }
         lezarBtn.setOnClickListener {
@@ -95,7 +95,6 @@ class IgenyKontenerLezarasCikkLezaras : Fragment() {
         }catch (e: Exception){
             Log.d(TAG, "loadData: $e")
         }
-
     }
     fun setProgressBarOff(){
         progress.visibility = View.GONE
