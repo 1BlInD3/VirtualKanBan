@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pocakszin2"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="130dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/black"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView7"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"
+                    app:cardBackgroundColor="@color/pocakszin4"
+                    app:cardCornerRadius="1dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/child_kontener"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:maxLines="1"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="5dp"
+                        android:text="Konténer"
+                        android:textAlignment="textStart"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView8"
+                    android:layout_width="80dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="2dp"
+                    app:cardBackgroundColor="@color/pocakszin4"
+                    app:cardCornerRadius="1dp"
+                    app:layout_constraintStart_toEndOf="@+id/cardView7"
+                    app:layout_constraintTop_toTopOf="@+id/cardView7">
+
+                    <TextView
+                        android:id="@+id/child_polc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="5dp"
+                        android:text="Polc"
+                        android:textAlignment="textStart"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView9"
+                    android:layout_width="180dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="2dp"
+                    app:cardBackgroundColor="@color/pocakszin4"
+                    app:cardCornerRadius="2dp"
+                    app:layout_constraintStart_toEndOf="@+id/cardView8"
+                    app:layout_constraintTop_toTopOf="@+id/cardView8">
+
+                    <TextView
+                        android:id="@+id/child_ido"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="5dp"
+                        android:text="Igénylés ideje"
+                        android:textAlignment="textStart"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView10"
+                    android:layout_width="120dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="2dp"
+                    app:cardBackgroundColor="@color/pocakszin4"
+                    app:cardCornerRadius="2dp"
+                    app:layout_constraintStart_toEndOf="@+id/cardView9"
+                    app:layout_constraintTop_toTopOf="@+id/cardView9">
+
+                    <TextView
+                        android:id="@+id/child_tetelszam"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:maxLines="1"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="5dp"
+                        android:text="Tételszám"
+                        android:textAlignment="textStart"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp" />
+
+                </androidx.cardview.widget.CardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constant"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/child_recycler_open"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:background="@color/pocakszin2"
+                    android:paddingBottom="3dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/constant"
+                    app:layout_constraintTop_toTopOf="@+id/constant" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </HorizontalScrollView>
+
+    <Button
+        android:id="@+id/exit4Button"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/buttn"
+        android:backgroundTint="@android:color/holo_red_dark"
+        android:text="Vissza"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView3" />
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingTop="5dp"
+        android:textAlignment="center"
+        android:text="MEGNYITOTT KONTÉNEREK"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:background="@android:color/holo_red_dark"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

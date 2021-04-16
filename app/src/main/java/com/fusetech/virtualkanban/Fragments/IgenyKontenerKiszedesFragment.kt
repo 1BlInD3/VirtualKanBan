@@ -6,11 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Adapters.KontenerAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerItem
 import com.fusetech.virtualkanban.R
@@ -24,6 +26,9 @@ private lateinit var childFrame: FrameLayout
 private lateinit var childRecycler: RecyclerView
 private var kontenerList: ArrayList<KontenerItem> = ArrayList()
 private lateinit var progress: ProgressBar
+private lateinit var megnyitottBtn : Button
+private lateinit var exit3Btn: Button
+private lateinit var mainActivity: MainActivity
 private const val TAG = "IgenyKontenerKiszedesFr"
 
 class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClickListener {
@@ -44,10 +49,13 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
         savedInstanceState: Bundle?
     ): View? {
        val view = inflater.inflate(R.layout.fragment_igeny_kontener_kiszedes, container, false)
+        mainActivity = activity as MainActivity
         childFrame = view.data_frame2
         val child = layoutInflater.inflate(R.layout.konteneres_view,null)
         childFrame.addView(child)
         progress = child.konteneresProgress
+        megnyitottBtn = child.megnyitottKontenerButton
+        exit3Btn = child.exit3Button
         setProgressBarOff()
         kontenerList.clear()
         childRecycler = child.child_recycler
@@ -59,6 +67,15 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
         loadData()
         childRecycler.adapter?.notifyDataSetChanged()
 
+        megnyitottBtn.setOnClickListener {
+            setProgressBarOn()
+            mainActivity.igenyKontenerMegnyitott()
+            setProgressBarOff()
+        }
+        exit3Btn.setOnClickListener {
+            kontenerList.clear()
+            mainActivity.loadMenuFragment(true)
+        }
 
        return view
     }
@@ -79,6 +96,7 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
     }
     private fun loadData(){
         try {
+            kontenerList.clear()
             val myList: ArrayList<KontenerItem> = arguments?.getSerializable("KISZEDESLISTA") as ArrayList<KontenerItem>
             for(i in 0 until myList.size){
                 kontenerList.add(KontenerItem(myList[i].kontener,myList[i].polc,myList[i].datum,myList[i].tetelszam,myList[i].kontner_id))

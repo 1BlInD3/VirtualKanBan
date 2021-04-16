@@ -94,6 +94,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
             cikkItem_igeny.isEnabled = true
             cikkItem_igeny.requestFocus()
             try {
+                igenyReveresed.clear()
                 getDataFromList()
             }catch (e: Exception){
                 Toast.makeText(view.context,"Nincs felvett tétel",Toast.LENGTH_SHORT).show()
