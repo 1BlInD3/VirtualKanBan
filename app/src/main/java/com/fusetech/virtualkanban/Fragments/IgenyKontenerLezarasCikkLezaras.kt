@@ -102,4 +102,7 @@ class IgenyKontenerLezarasCikkLezaras : Fragment() {
     fun setProgressBarOn(){
         progress.visibility = View.VISIBLE
     }
+    fun buttonPerform(){
+        exitBtn.performClick()
+    }
 }

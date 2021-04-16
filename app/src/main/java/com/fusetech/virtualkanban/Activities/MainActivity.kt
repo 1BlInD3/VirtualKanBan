@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private lateinit var igenyFragment: IgenyKontenerOsszeallitasFragment
     private lateinit var igenyLezarasFragment: IgenyKontenerLezarasFragment
     private lateinit var igenyKiszedesFragment: IgenyKontenerKiszedesFragment
+    private lateinit var igenyKiszedesCikkLezaras: IgenyKontenerLezarasCikkLezaras
     private val TAG = "MainActivity"
     private val cikklekerdezesFragment = CikklekerdezesFragment()
     val polcLocationFragment = PolcLocationFragment()
@@ -78,6 +79,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance("","")
         igenyLezarasFragment = IgenyKontenerLezarasFragment()
         igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
+        igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
         AidcManager.create(this) { aidcManager ->
             manager = aidcManager
             try {
@@ -117,8 +119,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
         return false
     }
-    private fun getIgenyLezaras(): Boolean{
-        val myFrag = supportFragmentManager.findFragmentByTag("IGENYLEZARAS")
+    private fun getFragment(fragmentName: String): Boolean{
+        val myFrag = supportFragmentManager.findFragmentByTag(fragmentName)
         if(myFrag != null && myFrag.isVisible){
             return true
         }
@@ -287,6 +289,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     igenyLezarasFragment.setProgressBarOff()
                 }
             }else{
+                val igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
                 igenyLezarCikkVisible = true
                 val kontenerCikkLezar: ArrayList<KontenerbenLezarasItem> = ArrayList()
                 do {
@@ -301,9 +304,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 val bundle = Bundle()
                 bundle.putSerializable("CIKKLEZAR",kontenerCikkLezar)
                 bundle.putString("KONTENER_ID",kontener_id)
-                val cikkLezaras = IgenyKontenerLezarasCikkLezaras()
-                cikkLezaras.arguments = bundle
-                supportFragmentManager.beginTransaction().replace(R.id.data_frame1,cikkLezaras,"CIKKLEZARASFRAGMENT").addToBackStack(null).commit()
+                igenyKiszedesCikkLezaras.arguments = bundle
+                supportFragmentManager.beginTransaction().replace(R.id.data_frame1,igenyKiszedesCikkLezaras,"CIKKLEZARASFRAGMENT").addToBackStack(null).commit()
                 CoroutineScope(Main).launch {
                     igenyLezarasFragment.setProgressBarOff()
                 }
@@ -922,16 +924,16 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     }
 
     override fun onBackPressed() {
-
-        if(getIgenyLezaras()) {
-            if (igenyLezarCikkVisible) {
-                igenyLezarCikkVisible = false
-                loadMenuFragment(true)
-                CoroutineScope(IO).launch {
-                    loadIgenyLezaras()
-                }
+        try{
+            if(getFragment("CIKKLEZARASFRAGMENT")) {
+               igenyKiszedesCikkLezaras.buttonPerform()
+            }else{
+                super.onBackPressed()
             }
+            //super.onBackPressed()
+        }catch (e: Exception){
+            Log.d(TAG, "onBackPressed: $e")
+            super.onBackPressed()
         }
-        super.onBackPressed()
     }
 }
