@@ -7,10 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Activities.MainActivity
@@ -37,6 +34,7 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
     private lateinit var kontenerKiszedes: sendKiszedesContainer
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var cimText: TextView
 
     interface sendKiszedesContainer{
         fun sendContainerKiszedes(kontener: String)
@@ -62,6 +60,8 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
         progress = child.konteneresProgress
         megnyitottBtn = child.megnyitottKontenerButton
         exit3Btn = child.exit3Button
+        cimText = view.titleText
+        cimText.text = arguments?.getString("CIM")
         setProgressBarOff()
         kontenerList.clear()
         childRecycler = child.child_recycler

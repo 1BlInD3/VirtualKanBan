@@ -55,7 +55,7 @@ class IgenyKontenerKiszedesMegnyitottFragment : Fragment(),KontenerAdapter.onKon
         exitBtn.setOnClickListener {
             kontenerList.clear()
             mainAcitivity.loadMenuFragment(true)
-            mainAcitivity.igenyKontenerKiszedes()
+            mainAcitivity.igenyKontenerKiszedes("6. Kiszedésre váró igénykonténerek")
         }
 
         return view

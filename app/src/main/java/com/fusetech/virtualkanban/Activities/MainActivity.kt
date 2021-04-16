@@ -193,9 +193,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                8 -> loadPolcHelyezesFragment()
                9 -> containerCheck("1GU")
                10 -> igenyKontenerCheck()
-               11 -> igenyKontenerKiszedes()//Log.d(TAG, "onKeyDown: $keyCode")
+               11 -> igenyKontenerKiszedes("4. Igény konténer kiszedése")//Log.d(TAG, "onKeyDown: $keyCode")
                12 -> Log.d(TAG, "onKeyDown: $keyCode")
-               13 -> igenyKontenerKiszedes()
+               13 -> igenyKontenerKiszedes("6. Kiszedésre váró igénykonténerek")
                14 -> Log.d(TAG, "onKeyDown: $keyCode")
                15 -> Log.d(TAG, "onKeyDown: $keyCode")
                16 -> loadCikklekerdezesFragment()
@@ -409,7 +409,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }
     }
-    private fun loadIgenyKiszedes(){
+    private fun loadIgenyKiszedes(cim: String){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try{
             CoroutineScope(Main).launch {
@@ -436,6 +436,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 }while(resultSet.next())
                 val bundle = Bundle()
                 bundle.putSerializable("KISZEDESLISTA",kontenerList)
+                bundle.putString("CIM",cim)
                 igenyKiszedesFragment.arguments = bundle
                 supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKiszedesFragment,"KISZEDES").addToBackStack(null).commit()
                 CoroutineScope(Main).launch {
@@ -1018,9 +1019,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
 
-     fun igenyKontenerKiszedes(){
+     fun igenyKontenerKiszedes(cim: String){
         CoroutineScope(IO).launch {
-            loadIgenyKiszedes()
+            loadIgenyKiszedes(cim)
         }
     }
 
