@@ -29,6 +29,7 @@ class MenuFragment : Fragment() {
     private lateinit var cikkLekerdezes : Button
     private lateinit var mainActivity: MainActivity
     private lateinit var menuProgress: ProgressBar
+    private lateinit var kilepes: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +54,7 @@ class MenuFragment : Fragment() {
         tobbletKihelyez = view.tobbletKihelyezes
         cikkLekerdezes = view.cikkLekerdezes
         menuProgress = view.menu_progress
+        kilepes = view.kilepesMenuButton
         setMenuProgressOff()
         if(!param1!!)
         {
@@ -79,6 +81,9 @@ class MenuFragment : Fragment() {
         }
         igenyOssze.setOnClickListener {
             mainActivity.loadIgenyOsszeallitasFragment("","")
+        }
+        kilepes.setOnClickListener {
+            mainActivity.finishAndRemoveTask()
         }
         return view
     }

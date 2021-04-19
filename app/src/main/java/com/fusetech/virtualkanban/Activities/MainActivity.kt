@@ -7,7 +7,6 @@ import android.view.KeyEvent
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import com.fusetech.virtualkanban.DataItems.*
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.R
@@ -157,14 +156,14 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread{
             barcodeData = p0?.barcodeData!!
-            if (loginFragment != null && loginFragment.isVisible) {
+            if (loginFragment.isVisible) {
                 loginFragment.SetId(barcodeData)
                 dolgKod = barcodeData
                 loginFragment.StartSpinning()
                 CoroutineScope(IO).launch {
                     checkRightSql(dolgKod)
                 }
-            }else if(cikklekerdezesFragment != null && cikklekerdezesFragment.isVisible) {
+            }else if(cikklekerdezesFragment.isVisible) {
                 loadLoadFragment("Várom az eredményt")
                 cikkItems.clear()
                 polcItems.clear()
@@ -186,6 +185,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         if(getMenuFragment())
         {
            when(keyCode){
+               7 -> finishAndRemoveTask()
                8 -> loadPolcHelyezesFragment()
                9 -> containerCheck("1GU")
                10 -> igenyKontenerCheck()
@@ -211,7 +211,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }
     }
-
     override fun onPause() {
         super.onPause()
         if (barcodeReader != null) {
@@ -365,48 +364,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }
     }
-   /* private fun loadIgenyKiszedesMegnyitott(){
-        Class.forName("net.sourceforge.jtds.jdbc.Driver")
-        try{
-            val megnyitott = IgenyKontenerKiszedesMegnyitottFragment()
-            CoroutineScope(Main).launch {
-                menuFragment.setMenuProgressOn()
-            }
-            connection = DriverManager.getConnection(url)
-            val statement = connection.prepareStatement(resources.getString(R.string.igenyKontenerKiszedese))
-            val resultSet = statement.executeQuery()
-            if(!resultSet.next()){
-                CoroutineScope(Main).launch {
-                    menuFragment.setMenuProgressOff()
-                }
-                supportFragmentManager.beginTransaction().replace(R.id.frame_container,megnyitott,"MEGNYITOTT").addToBackStack(null).commit()
-            }else{
-                val kontenerList: ArrayList<KontenerItem> = ArrayList()
-                do{
-                    val kontener: String? = resultSet.getString("kontener")
-                    val polc: String? = resultSet.getString("polc")
-                    val datum: String? = resultSet.getString("igenyelve")
-                    val tetelszam = resultSet.getInt("tetelszam")
-                    val id: String = resultSet.getString("id")
-                    val status: Int = resultSet.getInt("statusz")
-                    kontenerList.add(KontenerItem(kontener,polc,datum,tetelszam,id,status))
-                }while(resultSet.next())
-                val bundle = Bundle()
-                bundle.putSerializable("MEGNYITOTTLISTA",kontenerList)
-                megnyitott.arguments = bundle
-                supportFragmentManager.beginTransaction().replace(R.id.frame_container,megnyitott,"MEGNYITOTT").addToBackStack(null).commit()
-                CoroutineScope(Main).launch {
-                    menuFragment.setMenuProgressOff()
-                }
-            }
-        }catch (e: Exception){
-            Log.d(TAG, "loadIgenyKiszedes: $e")
-            CoroutineScope(Main).launch {
-                menuFragment.setMenuProgressOff()
-                setAlert("Probléma van :\n $e")
-            }
-        }
-    }*/
     private fun loadKiszedesreVaro(){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try{
