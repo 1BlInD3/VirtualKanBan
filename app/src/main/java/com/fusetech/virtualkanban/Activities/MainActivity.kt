@@ -49,9 +49,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     * a lezárás a másik fülön átírja a tételeknél a státuszt 1-re, a konténereknél a státusz is 1 lesz és beírja az igénylés dátumát
     *
     * 4es opció
+    * bonyolult.. tudja amit a 6-os opció. ha rámegyek egy tételre átírja a státuszát 2-re. be kell iktatni egy szállítójármű bekérést, onnantól jöhetnek a tételek
+    *
     *
     * 6os opció
-    * Kiírja az 1es státuszú konténereket, majd kattintással belemegy és kiírja a tételeket ami benne van + megnyitott konténer opció*/
+    * Kiírja az 1es és 2 státuszú konténereket, majd kattintással belemegy és kiírja a tételeket ami benne van, átszínezi a 2-es státuszú konténereket*/
     private var manager : AidcManager? = null
     private var barcodeReader : BarcodeReader? = null
     private lateinit var barcodeData : String
@@ -80,7 +82,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance("","")
         igenyLezarasFragment = IgenyKontenerLezarasFragment()
@@ -151,12 +153,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     fun loadIgenyOsszeallitasFragment(kontener: String, polc: String?){
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance(kontener,polc)
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyFragment,"IGENY").addToBackStack(null).commit()
-    }
-    fun removeIgenyFragment(){
-        val fragment : Fragment? = supportFragmentManager.findFragmentByTag("IGENYLEZARAS")
-        if (fragment != null) {
-            supportFragmentManager.beginTransaction().remove(fragment).commit()
-        }
     }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread{
@@ -284,7 +280,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             connection = DriverManager.getConnection(url)
             val statement = connection.prepareStatement(resources.getString(R.string.igenyKontenerLezarasCikkLezaras))
             statement.setInt(1,kontener_id.toInt())
-            statement.setInt(2,1)
+            //statement.setInt(2,1)
             val resultSet = statement.executeQuery()
             if(!resultSet.next()){
                 Log.d(TAG, "loadKontenerCikkek: HIBA VAN")
@@ -329,7 +325,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 igenyLezarasFragment.setProgressBarOn()
             }
             connection = DriverManager.getConnection(url)
-            val statement = connection.prepareStatement(resources.getString(R.string.igenyKontenerLezarasCikkLezaras))
+            val statement = connection.prepareStatement(resources.getString(R.string.igenyKontenerLezarasCikkLezarasNULL))
             statement.setInt(1,kontener_id.toInt())
             statement.setInt(2,0)
             val resultSet = statement.executeQuery()
@@ -738,20 +734,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 if (!resultSet1.next()){
                     CoroutineScope(Main).launch {
                         polcHelyezesFragment.setProgressBarOff()
-                       // polcHelyezesFragment.setContainerOn()
                     }
                     Log.d(TAG, "checkTrannzit: Nincs a 02-es raktárban")
-                    //ezt aztán kitörölni
-                    polcLocation?.add(PolcLocation("H221","151"))
-                    polcLocation?.add(PolcLocation("H222","152"))
-                    polcLocation?.add(PolcLocation("H223","153"))
-                    polcLocation?.add(PolcLocation("H224","154"))
-                    polcLocation?.add(PolcLocation("H225","155"))
-                    polcLocation?.add(PolcLocation("H226","156"))
-                    val bundle = Bundle()
-                    bundle.putSerializable("02RAKTAR",polcLocation)
-                    polcLocationFragment.arguments = bundle
-                    //supportFragmentManager.beginTransaction().replace(R.id.side_container,polcLocationFragment,"LOC").commit()
                 }
                 else{
                     CoroutineScope(Main).launch {
