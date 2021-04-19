@@ -526,7 +526,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }catch (e: Exception){
             Log.d(TAG, "loadIgenyLezaras: $e")
             CoroutineScope(Main).launch {
-                setAlert("Hálózati probléma! Próbáld újra")
+                setAlert("Hálózati probléma! Próbáld újra\n $e")
                 menuFragment.setMenuProgressOff()
             }
         }

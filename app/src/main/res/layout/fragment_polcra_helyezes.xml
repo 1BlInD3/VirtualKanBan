@@ -29,7 +29,7 @@
         android:layout_marginTop="54dp"
         android:text="Kiadó"
         android:textColor="@android:color/black"
-        android:textSize="14sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,11 +50,11 @@
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="54dp"
         android:text="Fogadó"
         android:textColor="@android:color/black"
-        android:textSize="14sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/textView8"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -78,6 +78,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="14dp"
         android:text="Cikkszám"
+        android:textSize="16sp"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
@@ -107,6 +108,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
         android:text="Mennyiség"
+        android:textSize="16sp"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -135,6 +137,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="22dp"
         android:text="Polc"
+        android:textSize="16sp"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView14" />
@@ -183,6 +186,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:textColor="@android:color/black"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cikkEditTxt" />
@@ -192,6 +196,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:textSize="16sp"
         android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -202,6 +207,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:textSize="16sp"
         android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -212,8 +218,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="9dp"
+        android:layout_marginTop="2dp"
         android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/mennyisegTxt"
         app:layout_constraintTop_toTopOf="@+id/mennyisegTxt" />
 
@@ -239,6 +247,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="86dp"
         android:text="Tranzit mennyiség "
+        android:textSize="16sp"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cikkEditTxt" />
