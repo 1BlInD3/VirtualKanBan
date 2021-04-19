@@ -1,5 +1,8 @@
 package com.fusetech.virtualkanban.Adapters
 
+import android.annotation.SuppressLint
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,8 +34,16 @@ class KontenerAdapter(var kontenerItem: ArrayList<KontenerItem>, val listener: o
         return KontenerHolder(itemView)
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: KontenerHolder, position: Int) {
         val currentItem = kontenerItem[position]
+        if(kontenerItem[position].status == 2){
+            //holder.kontenerText.setBackgroundColor(Color.RED)
+            holder.kontenerText.setBackgroundColor(R.color.vikings)
+            holder.polcText.setBackgroundColor(R.color.vikings)
+            holder.idoText.setBackgroundColor(R.color.vikings)
+            holder.tetelText.setBackgroundColor(R.color.vikings)
+        }
         holder.kontenerText.text = currentItem.kontener
         holder.polcText.text = currentItem.polc
         holder.idoText.text = currentItem.datum

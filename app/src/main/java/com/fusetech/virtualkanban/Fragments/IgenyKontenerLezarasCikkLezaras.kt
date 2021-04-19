@@ -64,13 +64,22 @@ class IgenyKontenerLezarasCikkLezaras : Fragment() {
         exitBtn.setOnClickListener {
             kontItem.clear()
             mainActivity.loadMenuFragment(true)
-            mainActivity.igenyKontenerCheck()
+            if(mainActivity.getFragment("CIKKLEZARASFRAGMENTHATOS")){
+                mainActivity.kiszedesreVaro()
+            }else{
+                mainActivity.igenyKontenerCheck()
+            }
         }
         lezarBtn.setOnClickListener {
             setProgressBarOn()
             mainActivity.closeContainerAndItem()
             kontItem.clear()
             mainActivity.loadMenuFragment(true)
+        }
+        if(arguments?.getBoolean("LEZARBUTN")!!){
+            lezarBtn.visibility = View.VISIBLE
+        }else{
+            lezarBtn.visibility = View.GONE
         }
         return view
     }
@@ -105,4 +114,5 @@ class IgenyKontenerLezarasCikkLezaras : Fragment() {
     fun buttonPerform(){
         exitBtn.performClick()
     }
+    //KEYCOOOOOOODEEEEEEE
 }

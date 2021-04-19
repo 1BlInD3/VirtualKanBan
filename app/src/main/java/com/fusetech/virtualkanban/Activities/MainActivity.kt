@@ -27,7 +27,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     PolcraHelyezesFragment.SendCode,
     PolcLocationFragment.SetPolcLocation,
     IgenyKontenerOsszeallitasFragment.SendBinCode,
-    IgenyKontenerLezarasFragment.IgenyKontnerLezaras{
+    IgenyKontenerLezarasFragment.IgenyKontnerLezaras,
+    KiszedesreVaroIgenyFragment.SendCode6{
     // 1es opció pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
     // át kell rakni máshova
@@ -64,7 +65,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private lateinit var igenyLezarasFragment: IgenyKontenerLezarasFragment
     private lateinit var igenyKiszedesFragment: IgenyKontenerKiszedesFragment
     private lateinit var igenyKiszedesCikkLezaras: IgenyKontenerLezarasCikkLezaras
-    private lateinit var igenyKontenerKiszedesMegnyitottFragment: IgenyKontenerKiszedesMegnyitottFragment
     private lateinit var kiszedesreVaroIgenyFragment: KiszedesreVaroIgenyFragment
     private val TAG = "MainActivity"
     private val cikklekerdezesFragment = CikklekerdezesFragment()
@@ -86,7 +86,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         igenyLezarasFragment = IgenyKontenerLezarasFragment()
         igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
         igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
-        igenyKontenerKiszedesMegnyitottFragment = IgenyKontenerKiszedesMegnyitottFragment()
         kiszedesreVaroIgenyFragment = KiszedesreVaroIgenyFragment()
         AidcManager.create(this) { aidcManager ->
             manager = aidcManager
@@ -127,7 +126,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
         return false
     }
-    private fun getFragment(fragmentName: String): Boolean{
+    fun getFragment(fragmentName: String): Boolean{
         val myFrag = supportFragmentManager.findFragmentByTag(fragmentName)
         if(myFrag != null && myFrag.isVisible){
             return true
@@ -152,10 +151,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     fun loadIgenyOsszeallitasFragment(kontener: String, polc: String?){
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance(kontener,polc)
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyFragment,"IGENY").addToBackStack(null).commit()
-    }
-    fun loadIgenyKiszedesFragment(){
-        val igenyMegnyitott = IgenyKontenerKiszedesMegnyitottFragment()
-        supportFragmentManager.beginTransaction().replace(R.id.data_frame2,igenyMegnyitott,"megnyitott").addToBackStack(null).commit()
     }
     fun removeIgenyFragment(){
         val fragment : Fragment? = supportFragmentManager.findFragmentByTag("IGENYLEZARAS")
@@ -284,17 +279,18 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Main).launch {
-                igenyLezarasFragment.setProgressBarOn()
+                kiszedesreVaroIgenyFragment.setProgressBarOn()
             }
             connection = DriverManager.getConnection(url)
             val statement = connection.prepareStatement(resources.getString(R.string.igenyKontenerLezarasCikkLezaras))
             statement.setInt(1,kontener_id.toInt())
+            statement.setInt(2,1)
             val resultSet = statement.executeQuery()
             if(!resultSet.next()){
                 Log.d(TAG, "loadKontenerCikkek: HIBA VAN")
                 CoroutineScope(Main).launch {
-                    setAlert("A konténerben nincs 0 státuszú cikk")
-                    igenyLezarasFragment.setProgressBarOff()
+                    setAlert("A konténerben nincs 1 státuszú cikk")
+                    kiszedesreVaroIgenyFragment.setProgressBarOff()
                 }
             }else{
                 val igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
@@ -312,16 +308,17 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 val bundle = Bundle()
                 bundle.putSerializable("CIKKLEZAR",kontenerCikkLezar)
                 bundle.putString("KONTENER_ID",kontener_id)
+                bundle.putBoolean("LEZARBUTN",false)
                 igenyKiszedesCikkLezaras.arguments = bundle
                 supportFragmentManager.beginTransaction().replace(R.id.data_frame3,igenyKiszedesCikkLezaras,"CIKKLEZARASFRAGMENTHATOS").addToBackStack(null).commit()
                 CoroutineScope(Main).launch {
-                    igenyLezarasFragment.setProgressBarOff()
+                    kiszedesreVaroIgenyFragment.setProgressBarOff()
                 }
             }
         }catch (e: Exception){
             Log.d(TAG, "loadKontenerCikkek: $e")
             CoroutineScope(Main).launch {
-                igenyLezarasFragment.setProgressBarOff()
+                kiszedesreVaroIgenyFragment.setProgressBarOff()
             }
         }
     }
@@ -334,6 +331,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             connection = DriverManager.getConnection(url)
             val statement = connection.prepareStatement(resources.getString(R.string.igenyKontenerLezarasCikkLezaras))
             statement.setInt(1,kontener_id.toInt())
+            statement.setInt(2,0)
             val resultSet = statement.executeQuery()
             if(!resultSet.next()){
                 Log.d(TAG, "loadKontenerCikkek: HIBA VAN")
@@ -357,6 +355,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 val bundle = Bundle()
                 bundle.putSerializable("CIKKLEZAR",kontenerCikkLezar)
                 bundle.putString("KONTENER_ID",kontener_id)
+                bundle.putBoolean("LEZARBUTN",true)
                 igenyKiszedesCikkLezaras.arguments = bundle
                 supportFragmentManager.beginTransaction().replace(R.id.data_frame1,igenyKiszedesCikkLezaras,"CIKKLEZARASFRAGMENT").addToBackStack(null).commit()
                 CoroutineScope(Main).launch {
@@ -370,7 +369,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }
     }
-    private fun loadIgenyKiszedesMegnyitott(){
+   /* private fun loadIgenyKiszedesMegnyitott(){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try{
             val megnyitott = IgenyKontenerKiszedesMegnyitottFragment()
@@ -379,7 +378,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
             connection = DriverManager.getConnection(url)
             val statement = connection.prepareStatement(resources.getString(R.string.igenyKontenerKiszedese))
-            statement.setInt(1,2)
             val resultSet = statement.executeQuery()
             if(!resultSet.next()){
                 CoroutineScope(Main).launch {
@@ -394,7 +392,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     val datum: String? = resultSet.getString("igenyelve")
                     val tetelszam = resultSet.getInt("tetelszam")
                     val id: String = resultSet.getString("id")
-                    kontenerList.add(KontenerItem(kontener,polc,datum,tetelszam,id))
+                    val status: Int = resultSet.getInt("statusz")
+                    kontenerList.add(KontenerItem(kontener,polc,datum,tetelszam,id,status))
                 }while(resultSet.next())
                 val bundle = Bundle()
                 bundle.putSerializable("MEGNYITOTTLISTA",kontenerList)
@@ -411,7 +410,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 setAlert("Probléma van :\n $e")
             }
         }
-    }
+    }*/
     private fun loadKiszedesreVaro(){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try{
@@ -420,7 +419,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
             connection = DriverManager.getConnection(url)
             val statement = connection.prepareStatement(resources.getString(R.string.igenyKontenerKiszedese))
-            statement.setInt(1,1)
             val resultSet = statement.executeQuery()
             if(!resultSet.next()){
                 CoroutineScope(Main).launch {
@@ -435,7 +433,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     val datum: String? = resultSet.getString("igenyelve")
                     val tetelszam = resultSet.getInt("tetelszam")
                     val id: String = resultSet.getString("id")
-                    myList.add(KontenerItem(kontener,polc,datum,tetelszam,id))
+                    val status: Int = resultSet.getInt("statusz")
+                    myList.add(KontenerItem(kontener,polc,datum,tetelszam,id,status))
                 }while(resultSet.next())
                 val bundle = Bundle()
                 bundle.putSerializable("VAROLISTA",myList)
@@ -461,7 +460,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
             connection = DriverManager.getConnection(url)
             val statement = connection.prepareStatement(resources.getString(R.string.igenyKontenerKiszedese))
-            statement.setInt(1,1)
             val resultSet = statement.executeQuery()
             if(!resultSet.next()){
                 CoroutineScope(Main).launch {
@@ -476,7 +474,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     val datum: String? = resultSet.getString("igenyelve")
                     val tetelszam = resultSet.getInt("tetelszam")
                     val id: String = resultSet.getString("id")
-                    kontenerList.add(KontenerItem(kontener,polc,datum,tetelszam,id))
+                    val status: Int = resultSet.getInt("statusz")
+                    kontenerList.add(KontenerItem(kontener,polc,datum,tetelszam,id,status))
                 }while(resultSet.next())
                 val bundle = Bundle()
                 bundle.putSerializable("KISZEDESLISTA",kontenerList)
@@ -513,7 +512,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     val datum: String? = resultSet.getString("igenyelve")
                     val tetelszam = resultSet.getInt("tetelszam")
                     val id: String? = resultSet.getString("id")
-                    kontenerList.add(KontenerItem(kontener,polc,datum,tetelszam,id))
+                    val status: Int = resultSet.getInt("statusz")
+                    kontenerList.add(KontenerItem(kontener,polc,datum,tetelszam,id,status))
                 }while(resultSet.next())
                 val bundle = Bundle()
                 bundle.putSerializable("KONTENERLISTA",kontenerList)
@@ -1068,11 +1068,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
 
-    fun igenyKontenerMegnyitott(){
-        CoroutineScope(IO).launch {
-            loadIgenyKiszedesMegnyitott()
-        }
-    }
     fun kiszedesreVaro(){
         CoroutineScope(IO).launch {
             loadKiszedesreVaro()
@@ -1084,8 +1079,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 getFragment("CIKKLEZARASFRAGMENT") -> {
                     igenyKiszedesCikkLezaras.buttonPerform()
                 }
-                getFragment("MEGNYITOTT") -> {
-                    igenyKontenerKiszedesMegnyitottFragment.performButton()
+                getFragment("CIKKLEZARASFRAGMENTHATOS") -> {
+                    igenyKiszedesCikkLezaras.buttonPerform()
                 }
                 else -> {
                     super.onBackPressed()
@@ -1094,6 +1089,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }catch (e: Exception){
             Log.d(TAG, "onBackPressed: $e")
             super.onBackPressed()
+        }
+    }
+
+    override fun containerCode(kontener: String) {
+        CoroutineScope(IO).launch {
+            loadKontenerCikkekHatos(kontener)
         }
     }
 }
