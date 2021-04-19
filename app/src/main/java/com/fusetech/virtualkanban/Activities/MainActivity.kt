@@ -46,7 +46,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     * 3as opció
     * csak azok a konténerek legyenek megjelenítve, amelyek KanBan státusza 1 ÉS A státusza 0 (írja ki amit ki kell írni) illetve a tételek státusza is 0
     * a lezárás a másik fülön átírja a tételeknél a státuszt 1-re, a konténereknél a státusz is 1 lesz és beírja az igénylés dátumát
-    * */
+    *
+    * 4es opció
+    *
+    * 6os opció
+    * Kiírja az 1es státuszú konténereket, majd kattintással belemegy és kiírja a tételeket ami benne van + megnyitott konténer opció*/
     private var manager : AidcManager? = null
     private var barcodeReader : BarcodeReader? = null
     private lateinit var barcodeData : String
@@ -61,6 +65,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private lateinit var igenyKiszedesFragment: IgenyKontenerKiszedesFragment
     private lateinit var igenyKiszedesCikkLezaras: IgenyKontenerLezarasCikkLezaras
     private lateinit var igenyKontenerKiszedesMegnyitottFragment: IgenyKontenerKiszedesMegnyitottFragment
+    private lateinit var kiszedesreVaroIgenyFragment: KiszedesreVaroIgenyFragment
     private val TAG = "MainActivity"
     private val cikklekerdezesFragment = CikklekerdezesFragment()
     val polcLocationFragment = PolcLocationFragment()
@@ -82,6 +87,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
         igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
         igenyKontenerKiszedesMegnyitottFragment = IgenyKontenerKiszedesMegnyitottFragment()
+        kiszedesreVaroIgenyFragment = KiszedesreVaroIgenyFragment()
         AidcManager.create(this) { aidcManager ->
             manager = aidcManager
             try {
@@ -194,7 +200,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                10 -> igenyKontenerCheck()
                11 -> igenyKontenerKiszedes()//Log.d(TAG, "onKeyDown: $keyCode")
                12 -> Log.d(TAG, "onKeyDown: $keyCode")
-               13 -> Log.d(TAG, "onKeyDown: $keyCode")
+               13 -> kiszedesreVaro()//Log.d(TAG, "onKeyDown: $keyCode")
                14 -> Log.d(TAG, "onKeyDown: $keyCode")
                15 -> Log.d(TAG, "onKeyDown: $keyCode")
                16 -> loadCikklekerdezesFragment()
@@ -274,6 +280,51 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             setAlert("Probléma van\n $e")
         }
     }
+    private fun loadKontenerCikkekHatos(kontener_id: String){
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try {
+            CoroutineScope(Main).launch {
+                igenyLezarasFragment.setProgressBarOn()
+            }
+            connection = DriverManager.getConnection(url)
+            val statement = connection.prepareStatement(resources.getString(R.string.igenyKontenerLezarasCikkLezaras))
+            statement.setInt(1,kontener_id.toInt())
+            val resultSet = statement.executeQuery()
+            if(!resultSet.next()){
+                Log.d(TAG, "loadKontenerCikkek: HIBA VAN")
+                CoroutineScope(Main).launch {
+                    setAlert("A konténerben nincs 0 státuszú cikk")
+                    igenyLezarasFragment.setProgressBarOff()
+                }
+            }else{
+                val igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
+                igenyLezarCikkVisible = true
+                val kontenerCikkLezar: ArrayList<KontenerbenLezarasItem> = ArrayList()
+                do {
+                    val cikk = resultSet.getString("cikkszam")
+                    val megj1 = resultSet.getString("Description1")
+                    val megj2 = resultSet.getString("Description2")
+                    val intrem = resultSet.getString("InternRem1")
+                    val igeny = resultSet.getDouble("igenyelt_mennyiseg").toString() +" "+resultSet.getString("Unit")
+                    val mozgatott = resultSet.getDouble("mozgatott_mennyiseg").toString()+" " + resultSet.getString("Unit")
+                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott))
+                }while (resultSet.next())
+                val bundle = Bundle()
+                bundle.putSerializable("CIKKLEZAR",kontenerCikkLezar)
+                bundle.putString("KONTENER_ID",kontener_id)
+                igenyKiszedesCikkLezaras.arguments = bundle
+                supportFragmentManager.beginTransaction().replace(R.id.data_frame3,igenyKiszedesCikkLezaras,"CIKKLEZARASFRAGMENTHATOS").addToBackStack(null).commit()
+                CoroutineScope(Main).launch {
+                    igenyLezarasFragment.setProgressBarOff()
+                }
+            }
+        }catch (e: Exception){
+            Log.d(TAG, "loadKontenerCikkek: $e")
+            CoroutineScope(Main).launch {
+                igenyLezarasFragment.setProgressBarOff()
+            }
+        }
+    }
     private fun loadKontenerCikkek(kontener_id: String){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -349,6 +400,47 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 bundle.putSerializable("MEGNYITOTTLISTA",kontenerList)
                 megnyitott.arguments = bundle
                 supportFragmentManager.beginTransaction().replace(R.id.frame_container,megnyitott,"MEGNYITOTT").addToBackStack(null).commit()
+                CoroutineScope(Main).launch {
+                    menuFragment.setMenuProgressOff()
+                }
+            }
+        }catch (e: Exception){
+            Log.d(TAG, "loadIgenyKiszedes: $e")
+            CoroutineScope(Main).launch {
+                menuFragment.setMenuProgressOff()
+                setAlert("Probléma van :\n $e")
+            }
+        }
+    }
+    private fun loadKiszedesreVaro(){
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try{
+            CoroutineScope(Main).launch {
+                menuFragment.setMenuProgressOn()
+            }
+            connection = DriverManager.getConnection(url)
+            val statement = connection.prepareStatement(resources.getString(R.string.igenyKontenerKiszedese))
+            statement.setInt(1,1)
+            val resultSet = statement.executeQuery()
+            if(!resultSet.next()){
+                CoroutineScope(Main).launch {
+                    menuFragment.setMenuProgressOff()
+                }
+                supportFragmentManager.beginTransaction().replace(R.id.frame_container,kiszedesreVaroIgenyFragment,"VARAS").addToBackStack(null).commit()
+            }else{
+                val myList: ArrayList<KontenerItem> = ArrayList()
+                do{
+                    val kontener: String? = resultSet.getString("kontener")
+                    val polc: String? = resultSet.getString("polc")
+                    val datum: String? = resultSet.getString("igenyelve")
+                    val tetelszam = resultSet.getInt("tetelszam")
+                    val id: String = resultSet.getString("id")
+                    myList.add(KontenerItem(kontener,polc,datum,tetelszam,id))
+                }while(resultSet.next())
+                val bundle = Bundle()
+                bundle.putSerializable("VAROLISTA",myList)
+                kiszedesreVaroIgenyFragment.arguments = bundle
+                supportFragmentManager.beginTransaction().replace(R.id.frame_container,kiszedesreVaroIgenyFragment,"VARAS").addToBackStack(null).commit()
                 CoroutineScope(Main).launch {
                     menuFragment.setMenuProgressOff()
                 }
@@ -981,15 +1073,23 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             loadIgenyKiszedesMegnyitott()
         }
     }
+    fun kiszedesreVaro(){
+        CoroutineScope(IO).launch {
+            loadKiszedesreVaro()
+        }
+    }
     override fun onBackPressed() {
         try{
-            if(getFragment("CIKKLEZARASFRAGMENT")) {
-               igenyKiszedesCikkLezaras.buttonPerform()
-            }
-            else if(getFragment("MEGNYITOTT")){
-                igenyKontenerKiszedesMegnyitottFragment.performButton()
-            }else{
-                super.onBackPressed()
+            when {
+                getFragment("CIKKLEZARASFRAGMENT") -> {
+                    igenyKiszedesCikkLezaras.buttonPerform()
+                }
+                getFragment("MEGNYITOTT") -> {
+                    igenyKontenerKiszedesMegnyitottFragment.performButton()
+                }
+                else -> {
+                    super.onBackPressed()
+                }
             }
         }catch (e: Exception){
             Log.d(TAG, "onBackPressed: $e")

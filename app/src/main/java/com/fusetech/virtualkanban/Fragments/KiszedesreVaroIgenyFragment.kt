@@ -9,15 +9,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Adapters.KontenerAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerItem
 import com.fusetech.virtualkanban.R
-import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes.view.*
-import kotlinx.android.synthetic.main.fragment_load.*
+import kotlinx.android.synthetic.main.fragment_kiszedesre_varo_igeny.view.*
 import kotlinx.android.synthetic.main.konteneres_view.view.*
 
 private const val ARG_PARAM1 = "param1"
@@ -29,10 +27,8 @@ private lateinit var progress: ProgressBar
 private lateinit var megnyitottBtn : Button
 private lateinit var exit3Btn: Button
 private lateinit var mainActivity: MainActivity
-private const val TAG = "IgenyKontenerKiszedesFr"
-
-class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClickListener {
-
+private const val TAG = "KiszedesreVaroIgenyFrag"
+class KiszedesreVaroIgenyFragment : Fragment(),KontenerAdapter.onKontenerClickListener {
     private var param1: String? = null
     private var param2: String? = null
 
@@ -48,9 +44,9 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-       val view = inflater.inflate(R.layout.fragment_igeny_kontener_kiszedes, container, false)
+        val view = inflater.inflate(R.layout.fragment_kiszedesre_varo_igeny, container, false)
         mainActivity = activity as MainActivity
-        childFrame = view.data_frame2
+        childFrame = view.data_frame3
         val child = layoutInflater.inflate(R.layout.konteneres_view,null)
         childFrame.addView(child)
         progress = child.konteneresProgress
@@ -67,7 +63,7 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
 
         megnyitottBtn.setOnClickListener {
             setProgressBarOn()
-            mainActivity.igenyKontenerMegnyitott()
+            //mainActivity.igenyKontenerMegnyitott()
             setProgressBarOff()
         }
         exit3Btn.setOnClickListener {
@@ -75,9 +71,8 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
             mainActivity.loadMenuFragment(true)
         }
 
-       return view
+        return view
     }
-
     companion object {
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
@@ -88,19 +83,18 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
                 }
             }
     }
-
     override fun onKontenerClick(position: Int) {
-        Toast.makeText(view?.context, "itt mas jelenik meg", Toast.LENGTH_SHORT).show()
+        Log.d(TAG, "onKontenerClick: MEGNYOMTAM")
     }
     private fun loadData(){
         try {
             kontenerList.clear()
-            val myList: ArrayList<KontenerItem> = arguments?.getSerializable("KISZEDESLISTA") as ArrayList<KontenerItem>
+            val myList: ArrayList<KontenerItem> = arguments?.getSerializable("VAROLISTA") as ArrayList<KontenerItem>
             for(i in 0 until myList.size){
                 kontenerList.add(KontenerItem(myList[i].kontener,myList[i].polc,myList[i].datum,myList[i].tetelszam,myList[i].kontner_id))
             }
         }catch (e: Exception){
-            Log.d(TAG, "loadData: ")
+            Log.d(TAG, "loadData: $e")
         }
     }
     fun setProgressBarOff(){
