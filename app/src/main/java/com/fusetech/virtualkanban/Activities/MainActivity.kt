@@ -166,24 +166,28 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread{
             barcodeData = p0?.barcodeData!!
-            if (loginFragment.isVisible) {
-                loginFragment.SetId(barcodeData)
-                dolgKod = barcodeData
-                loginFragment.StartSpinning()
-                CoroutineScope(IO).launch {
-                    checkRightSql(dolgKod)
+            when {
+                loginFragment.isVisible -> {
+                    loginFragment.SetId(barcodeData)
+                    dolgKod = barcodeData
+                    loginFragment.StartSpinning()
+                    CoroutineScope(IO).launch {
+                        checkRightSql(dolgKod)
+                    }
                 }
-            }else if(cikklekerdezesFragment.isVisible) {
-                loadLoadFragment("Várom az eredményt")
-                cikkItems.clear()
-                polcItems.clear()
-                cikklekerdezesFragment.setBinOrItem(barcodeData)
-                CoroutineScope(IO).launch {
-                    cikkPolcQuery(barcodeData)
+                cikklekerdezesFragment.isVisible -> {
+                    loadLoadFragment("Várom az eredményt")
+                    cikkItems.clear()
+                    polcItems.clear()
+                    cikklekerdezesFragment.setBinOrItem(barcodeData)
+                    CoroutineScope(IO).launch {
+                        cikkPolcQuery(barcodeData)
+                    }
                 }
-            }else if(getFragment("SZALLITO")){
-                CoroutineScope(IO).launch {
-                    updateKontenerKiszedesre(kontener)
+                getFragment("SZALLITO") -> {
+                    CoroutineScope(IO).launch {
+                        updateKontenerKiszedesre(kontener)
+                    }
                 }
             }
         }
@@ -201,7 +205,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
            when(keyCode){
                7 -> finishAndRemoveTask()
                8 -> loadPolcHelyezesFragment()
-               9 -> containerCheck("1GU")
+               9 -> containerCheck(dolgKod)
                10 -> igenyKontenerCheck()
                11 -> igenyKontenerKiszedes()//Log.d(TAG, "onKeyDown: $keyCode")
                12 -> Log.d(TAG, "onKeyDown: $keyCode")
@@ -1093,6 +1097,13 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             checkIfContainerIsOpen(kontener)
         }
     }
+
+    override fun containerCode(kontener: String) {
+        CoroutineScope(IO).launch {
+            loadKontenerCikkekHatos(kontener)
+        }
+    }
+
     override fun onBackPressed() {
         try{
             when {
@@ -1113,12 +1124,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }catch (e: Exception){
             Log.d(TAG, "onBackPressed: $e")
             super.onBackPressed()
-        }
-    }
-
-    override fun containerCode(kontener: String) {
-        CoroutineScope(IO).launch {
-            loadKontenerCikkekHatos(kontener)
         }
     }
 }
