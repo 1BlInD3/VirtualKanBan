@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private lateinit var igenyKiszedesFragment: IgenyKontenerKiszedesFragment
     private lateinit var igenyKiszedesCikkLezaras: IgenyKontenerLezarasCikkLezaras
     private lateinit var kiszedesreVaroIgenyFragment: KiszedesreVaroIgenyFragment
+    private lateinit var szallitoJarmuFragment: SzallitoJartmuFragment
     private val TAG = "MainActivity"
     private val cikklekerdezesFragment = CikklekerdezesFragment()
     val polcLocationFragment = PolcLocationFragment()
@@ -88,6 +89,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
         igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
         kiszedesreVaroIgenyFragment = KiszedesreVaroIgenyFragment()
+        szallitoJarmuFragment = SzallitoJartmuFragment()
         AidcManager.create(this) { aidcManager ->
             manager = aidcManager
             try {
@@ -153,6 +155,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance(kontener,polc)
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyFragment,"IGENY").addToBackStack(null).commit()
     }
+    fun loadSzallitoJarmu(kontener_id: String){
+        kontener = kontener_id
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container,szallitoJarmuFragment,"SZALLITO").addToBackStack(null).commit()
+    }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread{
             barcodeData = p0?.barcodeData!!
@@ -170,6 +176,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 cikklekerdezesFragment.setBinOrItem(barcodeData)
                 CoroutineScope(IO).launch {
                     cikkPolcQuery(barcodeData)
+                }
+            }else if(getFragment("SZALLITO") && barcodeData == "SZ01"){
+                szallitoJarmuFragment.setJarmu(barcodeData)
+                CoroutineScope(IO).launch {
+                    updateKontener(kontener)
                 }
             }
         }
@@ -248,7 +259,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         try{
             connection = DriverManager.getConnection(connectionString)
             val statment = connection.prepareStatement(resources.getString(R.string.updateContainerStatus))
-            statment.setString(1,kontener_id)
+            statment.setInt(1,1)
+            statment.setString(2,"NULL")
+            statment.setString(3,kontener_id)
             statment.executeUpdate()
             Log.d(TAG, "updateCikkAndKontener: Konténer lezárva")
             lezarandoKontener = ""
@@ -1022,6 +1035,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 }
                 getFragment("CIKKLEZARASFRAGMENTHATOS") -> {
                     igenyKiszedesCikkLezaras.buttonPerform()
+                }
+                getFragment("SZALLITO") -> {
+                    loadMenuFragment(true)
+                    igenyKontenerKiszedes()
                 }
                 else -> {
                     super.onBackPressed()
