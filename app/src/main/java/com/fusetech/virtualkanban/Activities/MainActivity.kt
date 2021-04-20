@@ -52,7 +52,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     *
     *
     * 6os opció
-    * Kiírja az 1es és 2 státuszú konténereket, majd kattintással belemegy és kiírja a tételeket ami benne van, átszínezi a 2-es státuszú konténereket*/
+    * Kiírja az 1es és 2 státuszú konténereket, majd kattintással belemegy és kiírja a tételeket ami benne van, átszínezi a 2-es státuszú konténereket
+    *
+    * írjon bele ha belelépek ha már van szállító jármű h ki vette át
+    *
+    * a szállítójármű beolvasásnl olyan polc kell ami van a 21-es raktárban*/
     private var manager : AidcManager? = null
     private var barcodeReader : BarcodeReader? = null
     private lateinit var barcodeData : String
@@ -177,10 +181,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 CoroutineScope(IO).launch {
                     cikkPolcQuery(barcodeData)
                 }
-            }else if(getFragment("SZALLITO") && barcodeData == "SZ01"){
-                szallitoJarmuFragment.setJarmu(barcodeData)
+            }else if(getFragment("SZALLITO")){
                 CoroutineScope(IO).launch {
-                    updateKontener(kontener)
+                    updateKontenerKiszedesre(kontener)
                 }
             }
         }
@@ -253,6 +256,63 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             return false
         }
     }
+    private fun checkIfContainerIsOpen(kontener: String){
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try{
+            connection = DriverManager.getConnection(connectionString)
+            val statement = connection.prepareStatement(resources.getString(R.string.kontenerEllenorzes))
+            statement.setString(1,kontener)
+            statement.setInt(2,2)
+            val resultSet = statement.executeQuery()
+            if(!resultSet.next()){
+                loadSzallitoJarmu(kontener)
+            }else{
+                val statement2 = connection.prepareStatement(resources.getString(R.string.atvevoBeiras))
+                statement2.setString(1,dolgKod)
+                statement2.setString(2,kontener)
+                statement2.executeUpdate()
+                Log.d(TAG, "checkIfContainerIsOpen: Sikeres update")
+                CoroutineScope(Main).launch {
+                    setAlert("Itt kell beolvasni az új oldalt")
+                }
+            }
+        }catch (e: Exception){
+            CoroutineScope(Main).launch {
+                setAlert("Hiba \n $e")
+            }
+        }
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private fun updateKontenerKiszedesre(kontener: String) {
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try{
+            connection = DriverManager.getConnection(connectionString)
+            val statement2 = connection.prepareStatement(resources.getString(R.string.isPolc21))
+            statement2.setString(1,"21")
+            statement2.setString(2,barcodeData)
+            val resultSet = statement2.executeQuery()
+            if(!resultSet.next()){
+                CoroutineScope(Main).launch {
+                    setAlert("Nincs a tranzitraktárban!")
+                }
+            }else{
+                val statement = connection.prepareStatement(resources.getString(R.string.updateContainerStatus))
+                statement.setInt(1,2)
+                statement.setString(2,"SZ01")
+                statement.setString(3,dolgKod)//ide kell a bejelentkezős kód
+                statement.setString(4,kontener)
+                statement.executeUpdate()
+                Log.d(TAG, "updateKontenerKiszedesre: Sikeres adatfrissítés!!!")
+                CoroutineScope(Main).launch {
+                    setAlert("Siker!")
+                }
+            }
+        }catch (e: Exception){
+            CoroutineScope(Main).launch {
+                setAlert("Probléma a feltöltésben!\n $e")
+            }
+        }
+    }
 
     private fun updateKontener(kontener_id: String){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -261,13 +321,14 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             val statment = connection.prepareStatement(resources.getString(R.string.updateContainerStatus))
             statment.setInt(1,1)
             statment.setString(2,"NULL")
-            statment.setString(3,kontener_id)
+            statment.setString(3,dolgKod)//ide kell a bejelentkezős kód
+            statment.setString(4,kontener_id)
             statment.executeUpdate()
             Log.d(TAG, "updateCikkAndKontener: Konténer lezárva")
             lezarandoKontener = ""
         }catch (e: Exception){
             Log.d(TAG, "updateKontener: $e")
-            setAlert("Probléma van\n $e")
+            setAlert("Probléma van a konténer 1-re átírásánál\n $e")
         }
     }
     private fun updateCikk(kontener_id: String){
@@ -1025,6 +1086,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     fun kiszedesreVaro(){
         CoroutineScope(IO).launch {
             loadKiszedesreVaro()
+        }
+    }
+    fun checkIfContainerStatus(kontener: String){
+        CoroutineScope(IO).launch {
+            checkIfContainerIsOpen(kontener)
         }
     }
     override fun onBackPressed() {

@@ -77,10 +77,14 @@ class MenuFragment : Fragment() {
         }
 
         polcHelyezes.setOnClickListener {
-            mainActivity.loadPolcHelyezesFragment()
+            if(polcHelyezes.isEnabled){
+                mainActivity.loadPolcHelyezesFragment()
+            }
         }
         igenyOssze.setOnClickListener {
-            mainActivity.loadIgenyOsszeallitasFragment("","")
+            if(igenyOssze.isEnabled){
+                mainActivity.loadIgenyOsszeallitasFragment("","")// ez csak megjelenítés semmi sql nem fut alatta
+            }
         }
         kilepes.setOnClickListener {
             mainActivity.finishAndRemoveTask()

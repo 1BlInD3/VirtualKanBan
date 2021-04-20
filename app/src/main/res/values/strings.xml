@@ -16,7 +16,7 @@
     <string name="updateContainerValue">UPDATE [leltar].[dbo].kontener SET kontener = ? where atado = ? and statusz = ?</string>
     <string name="updateBin">UPDATE [leltar].[dbo].kontener SET termeles_rakhely = ? where atado = ? and statusz = ?</string>
     <string name="updateItemStatus">UPDATE [leltar].[dbo].[kontener_tetel] SET statusz = 1 where kontener_id = ?</string>
-    <string name="updateContainerStatus">UPDATE [leltar].[dbo].[kontener] SET statusz = ?, SzallitoJarmu = ? where id = ?</string>
+    <string name="updateContainerStatus">UPDATE [leltar].[dbo].[kontener] SET statusz = ?, SzallitoJarmu = ?, atvevo = ? where id = ?</string>
     <string name="closeContainer">UPDATE [leltar].[dbo].kontener SET statusz = ?, igenyelve = ? where id = ?</string>
     <string name="loadIgenyItemsToList">SELECT cikkszam, igenyelt_mennyiseg,cikk.[SC01002] as megjegyzes FROM [leltar].[dbo].[kontener_tetel] left outer join [ScaCompDB].[dbo].SC010300 as cikk on cikk.SC01001 = [leltar].[dbo].[kontener_tetel].cikkszam where kontener_id = ? order by id desc</string>
     <string name="igenyKontenerLezarasKontenerBeolvas">SELECT MAX(kontener.id)as id,MAX(kontener.kontener)as kontener,MAX(kontener.statusz) as statusz,MAX(kontener.igenyelve)as igenyelve,COUNT(tetel.kontener_id)as tetelszam, MAX(kontener.termeles_rakhely)as polc FROM [leltar].[dbo].[kontener] as kontener LEFT OUTER JOIN [leltar].[dbo].[kontener_tetel] as tetel ON kontener.id = tetel.kontener_id WHERE kontener.statusz = 0 and kontener.KanbanStatus = 1 GROUP BY kontener.id</string>
@@ -24,4 +24,6 @@
     <string name="igenyKontenerKiszedese">SELECT MAX(kontener.id)as id,MAX(kontener.kontener)as kontener,MAX(kontener.igenyelve)as igenyelve,MAX(kontener.statusz) as statusz,COUNT(tetel.kontener_id)as tetelszam, MAX(kontener.termeles_rakhely)as polc FROM [leltar].[dbo].[kontener] as kontener LEFT OUTER JOIN [leltar].[dbo].[kontener_tetel] as tetel ON kontener.id = tetel.kontener_id WHERE kontener.statusz = 1 OR kontener.statusz = 2 GROUP BY kontener.id ORDER BY igenyelve,tetelszam desc</string>
     <string name="igenyKontenerLezarasCikkLezarasNULL">SELECT tetel.cikkszam as cikkszam, adat.Description1 ,adat.Description2 ,adat.InternRem1 ,tetel.statusz as statusz, tetel.igenyelt_mennyiseg as igenyelt_mennyiseg ,tetel.mozgatott_mennyiseg as mozgatott_mennyiseg, unit.Description as Unit FROM [leltar].[dbo].[kontener_tetel] as tetel LEFT OUTER JOIN [ScaCompDB].[dbo].[VF_SC010300_Stockfile] as adat ON tetel.cikkszam = adat.StockCode LEFT OUTER JOIN [ScaCompDB].[dbo].[VF_SCUN0300_UnitCode] as unit ON adat.UnitCodeStoc = unit.UnitCode where kontener_id = ? and statusz = ?</string>
     <string name="kontenerEllenorzes">SELECT id FROM [leltar].[dbo].[kontener] where id = ? and statusz = ?</string>
+    <string name="atvevoBeiras">UPDATE [leltar].[dbo].kontener SET atvevo = ? where id = ?</string>
+    <string name="isPolc21">SELECT WarehouseID, BinNumber, InternalName FROM [ScaCompDB].[dbo].VF_SC360300_StockBinNo left outer join [ScaCompDB].[dbo].VF_SC230300_WarehouseInfo ON WarehouseID = Warehouse WHERE WarehouseID = ? AND BinNumber = ?</string>
 </resources>

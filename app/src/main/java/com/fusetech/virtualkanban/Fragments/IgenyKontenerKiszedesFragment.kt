@@ -83,8 +83,7 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
     }
 
     override fun onKontenerClick(position: Int) {
-        //Toast.makeText(view?.context, "itt mas jelenik meg", Toast.LENGTH_SHORT).show()
-        mainActivity.loadSzallitoJarmu()
+        mainActivity.checkIfContainerStatus(kontenerList[position].kontner_id.toString())
     }
     private fun loadData(){
         try {
