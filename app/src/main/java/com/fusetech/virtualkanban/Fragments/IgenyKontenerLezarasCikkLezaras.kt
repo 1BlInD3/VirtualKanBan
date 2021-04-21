@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Activities.MainActivity
@@ -28,7 +29,7 @@ private lateinit var kontenerNev: TextView
 private const val TAG = "IgenyKontenerLezarasCik"
 private lateinit var progress: ProgressBar
 
-class IgenyKontenerLezarasCikkLezaras : Fragment() {
+class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.onItemClickListener {
     private var param1: String? = null
     private var param2: String? = null
 
@@ -52,7 +53,7 @@ class IgenyKontenerLezarasCikkLezaras : Fragment() {
         kontenerNev = view.kontenerNameLezaras
         progress = view.cikkLezarasProgress
         setProgressBarOff()
-        recycler.adapter = KontenerbenLezarasAdapter(kontItem)
+        recycler.adapter = KontenerbenLezarasAdapter(kontItem,this)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
         kontItem.clear()
@@ -98,7 +99,7 @@ class IgenyKontenerLezarasCikkLezaras : Fragment() {
         try {
             val myList: ArrayList<KontenerbenLezarasItem> = arguments?.getSerializable("CIKKLEZAR") as ArrayList<KontenerbenLezarasItem>
             for(i in 0 until myList.size){
-                kontItem.add(KontenerbenLezarasItem(myList[i].cikkszam,myList[i].megjegyzes1,myList[i].megjegyzes2,myList[i].intrem,myList[i].igeny,myList[i].kiadva))
+                kontItem.add(KontenerbenLezarasItem(myList[i].cikkszam,myList[i].megjegyzes1,myList[i].megjegyzes2,myList[i].intrem,myList[i].igeny,myList[i].kiadva,myList[i].statusz))
             }
             kontenerNev.text = arguments?.getString("KONTENER_ID")
         }catch (e: Exception){
@@ -113,6 +114,10 @@ class IgenyKontenerLezarasCikkLezaras : Fragment() {
     }
     fun buttonPerform(){
         exitBtn.performClick()
+    }
+
+    override fun onItemClick(position: Int) {
+        Log.d(TAG, "onItemClick: ")
     }
     //KEYCOOOOOOODEEEEEEE
 }

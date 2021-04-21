@@ -276,6 +276,32 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 statement2.setString(2,kontener)
                 statement2.executeUpdate()
                 Log.d(TAG, "checkIfContainerIsOpen: Sikeres update")
+                val statment3 = connection.prepareStatement(resources.getString(R.string.igenyKontenerLezarasCikkLezaras))
+                statment3.setInt(1,kontener.toInt())
+                val resultSet1 = statment3.executeQuery()
+                if(!resultSet1.next()){
+                    CoroutineScope(Main).launch {
+                        setAlert("A konténer üres")
+                    }
+                }else{
+                    val fragment = IgenyKontnerKiszedesCikk()
+                    val konteneresCikkek: ArrayList<KontenerbenLezarasItem> = ArrayList()
+                    do{
+                        val cikk = resultSet1.getString("cikkszam")
+                        val megj1 = resultSet1.getString("Description1")
+                        val megj2 = resultSet1.getString("Description2")
+                        val intrem = resultSet1.getString("InternRem1")
+                        val igeny = resultSet1.getDouble("igenyelt_mennyiseg").toString() +" "+resultSet1.getString("Unit")
+                        val mozgatott = resultSet1.getDouble("mozgatott_mennyiseg").toString()+" "+resultSet1.getString("Unit")
+                        val status = resultSet1.getInt("statusz")
+                        konteneresCikkek.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status))
+                    }while (resultSet1.next())
+                    val bundle = Bundle()
+                    bundle.putSerializable("NEGYESCIKKEK",konteneresCikkek)
+                    bundle.putSerializable("NEGYESNEV",kontener)
+                    fragment.arguments = bundle
+                    supportFragmentManager.beginTransaction().replace(R.id.data_frame2,fragment,"NEGYESCIKKEK").commit()
+                }
                 CoroutineScope(Main).launch {
                     setAlert("Itt kell beolvasni az új oldalt")
                 }
@@ -376,7 +402,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     val intrem = resultSet.getString("InternRem1")
                     val igeny = resultSet.getDouble("igenyelt_mennyiseg").toString() +" "+resultSet.getString("Unit")
                     val mozgatott = resultSet.getDouble("mozgatott_mennyiseg").toString()+" " + resultSet.getString("Unit")
-                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott))
+                    val status = resultSet.getInt("statusz")
+                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status))
                 }while (resultSet.next())
                 val bundle = Bundle()
                 bundle.putSerializable("CIKKLEZAR",kontenerCikkLezar)
@@ -423,7 +450,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     val intrem = resultSet.getString("InternRem1")
                     val igeny = resultSet.getDouble("igenyelt_mennyiseg").toString() +" "+resultSet.getString("Unit")
                     val mozgatott = resultSet.getDouble("mozgatott_mennyiseg").toString()+" " + resultSet.getString("Unit")
-                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott))
+                    val status = resultSet.getInt("statusz")
+                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status))
                 }while (resultSet.next())
                 val bundle = Bundle()
                 bundle.putSerializable("CIKKLEZAR",kontenerCikkLezar)
