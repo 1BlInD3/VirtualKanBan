@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:focusable="false"
     tools:context=".Fragments.IgenyKontenerKiszedesFragment"
     android:background="@color/pocakszin2">
 
@@ -12,6 +13,7 @@
         android:id="@+id/data_frame2"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:focusable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,6 +25,7 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="35dp"
+        android:focusable="false"
         android:background="@color/pocakszin4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -34,6 +37,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
             android:text="4. Igény konténer kiszedése"
+            android:focusable="false"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
