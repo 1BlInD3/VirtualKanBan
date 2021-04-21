@@ -302,9 +302,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     fragment.arguments = bundle
                     supportFragmentManager.beginTransaction().replace(R.id.data_frame2,fragment,"NEGYESCIKKEK").commit()
                 }
-                CoroutineScope(Main).launch {
-                    setAlert("Itt kell beolvasni az új oldalt")
-                }
             }
         }catch (e: Exception){
             CoroutineScope(Main).launch {
