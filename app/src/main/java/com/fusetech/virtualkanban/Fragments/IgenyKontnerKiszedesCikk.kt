@@ -35,7 +35,7 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
     private lateinit var cikkAdatok: KiszedesAdatok
 
     interface KiszedesAdatok{
-        fun cikkAdatok(cikk: String?, megj1: String?, megj2: String?, intrem: String?, igeny: Double, unit: String?)
+        fun cikkAdatok(cikk: String?, megj1: String?, megj2: String?, intrem: String?, igeny: Double, unit: String?, id: Int)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,14 +85,14 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
     override fun onItemClick(position: Int) {
         Toast.makeText(view?.context, "$position", Toast.LENGTH_SHORT).show()
         cikkAdatok.cikkAdatok(cikkItem[position].cikkszam,cikkItem[position].megjegyzes1,cikkItem[position].megjegyzes2,
-        cikkItem[position].intrem,cikkItem[position].igeny.toString().toDouble(),cikkItem[position].unit)
+        cikkItem[position].intrem,cikkItem[position].igeny.toString().toDouble(),cikkItem[position].unit,cikkItem[position].id)
 
     }
     private fun loadData(){
         cikkItem.clear()
         val myList: ArrayList<KontenerbenLezarasItem> = arguments?.getSerializable("NEGYESCIKKEK") as ArrayList<KontenerbenLezarasItem>
         for(i in 0 until myList.size){
-            cikkItem.add(KontenerbenLezarasItem(myList[i].cikkszam,myList[i].megjegyzes1,myList[i].megjegyzes2,myList[i].intrem,myList[i].igeny,myList[i].kiadva,myList[i].statusz,myList[i].unit))
+            cikkItem.add(KontenerbenLezarasItem(myList[i].cikkszam,myList[i].megjegyzes1,myList[i].megjegyzes2,myList[i].intrem,myList[i].igeny,myList[i].kiadva,myList[i].statusz,myList[i].unit,myList[i].id))
         }
     }
 

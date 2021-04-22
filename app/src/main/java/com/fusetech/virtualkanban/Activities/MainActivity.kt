@@ -298,7 +298,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         val mozgatott = resultSet1.getDouble("mozgatott_mennyiseg").toString()
                         val status = resultSet1.getInt("statusz")
                         val unit = resultSet1.getString("Unit")
-                        konteneresCikkek.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status,unit))
+                        val id = resultSet1.getInt("id")
+                        konteneresCikkek.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status,unit,id))
                     }while (resultSet1.next())
                     val bundle = Bundle()
                     bundle.putSerializable("NEGYESCIKKEK",konteneresCikkek)
@@ -405,7 +406,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     val mozgatott = resultSet.getDouble("mozgatott_mennyiseg").toString()+" " + resultSet.getString("Unit")
                     val status = resultSet.getInt("statusz")
                     val unit = resultSet.getString("Unit")
-                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status,unit))
+                    val id = resultSet.getInt("id")
+                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status,unit,id))
                 }while (resultSet.next())
                 val bundle = Bundle()
                 bundle.putSerializable("CIKKLEZAR",kontenerCikkLezar)
@@ -454,7 +456,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     val mozgatott = resultSet.getDouble("mozgatott_mennyiseg").toString()+" " + resultSet.getString("Unit")
                     val status = resultSet.getInt("statusz")
                     val unit = resultSet.getString("Unit")
-                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status,unit))
+                    val id = resultSet.getInt("id")
+                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status,unit,id))
                 }while (resultSet.next())
                 val bundle = Bundle()
                 bundle.putSerializable("CIKKLEZAR",kontenerCikkLezar)
@@ -1148,6 +1151,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     loadMenuFragment(true)
                     igenyKontenerKiszedes()
                 }
+                getFragment("KISZEDESCIKK") -> {
+                    loadMenuFragment(true)
+                    igenyKontenerKiszedes()
+                }
                 else -> {
                     super.onBackPressed()
                 }
@@ -1158,15 +1165,61 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
 
-    override fun cikkAdatok(cikk: String?, megj1: String?, megj2: String?, intrem: String?, igeny: Double, unit: String?) {
-        var bundle = Bundle()
-        bundle.putString("K_CIKK",cikk)
-        bundle.putString("K_MEGJ1",megj1)
-        bundle.putString("K_MEGJ2",megj2)
-        bundle.putString("K_INT",intrem)
-        bundle.putDouble("K_IGENY",igeny)
-        bundle.putString("K_UNIT",unit)
-        igenyKontenerKiszedesCikkKiszedes.arguments = bundle
-        supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKontenerKiszedesCikkKiszedes,"KISZEDESCIKK").addToBackStack(null).commit()
+    override fun cikkAdatok(cikk: String?, megj1: String?, megj2: String?, intrem: String?, igeny: Double, unit: String?, id: Int) {
+        CoroutineScope(IO).launch {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            try{
+                connection = DriverManager.getConnection(connectionString)
+                val statement = connection.prepareStatement(resources.getString(R.string.cikkCheck))
+                statement.setInt(1,id)
+                statement.setInt(2,2)
+                val resultSet = statement.executeQuery()
+                if(!resultSet.next()){
+                    val statement1 = connection.prepareStatement(resources.getString(R.string.cikkUpdate))
+                    statement1.setInt(1,2)
+                    statement1.setInt(2,id)
+                    statement1.executeUpdate()
+                    val bundle = Bundle()
+                    bundle.putString("K_CIKK",cikk)
+                    bundle.putString("K_MEGJ1",megj1)
+                    bundle.putString("K_MEGJ2",megj2)
+                    bundle.putString("K_INT",intrem)
+                    bundle.putString("K_IGENY",igeny.toString())
+                    bundle.putString("K_UNIT",unit)
+                    igenyKontenerKiszedesCikkKiszedes.arguments = bundle
+                    supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKontenerKiszedesCikkKiszedes,"KISZEDESCIKK").commit()
+                    val statement2 = connection.prepareStatement(resources.getString(R.string.raktarCheck))
+                    statement2.setString(1,cikk)
+                    val resultSet2 = statement2.executeQuery()
+                    if(!resultSet2.next()){
+                        CoroutineScope(Main).launch {
+                            setAlert("Pedig lennie kéne")
+                        }
+                    }else{
+                        val myList: ArrayList<PolcLocation> = ArrayList()
+                        do{
+                            val polc = resultSet2.getString("BinNumber")
+                            val mennyiseg = resultSet2.getString("BalanceQty")
+                            myList.add(PolcLocation(polc,mennyiseg))
+                        }while (resultSet2.next())
+                        val bundle2 = Bundle()
+                        bundle2.putSerializable("K_LOCATION",myList)
+                        val sideFragment = KiszedesLocationFragment()
+                        sideFragment.arguments = bundle2
+                        supportFragmentManager.beginTransaction().replace(R.id.side_container2,sideFragment,"K_SIDE").commit()
+                    }
+                }else{
+                    CoroutineScope(Main).launch {
+                        setAlert("Nem tudod megnyitni, mert már valaki dolgozik benne")
+                    }
+                }
+            }catch (e: Exception){
+                CoroutineScope(Main).launch {
+                    setAlert("Csekk\n $e")
+                }
+            }
+
+        }
+        Log.d(TAG, "cikkAdatok: ")
     }
 }

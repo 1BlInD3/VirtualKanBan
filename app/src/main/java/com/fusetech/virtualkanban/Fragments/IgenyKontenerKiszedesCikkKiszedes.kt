@@ -1,6 +1,7 @@
 package com.fusetech.virtualkanban.Fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes_cikk_kisz
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+private const val TAG = "IgenyKontenerKiszedesCi"
 
 class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
     private var param1: String? = null
@@ -62,25 +64,28 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
         vissza = view.kiszedesVissza
         progress = view.kihelyezesProgress
         setProgressBarOff()
-        cikkEdit.isEnabled = false
+      /*  cikkEdit.isEnabled = false
         igeny.isFocusable = false
-        igeny.isFocusableInTouchMode = false
+        igeny.isFocusableInTouchMode = false*/
         mennyiseg.isFocusable = false
         mennyiseg.isFocusableInTouchMode = false
         polc.requestFocus()
-
-        cikkEdit.setText(arguments?.getString("K_CIKK"))
-        meg1.text = arguments?.getString("K_MEGJ1")
-        meg2.text = arguments?.getString("K_MEGJ2")
-        intrem.text = arguments?.getString("K_INT")
-        igeny.setText(arguments?.getDouble("K_IGENY").toString())
-        unit.text = arguments?.getString("K_UNIT")
 
         feltolt.setOnClickListener{
             if(mennyiseg.text.isEmpty()){
                 mainActivity.setAlert("Nincs kitöltve minden rendesen")
                 mennyiseg.requestFocus()
             }
+        }
+        vissza.setOnClickListener{
+           /* cikkEdit.setText("")
+            meg1.text = ""
+            meg2.text = ""
+            intrem.text = ""
+            igeny.setText("")
+            unit.text = ""*/
+            mainActivity.loadMenuFragment(true)
+            mainActivity.igenyKontenerKiszedes()
         }
         return view
     }
@@ -100,5 +105,21 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
     }
     fun setProgressBarOn(){
         progress.visibility = View.VISIBLE
+    }
+    fun performButton(){
+        vissza.performClick()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        cikkEdit.setText(arguments?.getString("K_CIKK"))
+        Log.d(TAG, "onCreateView: ${arguments?.getString("K_CIKK")}")
+        meg1.text = arguments?.getString("K_MEGJ1")
+        meg2.text = arguments?.getString("K_MEGJ2")
+        intrem.text = arguments?.getString("K_INT")
+        igeny.setText(arguments?.getString("K_IGENY"))
+        Log.d(TAG, "onCreateView: ${arguments?.getString("K_IGENY").toString()}")
+        unit.text = arguments?.getString("K_UNIT")
+
     }
 }
