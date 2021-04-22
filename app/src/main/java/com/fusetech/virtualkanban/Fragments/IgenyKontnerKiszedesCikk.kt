@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.Fragments
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -31,6 +32,11 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
     private lateinit var kontenerNev: TextView
     private lateinit var progress: ProgressBar
     private val cikkItem: ArrayList<KontenerbenLezarasItem> = ArrayList()
+    private lateinit var cikkAdatok: KiszedesAdatok
+
+    interface KiszedesAdatok{
+        fun cikkAdatok(cikk: String?, megj1: String?, megj2: String?, intrem: String?, igeny: Double, unit: String?)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,12 +84,24 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
 
     override fun onItemClick(position: Int) {
         Toast.makeText(view?.context, "$position", Toast.LENGTH_SHORT).show()
+        cikkAdatok.cikkAdatok(cikkItem[position].cikkszam,cikkItem[position].megjegyzes1,cikkItem[position].megjegyzes2,
+        cikkItem[position].intrem,cikkItem[position].igeny.toString().toDouble(),cikkItem[position].unit)
+
     }
     private fun loadData(){
         cikkItem.clear()
         val myList: ArrayList<KontenerbenLezarasItem> = arguments?.getSerializable("NEGYESCIKKEK") as ArrayList<KontenerbenLezarasItem>
         for(i in 0 until myList.size){
-            cikkItem.add(KontenerbenLezarasItem(myList[i].cikkszam,myList[i].megjegyzes1,myList[i].megjegyzes2,myList[i].intrem,myList[i].igeny,myList[i].kiadva,myList[i].statusz))
+            cikkItem.add(KontenerbenLezarasItem(myList[i].cikkszam,myList[i].megjegyzes1,myList[i].megjegyzes2,myList[i].intrem,myList[i].igeny,myList[i].kiadva,myList[i].statusz,myList[i].unit))
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        cikkAdatok = if(context is KiszedesAdatok){
+            context
+        }else{
+            throw RuntimeException(context.toString() + "must implement")
         }
     }
 }

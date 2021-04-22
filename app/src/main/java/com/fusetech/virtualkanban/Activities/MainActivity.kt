@@ -27,7 +27,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     PolcLocationFragment.SetPolcLocation,
     IgenyKontenerOsszeallitasFragment.SendBinCode,
     IgenyKontenerLezarasFragment.IgenyKontnerLezaras,
-    KiszedesreVaroIgenyFragment.SendCode6{
+    KiszedesreVaroIgenyFragment.SendCode6,
+    IgenyKontnerKiszedesCikk.KiszedesAdatok{
     // 1es opció pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
     // át kell rakni máshova
@@ -72,6 +73,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private lateinit var igenyKiszedesCikkLezaras: IgenyKontenerLezarasCikkLezaras
     private lateinit var kiszedesreVaroIgenyFragment: KiszedesreVaroIgenyFragment
     private lateinit var szallitoJarmuFragment: SzallitoJartmuFragment
+    private lateinit var igenyKontenerKiszedesCikkKiszedes: IgenyKontenerKiszedesCikkKiszedes
     private val TAG = "MainActivity"
     private val cikklekerdezesFragment = CikklekerdezesFragment()
     val polcLocationFragment = PolcLocationFragment()
@@ -94,6 +96,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
         kiszedesreVaroIgenyFragment = KiszedesreVaroIgenyFragment()
         szallitoJarmuFragment = SzallitoJartmuFragment()
+        igenyKontenerKiszedesCikkKiszedes = IgenyKontenerKiszedesCikkKiszedes()
         AidcManager.create(this) { aidcManager ->
             manager = aidcManager
             try {
@@ -291,16 +294,17 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         val megj1 = resultSet1.getString("Description1")
                         val megj2 = resultSet1.getString("Description2")
                         val intrem = resultSet1.getString("InternRem1")
-                        val igeny = resultSet1.getDouble("igenyelt_mennyiseg").toString() +" "+resultSet1.getString("Unit")
-                        val mozgatott = resultSet1.getDouble("mozgatott_mennyiseg").toString()+" "+resultSet1.getString("Unit")
+                        val igeny = resultSet1.getDouble("igenyelt_mennyiseg").toString()
+                        val mozgatott = resultSet1.getDouble("mozgatott_mennyiseg").toString()
                         val status = resultSet1.getInt("statusz")
-                        konteneresCikkek.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status))
+                        val unit = resultSet1.getString("Unit")
+                        konteneresCikkek.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status,unit))
                     }while (resultSet1.next())
                     val bundle = Bundle()
                     bundle.putSerializable("NEGYESCIKKEK",konteneresCikkek)
                     bundle.putSerializable("NEGYESNEV",kontener)
                     fragment.arguments = bundle
-                    supportFragmentManager.beginTransaction().replace(R.id.data_frame2,fragment,"NEGYESCIKKEK").commit()
+                    supportFragmentManager.beginTransaction().replace(R.id.data_frame2,fragment,"NEGYESCIKKEK").addToBackStack(null).commit()
                 }
             }
         }catch (e: Exception){
@@ -400,7 +404,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     val igeny = resultSet.getDouble("igenyelt_mennyiseg").toString() +" "+resultSet.getString("Unit")
                     val mozgatott = resultSet.getDouble("mozgatott_mennyiseg").toString()+" " + resultSet.getString("Unit")
                     val status = resultSet.getInt("statusz")
-                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status))
+                    val unit = resultSet.getString("Unit")
+                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status,unit))
                 }while (resultSet.next())
                 val bundle = Bundle()
                 bundle.putSerializable("CIKKLEZAR",kontenerCikkLezar)
@@ -448,7 +453,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     val igeny = resultSet.getDouble("igenyelt_mennyiseg").toString() +" "+resultSet.getString("Unit")
                     val mozgatott = resultSet.getDouble("mozgatott_mennyiseg").toString()+" " + resultSet.getString("Unit")
                     val status = resultSet.getInt("statusz")
-                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status))
+                    val unit = resultSet.getString("Unit")
+                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status,unit))
                 }while (resultSet.next())
                 val bundle = Bundle()
                 bundle.putSerializable("CIKKLEZAR",kontenerCikkLezar)
@@ -1150,5 +1156,17 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             Log.d(TAG, "onBackPressed: $e")
             super.onBackPressed()
         }
+    }
+
+    override fun cikkAdatok(cikk: String?, megj1: String?, megj2: String?, intrem: String?, igeny: Double, unit: String?) {
+        var bundle = Bundle()
+        bundle.putString("K_CIKK",cikk)
+        bundle.putString("K_MEGJ1",megj1)
+        bundle.putString("K_MEGJ2",megj2)
+        bundle.putString("K_INT",intrem)
+        bundle.putDouble("K_IGENY",igeny)
+        bundle.putString("K_UNIT",unit)
+        igenyKontenerKiszedesCikkKiszedes.arguments = bundle
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKontenerKiszedesCikkKiszedes,"KISZEDESCIKK").addToBackStack(null).commit()
     }
 }
