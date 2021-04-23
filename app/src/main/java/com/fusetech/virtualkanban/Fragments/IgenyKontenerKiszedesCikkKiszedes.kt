@@ -12,6 +12,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.R
+import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes_cikk_kiszedes.*
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes_cikk_kiszedes.view.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -35,6 +36,8 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
     private lateinit var vissza: Button
     private lateinit var progress: ProgressBar
     private lateinit var mainActivity: MainActivity
+    private lateinit var kontenerNumber: TextView
+    private lateinit var cikkNumber: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,6 +66,8 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
         feltolt = view.kiszedesFeltolt
         vissza = view.kiszedesVissza
         progress = view.kihelyezesProgress
+        kontenerNumber = view.kontenerIDKiszedes
+        cikkNumber = view.cikkIDKiszedes
         setProgressBarOff()
       /*  cikkEdit.isEnabled = false
         igeny.isFocusable = false
@@ -85,7 +90,10 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
             igeny.setText("")
             unit.text = ""*/
             mainActivity.loadMenuFragment(true)
-            mainActivity.igenyKontenerKiszedes()
+           // mainActivity.igenyKontenerKiszedes()
+            mainActivity.loadKiszedesFragment()
+            mainActivity.checkIfContainerStatus(kontenerIDKiszedes.text.trim().toString())
+           // mainActivity.igenyKontenerKiszedesCikkKiszedesFocus()
         }
         return view
     }
@@ -117,9 +125,11 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
         meg1.text = arguments?.getString("K_MEGJ1")
         meg2.text = arguments?.getString("K_MEGJ2")
         intrem.text = arguments?.getString("K_INT")
-        igeny.setText(arguments?.getString("K_IGENY"))
+        igeny.setText(arguments?.getDouble("K_IGENY").toString())
         Log.d(TAG, "onCreateView: ${arguments?.getString("K_IGENY").toString()}")
         unit.text = arguments?.getString("K_UNIT")
+        kontenerNumber.text = arguments?.getInt("K_KONTENER").toString()
+        cikkNumber.text = arguments?.getInt("K_ID").toString()
 
     }
 }

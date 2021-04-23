@@ -50,7 +50,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     *
     * 4es opció
     * bonyolult.. tudja amit a 6-os opció. ha rámegyek egy tételre átírja a státuszát 2-re. be kell iktatni egy szállítójármű bekérést, onnantól jöhetnek a tételek
-    *
+    * kiszedés: ha nulla a mennyiség akkor cikk lezárás és 3as státusz, ha felvette a megfelelő mennyiséget akkor is 3as státusz, ha nem vesz fel annyit akkor beírja a raktar
+    * tetel adatbazisba és ha kilepek lezaras nelkul akkor visszairja 1-re. ha aztán megint megnyitom akkor abból kiolvassa az értéket és azt kivonja az igényelt mennyiségből
+    * és a polcot amit be kell frissíteni. esetleg másik színezés???
     *
     * 6os opció
     * Kiírja az 1es és 2 státuszú konténereket, majd kattintással belemegy és kiírja a tételeket ami benne van, átszínezi a 2-es státuszú konténereket
@@ -165,6 +167,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     fun loadSzallitoJarmu(kontener_id: String){
         kontener = kontener_id
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,szallitoJarmuFragment,"SZALLITO").addToBackStack(null).commit()
+    }
+    fun loadKiszedesFragment(){
+        val kiszedes = IgenyKontenerKiszedesFragment()
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container,kiszedes).addToBackStack(null).commit()
     }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread{
@@ -299,18 +305,20 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         val status = resultSet1.getInt("statusz")
                         val unit = resultSet1.getString("Unit")
                         val id = resultSet1.getInt("id")
-                        konteneresCikkek.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status,unit,id))
+                        val kontenerId = resultSet1.getInt("kontener_id")
+                        konteneresCikkek.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status,unit,id,kontenerId))
                     }while (resultSet1.next())
                     val bundle = Bundle()
                     bundle.putSerializable("NEGYESCIKKEK",konteneresCikkek)
                     bundle.putSerializable("NEGYESNEV",kontener)
                     fragment.arguments = bundle
-                    supportFragmentManager.beginTransaction().replace(R.id.data_frame2,fragment,"NEGYESCIKKEK").addToBackStack(null).commit()
+                    supportFragmentManager.beginTransaction().replace(R.id.data_frame2,fragment,"NEGYESCIKKEK").commit()
                 }
             }
         }catch (e: Exception){
             CoroutineScope(Main).launch {
                 setAlert("Hiba \n $e")
+                Log.d(TAG, "checkIfContainerIsOpen: $e")
             }
         }
     }
@@ -407,7 +415,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     val status = resultSet.getInt("statusz")
                     val unit = resultSet.getString("Unit")
                     val id = resultSet.getInt("id")
-                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status,unit,id))
+                    val kontenerId = resultSet.getInt("kontener_id")
+                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status,unit,id,kontenerId))
                 }while (resultSet.next())
                 val bundle = Bundle()
                 bundle.putSerializable("CIKKLEZAR",kontenerCikkLezar)
@@ -457,7 +466,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     val status = resultSet.getInt("statusz")
                     val unit = resultSet.getString("Unit")
                     val id = resultSet.getInt("id")
-                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status,unit,id))
+                    val kontenerId = resultSet.getInt("kontener_id")
+                    kontenerCikkLezar.add(KontenerbenLezarasItem(cikk,megj1,megj2,intrem,igeny,mozgatott,status,unit,id,kontenerId))
                 }while (resultSet.next())
                 val bundle = Bundle()
                 bundle.putSerializable("CIKKLEZAR",kontenerCikkLezar)
@@ -1137,7 +1147,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             loadKontenerCikkekHatos(kontener)
         }
     }
-
+    
     override fun onBackPressed() {
         try{
             when {
@@ -1152,6 +1162,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     igenyKontenerKiszedes()
                 }
                 getFragment("KISZEDESCIKK") -> {
+                   /* loadMenuFragment(true)
+                    igenyKontenerKiszedes()*/
+                    igenyKontenerKiszedesCikkKiszedes.performButton()
+                }
+                getFragment("NEGYESCIKKEK") -> {
                     loadMenuFragment(true)
                     igenyKontenerKiszedes()
                 }
@@ -1165,7 +1180,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
 
-    override fun cikkAdatok(cikk: String?, megj1: String?, megj2: String?, intrem: String?, igeny: Double, unit: String?, id: Int) {
+    override fun cikkAdatok(cikk: String?, megj1: String?, megj2: String?, intrem: String?, igeny: Double, unit: String?, id: Int, kontnerNumber: Int) {
         CoroutineScope(IO).launch {
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             try{
@@ -1184,8 +1199,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     bundle.putString("K_MEGJ1",megj1)
                     bundle.putString("K_MEGJ2",megj2)
                     bundle.putString("K_INT",intrem)
-                    bundle.putString("K_IGENY",igeny.toString())
+                    bundle.putDouble("K_IGENY",igeny)
                     bundle.putString("K_UNIT",unit)
+                    bundle.putInt("K_KONTENER",kontnerNumber)
+                    bundle.putInt("K_ID",id)
                     igenyKontenerKiszedesCikkKiszedes.arguments = bundle
                     supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKontenerKiszedesCikkKiszedes,"KISZEDESCIKK").commit()
                     val statement2 = connection.prepareStatement(resources.getString(R.string.raktarCheck))

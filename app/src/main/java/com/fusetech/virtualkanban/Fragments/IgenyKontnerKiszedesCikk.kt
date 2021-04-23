@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Adapters.KontenerbenLezarasAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerbenLezarasItem
 import com.fusetech.virtualkanban.R
@@ -33,9 +34,10 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
     private lateinit var progress: ProgressBar
     private val cikkItem: ArrayList<KontenerbenLezarasItem> = ArrayList()
     private lateinit var cikkAdatok: KiszedesAdatok
+    private lateinit var mainAcitivity: MainActivity
 
     interface KiszedesAdatok{
-        fun cikkAdatok(cikk: String?, megj1: String?, megj2: String?, intrem: String?, igeny: Double, unit: String?, id: Int)
+        fun cikkAdatok(cikk: String?, megj1: String?, megj2: String?, intrem: String?, igeny: Double, unit: String?, id: Int, kontnerNumber: Int)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,11 +53,11 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.kontenerben_lezaras_view, container, false)
-
+        mainAcitivity = activity as MainActivity
         kontenerNev = view.kontenerNameLezaras
         recycler = view.child_recycler2
         tovabbBtn = view.lezar3Button
-        visszaBtn = view.lezar3Button
+        visszaBtn = view.exit3CikkButton
         progress = view.cikkLezarasProgress
         progress.visibility = View.GONE
         kontenerNev.text = arguments?.getString("NEGYESNEV")
@@ -67,6 +69,10 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         loadData()
         recycler.adapter?.notifyDataSetChanged()
         recycler.requestFocus()
+        visszaBtn.setOnClickListener{
+            mainAcitivity.loadMenuFragment(true)
+            mainAcitivity.igenyKontenerKiszedes()
+        }
 
         return view
     }
@@ -83,19 +89,17 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
     }
 
     override fun onItemClick(position: Int) {
-        Toast.makeText(view?.context, "$position", Toast.LENGTH_SHORT).show()
         cikkAdatok.cikkAdatok(cikkItem[position].cikkszam,cikkItem[position].megjegyzes1,cikkItem[position].megjegyzes2,
-        cikkItem[position].intrem,cikkItem[position].igeny.toString().toDouble(),cikkItem[position].unit,cikkItem[position].id)
+        cikkItem[position].intrem,cikkItem[position].igeny.toString().toDouble(),cikkItem[position].unit,cikkItem[position].id,cikkItem[position].kontener_id)
 
     }
     private fun loadData(){
         cikkItem.clear()
         val myList: ArrayList<KontenerbenLezarasItem> = arguments?.getSerializable("NEGYESCIKKEK") as ArrayList<KontenerbenLezarasItem>
         for(i in 0 until myList.size){
-            cikkItem.add(KontenerbenLezarasItem(myList[i].cikkszam,myList[i].megjegyzes1,myList[i].megjegyzes2,myList[i].intrem,myList[i].igeny,myList[i].kiadva,myList[i].statusz,myList[i].unit,myList[i].id))
+            cikkItem.add(KontenerbenLezarasItem(myList[i].cikkszam,myList[i].megjegyzes1,myList[i].megjegyzes2,myList[i].intrem,myList[i].igeny,myList[i].kiadva,myList[i].statusz,myList[i].unit,myList[i].id,myList[i].kontener_id))
         }
     }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         cikkAdatok = if(context is KiszedesAdatok){
@@ -103,5 +107,10 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         }else{
             throw RuntimeException(context.toString() + "must implement")
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        recycler.requestFocus()
     }
 }
