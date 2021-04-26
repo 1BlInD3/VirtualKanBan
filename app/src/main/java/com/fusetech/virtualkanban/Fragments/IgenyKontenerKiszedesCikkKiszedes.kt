@@ -187,4 +187,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
         mennyiseg.isFocusableInTouchMode = true
         mennyiseg.requestFocus()
     }
+
+    override fun onPause() {
+        super.onPause()
+        polc.setText("")
+    }
 }

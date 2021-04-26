@@ -26,7 +26,7 @@
     <string name="kontenerEllenorzes">SELECT id FROM [leltar].[dbo].[kontener] where id = ? and statusz = ?</string>
     <string name="atvevoBeiras">UPDATE [leltar].[dbo].kontener SET atvevo = ? where id = ?</string>
     <string name="isPolc21">SELECT WarehouseID, BinNumber, InternalName FROM [ScaCompDB].[dbo].VF_SC360300_StockBinNo left outer join [ScaCompDB].[dbo].VF_SC230300_WarehouseInfo ON WarehouseID = Warehouse WHERE WarehouseID = ? AND BinNumber = ?</string>
-    <string name="cikkCheck">SELECT [id] FROM [leltar].[dbo].[kontener_tetel] WHERE id = ? AND statusz = ? AND atvevo IS NULL OR atvevo = ? </string>
+    <string name="cikkCheck">SELECT [id] FROM [leltar].[dbo].[kontener_tetel] WHERE id = ? AND statusz &lt; 3 AND atvevo IS NULL OR atvevo = ? </string>
     <string name="getAtvevo">SELECT [id],[atvevo] FROM [leltar].[dbo].[kontener_tetel] WHERE id = ?</string>
     <string name="cikkUpdate">UPDATE [leltar].[dbo].[kontener_tetel] SET statusz = ?, atvevo = ? where id = ?</string>
     <string name="raktarTetelIdeiglenes">SELECT id, kontener_tetel_id,mozgatott_mennyiseg,kiado_raktar,kiado_rakhely FROM [leltar].[dbo].[kontener_raktar_tetel] where kontener_tetel_id = ?</string>

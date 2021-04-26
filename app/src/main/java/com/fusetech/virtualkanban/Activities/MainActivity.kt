@@ -197,9 +197,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         updateKontenerKiszedesre(kontener)
                     }
                 }
-                getFragment("NEGYESCIKKEK") -> {
+                getFragment("KISZEDESCIKK") -> {
                     CoroutineScope(IO).launch {
-
+                        chechPolcAndSetBin(barcodeData)
                     }
                     //igenyKontenerKiszedesCikkKiszedes.setBin(barcodeData)
                 }
@@ -261,7 +261,27 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
 
-    private fun
+    private fun chechPolcAndSetBin(code: String){
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try{
+            connection = DriverManager.getConnection(url)
+            val statement = connection.prepareStatement(resources.getString(R.string.isPolc))
+            statement.setString(1,code)
+            val resultSet = statement.executeQuery()
+            if(!resultSet.next()){
+                CoroutineScope(Main).launch {
+                    setAlert("Nincs ilyen polc")
+                }
+            }else{CoroutineScope(Main).launch {
+                igenyKontenerKiszedesCikkKiszedes.setBin(code)
+            }
+            }
+        }catch(e: Exception){
+            CoroutineScope(Main).launch {
+                setAlert("Probléma $e")
+            }
+        }
+    }
 
     private fun chechIfPolcHasChanged(kontener: String): Boolean {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -1210,10 +1230,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             try{
                 connection = DriverManager.getConnection(connectionString)
-                val statement = connection.prepareStatement(resources.getString(R.string.cikkCheck))
+                val statement = connection.prepareStatement(resources.getString(R.string.cikkCheck))// ezt is ki kell javítani, hogy 1 v kettő legyen jó státusz
                 statement.setInt(1,id)
-                statement.setInt(2,1)
-                statement.setString(3,dolgKod)
+                statement.setString(2,dolgKod)
                 val resultSet = statement.executeQuery()
                 if(!resultSet.next()){
                     CoroutineScope(Main).launch {
