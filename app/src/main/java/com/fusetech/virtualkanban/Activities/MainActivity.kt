@@ -16,10 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.PreparedStatement
-import java.sql.ResultSet
+import java.sql.*
 
 class MainActivity : AppCompatActivity(), BarcodeListener,
     CikklekerdezesFragment.SetItemOrBinManually,
@@ -53,6 +50,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     * kiszedés: ha nulla a mennyiség akkor cikk lezárás és 3as státusz, ha felvette a megfelelő mennyiséget akkor is 3as státusz, ha nem vesz fel annyit akkor beírja a raktar
     * tetel adatbazisba és ha kilepek lezaras nelkul akkor visszairja 1-re. ha aztán megint megnyitom akkor abból kiolvassa az értéket és azt kivonja az igényelt mennyiségből
     * és a polcot amit be kell frissíteni. esetleg másik színezés???
+    * amikor kiválasztom a konténert, akkor csak azok a cikkek jelenjenek meg amiknél az átvevő NULL
     *
     * 6os opció
     * Kiírja az 1es és 2 státuszú konténereket, majd kattintással belemegy és kiírja a tételeket ami benne van, átszínezi a 2-es státuszú konténereket
@@ -287,6 +285,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 Log.d(TAG, "checkIfContainerIsOpen: Sikeres update")
                 val statment3 = connection.prepareStatement(resources.getString(R.string.igenyKontenerLezarasCikkLezaras))
                 statment3.setInt(1,kontener.toInt())
+                statment3.setString(2,dolgKod)
                 val resultSet1 = statment3.executeQuery()
                 if(!resultSet1.next()){
                     CoroutineScope(Main).launch {
@@ -1147,7 +1146,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             loadKontenerCikkekHatos(kontener)
         }
     }
-    
+
     override fun onBackPressed() {
         try{
             when {
@@ -1179,7 +1178,24 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             super.onBackPressed()
         }
     }
-
+    fun cikkUpdate(cikk: Int){
+        CoroutineScope(IO).launch {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            try{
+                connection = DriverManager.getConnection(connectionString)
+                val statement = connection.prepareStatement(resources.getString(R.string.cikkUpdate))
+                statement.setInt(1,1)
+                statement.setNull(2,Types.INTEGER)
+                statement.setInt(3,cikk)
+                statement.executeUpdate()
+                Log.d(TAG, "cikkUpdate: sikeres")
+            }catch (e: Exception){
+                CoroutineScope(Main).launch {
+                    setAlert("CikkUpdateHiba $e")
+                }
+            }
+        }
+    }
     override fun cikkAdatok(cikk: String?, megj1: String?, megj2: String?, intrem: String?, igeny: Double, unit: String?, id: Int, kontnerNumber: Int) {
         CoroutineScope(IO).launch {
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -1187,13 +1203,20 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 connection = DriverManager.getConnection(connectionString)
                 val statement = connection.prepareStatement(resources.getString(R.string.cikkCheck))
                 statement.setInt(1,id)
-                statement.setInt(2,2)
+                statement.setInt(2,1)
+                statement.setString(3,dolgKod)
                 val resultSet = statement.executeQuery()
                 if(!resultSet.next()){
+                    CoroutineScope(Main).launch {
+                        setAlert("Nem tudod megnyitni, mert már valaki dolgozik benne")
+                    }
+                }else{
                     val statement1 = connection.prepareStatement(resources.getString(R.string.cikkUpdate))
                     statement1.setInt(1,2)
-                    statement1.setInt(2,id)
+                    statement1.setString(2,dolgKod)
+                    statement1.setInt(3,id)
                     statement1.executeUpdate()
+                    //ide kell hogy megnézze mi van a raktar_kontenerben
                     val bundle = Bundle()
                     bundle.putString("K_CIKK",cikk)
                     bundle.putString("K_MEGJ1",megj1)
@@ -1210,7 +1233,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     val resultSet2 = statement2.executeQuery()
                     if(!resultSet2.next()){
                         CoroutineScope(Main).launch {
-                            setAlert("Pedig lennie kéne")
+                            setAlert("Nincs készleten")
                         }
                     }else{
                         val myList: ArrayList<PolcLocation> = ArrayList()
@@ -1224,10 +1247,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         val sideFragment = KiszedesLocationFragment()
                         sideFragment.arguments = bundle2
                         supportFragmentManager.beginTransaction().replace(R.id.side_container2,sideFragment,"K_SIDE").commit()
-                    }
-                }else{
-                    CoroutineScope(Main).launch {
-                        setAlert("Nem tudod megnyitni, mert már valaki dolgozik benne")
                     }
                 }
             }catch (e: Exception){

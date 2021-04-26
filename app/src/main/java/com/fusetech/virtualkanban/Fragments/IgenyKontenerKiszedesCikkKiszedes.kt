@@ -38,6 +38,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
     private lateinit var mainActivity: MainActivity
     private lateinit var kontenerNumber: TextView
     private lateinit var cikkNumber: TextView
+    private var igenyeltMennyiseg: Double = 0.0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,9 +70,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
         kontenerNumber = view.kontenerIDKiszedes
         cikkNumber = view.cikkIDKiszedes
         setProgressBarOff()
-      /*  cikkEdit.isEnabled = false
+        cikkEdit.isEnabled = false
         igeny.isFocusable = false
-        igeny.isFocusableInTouchMode = false*/
+        igeny.isFocusableInTouchMode = false
         mennyiseg.isFocusable = false
         mennyiseg.isFocusableInTouchMode = false
         polc.requestFocus()
@@ -83,17 +84,24 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
             }
         }
         vissza.setOnClickListener{
-           /* cikkEdit.setText("")
-            meg1.text = ""
-            meg2.text = ""
-            intrem.text = ""
-            igeny.setText("")
-            unit.text = ""*/
+            mainActivity.cikkUpdate(cikkIDKiszedes.text.trim().toString().toInt())
             mainActivity.loadMenuFragment(true)
-           // mainActivity.igenyKontenerKiszedes()
             mainActivity.loadKiszedesFragment()
             mainActivity.checkIfContainerStatus(kontenerIDKiszedes.text.trim().toString())
-           // mainActivity.igenyKontenerKiszedesCikkKiszedesFocus()
+        }
+        mennyiseg.setOnClickListener {
+            if(mennyiseg.text.trim().toString().toDouble().equals(igenyeltMennyiseg)){
+                //itt akkor le kell zárni 3as státuszúra
+                mainActivity.setAlert("Megegyzik, mehet 3as státuszra")
+            }else if(mennyiseg.text.toString().toDouble()> igenyeltMennyiseg && mennyiseg.text.toString().toDouble() < szazalek(10)){
+                mainActivity.setAlert("Kivehetsz annyival többet és 3as státusz")
+            }else if (mennyiseg.text.trim().toString().toDouble() == 0.0){
+                mainActivity.setAlert("Nullával ki van ütve 3as státusz")
+            }else if(mennyiseg.text.toString().toDouble() > szazalek(10)){
+                mainActivity.setAlert("Túl sok ennyit nem vehetsz ki")
+            }else{
+                //itt kell átírni a dolgokat, hogy vigye le a polcról és csökkentse az igényt és beírja a másik táblába
+            }
         }
         return view
     }
@@ -125,11 +133,18 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
         meg1.text = arguments?.getString("K_MEGJ1")
         meg2.text = arguments?.getString("K_MEGJ2")
         intrem.text = arguments?.getString("K_INT")
-        igeny.setText(arguments?.getDouble("K_IGENY").toString())
+        igenyeltMennyiseg = arguments?.getDouble("K_IGENY")!!
+        //igeny.setText(arguments?.getDouble("K_IGENY").toString())
+        igeny.setText(igenyeltMennyiseg.toString())
         Log.d(TAG, "onCreateView: ${arguments?.getString("K_IGENY").toString()}")
         unit.text = arguments?.getString("K_UNIT")
         kontenerNumber.text = arguments?.getInt("K_KONTENER").toString()
         cikkNumber.text = arguments?.getInt("K_ID").toString()
 
+    }
+    fun szazalek(x : Int): Double{
+        var ceiling: Int
+        ceiling = ((igenyeltMennyiseg/mennyiseg.text.toString().toDouble()) * x).toInt()
+        return igenyeltMennyiseg+ceiling
     }
 }

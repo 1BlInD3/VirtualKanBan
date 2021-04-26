@@ -102,4 +102,9 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
     fun setProgressBarOn(){
         progress.visibility = View.VISIBLE
     }
+
+    override fun onResume() {
+        super.onResume()
+        childRecycler.requestFocus()
+    }
 }
