@@ -10,7 +10,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Activities.MainActivity
+import com.fusetech.virtualkanban.Adapters.PolcLocationAdapter
+import com.fusetech.virtualkanban.DataItems.PolcLocation
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes_cikk_kiszedes.*
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes_cikk_kiszedes.view.*
@@ -21,7 +25,7 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private const val TAG = "IgenyKontenerKiszedesCi"
 
-class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
+class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcItemClickListener {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var cikkEdit: EditText
@@ -39,6 +43,8 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
     private lateinit var kontenerNumber: TextView
     private lateinit var cikkNumber: TextView
     private var igenyeltMennyiseg: Double = 0.0
+    private lateinit var locationRecycler: RecyclerView
+    private val itemLocationList:ArrayList<PolcLocation> = ArrayList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +61,10 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_igeny_kontener_kiszedes_cikk_kiszedes,container,false)
         mainActivity = activity as MainActivity
+        locationRecycler = view.locationRecycler
+        locationRecycler.adapter = PolcLocationAdapter(itemLocationList,this)
+        locationRecycler.layoutManager = LinearLayoutManager(view.context)
+        locationRecycler.setHasFixedSize(true)
         cikkEdit = view.kiszedesCikkEdit
         meg1 = view.kiszedesMegj1
         meg2 = view.kiszedesMegj2
@@ -73,9 +83,12 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
         cikkEdit.isEnabled = false
         igeny.isFocusable = false
         igeny.isFocusableInTouchMode = false
-        mennyiseg.isFocusable = false
-        mennyiseg.isFocusableInTouchMode = false
-        polc.requestFocus()
+        mennyiseg.isFocusable = true //false
+        mennyiseg.isFocusableInTouchMode = true //false
+        //polc.requestFocus()
+        mennyiseg.requestFocus()
+        loadData()
+        locationRecycler.adapter?.notifyDataSetChanged()
 
         feltolt.setOnClickListener{
             if(mennyiseg.text.isEmpty()){
@@ -93,7 +106,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
             if(mennyiseg.text.trim().toString().toDouble().equals(igenyeltMennyiseg)){
                 //itt akkor le kell zárni 3as státuszúra
                 mainActivity.setAlert("Megegyzik, mehet 3as státuszra")
-            }else if(mennyiseg.text.toString().toDouble()> igenyeltMennyiseg && mennyiseg.text.toString().toDouble() < szazalek(10)){
+            }else if((mennyiseg.text.toString().toDouble()> igenyeltMennyiseg) && (mennyiseg.text.toString().toDouble() <= szazalek(10))){
                 mainActivity.setAlert("Kivehetsz annyival többet és 3as státusz")
             }else if (mennyiseg.text.trim().toString().toDouble() == 0.0){
                 mainActivity.setAlert("Nullával ki van ütve 3as státusz")
@@ -115,6 +128,13 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+    fun loadData(){
+        itemLocationList.clear()
+        val myList: ArrayList<PolcLocation> = arguments?.getSerializable("K_LIST") as ArrayList<PolcLocation>
+        for(i in 0 until myList.size){
+            itemLocationList.add(PolcLocation(myList[i].polc,myList[i].mennyiseg))
+        }
     }
     fun setProgressBarOff(){
         progress.visibility = View.GONE
@@ -140,11 +160,31 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment() {
         unit.text = arguments?.getString("K_UNIT")
         kontenerNumber.text = arguments?.getInt("K_KONTENER").toString()
         cikkNumber.text = arguments?.getInt("K_ID").toString()
+        val binNumber = arguments?.getString("K_POLC")
+        if(binNumber != ""){
+            for(i in 0 until itemLocationList.size){
+                var a = itemLocationList[i].polc
+                if(itemLocationList[i].polc?.trim().equals(binNumber)){
+                    itemLocationList[i].mennyiseg = (itemLocationList[i].mennyiseg.toString().toDouble() - igenyeltMennyiseg).toString()
+                }
+            }
+            locationRecycler.adapter?.notifyDataSetChanged()
+        }
 
     }
     fun szazalek(x : Int): Double{
-        var ceiling: Int
+        val ceiling: Int
         ceiling = ((igenyeltMennyiseg/mennyiseg.text.toString().toDouble()) * x).toInt()
         return igenyeltMennyiseg+ceiling
+    }
+
+    override fun polcItemClick(position: Int) {
+        Log.d(TAG, "polcItemClick: MEGNYOMTAM")
+    }
+    fun setBin(polcName: String){
+        polc.setText(polcName)
+        mennyiseg.isFocusable = true
+        mennyiseg.isFocusableInTouchMode = true
+        mennyiseg.requestFocus()
     }
 }

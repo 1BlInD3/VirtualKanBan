@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.Fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -28,10 +29,23 @@ private lateinit var mainActivity: MainActivity
 private lateinit var kontenerNev: TextView
 private const val TAG = "IgenyKontenerLezarasCik"
 private lateinit var progress: ProgressBar
+private lateinit var sendItemCode : IgenyKontenerLezarasCikkLezaras.CikkCode
 
 class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.onItemClickListener {
     private var param1: String? = null
     private var param2: String? = null
+    interface CikkCode{
+        fun cikkCode(code: Int)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        sendItemCode = if(context is CikkCode){
+            context
+        }else{
+            throw RuntimeException(context.toString() + "must implement")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,7 +131,6 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
     }
 
     override fun onItemClick(position: Int) {
-        Log.d(TAG, "onItemClick: ")
+        sendItemCode.cikkCode(kontItem[position].id)
     }
-    //KEYCOOOOOOODEEEEEEE
 }

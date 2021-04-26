@@ -27,5 +27,10 @@
     <string name="atvevoBeiras">UPDATE [leltar].[dbo].kontener SET atvevo = ? where id = ?</string>
     <string name="isPolc21">SELECT WarehouseID, BinNumber, InternalName FROM [ScaCompDB].[dbo].VF_SC360300_StockBinNo left outer join [ScaCompDB].[dbo].VF_SC230300_WarehouseInfo ON WarehouseID = Warehouse WHERE WarehouseID = ? AND BinNumber = ?</string>
     <string name="cikkCheck">SELECT [id] FROM [leltar].[dbo].[kontener_tetel] WHERE id = ? AND statusz = ? AND atvevo IS NULL OR atvevo = ? </string>
+    <string name="getAtvevo">SELECT [id],[atvevo] FROM [leltar].[dbo].[kontener_tetel] WHERE id = ?</string>
     <string name="cikkUpdate">UPDATE [leltar].[dbo].[kontener_tetel] SET statusz = ?, atvevo = ? where id = ?</string>
+    <string name="raktarTetelIdeiglenes">SELECT id, kontener_tetel_id,mozgatott_mennyiseg,kiado_raktar,kiado_rakhely FROM [leltar].[dbo].[kontener_raktar_tetel] where kontener_tetel_id = ?</string>
+    <string name="igenyKontenerLezarasCikkLezarasNezegetos">SELECT tetel.id as id, tetel.kontener_id as kontener_id,tetel.cikkszam as cikkszam,adat.Description1 ,adat.Description2 ,adat.InternRem1 ,tetel.statusz as statusz, tetel.igenyelt_mennyiseg as igenyelt_mennyiseg ,tetel.mozgatott_mennyiseg as mozgatott_mennyiseg, unit.Description as Unit FROM [leltar].[dbo].[kontener_tetel] as tetel LEFT OUTER JOIN [ScaCompDB].[dbo].[VF_SC010300_Stockfile] as adat ON tetel.cikkszam = adat.StockCode LEFT OUTER JOIN [ScaCompDB].[dbo].[VF_SCUN0300_UnitCode] as unit ON adat.UnitCodeStoc = unit.UnitCode where kontener_id = ?
+</string>
+    <string name="nev">SELECT [TextDescription] FROM [Fusetech].[dbo].[DolgKodok] where Key1 = ?</string>
 </resources>
