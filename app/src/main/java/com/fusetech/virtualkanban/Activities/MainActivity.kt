@@ -299,6 +299,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private fun checkIfContainerIsOpen(kontener: String){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try{
+            CoroutineScope(Main).launch {
+                igenyKiszedesFragment.setProgressBarOn()
+            }
             connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(resources.getString(R.string.kontenerEllenorzes))
             statement.setString(1,kontener)
@@ -306,6 +309,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             val resultSet = statement.executeQuery()
             if(!resultSet.next()){
                 loadSzallitoJarmu(kontener)
+                CoroutineScope(Main).launch {
+                    igenyKiszedesFragment.setProgressBarOff()
+                }
             }else{
                 val statement2 = connection.prepareStatement(resources.getString(R.string.atvevoBeiras))
                 statement2.setString(1,dolgKod)
@@ -319,6 +325,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 if(!resultSet1.next()){
                     CoroutineScope(Main).launch {
                         setAlert("A konténer üres")
+                        igenyKiszedesFragment.setProgressBarOff()
                     }
                 }else{
                     val fragment = IgenyKontnerKiszedesCikk()
@@ -341,12 +348,16 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     bundle.putSerializable("NEGYESNEV",kontener)
                     fragment.arguments = bundle
                     supportFragmentManager.beginTransaction().replace(R.id.data_frame2,fragment,"NEGYESCIKKEK").commit()
+                    CoroutineScope(Main).launch {
+                        igenyKiszedesFragment.setProgressBarOff()
+                    }
                 }
             }
         }catch (e: Exception){
             CoroutineScope(Main).launch {
                 setAlert("Hiba \n $e")
                 Log.d(TAG, "checkIfContainerIsOpen: $e")
+                igenyKiszedesFragment.setProgressBarOff()
             }
         }
     }
@@ -1226,6 +1237,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
     override fun cikkAdatok(cikk: String?, megj1: String?, megj2: String?, intrem: String?, igeny: Double, unit: String?, id: Int, kontnerNumber: Int) {
+       // val igenyKontnerKiszedesCikk = IgenyKontnerKiszedesCikk()
         CoroutineScope(IO).launch {
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             try{
