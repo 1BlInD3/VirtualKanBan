@@ -26,7 +26,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     IgenyKontenerLezarasFragment.IgenyKontnerLezaras,
     KiszedesreVaroIgenyFragment.SendCode6,
     IgenyKontnerKiszedesCikk.KiszedesAdatok,
-    IgenyKontenerLezarasCikkLezaras.CikkCode{
+    IgenyKontenerLezarasCikkLezaras.CikkCode,
+    IgenyKontenerKiszedesCikkKiszedes.SendXmlData{
     // 1es opció pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
     // át kell rakni máshova
@@ -85,6 +86,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private var igenyLezarCikkVisible: Boolean = false
     private val url = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10"
     private val connectionString ="jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
+    private val xmlList: ArrayList<XmlData> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -1372,5 +1374,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 }
             }
         }
+    }
+
+    override fun sendXmlData(cikk: String, polc: String, mennyiseg: Double) {
+        Log.d(TAG, "sendXmlData: ")
     }
 }

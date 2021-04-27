@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.Fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -18,6 +19,7 @@ import com.fusetech.virtualkanban.DataItems.PolcLocation
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes_cikk_kiszedes.*
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes_cikk_kiszedes.view.*
+import kotlinx.android.synthetic.main.fragment_igeny_kontener_osszeallitas.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,7 +47,12 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
     private var igenyeltMennyiseg: Double = 0.0
     private lateinit var locationRecycler: RecyclerView
     private val itemLocationList:ArrayList<PolcLocation> = ArrayList()
-
+    private val tempLocations: ArrayList<PolcLocation> = ArrayList()
+    private val inputLocations: ArrayList<PolcLocation> = ArrayList()
+    private lateinit var xmlData: SendXmlData
+    interface SendXmlData{
+        fun sendXmlData(cikk: String, polc: String, mennyiseg: Double)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,17 +111,37 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
             mainActivity.checkIfContainerStatus(kontenerIDKiszedes.text.trim().toString())
         }
         mennyiseg.setOnClickListener {
-            if(mennyiseg.text.trim().toString().toDouble().equals(igenyeltMennyiseg)){
-                //itt akkor le kell zárni 3as státuszúra
-                mainActivity.setAlert("Megegyzik, mehet 3as státuszra")
-            }else if((mennyiseg.text.toString().toDouble()> igenyeltMennyiseg) && (mennyiseg.text.toString().toDouble() <= szazalek(10))){
-                mainActivity.setAlert("Kivehetsz annyival többet és 3as státusz")
-            }else if (mennyiseg.text.trim().toString().toDouble() == 0.0){
-                mainActivity.setAlert("Nullával ki van ütve 3as státusz")
-            }else if(mennyiseg.text.toString().toDouble() > szazalek(10)){
+            var osszeadva = false
+                if(mennyiseg.text.toString().toDouble() > szazalek(10)) {
                 mainActivity.setAlert("Túl sok ennyit nem vehetsz ki")
-            }else{
-                //itt kell átírni a dolgokat, hogy vigye le a polcról és csökkentse az igényt és beírja a másik táblába
+            }else if(mennyiseg.text.trim().toString().toDouble() <= igenyeltMennyiseg){
+                igenyeltMennyiseg -= mennyiseg.text.trim().toString().toDouble()
+                igeny.setText(igenyeltMennyiseg.toString())
+                for(i in 0 until itemLocationList.size) {
+                    if (itemLocationList[i].polc?.trim() == polc.text.trim().toString()) {
+                        itemLocationList[i].mennyiseg = (itemLocationList[i].mennyiseg.toString()
+                            .toDouble() - mennyiseg.text.trim().toString().toDouble()).toString()
+                    }
+                    locationRecycler.adapter?.notifyDataSetChanged()
+                }
+                inputLocations.add(PolcLocation(polc.text.trim().toString(),mennyiseg.text.trim().toString()))
+                //xmlData.sendXmlData(cikkEdit.text.trim().toString(),polc.text.trim().toString(),mennyiseg.text.trim().toString().toDouble())
+                //feltölteni itt a raktár tétel táblát
+                //itt az történik, hogy megnézzük, hogy van e már olyan polcon aminek an értéke és összeadni az újjal
+                if(tempLocations.size == 0){
+                    //xmlData.sendXmlData(cikkEdit.text.trim().toString(),polc.text.trim().toString(),mennyiseg.text.trim().toString().toDouble())
+                    tempLocations.add(PolcLocation(polc.text.trim().toString(),mennyiseg.text.trim().toString()))
+                }else{
+                    for (i in 0 until tempLocations.size){
+                        if(tempLocations[i].polc == polc.text.trim().toString()){
+                            tempLocations[i].mennyiseg =  (tempLocations[i].mennyiseg.toString().toDouble() + mennyiseg.text.trim().toString().toDouble()).toString()
+                            osszeadva = true
+                        }
+                    }
+                    if(!osszeadva){
+                        tempLocations.add(PolcLocation(polc.text.trim().toString(),mennyiseg.text.trim().toString()))
+                    }
+                }
             }
         }
         return view
@@ -150,7 +177,6 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
     override fun onResume() {
         super.onResume()
         cikkEdit.setText(arguments?.getString("K_CIKK"))
-        Log.d(TAG, "onCreateView: ${arguments?.getString("K_CIKK")}")
         meg1.text = arguments?.getString("K_MEGJ1")
         meg2.text = arguments?.getString("K_MEGJ2")
         intrem.text = arguments?.getString("K_INT")
@@ -171,9 +197,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
                 }
             }
             locationRecycler.adapter?.notifyDataSetChanged()
-
         }
-
     }
     fun szazalek(x : Int): Double{
         val ceiling: Int
@@ -196,5 +220,15 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
     override fun onPause() {
         super.onPause()
         polc.setText("")
+        mennyiseg.setText("")
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        xmlData = if(context is SendXmlData){
+            context
+        }else{
+            throw RuntimeException(context.toString() + "must implement")
+        }
     }
 }
