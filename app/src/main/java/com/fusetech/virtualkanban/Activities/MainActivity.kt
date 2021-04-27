@@ -1237,7 +1237,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
     override fun cikkAdatok(cikk: String?, megj1: String?, megj2: String?, intrem: String?, igeny: Double, unit: String?, id: Int, kontnerNumber: Int) {
-       // val igenyKontnerKiszedesCikk = IgenyKontnerKiszedesCikk()
         CoroutineScope(IO).launch {
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             try{
@@ -1251,6 +1250,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         setAlert("Nem tudod megnyitni, mert már valaki dolgozik benne")
                     }
                 }else{
+                    val listOfBin: ArrayList<PolcLocation> = ArrayList()
                     val statement1 = connection.prepareStatement(resources.getString(R.string.cikkUpdate))
                     statement1.setInt(1,2)
                     statement1.setString(2,dolgKod)
@@ -1286,15 +1286,18 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                             bundle.putInt("K_KONTENER",kontnerNumber)
                             bundle.putInt("K_ID",id)
                             bundle.putSerializable("K_LIST",myList)
-                            bundle.putString("K_POLC","")
+                            bundle.putSerializable("K_POLC",listOfBin)
                             igenyKontenerKiszedesCikkKiszedes.arguments = bundle
                             supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKontenerKiszedesCikkKiszedes,"KISZEDESCIKK").commit()
                         }
                     }else{
                         //HA VAN AZ ÁTMENETI ADATTÁBLÁBA ÉRTÉK
-                        val ujIgeny = igeny - resultSet5.getDouble("mozgatott_mennyiseg")
-                        val rakhely = resultSet5.getString("kiado_rakhely")
-
+                        var  a = 0.0
+                        do{
+                            a += resultSet5.getDouble("mozgatott_mennyiseg")
+                            listOfBin.add(PolcLocation(resultSet5.getString("kiado_rakhely"),resultSet5.getDouble("mozgatott_mennyiseg").toString()))
+                        }while(resultSet5.next())
+                        val ujIgeny = igeny - a
                         val statement2 = connection.prepareStatement(resources.getString(R.string.raktarCheck))
                         statement2.setString(1,cikk)
                         val resultSet2 = statement2.executeQuery()
@@ -1319,11 +1322,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                             bundle.putInt("K_KONTENER",kontnerNumber)
                             bundle.putInt("K_ID",id)
                             bundle.putSerializable("K_LIST",myList)
-                            bundle.putString("K_POLC",rakhely)
+                            bundle.putSerializable("K_POLC",listOfBin)
                             igenyKontenerKiszedesCikkKiszedes.arguments = bundle
                             supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKontenerKiszedesCikkKiszedes,"KISZEDESCIKK").commit()
                         }
-
                     }
                 }
             }catch (e: Exception){

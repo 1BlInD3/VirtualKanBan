@@ -113,4 +113,10 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         super.onResume()
         recycler.requestFocus()
     }
+    fun setProgressBarOff(){
+        progress.visibility = View.GONE
+    }
+    fun setProgressBarOn(){
+        progress.visibility = View.VISIBLE
+    }
 }

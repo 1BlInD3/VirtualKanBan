@@ -80,13 +80,14 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
         kontenerNumber = view.kontenerIDKiszedes
         cikkNumber = view.cikkIDKiszedes
         setProgressBarOff()
-        cikkEdit.isEnabled = false
+        cikkEdit.isFocusable = false
+        cikkEdit.isFocusableInTouchMode = false
         igeny.isFocusable = false
         igeny.isFocusableInTouchMode = false
-        mennyiseg.isFocusable = true //false
-        mennyiseg.isFocusableInTouchMode = true //false
-        //polc.requestFocus()
-        mennyiseg.requestFocus()
+        mennyiseg.isFocusable = false
+        mennyiseg.isFocusableInTouchMode = false
+        polc.requestFocus()
+        //mennyiseg.requestFocus()
         loadData()
         locationRecycler.adapter?.notifyDataSetChanged()
 
@@ -160,15 +161,17 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
         unit.text = arguments?.getString("K_UNIT")
         kontenerNumber.text = arguments?.getInt("K_KONTENER").toString()
         cikkNumber.text = arguments?.getInt("K_ID").toString()
-        val binNumber = arguments?.getString("K_POLC")
-        if(binNumber != ""){
-            for(i in 0 until itemLocationList.size){
-                var a = itemLocationList[i].polc
-                if(itemLocationList[i].polc?.trim().equals(binNumber)){
-                    itemLocationList[i].mennyiseg = (itemLocationList[i].mennyiseg.toString().toDouble() - igenyeltMennyiseg).toString()
+        val binNumber = arguments?.getSerializable("K_POLC") as ArrayList<PolcLocation>
+        if(binNumber.size > 0) {
+            for (i in 0 until itemLocationList.size) {
+                for(j in 0 until binNumber.size){
+                    if(itemLocationList[i].polc?.trim() == binNumber[j].polc?.trim()){
+                        itemLocationList[i].mennyiseg = (itemLocationList[i].mennyiseg.toString().toDouble() - binNumber[j].mennyiseg.toString().toDouble()).toString()
+                    }
                 }
             }
             locationRecycler.adapter?.notifyDataSetChanged()
+
         }
 
     }
@@ -183,6 +186,8 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
     }
     fun setBin(polcName: String){
         polc.setText(polcName)
+        polc.isFocusable = false
+        polc.isFocusableInTouchMode = false
         mennyiseg.isFocusable = true
         mennyiseg.isFocusableInTouchMode = true
         mennyiseg.requestFocus()
