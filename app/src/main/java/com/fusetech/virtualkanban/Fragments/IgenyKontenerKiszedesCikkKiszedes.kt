@@ -2,6 +2,9 @@ package com.fusetech.virtualkanban.Fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.text.InputFilter
+import android.text.InputType
+import android.text.Spanned
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -20,6 +23,7 @@ import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes_cikk_kiszedes.*
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes_cikk_kiszedes.view.*
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_osszeallitas.*
+import java.util.Locale.filter
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -50,6 +54,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
     private val tempLocations: ArrayList<PolcLocation> = ArrayList()
     private val inputLocations: ArrayList<PolcLocation> = ArrayList()
     private lateinit var xmlData: SendXmlData
+    private var maxMennyiseg: Double = 0.0
     interface SendXmlData{
         fun sendXmlData(cikk: String, polc: String, mennyiseg: Double)
     }
@@ -93,6 +98,10 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
         igeny.isFocusableInTouchMode = false
         mennyiseg.isFocusable = false
         mennyiseg.isFocusableInTouchMode = false
+        polc.keyListener = null
+        polc.isFocusable = true
+        polc.isFocusableInTouchMode = true
+        polc.isCursorVisible = true
         polc.requestFocus()
         //mennyiseg.requestFocus()
         loadData()
@@ -112,37 +121,63 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
         }
         mennyiseg.setOnClickListener {
             var osszeadva = false
-                if(mennyiseg.text.toString().toDouble() > szazalek(10)) {
-                mainActivity.setAlert("Túl sok ennyit nem vehetsz ki")
-            }else if(mennyiseg.text.trim().toString().toDouble() <= igenyeltMennyiseg){
-                igenyeltMennyiseg -= mennyiseg.text.trim().toString().toDouble()
-                igeny.setText(igenyeltMennyiseg.toString())
-                for(i in 0 until itemLocationList.size) {
-                    if (itemLocationList[i].polc?.trim() == polc.text.trim().toString()) {
-                        itemLocationList[i].mennyiseg = (itemLocationList[i].mennyiseg.toString()
-                            .toDouble() - mennyiseg.text.trim().toString().toDouble()).toString()
+            if(mennyiseg.text?.trim().toString().toDouble() <= maxMennyiseg) {
+                if (mennyiseg.text.toString().toDouble() > szazalek(10)) {
+                    mainActivity.setAlert("Túl sok ennyit nem vehetsz ki")
+                } else if (mennyiseg.text.trim().toString().toDouble() <= igenyeltMennyiseg) {
+                    //frissíteni a kontener_raktar_tetel-t
+                    //frissíteni a kontener_tetel-t
+
+                    igenyeltMennyiseg -= mennyiseg.text.trim().toString().toDouble()
+                    igeny.setText(igenyeltMennyiseg.toString())
+                    for (i in 0 until itemLocationList.size) {
+                        if (itemLocationList[i].polc?.trim() == polc.text.trim().toString()) {
+                            itemLocationList[i].mennyiseg =
+                                (itemLocationList[i].mennyiseg.toString()
+                                    .toDouble() - mennyiseg.text.trim().toString()
+                                    .toDouble()).toString()
+                        }
+                        locationRecycler.adapter?.notifyDataSetChanged()
                     }
-                    locationRecycler.adapter?.notifyDataSetChanged()
-                }
-                inputLocations.add(PolcLocation(polc.text.trim().toString(),mennyiseg.text.trim().toString()))
-                //xmlData.sendXmlData(cikkEdit.text.trim().toString(),polc.text.trim().toString(),mennyiseg.text.trim().toString().toDouble())
-                //feltölteni itt a raktár tétel táblát
-                //itt az történik, hogy megnézzük, hogy van e már olyan polcon aminek an értéke és összeadni az újjal
-                if(tempLocations.size == 0){
-                    //xmlData.sendXmlData(cikkEdit.text.trim().toString(),polc.text.trim().toString(),mennyiseg.text.trim().toString().toDouble())
-                    tempLocations.add(PolcLocation(polc.text.trim().toString(),mennyiseg.text.trim().toString()))
-                }else{
-                    for (i in 0 until tempLocations.size){
-                        if(tempLocations[i].polc == polc.text.trim().toString()){
-                            tempLocations[i].mennyiseg =  (tempLocations[i].mennyiseg.toString().toDouble() + mennyiseg.text.trim().toString().toDouble()).toString()
-                            osszeadva = true
+                    if (tempLocations.size == 0) {
+                        tempLocations.add(
+                            PolcLocation(
+                                polc.text.trim().toString(),
+                                mennyiseg.text.trim().toString()
+                            )
+                        )
+                    } else {
+                        for (i in 0 until tempLocations.size) {
+                            if (tempLocations[i].polc == polc.text.trim().toString()) {
+                                tempLocations[i].mennyiseg = (tempLocations[i].mennyiseg.toString()
+                                    .toDouble() + mennyiseg.text.trim().toString()
+                                    .toDouble()).toString()
+                                osszeadva = true
+                            }
+                        }
+                        if (!osszeadva) {
+                            tempLocations.add(
+                                PolcLocation(
+                                    polc.text.trim().toString(),
+                                    mennyiseg.text.trim().toString()
+                                )
+                            )
                         }
                     }
-                    if(!osszeadva){
-                        tempLocations.add(PolcLocation(polc.text.trim().toString(),mennyiseg.text.trim().toString()))
+                    if (igenyeltMennyiseg == 0.0) {
+                        Log.d(TAG, "onCreateView: LEFUTOTT")
                     }
                 }
+            }else{
+                mainActivity.setAlert("Többet adtál meg mint ami a polcon van")
             }
+            mennyiseg.setText("")
+            mennyiseg.isFocusable = false
+            mennyiseg.isFocusableInTouchMode = false
+            polc.isFocusable = true
+            polc.isFocusableInTouchMode = true
+            polc.setText("")
+            polc.requestFocus()
         }
         return view
     }
@@ -209,12 +244,23 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
         Log.d(TAG, "polcItemClick: MEGNYOMTAM")
     }
     fun setBin(polcName: String){
-        polc.setText(polcName)
-        polc.isFocusable = false
-        polc.isFocusableInTouchMode = false
-        mennyiseg.isFocusable = true
-        mennyiseg.isFocusableInTouchMode = true
-        mennyiseg.requestFocus()
+        maxMennyiseg = 0.0
+        if(polc.text.isEmpty()){
+        for(i in 0 until itemLocationList.size){
+            if(itemLocationList[i].polc?.trim() == polcName.trim()){
+                polc.setText(polcName)
+                polc.isFocusable = false
+                polc.isFocusableInTouchMode = false
+                mennyiseg.isFocusable = true
+                mennyiseg.isFocusableInTouchMode = true
+                mennyiseg.requestFocus()
+                maxMennyiseg = itemLocationList[i].mennyiseg?.trim().toString().toDouble()
+            }
+        }
+        if(polc.text.isEmpty()){
+            mainActivity.setAlert("Nincs a rakhelyen ilyen tétel")
+        }
+        }
     }
 
     override fun onPause() {
