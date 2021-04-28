@@ -33,4 +33,5 @@
     <string name="igenyKontenerLezarasCikkLezarasNezegetos">SELECT tetel.id as id, tetel.kontener_id as kontener_id,tetel.cikkszam as cikkszam,adat.Description1 ,adat.Description2 ,adat.InternRem1 ,tetel.statusz as statusz, tetel.igenyelt_mennyiseg as igenyelt_mennyiseg ,tetel.mozgatott_mennyiseg as mozgatott_mennyiseg, unit.Description as Unit FROM [leltar].[dbo].[kontener_tetel] as tetel LEFT OUTER JOIN [ScaCompDB].[dbo].[VF_SC010300_Stockfile] as adat ON tetel.cikkszam = adat.StockCode LEFT OUTER JOIN [ScaCompDB].[dbo].[VF_SCUN0300_UnitCode] as unit ON adat.UnitCodeStoc = unit.UnitCode where kontener_id = ?
 </string>
     <string name="nev">SELECT [TextDescription] FROM [Fusetech].[dbo].[DolgKodok] where Key1 = ?</string>
+    <string name="insertTemporary">INSERT INTO [leltar].[dbo].[kontener_raktar_tetel] (kontener_tetel_id,mozgatott_mennyiseg,kiado_raktar,kiado_rakhely) VALUES (?,?,?,?)</string>
 </resources>

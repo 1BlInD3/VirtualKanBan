@@ -2,7 +2,6 @@ package com.fusetech.virtualkanban.Activities
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.text.Spanned
 import android.util.Log
 import android.view.KeyEvent
 import android.view.WindowManager
@@ -87,7 +86,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private var igenyLezarCikkVisible: Boolean = false
     private val url = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10"
     private val connectionString ="jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
-    private val xmlList: ArrayList<XmlData> = ArrayList()
+    //private val xmlList: ArrayList<XmlData> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -1375,6 +1374,25 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 }
             }
         }
+    }
+    fun insertDataToRaktarTetel(cikk : String, mennyiseg: Double, raktarKod: String, polc: String){
+       // CoroutineScope(IO).launch {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            try{
+                connection = DriverManager.getConnection(connectionString)
+                val statement = connection.prepareStatement(resources.getString(R.string.insertTemporary))
+                statement.setString(1, cikk)
+                statement.setDouble(2, mennyiseg)
+                statement.setString(3, raktarKod)
+                statement.setString(4, polc)
+                statement.executeUpdate()
+                igenyKontenerKiszedesCikkKiszedes.isSaved = true
+            }catch (e: Exception){
+                CoroutineScope(Main).launch {
+                    setAlert("Probléma a ratar_tetel feltöltésnél $e")
+                }
+            }
+        //}
     }
 
     override fun sendXmlData(cikk: String, polc: String, mennyiseg: Double) {

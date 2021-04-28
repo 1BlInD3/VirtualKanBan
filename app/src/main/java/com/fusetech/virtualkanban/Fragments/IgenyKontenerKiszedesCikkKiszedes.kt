@@ -23,6 +23,11 @@ import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes_cikk_kiszedes.*
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes_cikk_kiszedes.view.*
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_osszeallitas.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.util.Locale.filter
 
 // TODO: Rename parameter arguments, choose names that match
@@ -55,6 +60,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
     private val inputLocations: ArrayList<PolcLocation> = ArrayList()
     private lateinit var xmlData: SendXmlData
     private var maxMennyiseg: Double = 0.0
+    var isSaved = false
     interface SendXmlData{
         fun sendXmlData(cikk: String, polc: String, mennyiseg: Double)
     }
@@ -125,47 +131,66 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
                 if (mennyiseg.text.toString().toDouble() > szazalek(10)) {
                     mainActivity.setAlert("Túl sok ennyit nem vehetsz ki")
                 } else if (mennyiseg.text.trim().toString().toDouble() <= igenyeltMennyiseg) {
-                    //frissíteni a kontener_raktar_tetel-t
-                    //frissíteni a kontener_tetel-t
-
-                    igenyeltMennyiseg -= mennyiseg.text.trim().toString().toDouble()
-                    igeny.setText(igenyeltMennyiseg.toString())
-                    for (i in 0 until itemLocationList.size) {
-                        if (itemLocationList[i].polc?.trim() == polc.text.trim().toString()) {
-                            itemLocationList[i].mennyiseg =
-                                (itemLocationList[i].mennyiseg.toString()
-                                    .toDouble() - mennyiseg.text.trim().toString()
-                                    .toDouble()).toString()
-                        }
-                        locationRecycler.adapter?.notifyDataSetChanged()
-                    }
-                    if (tempLocations.size == 0) {
-                        tempLocations.add(
-                            PolcLocation(
-                                polc.text.trim().toString(),
-                                mennyiseg.text.trim().toString()
+                    val a = mennyiseg.text?.trim().toString().toDouble()
+                    CoroutineScope(IO).launch {
+                        async {
+                            mainActivity.insertDataToRaktarTetel(
+                                cikkNumber.text.trim().toString(),
+                                mennyiseg.text.trim().toString().toDouble(),
+                                "02",
+                                polc.text.trim().toString()
                             )
-                        )
-                    } else {
-                        for (i in 0 until tempLocations.size) {
-                            if (tempLocations[i].polc == polc.text.trim().toString()) {
-                                tempLocations[i].mennyiseg = (tempLocations[i].mennyiseg.toString()
-                                    .toDouble() + mennyiseg.text.trim().toString()
-                                    .toDouble()).toString()
-                                osszeadva = true
+                        }.await()
+                        //mainActivity.insertDataToRaktarTetel(cikkNumber.text.trim().toString(),mennyiseg.text.trim().toString().toDouble(),"02",polc.text.trim().toString())
+                        if (isSaved) {
+                            CoroutineScope(Main).launch {
+                                igenyeltMennyiseg -= a
+                                igeny.setText(igenyeltMennyiseg.toString())
                             }
-                        }
-                        if (!osszeadva) {
-                            tempLocations.add(
-                                PolcLocation(
-                                    polc.text.trim().toString(),
-                                    mennyiseg.text.trim().toString()
+                            for (i in 0 until itemLocationList.size) {
+                                if (itemLocationList[i].polc?.trim() == polc.text.trim()
+                                        .toString()
+                                ) {
+                                    itemLocationList[i].mennyiseg =
+                                        (itemLocationList[i].mennyiseg.toString()
+                                            .toDouble() - mennyiseg.text.trim().toString()
+                                            .toDouble()).toString()
+                                }
+                                CoroutineScope(Main).launch {
+                                    locationRecycler.adapter?.notifyDataSetChanged()
+                                }
+                            }
+                            if (tempLocations.size == 0) {
+                                tempLocations.add(
+                                    PolcLocation(
+                                        polc.text.trim().toString(),
+                                        mennyiseg.text.trim().toString()
+                                    )
                                 )
-                            )
+                            } else {
+                                for (i in 0 until tempLocations.size) {
+                                    if (tempLocations[i].polc == polc.text.trim().toString()) {
+                                        tempLocations[i].mennyiseg =
+                                            (tempLocations[i].mennyiseg.toString()
+                                                .toDouble() + mennyiseg.text.trim().toString()
+                                                .toDouble()).toString()
+                                        osszeadva = true
+                                    }
+                                }
+                                if (!osszeadva) {
+                                    tempLocations.add(
+                                        PolcLocation(
+                                            polc.text.trim().toString(),
+                                            mennyiseg.text.trim().toString()
+                                        )
+                                    )
+                                }
+                            }
+                            if (igenyeltMennyiseg == 0.0) {
+                                Log.d(TAG, "onCreateView: LEFUTOTT")
+                            }
+                            //frissíteni a kontenerben a mozgatott mennyiséget és a státuszt
                         }
-                    }
-                    if (igenyeltMennyiseg == 0.0) {
-                        Log.d(TAG, "onCreateView: LEFUTOTT")
                     }
                 }
             }else{
@@ -191,6 +216,10 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+    fun mennyisegSzamolas(){
+
+
     }
     fun loadData(){
         itemLocationList.clear()
