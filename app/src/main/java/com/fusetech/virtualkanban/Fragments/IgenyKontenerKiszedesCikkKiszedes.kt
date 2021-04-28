@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.Locale.filter
+import kotlin.math.log
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -132,65 +133,60 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
                     mainActivity.setAlert("Túl sok ennyit nem vehetsz ki")
                 } else if (mennyiseg.text.trim().toString().toDouble() <= igenyeltMennyiseg) {
                     val a = mennyiseg.text?.trim().toString().toDouble()
+                    val b = polc.text.trim().toString()
+                    val c =  cikkNumber.text.trim().toString()
                     CoroutineScope(IO).launch {
                         async {
                             mainActivity.insertDataToRaktarTetel(
-                                cikkNumber.text.trim().toString(),
-                                mennyiseg.text.trim().toString().toDouble(),
+                                c,
+                                a.toDouble(),
                                 "02",
                                 polc.text.trim().toString()
                             )
                         }.await()
-                        //mainActivity.insertDataToRaktarTetel(cikkNumber.text.trim().toString(),mennyiseg.text.trim().toString().toDouble(),"02",polc.text.trim().toString())
                         if (isSaved) {
                             CoroutineScope(Main).launch {
                                 igenyeltMennyiseg -= a
                                 igeny.setText(igenyeltMennyiseg.toString())
-                            }
                             for (i in 0 until itemLocationList.size) {
-                                if (itemLocationList[i].polc?.trim() == polc.text.trim()
-                                        .toString()
-                                ) {
-                                    itemLocationList[i].mennyiseg =
-                                        (itemLocationList[i].mennyiseg.toString()
-                                            .toDouble() - mennyiseg.text.trim().toString()
-                                            .toDouble()).toString()
+                                if (itemLocationList[i].polc?.trim() == b) {
+                                        itemLocationList[i].mennyiseg = (itemLocationList[i].mennyiseg.toString().toDouble() - a).toString()
                                 }
-                                CoroutineScope(Main).launch {
-                                    locationRecycler.adapter?.notifyDataSetChanged()
-                                }
-                            }
-                            if (tempLocations.size == 0) {
-                                tempLocations.add(
-                                    PolcLocation(
-                                        polc.text.trim().toString(),
-                                        mennyiseg.text.trim().toString()
-                                    )
-                                )
-                            } else {
-                                for (i in 0 until tempLocations.size) {
-                                    if (tempLocations[i].polc == polc.text.trim().toString()) {
-                                        tempLocations[i].mennyiseg =
-                                            (tempLocations[i].mennyiseg.toString()
-                                                .toDouble() + mennyiseg.text.trim().toString()
-                                                .toDouble()).toString()
-                                        osszeadva = true
-                                    }
-                                }
-                                if (!osszeadva) {
+                                if (tempLocations.size == 0) {
                                     tempLocations.add(
                                         PolcLocation(
-                                            polc.text.trim().toString(),
-                                            mennyiseg.text.trim().toString()
+                                            b,
+                                            a.toString()
                                         )
                                     )
+                                } else {
+                                    for (i in 0 until tempLocations.size) {
+                                        if (tempLocations[i].polc == b) {
+                                            tempLocations[i].mennyiseg =
+                                                (tempLocations[i].mennyiseg.toString().toDouble() + a).toString()
+                                            osszeadva = true
+                                        }
+                                    }
+                                    if (!osszeadva) {
+                                        tempLocations.add(
+                                            PolcLocation(
+                                                polc.text.trim().toString(),
+                                                a.toString()
+                                            )
+                                        )
+                                    }
                                 }
+                                if (igenyeltMennyiseg == 0.0) {
+                                    Log.d(TAG, "onCreateView: LEFUTOTT")
+                                }
+                                //frissíteni a kontenerben a mozgatott mennyiséget és a státuszt
                             }
-                            if (igenyeltMennyiseg == 0.0) {
-                                Log.d(TAG, "onCreateView: LEFUTOTT")
-                            }
-                            //frissíteni a kontenerben a mozgatott mennyiséget és a státuszt
+                                locationRecycler.adapter?.notifyDataSetChanged()
+                                for(i in 0 until tempLocations.size){
+                                    Log.d(TAG,"NEM ${tempLocations[i].polc} + ${tempLocations[i].mennyiseg}")
+                                }
                         }
+                    }
                     }
                 }
             }else{
