@@ -38,5 +38,6 @@
     <string name="getSzallitoJarmu">SELECT SzallitoJarmu FROM [leltar].[dbo].[kontener] WHERE id = ?</string>
     <string name="updateKontenerTetel">UPDATE [leltar].[dbo].[kontener_tetel] SET mozgatott_mennyiseg = ?, kiado_raktar = ?, kiado_rakhely = ?, SzallitoJarmu = ? WHERE id = ?</string>
     <string name="updateKontenerTeletStatusz">UPDATE [leltar].[dbo].[kontener_tetel] SET statusz = ? WHERE id = ?</string>
+    <string name="updateCikkAtvevo">UPDATE [leltar].[dbo].[kontener_tetel] SET atvevo = ? WHERE kontener_id = ?</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.Fragments
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -42,7 +43,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
     private lateinit var igeny: EditText
     private lateinit var polc: EditText
     private lateinit var mennyiseg: EditText
-    private lateinit var feltolt: Button
+    private lateinit var lezar: Button
     private lateinit var vissza: Button
     private lateinit var progress: ProgressBar
     private lateinit var mainActivity: MainActivity
@@ -88,7 +89,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
         igeny = view.kiszedesIgenyEdit
         polc = view.kiszedesPolc
         mennyiseg = view.kiszedesMennyiseg
-        feltolt = view.kiszedesFeltolt
+        lezar = view.kiszedesLezar
         vissza = view.kiszedesVissza
         progress = view.kihelyezesProgress
         kontenerNumber = view.kontenerIDKiszedes
@@ -109,11 +110,20 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
         loadData()
         locationRecycler.adapter?.notifyDataSetChanged()
 
-        feltolt.setOnClickListener{
-            if(mennyiseg.text.isEmpty()){
-                mainActivity.setAlert("Nincs kitöltve minden rendesen")
-                mennyiseg.requestFocus()
+        lezar.setOnClickListener{
+            val builder = AlertDialog.Builder(view.context)
+            builder.setTitle("Figyelem")
+                .setMessage("Biztos le akarod így zárni?")
+            builder.setPositiveButton("Igen"){
+                dialog, which ->
+                Log.d(TAG, "onCreateView: Megnyomtam az IGEN gombot")
             }
+            builder.setNegativeButton("Nem"){
+                dialog, which ->
+                Log.d(TAG, "onCreateView: Megnyomtam a NEM gombot")
+            }
+            builder.create()
+            builder.show()
         }
         vissza.setOnClickListener{
             mainActivity.cikkUpdate(cikkIDKiszedes.text.trim().toString().toInt())
@@ -184,6 +194,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
                                             mainActivity.loadMenuFragment(true)
                                             mainActivity.loadKiszedesFragment()
                                             mainActivity.checkIfContainerStatus(kontenerIDKiszedes.text.trim().toString())
+                                            mainActivity.updateItemAtvevo(c)
                                         }
                                     }
                                     Log.d(TAG, "onCreateView: LEFUTOTT")

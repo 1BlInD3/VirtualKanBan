@@ -1050,6 +1050,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         val builder = AlertDialog.Builder(this@MainActivity)
         builder.setTitle("Figyelem")
             .setMessage(text)
+        //builder.setPositiveButton("Igen")
         builder.create()
         builder.show()
     }
@@ -1406,6 +1407,20 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }catch (e: Exception){
             CoroutineScope(Main).launch {
                 setAlert("Probléma a tétel 3-ra írásával")
+            }
+        }
+    }
+    fun updateItemAtvevo(itemId: String){
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try{
+            connection = DriverManager.getConnection(connectionString)
+            val statement = connection.prepareStatement(resources.getString(R.string.updateCikkAtvevo))
+            statement.setNull(1,Types.INTEGER)
+            statement.setString(2, itemId)
+            statement.executeUpdate()
+        }catch (e: Exception){
+            CoroutineScope(Main).launch {
+                setAlert("Nem tudom az átvevőt kinullázni $e")
             }
         }
     }
