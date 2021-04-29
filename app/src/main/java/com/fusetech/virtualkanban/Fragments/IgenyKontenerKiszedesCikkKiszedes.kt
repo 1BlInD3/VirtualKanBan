@@ -2,9 +2,6 @@ package com.fusetech.virtualkanban.Fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.text.InputFilter
-import android.text.InputType
-import android.text.Spanned
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -22,14 +19,11 @@ import com.fusetech.virtualkanban.DataItems.PolcLocation
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes_cikk_kiszedes.*
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes_cikk_kiszedes.view.*
-import kotlinx.android.synthetic.main.fragment_igeny_kontener_osszeallitas.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.util.Locale.filter
-import kotlin.math.log
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,10 +52,11 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
     private lateinit var locationRecycler: RecyclerView
     private val itemLocationList:ArrayList<PolcLocation> = ArrayList()
     private val tempLocations: ArrayList<PolcLocation> = ArrayList()
-    private val inputLocations: ArrayList<PolcLocation> = ArrayList()
     private lateinit var xmlData: SendXmlData
     private var maxMennyiseg: Double = 0.0
     var isSaved = false
+    var isUpdated = false
+
     interface SendXmlData{
         fun sendXmlData(cikk: String, polc: String, mennyiseg: Double)
     }
@@ -135,11 +130,12 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
                     val a = mennyiseg.text?.trim().toString().toDouble()
                     val b = polc.text.trim().toString()
                     val c =  cikkNumber.text.trim().toString()
+                    val d = kontenerNumber.text.trim().toString()
                     CoroutineScope(IO).launch {
                         async {
                             mainActivity.insertDataToRaktarTetel(
                                 c,
-                                a.toDouble(),
+                                a,
                                 "02",
                                 polc.text.trim().toString()
                             )
@@ -177,16 +173,34 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
                                     }
                                 }
                                 if (igenyeltMennyiseg == 0.0) {
+                                    isUpdated = false
+                                    CoroutineScope(IO).launch {
+                                        mainActivity.checkIfContainerIsDone(d,c,"02",b)
+                                        async {
+                                            mainActivity.updateItemStatus(c)
+                                        }.await()
+                                        if(isUpdated){
+                                            mainActivity.checkIfContainerIsDone(d,c,"02",b)
+                                            mainActivity.loadMenuFragment(true)
+                                            mainActivity.loadKiszedesFragment()
+                                            mainActivity.checkIfContainerStatus(kontenerIDKiszedes.text.trim().toString())
+                                        }
+                                    }
                                     Log.d(TAG, "onCreateView: LEFUTOTT")
+
+                                }else{
+                                    Log.d(TAG, "onCreateView: Frissíteni a táblákat")
+                                    CoroutineScope(IO).launch {
+                                        mainActivity.checkIfContainerIsDone(d,c,"02",b)
+                                    }
                                 }
-                                //frissíteni a kontenerben a mozgatott mennyiséget és a státuszt
                             }
                                 locationRecycler.adapter?.notifyDataSetChanged()
                                 for(i in 0 until tempLocations.size){
                                     Log.d(TAG,"NEM ${tempLocations[i].polc} + ${tempLocations[i].mennyiseg}")
                                 }
                         }
-                    }
+                        }
                     }
                 }
             }else{
@@ -212,10 +226,6 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
                     putString(ARG_PARAM2, param2)
                 }
             }
-    }
-    fun mennyisegSzamolas(){
-
-
     }
     fun loadData(){
         itemLocationList.clear()

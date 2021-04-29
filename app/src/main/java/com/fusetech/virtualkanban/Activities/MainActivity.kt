@@ -1394,6 +1394,66 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         //}
     }
+    fun updateItemStatus(itemId: String){
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try{
+            connection = DriverManager.getConnection(connectionString)
+            val statement = connection.prepareStatement(resources.getString(R.string.updateKontenerTeletStatusz))
+            statement.setInt(1,3)
+            statement.setString(2,itemId)
+            statement.executeUpdate()
+            igenyKontenerKiszedesCikkKiszedes.isUpdated = true
+        }catch (e: Exception){
+            CoroutineScope(Main).launch {
+                setAlert("Probléma a tétel 3-ra írásával")
+            }
+        }
+    }
+    fun checkIfContainerIsDone(container: String, itemId: String,raktar: String,polc : String){
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        val mozgatott: Double
+        val szallito: String
+        try{
+            connection = DriverManager.getConnection(connectionString)
+            val statement = connection.prepareStatement(resources.getString(R.string.kontenerCikkEllenorzes))
+            statement.setString(1,container)
+            val resultSet = statement.executeQuery()
+            if(!resultSet.next()){
+                CoroutineScope(Main).launch {
+                    setAlert("Nincs több 3as cikk")
+                }
+            }else{
+                val statement1 = connection.prepareStatement(resources.getString(R.string.getMozgatottMennyiseg))
+                statement1.setString(1,itemId)
+                val resultSet1 = statement1.executeQuery()
+                if(!resultSet1.next()){
+                    Log.d(TAG, "checkIfContainerIsDone: nincs mozgatott mennyiség (hazugság)")
+                }else{
+                    mozgatott = resultSet1.getDouble("mozgatott_mennyiseg")
+                    val statement2 = connection.prepareStatement(resources.getString(R.string.getSzallitoJarmu))
+                    statement2.setString(1,container)
+                    val resultSet2 = statement2.executeQuery()
+                    if(!resultSet2.next()){
+                        Log.d(TAG, "checkIfContainerIsDone: nincs szállítójármű")
+                    }else{
+                        szallito = resultSet2.getString("SzallitoJarmu")
+                        val statement3 = connection.prepareStatement(resources.getString(R.string.updateKontenerTetel))
+                        statement3.setDouble(1,mozgatott)
+                        statement3.setString(2,raktar)
+                        statement3.setString(3,polc)
+                        statement3.setString(4,szallito)
+                        statement3.setString(5,itemId)
+                        statement3.executeUpdate()
+                        Log.d(TAG, "checkIfContainerIsDone: Sikeres update")
+                    }
+                }
+            }
+        }catch (e: Exception){
+            CoroutineScope(Main).launch {
+                setAlert("Probléma a konténer ellenőrzésével $e")
+            }
+        }
+    }
 
     override fun sendXmlData(cikk: String, polc: String, mennyiseg: Double) {
         Log.d(TAG, "sendXmlData: ")
