@@ -1,6 +1,7 @@
 package com.fusetech.virtualkanban.Adapters
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +43,13 @@ class KontenerbenLezarasAdapter(var kontenerCikkLezaras: ArrayList<KontenerbenLe
             holder.intRem.setBackgroundColor(R.color.vikings)
             holder.igeny.setBackgroundColor(R.color.vikings)
             holder.mozgas.setBackgroundColor(R.color.vikings)
+        }else if(kontenerCikkLezaras[position].statusz == 3){
+            holder.cikkszam.setBackgroundColor(Color.GREEN)
+            holder.megj1.setBackgroundColor(Color.GREEN)
+            holder.megj2.setBackgroundColor(Color.GREEN)
+            holder.intRem.setBackgroundColor(Color.GREEN)
+            holder.igeny.setBackgroundColor(Color.GREEN)
+            holder.mozgas.setBackgroundColor(Color.GREEN)
         }
         holder.cikkszam.text = currentPosition.cikkszam
         holder.megj1.text = currentPosition.megjegyzes1

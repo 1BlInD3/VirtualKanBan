@@ -1454,7 +1454,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }
     }
-
     override fun sendXmlData(cikk: String, polc: String, mennyiseg: Double) {
         Log.d(TAG, "sendXmlData: ")
     }
