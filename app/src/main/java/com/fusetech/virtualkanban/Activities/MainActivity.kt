@@ -325,10 +325,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 statment3.setString(2,dolgKod)
                 val resultSet1 = statment3.executeQuery()
                 if(!resultSet1.next()){
-                    CoroutineScope(Main).launch {
+                    /*CoroutineScope(Main).launch {
                         setAlert("A konténer üres")
                         igenyKiszedesFragment.setProgressBarOff()
-                    }
+                    }*/
+                    val ellenorzoFragment = EllenorzoKodFragment()
+                    supportFragmentManager.beginTransaction().replace(R.id.frame_container,ellenorzoFragment,"ELLENOR").commit()
                 }else{
                     val fragment = IgenyKontnerKiszedesCikk()
                     val konteneresCikkek: ArrayList<KontenerbenLezarasItem> = ArrayList()
@@ -1214,6 +1216,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     loadMenuFragment(true)
                     igenyKontenerKiszedes()
                 }
+                getFragment("ELLENOR") -> {
+                    loadMenuFragment(true)
+                    igenyKontenerKiszedes()
+                }
                 else -> {
                     super.onBackPressed()
                 }
@@ -1423,7 +1429,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             igenyKontenerKiszedesCikkKiszedes.isUpdated = true
         }catch (e: Exception){
             CoroutineScope(Main).launch {
-                setAlert("Probléma a tétel 3-ra írásával")
+                setAlert("Probléma a tétel 3-ra írásával $e")
             }
         }
     }

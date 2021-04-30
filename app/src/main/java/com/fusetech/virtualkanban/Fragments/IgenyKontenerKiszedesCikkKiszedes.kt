@@ -120,6 +120,28 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             builder.setTitle("Figyelem")
                 .setMessage("Biztos le akarod így zárni?")
             builder.setPositiveButton("Igen") { dialog, which ->
+                if(!polc.text.trim().toString().isEmpty()) {
+                    CoroutineScope(IO).launch {
+                        async {
+                            mainActivity.updateItemStatus(cikkNumber.text.trim().toString())
+                        }.await()
+                        if (isUpdated) {
+                           /* mainActivity.updateItemAtvevo(cikkNumber.text.trim().toString())
+                            mainActivity.checkIfContainerIsDone(
+                                kontenerNumber.text.trim().toString(),
+                                cikkNumber.text.trim().toString(),
+                                "02",
+                                polc.text.trim().toString()
+                            )*/
+
+                            mainActivity.loadMenuFragment(true)
+                            mainActivity.loadKiszedesFragment()
+                            mainActivity.checkIfContainerStatus(
+                                kontenerIDKiszedes.text.trim().toString()
+                            )
+                        }
+                    }
+                }
                 Log.d(TAG, "onCreateView: Megnyomtam az IGEN gombot")
             }
             builder.setNegativeButton("Nem") { dialog, which ->
