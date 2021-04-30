@@ -523,6 +523,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }catch (e: Exception){
             Log.d(TAG, "loadKontenerCikkek: $e")
             CoroutineScope(Main).launch {
+                Log.d(TAG, "loadKontenerCikkek: $e")
+                setAlert("$e")
                 igenyLezarasFragment.setProgressBarOff()
             }
         }
