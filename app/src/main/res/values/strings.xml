@@ -38,6 +38,7 @@
     <string name="getSzallitoJarmu">SELECT SzallitoJarmu FROM [leltar].[dbo].[kontener] WHERE id = ?</string>
     <string name="updateKontenerTetel">UPDATE [leltar].[dbo].[kontener_tetel] SET mozgatott_mennyiseg = ?, kiado_raktar = ?, kiado_rakhely = ?, SzallitoJarmu = ? WHERE id = ?</string>
     <string name="updateKontenerTeletStatusz">UPDATE [leltar].[dbo].[kontener_tetel] SET statusz = ? WHERE id = ?</string>
-    <string name="updateCikkAtvevo">UPDATE [leltar].[dbo].[kontener_tetel] SET atvevo = ? WHERE kontener_id = ?</string>
+    <string name="updateCikkAtvevo">UPDATE [leltar].[dbo].[kontener_tetel] SET atvevo = ? WHERE id = ?</string>
+    <string name="fillArray">SELECT SUM ([mozgatott_mennyiseg])as mozgatott_mennyiseg, [kiado_rakhely] FROM [leltar].[dbo].[kontener_raktar_tetel] WHERE kontener_tetel_id = ? GROUP BY kiado_rakhely</string>
 
 </resources>

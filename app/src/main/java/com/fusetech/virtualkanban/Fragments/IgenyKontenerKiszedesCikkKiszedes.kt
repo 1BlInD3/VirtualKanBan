@@ -32,7 +32,7 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private const val TAG = "IgenyKontenerKiszedesCi"
 
-class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcItemClickListener {
+class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcItemClickListener {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var cikkEdit: EditText
@@ -50,15 +50,16 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
     private lateinit var kontenerNumber: TextView
     private lateinit var cikkNumber: TextView
     private var igenyeltMennyiseg: Double = 0.0
+    private var igenyeltMennyisegAmiNemValtozik: Double = 0.0
     private lateinit var locationRecycler: RecyclerView
-    private val itemLocationList:ArrayList<PolcLocation> = ArrayList()
+    private val itemLocationList: ArrayList<PolcLocation> = ArrayList()
     private val tempLocations: ArrayList<PolcLocation> = ArrayList()
     private lateinit var xmlData: SendXmlData
     private var maxMennyiseg: Double = 0.0
     var isSaved = false
     var isUpdated = false
 
-    interface SendXmlData{
+    interface SendXmlData {
         fun sendXmlData(cikk: String, polc: String, mennyiseg: Double)
     }
 
@@ -74,10 +75,14 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_igeny_kontener_kiszedes_cikk_kiszedes,container,false)
+        val view = inflater.inflate(
+            R.layout.fragment_igeny_kontener_kiszedes_cikk_kiszedes,
+            container,
+            false
+        )
         mainActivity = activity as MainActivity
         locationRecycler = view.locationRecycler
-        locationRecycler.adapter = PolcLocationAdapter(itemLocationList,this)
+        locationRecycler.adapter = PolcLocationAdapter(itemLocationList, this)
         locationRecycler.layoutManager = LinearLayoutManager(view.context)
         locationRecycler.setHasFixedSize(true)
         cikkEdit = view.kiszedesCikkEdit
@@ -110,22 +115,20 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
         loadData()
         locationRecycler.adapter?.notifyDataSetChanged()
 
-        lezar.setOnClickListener{
+        lezar.setOnClickListener {
             val builder = AlertDialog.Builder(view.context)
             builder.setTitle("Figyelem")
                 .setMessage("Biztos le akarod így zárni?")
-            builder.setPositiveButton("Igen"){
-                dialog, which ->
+            builder.setPositiveButton("Igen") { dialog, which ->
                 Log.d(TAG, "onCreateView: Megnyomtam az IGEN gombot")
             }
-            builder.setNegativeButton("Nem"){
-                dialog, which ->
+            builder.setNegativeButton("Nem") { dialog, which ->
                 Log.d(TAG, "onCreateView: Megnyomtam a NEM gombot")
             }
             builder.create()
             builder.show()
         }
-        vissza.setOnClickListener{
+        vissza.setOnClickListener {
             mainActivity.cikkUpdate(cikkIDKiszedes.text.trim().toString().toInt())
             mainActivity.loadMenuFragment(true)
             mainActivity.loadKiszedesFragment()
@@ -133,13 +136,14 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
         }
         mennyiseg.setOnClickListener {
             var osszeadva = false
-            if(mennyiseg.text?.trim().toString().toDouble() <= maxMennyiseg) {
+            isUpdated = false
+            if (mennyiseg.text?.trim().toString().toDouble() <= maxMennyiseg) {
                 if (mennyiseg.text.toString().toDouble() > szazalek(10)) {
                     mainActivity.setAlert("Túl sok ennyit nem vehetsz ki")
-                } else if (mennyiseg.text.trim().toString().toDouble() <= igenyeltMennyiseg) {
+                } else /*if (mennyiseg.text.trim().toString().toDouble() <= igenyeltMennyiseg)*/ {
                     val a = mennyiseg.text?.trim().toString().toDouble()
                     val b = polc.text.trim().toString()
-                    val c =  cikkNumber.text.trim().toString()
+                    val c = cikkNumber.text.trim().toString()
                     val d = kontenerNumber.text.trim().toString()
                     CoroutineScope(IO).launch {
                         async {
@@ -147,17 +151,21 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
                                 c,
                                 a,
                                 "02",
-                                polc.text.trim().toString()
+                                b
                             )
                         }.await()
                         if (isSaved) {
                             CoroutineScope(Main).launch {
                                 igenyeltMennyiseg -= a
                                 igeny.setText(igenyeltMennyiseg.toString())
-                            for (i in 0 until itemLocationList.size) {
-                                if (itemLocationList[i].polc?.trim() == b) {
-                                        itemLocationList[i].mennyiseg = (itemLocationList[i].mennyiseg.toString().toDouble() - a).toString()
+                                for (i in 0 until itemLocationList.size) {
+                                    if (itemLocationList[i].polc?.trim() == b) {
+                                        itemLocationList[i].mennyiseg =
+                                            (itemLocationList[i].mennyiseg.toString()
+                                                .toDouble() - a).toString()
+                                    }
                                 }
+                                //TÖMBBE ÍRÁS
                                 if (tempLocations.size == 0) {
                                     tempLocations.add(
                                         PolcLocation(
@@ -169,53 +177,61 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
                                     for (i in 0 until tempLocations.size) {
                                         if (tempLocations[i].polc == b) {
                                             tempLocations[i].mennyiseg =
-                                                (tempLocations[i].mennyiseg.toString().toDouble() + a).toString()
+                                                (tempLocations[i].mennyiseg.toString()
+                                                    .toDouble() + a).toString()
                                             osszeadva = true
                                         }
                                     }
                                     if (!osszeadva) {
                                         tempLocations.add(
                                             PolcLocation(
-                                                polc.text.trim().toString(),
+                                                b,
                                                 a.toString()
                                             )
                                         )
                                     }
                                 }
+                                // megnézni, hogy kész e az igény
                                 if (igenyeltMennyiseg == 0.0) {
                                     isUpdated = false
                                     CoroutineScope(IO).launch {
-                                        mainActivity.checkIfContainerIsDone(d,c,"02",b)
+                                        mainActivity.checkIfContainerIsDone(d, c, "02", b)
                                         async {
                                             mainActivity.updateItemStatus(c)
                                         }.await()
-                                        if(isUpdated){
-                                            mainActivity.checkIfContainerIsDone(d,c,"02",b)
+                                        if (isUpdated) {
+                                            mainActivity.updateItemAtvevo(c)
+                                            mainActivity.checkIfContainerIsDone(d, c, "02", b)
                                             mainActivity.loadMenuFragment(true)
                                             mainActivity.loadKiszedesFragment()
-                                            mainActivity.checkIfContainerStatus(kontenerIDKiszedes.text.trim().toString())
-                                            mainActivity.updateItemAtvevo(c)
+                                            mainActivity.checkIfContainerStatus(
+                                                kontenerIDKiszedes.text.trim().toString()
+                                            )
                                         }
                                     }
                                     Log.d(TAG, "onCreateView: LEFUTOTT")
 
-                                }else{
+                                } else {
                                     Log.d(TAG, "onCreateView: Frissíteni a táblákat")
                                     CoroutineScope(IO).launch {
-                                        mainActivity.checkIfContainerIsDone(d,c,"02",b)
+                                        mainActivity.checkIfContainerIsDone(d, c, "02", b)
                                     }
                                 }
-                            }
                                 locationRecycler.adapter?.notifyDataSetChanged()
-                                for(i in 0 until tempLocations.size){
-                                    Log.d(TAG,"NEM ${tempLocations[i].polc} + ${tempLocations[i].mennyiseg}")
+                                for (i in 0 until tempLocations.size) {
+                                    Log.d(
+                                        TAG,
+                                        "NEM ${tempLocations[i].polc} + ${tempLocations[i].mennyiseg}"
+                                    )
                                 }
-                        }
+                            }
                         }
                     }
                 }
-            }else{
-                mainActivity.setAlert("Többet adtál meg mint ami a polcon van")
+            } else {
+                CoroutineScope(Main).launch {
+                    mainActivity.setAlert("Többet adtál meg mint ami a polcon van")
+                }
             }
             mennyiseg.setText("")
             mennyiseg.isFocusable = false
@@ -238,30 +254,37 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
                 }
             }
     }
-    fun loadData(){
+
+    fun loadData() {
         itemLocationList.clear()
-        val myList: ArrayList<PolcLocation> = arguments?.getSerializable("K_LIST") as ArrayList<PolcLocation>
-        for(i in 0 until myList.size){
-            itemLocationList.add(PolcLocation(myList[i].polc,myList[i].mennyiseg))
+        val myList: ArrayList<PolcLocation> =
+            arguments?.getSerializable("K_LIST") as ArrayList<PolcLocation>
+        for (i in 0 until myList.size) {
+            itemLocationList.add(PolcLocation(myList[i].polc, myList[i].mennyiseg))
         }
     }
-    fun setProgressBarOff(){
+
+    fun setProgressBarOff() {
         progress.visibility = View.GONE
     }
-    fun setProgressBarOn(){
+
+    fun setProgressBarOn() {
         progress.visibility = View.VISIBLE
     }
-    fun performButton(){
+
+    fun performButton() {
         vissza.performClick()
     }
 
     override fun onResume() {
         super.onResume()
+        tempLocations.clear()
         cikkEdit.setText(arguments?.getString("K_CIKK"))
         meg1.text = arguments?.getString("K_MEGJ1")
         meg2.text = arguments?.getString("K_MEGJ2")
         intrem.text = arguments?.getString("K_INT")
         igenyeltMennyiseg = arguments?.getDouble("K_IGENY")!!
+        igenyeltMennyisegAmiNemValtozik = arguments?.getDouble("K_IGENY")!!
         //igeny.setText(arguments?.getDouble("K_IGENY").toString())
         igeny.setText(igenyeltMennyiseg.toString())
         Log.d(TAG, "onCreateView: ${arguments?.getString("K_IGENY").toString()}")
@@ -269,43 +292,55 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
         kontenerNumber.text = arguments?.getInt("K_KONTENER").toString()
         cikkNumber.text = arguments?.getInt("K_ID").toString()
         val binNumber = arguments?.getSerializable("K_POLC") as ArrayList<PolcLocation>
-        if(binNumber.size > 0) {
+        val tempTomb = arguments?.getSerializable("K_TOMB") as ArrayList<PolcLocation>
+        if (binNumber.size > 0) {
             for (i in 0 until itemLocationList.size) {
-                for(j in 0 until binNumber.size){
-                    if(itemLocationList[i].polc?.trim() == binNumber[j].polc?.trim()){
-                        itemLocationList[i].mennyiseg = (itemLocationList[i].mennyiseg.toString().toDouble() - binNumber[j].mennyiseg.toString().toDouble()).toString()
+                for (j in 0 until binNumber.size) {
+                    if (itemLocationList[i].polc?.trim() == binNumber[j].polc?.trim()) {
+                        itemLocationList[i].mennyiseg = (itemLocationList[i].mennyiseg.toString()
+                            .toDouble() - binNumber[j].mennyiseg.toString().toDouble()).toString()
                     }
                 }
             }
             locationRecycler.adapter?.notifyDataSetChanged()
         }
+        if(tempTomb.size > 0){
+            for (i in 0 until tempTomb.size){
+                tempLocations.add(PolcLocation(tempTomb[i].polc,tempTomb[i].mennyiseg))
+            }
+            for (i in 0 until tempLocations.size){
+                Log.d(TAG, "onResume: ${tempLocations[i].polc}, ${tempLocations[i].mennyiseg}")
+            }
+        }
     }
-    fun szazalek(x : Int): Double{
+
+    fun szazalek(x: Int): Double {
         val ceiling: Int
-        ceiling = ((igenyeltMennyiseg/mennyiseg.text.toString().toDouble()) * x).toInt()
-        return igenyeltMennyiseg+ceiling
+        ceiling = ((igenyeltMennyisegAmiNemValtozik / mennyiseg.text.toString().toDouble()) * x).toInt()
+        return igenyeltMennyisegAmiNemValtozik + ceiling
     }
 
     override fun polcItemClick(position: Int) {
         Log.d(TAG, "polcItemClick: MEGNYOMTAM")
     }
-    fun setBin(polcName: String){
+
+    fun setBin(polcName: String) {
         maxMennyiseg = 0.0
-        if(polc.text.isEmpty()){
-        for(i in 0 until itemLocationList.size){
-            if(itemLocationList[i].polc?.trim() == polcName.trim()){
-                polc.setText(polcName)
-                polc.isFocusable = false
-                polc.isFocusableInTouchMode = false
-                mennyiseg.isFocusable = true
-                mennyiseg.isFocusableInTouchMode = true
-                mennyiseg.requestFocus()
-                maxMennyiseg = itemLocationList[i].mennyiseg?.trim().toString().toDouble()
+        if (polc.text.isEmpty()) {
+            for (i in 0 until itemLocationList.size) {
+                if (itemLocationList[i].polc?.trim() == polcName.trim()) {
+                    polc.setText(polcName)
+                    polc.isFocusable = false
+                    polc.isFocusableInTouchMode = false
+                    mennyiseg.isFocusable = true
+                    mennyiseg.isFocusableInTouchMode = true
+                    mennyiseg.requestFocus()
+                    maxMennyiseg = itemLocationList[i].mennyiseg?.trim().toString().toDouble()
+                }
             }
-        }
-        if(polc.text.isEmpty()){
-            mainActivity.setAlert("Nincs a rakhelyen ilyen tétel")
-        }
+            if (polc.text.isEmpty()) {
+                mainActivity.setAlert("Nincs a rakhelyen ilyen tétel")
+            }
         }
     }
 
@@ -317,9 +352,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(),PolcLocationAdapter.PolcIte
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        xmlData = if(context is SendXmlData){
+        xmlData = if (context is SendXmlData) {
             context
-        }else{
+        } else {
             throw RuntimeException(context.toString() + "must implement")
         }
     }

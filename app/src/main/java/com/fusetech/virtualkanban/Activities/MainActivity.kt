@@ -1261,6 +1261,19 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     statement1.setString(2,dolgKod)
                     statement1.setInt(3,id)
                     statement1.executeUpdate()
+                    val tempPolcLocations: ArrayList<PolcLocation> = ArrayList()
+                    val statement6 = connection.prepareStatement(resources.getString(R.string.fillArray))
+                    statement6.setInt(1,id)
+                    val resultSet6 = statement6.executeQuery()
+                    if(!resultSet6.next()){
+                        Log.d(TAG, "cikkAdatok: nincsenek ilyen rekordok")
+                    }else{
+                        do{
+                            val bin = resultSet6.getString("kiado_rakhely")
+                            val sum = resultSet6.getString("mozgatott_mennyiseg")
+                            tempPolcLocations.add(PolcLocation(bin,sum))
+                        }while (resultSet6.next())
+                    }
                     //ide kell hogy megnézze mi van a raktar_kontenerben
                     val statement5 = connection.prepareStatement(resources.getString(R.string.raktarTetelIdeiglenes))
                     statement5.setInt(1,id)
@@ -1292,6 +1305,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                             bundle.putInt("K_ID",id)
                             bundle.putSerializable("K_LIST",myList)
                             bundle.putSerializable("K_POLC",listOfBin)
+                            bundle.putSerializable("K_TOMB",tempPolcLocations)
                             igenyKontenerKiszedesCikkKiszedes.arguments = bundle
                             supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKontenerKiszedesCikkKiszedes,"KISZEDESCIKK").commit()
                         }
@@ -1328,6 +1342,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                             bundle.putInt("K_ID",id)
                             bundle.putSerializable("K_LIST",myList)
                             bundle.putSerializable("K_POLC",listOfBin)
+                            bundle.putSerializable("K_TOMB",tempPolcLocations)
                             igenyKontenerKiszedesCikkKiszedes.arguments = bundle
                             supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKontenerKiszedesCikkKiszedes,"KISZEDESCIKK").commit()
                         }
