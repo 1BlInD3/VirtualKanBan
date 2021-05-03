@@ -395,14 +395,17 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }else{
                 val statement = connection.prepareStatement(resources.getString(R.string.updateContainerStatus))
                 statement.setInt(1,2)
-                statement.setString(2,"SZ01")
+                statement.setString(2,barcodeData)
                 statement.setString(3,dolgKod)//ide kell a bejelentkezős kód
                 statement.setString(4,kontener)
                 statement.executeUpdate()
                 Log.d(TAG, "updateKontenerKiszedesre: Sikeres adatfrissítés!!!")
-                CoroutineScope(Main).launch {
+                /*CoroutineScope(Main).launch {
                     setAlert("Siker!")
-                }
+                }*/
+                //itt kéne beolvasni a 4es opciót
+                loadKiszedesFragment()
+                checkIfContainerIsOpen(kontener)
             }
         }catch (e: Exception){
             CoroutineScope(Main).launch {
@@ -560,6 +563,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 }
                 supportFragmentManager.beginTransaction().replace(R.id.frame_container,kiszedesreVaroIgenyFragment,"VARAS").addToBackStack(null).commit()
             }else{
+                myList.clear()
                 do{
                     val kontener: String? = resultSet.getString("kontener")
                     val polc: String? = resultSet.getString("polc")
@@ -600,6 +604,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 }
                 supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKiszedesFragment,"KISZEDES").addToBackStack(null).commit()
             }else{
+                kontenerList.clear()
                 do{
                     val kontener: String? = resultSet.getString("kontener")
                     val polc: String? = resultSet.getString("polc")
@@ -636,7 +641,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             val resultSet = statement.executeQuery()
             if(!resultSet.next()){
                 Log.d(TAG, "loadIgenyLezaras: Nincs ilyen konténer")
+                CoroutineScope(Main).launch {
+                    setAlert("loadIgenyLezaras: Nincs ilyen konténer")
+                }
             }else{
+                kontener1List.clear()
                 do {
                     val kontener: String? = resultSet.getString("kontener")
                     val polc: String? = resultSet.getString("polc")
@@ -1464,14 +1473,14 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         val szallito: String
         try{
             connection = DriverManager.getConnection(connectionString)
-            val statement = connection.prepareStatement(resources.getString(R.string.kontenerCikkEllenorzes))
+           /* val statement = connection.prepareStatement(resources.getString(R.string.kontenerCikkEllenorzes))
             statement.setString(1,container)
             val resultSet = statement.executeQuery()
             if(!resultSet.next()){
                 CoroutineScope(Main).launch {
                     setAlert("Nincs több 3as cikk")
                 }
-            }else{
+            }else{*/
                 val statement1 = connection.prepareStatement(resources.getString(R.string.getMozgatottMennyiseg))
                 statement1.setString(1,itemId)
                 val resultSet1 = statement1.executeQuery()
@@ -1494,9 +1503,17 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         statement3.setString(5,itemId)
                         statement3.executeUpdate()
                         Log.d(TAG, "checkIfContainerIsDone: Sikeres update")
+                        /*val statement = connection.prepareStatement(resources.getString(R.string.kontenerCikkEllenorzes))
+                        statement.setString(1,container)
+                        val resultSet = statement.executeQuery()
+                        if(!resultSet.next()) {
+                            CoroutineScope(Main).launch {
+                                setAlert("Nincs több 3as cikk")
+                            }
+                        }*/
                     }
                 }
-            }
+            //}
         }catch (e: Exception){
             CoroutineScope(Main).launch {
                 setAlert("Probléma a konténer ellenőrzésével $e")

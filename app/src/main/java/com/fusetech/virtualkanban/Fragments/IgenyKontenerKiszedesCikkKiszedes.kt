@@ -127,12 +127,12 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                         }.await()
                         if (isUpdated) {
                             mainActivity.updateItemAtvevo(cikkNumber.text.trim().toString())
-                            /*mainActivity.checkIfContainerIsDone(
+                            mainActivity.checkIfContainerIsDone(
                                 kontenerNumber.text.trim().toString(),
                                 cikkNumber.text.trim().toString(),
                                 "02",
                                 polc.text.trim().toString()
-                            )*/
+                            )
                             mainActivity.loadMenuFragment(true)
                             mainActivity.loadKiszedesFragment()
                             mainActivity.checkIfContainerStatus(

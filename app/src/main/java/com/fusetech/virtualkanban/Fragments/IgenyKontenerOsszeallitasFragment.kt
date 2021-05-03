@@ -155,7 +155,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
                 Log.d(TAG, "onCreateView: lezártam az üreset")
             }
             else{
-                sendBinCode.closeContainer(5, currentDateAndTime) // ezt 1esre kéne átírni
+                sendBinCode.closeContainer(1, currentDateAndTime) // ezt 1esre kéne átírni
                 setProgressBarOff()
                 clearAll()
                 mainActivity.loadMenuFragment(true)
