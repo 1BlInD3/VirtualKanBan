@@ -30,7 +30,7 @@ private lateinit var exit3Btn: Button
 private lateinit var mainActivity: MainActivity
 private const val TAG = "IgenyKontenerKiszedesFr"
 
-class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClickListener {
+class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClickListener{
 
     private var param1: String? = null
     private var param2: String? = null
@@ -106,5 +106,10 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
     override fun onResume() {
         super.onResume()
         childRecycler.requestFocus()
+    }
+
+    override fun onDestroy() {
+        kontenerList.clear()
+        super.onDestroy()
     }
 }

@@ -76,6 +76,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private lateinit var kiszedesreVaroIgenyFragment: KiszedesreVaroIgenyFragment
     private lateinit var szallitoJarmuFragment: SzallitoJartmuFragment
     private lateinit var igenyKontenerKiszedesCikkKiszedes: IgenyKontenerKiszedesCikkKiszedes
+    private lateinit var ellenorzoKodFragment: EllenorzoKodFragment
     private val TAG = "MainActivity"
     private val cikklekerdezesFragment = CikklekerdezesFragment()
     val polcLocationFragment = PolcLocationFragment()
@@ -86,6 +87,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private var igenyLezarCikkVisible: Boolean = false
     private val url = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10"
     private val connectionString ="jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
+    private var selectedContainer = ""
+    private val kontener1List: ArrayList<KontenerItem> = ArrayList()
+    private val myList: ArrayList<KontenerItem> = ArrayList()
+    private val kontenerList: ArrayList<KontenerItem> = ArrayList()
+    private val listIgenyItems: ArrayList<IgenyItem> = ArrayList()
     //private val xmlList: ArrayList<XmlData> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,6 +106,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         kiszedesreVaroIgenyFragment = KiszedesreVaroIgenyFragment()
         szallitoJarmuFragment = SzallitoJartmuFragment()
         igenyKontenerKiszedesCikkKiszedes = IgenyKontenerKiszedesCikkKiszedes()
+        ellenorzoKodFragment = EllenorzoKodFragment()
         AidcManager.create(this) { aidcManager ->
             manager = aidcManager
             try {
@@ -205,6 +212,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     }
                     //igenyKontenerKiszedesCikkKiszedes.setBin(barcodeData)
                 }
+                getFragment("ELLENOR") ->{
+                    ellenorzoKodFragment.setCode(barcodeData)
+                    checkEllenorzoKod(barcodeData)
+                }
             }
         }
     }
@@ -247,6 +258,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     }
     override fun onPause() {
         super.onPause()
+        myList.clear()
+        kontener1List.clear()
+        kontenerList.clear()
+        listIgenyItems.clear()
         if (barcodeReader != null) {
             barcodeReader?.release()
         }
@@ -329,8 +344,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         setAlert("A konténer üres")
                         igenyKiszedesFragment.setProgressBarOff()
                     }*/
-                    val ellenorzoFragment = EllenorzoKodFragment()
-                    supportFragmentManager.beginTransaction().replace(R.id.frame_container,ellenorzoFragment,"ELLENOR").commit()
+                    supportFragmentManager.beginTransaction().replace(R.id.frame_container,ellenorzoKodFragment,"ELLENOR").commit()
                 }else{
                     val fragment = IgenyKontnerKiszedesCikk()
                     val konteneresCikkek: ArrayList<KontenerbenLezarasItem> = ArrayList()
@@ -546,7 +560,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 }
                 supportFragmentManager.beginTransaction().replace(R.id.frame_container,kiszedesreVaroIgenyFragment,"VARAS").addToBackStack(null).commit()
             }else{
-                val myList: ArrayList<KontenerItem> = ArrayList()
                 do{
                     val kontener: String? = resultSet.getString("kontener")
                     val polc: String? = resultSet.getString("polc")
@@ -587,7 +600,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 }
                 supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKiszedesFragment,"KISZEDES").addToBackStack(null).commit()
             }else{
-                val kontenerList: ArrayList<KontenerItem> = ArrayList()
                 do{
                     val kontener: String? = resultSet.getString("kontener")
                     val polc: String? = resultSet.getString("polc")
@@ -625,7 +637,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             if(!resultSet.next()){
                 Log.d(TAG, "loadIgenyLezaras: Nincs ilyen konténer")
             }else{
-                val kontenerList: ArrayList<KontenerItem> = ArrayList()
                 do {
                     val kontener: String? = resultSet.getString("kontener")
                     val polc: String? = resultSet.getString("polc")
@@ -633,10 +644,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     val tetelszam = resultSet.getInt("tetelszam")
                     val id: String? = resultSet.getString("id")
                     val status: Int = resultSet.getInt("statusz")
-                    kontenerList.add(KontenerItem(kontener,polc,datum,tetelszam,id,status))
+                    kontener1List.add(KontenerItem(kontener,polc,datum,tetelszam,id,status))
                 }while(resultSet.next())
                 val bundle = Bundle()
-                bundle.putSerializable("KONTENERLISTA",kontenerList)
+                bundle.putSerializable("KONTENERLISTA",kontener1List)
                 igenyLezarasFragment.arguments = bundle
                 supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyLezarasFragment,"IGENYLEZARAS").addToBackStack(null).commit()
                 CoroutineScope(Main).launch {
@@ -965,7 +976,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         menuFragment.setMenuProgressOff()
                     }
                 }else{
-                    val listIgenyItems: ArrayList<IgenyItem> = ArrayList()
                     do {
                         val cikk = loadIgenyListResult.getString("cikkszam")
                         val megjegyzes = loadIgenyListResult.getString("megjegyzes")
@@ -1183,6 +1193,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
     fun checkIfContainerStatus(kontener: String){
+        selectedContainer = kontener
         CoroutineScope(IO).launch {
             checkIfContainerIsOpen(kontener)
         }
@@ -1492,7 +1503,46 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }
     }
+    fun checkEllenorzoKod(code: String){
+        CoroutineScope(IO).launch {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            try{
+                CoroutineScope(Main).launch {
+                    ellenorzoKodFragment.setProgressBarOn()
+                }
+                connection = DriverManager.getConnection(connectionString)
+                val statement = connection.prepareStatement(resources.getString(R.string.kontenerBinDesciption))
+                statement.setString(1, selectedContainer)
+                val resultSet = statement.executeQuery()
+                if (!resultSet.next()){
+                    CoroutineScope(Main).launch {
+                        setAlert("Gáz van")
+                        ellenorzoKodFragment.setProgressBarOff()
+                    }
+                }else{
+                    val ellKod = resultSet.getString("BinDescript2")
+                    if(code.trim().equals(ellKod)){
+                        CoroutineScope(Main).launch {
+                            setAlert("ITT kell lezárni a konténert")
+                            ellenorzoKodFragment.setProgressBarOff()
+                        }
+                    }else{
+                        CoroutineScope(Main).launch {
+                            setAlert("Nem egyezik a kód a szállító járművel")
+                            ellenorzoKodFragment.setProgressBarOff()
+                        }
+                    }
+                }
+            }catch (e: Exception){
+                CoroutineScope(Main).launch {
+                    setAlert("Ellenorzo\n $e")
+                    ellenorzoKodFragment.setProgressBarOff()
+                }
+            }
+        }
+    }
     override fun sendXmlData(cikk: String, polc: String, mennyiseg: Double) {
         Log.d(TAG, "sendXmlData: ")
     }
+
 }

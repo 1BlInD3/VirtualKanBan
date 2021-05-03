@@ -59,6 +59,7 @@ class EllenorzoKodFragment : Fragment() {
         ellenorzoProgress.visibility = View.VISIBLE
     }
     fun setCode(code: String){
+        ellenorzoKod.selectAll()
         ellenorzoKod.setText(code)
     }
 }
