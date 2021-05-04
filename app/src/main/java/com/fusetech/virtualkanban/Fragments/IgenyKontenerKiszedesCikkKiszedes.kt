@@ -120,7 +120,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             builder.setTitle("Figyelem")
                 .setMessage("Biztos le akarod így zárni?")
             builder.setPositiveButton("Igen") { dialog, which ->
-                if(!polc.text.trim().toString().isEmpty()) {
+                if(!polc.text.trim().toString().isEmpty() && (mennyiseg.text.trim().toString().isEmpty() || mennyiseg.text.trim().toString() == "0" || mennyiseg.text.trim().toString() == "0.0")) {
                     CoroutineScope(IO).launch {
                         async {
                             mainActivity.updateItemStatus(cikkNumber.text.trim().toString())

@@ -37,8 +37,8 @@ class SzallitoJartmuFragment : Fragment() {
         mainActivity = activity as MainActivity
         szallitoEdit = view.szallitoEdit
         exitSzallito = view.exitSzallitoButton
-        szallitoEdit.isEnabled = false
-
+        //szallitoEdit.isEnabled = false
+        szallitoEdit.requestFocus()
         exitSzallito.setOnClickListener {
             mainActivity.loadMenuFragment(true)
             mainActivity.igenyKontenerKiszedes()
@@ -59,5 +59,6 @@ class SzallitoJartmuFragment : Fragment() {
     }
     fun setJarmu(jarmu: String){
         szallitoEdit.setText(jarmu)
+        szallitoEdit.isEnabled = false
     }
 }

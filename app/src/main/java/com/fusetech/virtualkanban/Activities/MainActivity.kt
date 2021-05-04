@@ -4,7 +4,9 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
+import android.view.View
 import android.view.WindowManager
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.fusetech.virtualkanban.DataItems.*
@@ -12,6 +14,7 @@ import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.R
 import com.honeywell.aidc.*
 import com.honeywell.aidc.BarcodeReader.BarcodeListener
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -72,6 +75,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private lateinit var igenyFragment: IgenyKontenerOsszeallitasFragment
     private lateinit var igenyLezarasFragment: IgenyKontenerLezarasFragment
     private lateinit var igenyKiszedesFragment: IgenyKontenerKiszedesFragment
+    private lateinit var igenyKiszedesCikk: IgenyKontnerKiszedesCikk
     private lateinit var igenyKiszedesCikkLezaras: IgenyKontenerLezarasCikkLezaras
     private lateinit var kiszedesreVaroIgenyFragment: KiszedesreVaroIgenyFragment
     private lateinit var szallitoJarmuFragment: SzallitoJartmuFragment
@@ -92,6 +96,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private val myList: ArrayList<KontenerItem> = ArrayList()
     private val kontenerList: ArrayList<KontenerItem> = ArrayList()
     private val listIgenyItems: ArrayList<IgenyItem> = ArrayList()
+    private lateinit var progress: ProgressBar
     //private val xmlList: ArrayList<XmlData> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,6 +112,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         szallitoJarmuFragment = SzallitoJartmuFragment()
         igenyKontenerKiszedesCikkKiszedes = IgenyKontenerKiszedesCikkKiszedes()
         ellenorzoKodFragment = EllenorzoKodFragment()
+        igenyKiszedesCikk = IgenyKontnerKiszedesCikk()
+        progress = progressBar2
+        progress.visibility = View.GONE
         AidcManager.create(this) { aidcManager ->
             manager = aidcManager
             try {
@@ -202,6 +210,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     }
                 }
                 getFragment("SZALLITO") -> {
+                    szallitoJarmuFragment.setJarmu(barcodeData)
                     CoroutineScope(IO).launch {
                         updateKontenerKiszedesre(kontener)
                     }
@@ -340,10 +349,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 statment3.setString(2,dolgKod)
                 val resultSet1 = statment3.executeQuery()
                 if(!resultSet1.next()){
-                    /*CoroutineScope(Main).launch {
+                    CoroutineScope(Main).launch {
                         setAlert("A konténer üres")
                         igenyKiszedesFragment.setProgressBarOff()
-                    }*/
+                    }
                     supportFragmentManager.beginTransaction().replace(R.id.frame_container,ellenorzoKodFragment,"ELLENOR").commit()
                 }else{
                     val fragment = IgenyKontnerKiszedesCikk()
@@ -365,6 +374,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     bundle.putSerializable("NEGYESCIKKEK",konteneresCikkek)
                     bundle.putSerializable("NEGYESNEV",kontener)
                     fragment.arguments = bundle
+                   // igenyKiszedesCikk.arguments = bundle
                     supportFragmentManager.beginTransaction().replace(R.id.data_frame2,fragment,"NEGYESCIKKEK").commit()
                     CoroutineScope(Main).launch {
                         igenyKiszedesFragment.setProgressBarOff()
@@ -1234,6 +1244,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 }
                 getFragment("NEGYESCIKKEK") -> {
                     loadMenuFragment(true)
+                    //loadKiszedesFragment()
                     igenyKontenerKiszedes()
                 }
                 getFragment("ELLENOR") -> {
@@ -1271,6 +1282,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         CoroutineScope(IO).launch {
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             try{
+                CoroutineScope(Main).launch {
+                   progress.visibility = View.VISIBLE
+                }
                 connection = DriverManager.getConnection(connectionString)
                 val statement = connection.prepareStatement(resources.getString(R.string.cikkCheck))// ezt is ki kell javítani, hogy 1 v kettő legyen jó státusz
                 statement.setInt(1,id)
@@ -1279,6 +1293,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 if(!resultSet.next()){
                     CoroutineScope(Main).launch {
                         setAlert("Nem tudod megnyitni, mert már valaki dolgozik benne")
+                        progress.visibility = View.GONE
                     }
                 }else{
                     val listOfBin: ArrayList<PolcLocation> = ArrayList()
@@ -1293,6 +1308,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     val resultSet6 = statement6.executeQuery()
                     if(!resultSet6.next()){
                         Log.d(TAG, "cikkAdatok: nincsenek ilyen rekordok")
+                        CoroutineScope(Main).launch {
+                            progress.visibility = View.GONE
+                        }
                     }else{
                         do{
                             val bin = resultSet6.getString("kiado_rakhely")
@@ -1312,6 +1330,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         if(!resultSet2.next()){
                             CoroutineScope(Main).launch {
                                 setAlert("Nincs készleten")
+                                progress.visibility = View.GONE
                             }
                         }else{
                             val myList: ArrayList<PolcLocation> = ArrayList()
@@ -1335,6 +1354,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                             igenyKontenerKiszedesCikkKiszedes.arguments = bundle
                             supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKontenerKiszedesCikkKiszedes,"KISZEDESCIKK").commit()
                         }
+                        CoroutineScope(Main).launch {
+                            progress.visibility = View.GONE
+                        }
                     }else{
                         //HA VAN AZ ÁTMENETI ADATTÁBLÁBA ÉRTÉK
                         var  a = 0.0
@@ -1349,6 +1371,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         if(!resultSet2.next()){
                             CoroutineScope(Main).launch {
                                 setAlert("Nincs készleten")
+                                progress.visibility = View.GONE
                             }
                         }else{
                             val myList: ArrayList<PolcLocation> = ArrayList()
@@ -1372,6 +1395,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                             igenyKontenerKiszedesCikkKiszedes.arguments = bundle
                             supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKontenerKiszedesCikkKiszedes,"KISZEDESCIKK").commit()
                         }
+                    }
+                    CoroutineScope(Main).launch {
+                        progress.visibility = View.GONE
                     }
                 }
             }catch (e: Exception){
