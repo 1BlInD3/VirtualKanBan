@@ -1264,6 +1264,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         CoroutineScope(IO).launch {
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             try{
+                CoroutineScope(Main).launch {
+                    igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
+                }
                 connection = DriverManager.getConnection(connectionString)
                 val statement = connection.prepareStatement(resources.getString(R.string.cikkUpdate))
                 statement.setInt(1,1)
@@ -1271,9 +1274,13 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 statement.setInt(3,cikk)
                 statement.executeUpdate()
                 Log.d(TAG, "cikkUpdate: sikeres")
+                CoroutineScope(Main).launch {
+                    igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                }
             }catch (e: Exception){
                 CoroutineScope(Main).launch {
                     setAlert("CikkUpdateHiba $e")
+                    igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
                 }
             }
         }
@@ -1467,29 +1474,43 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     fun updateItemStatus(itemId: String){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try{
+            CoroutineScope(Main).launch {
+                igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
+            }
             connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(resources.getString(R.string.updateKontenerTeletStatusz))
             statement.setInt(1,3)
             statement.setString(2,itemId)
             statement.executeUpdate()
             igenyKontenerKiszedesCikkKiszedes.isUpdated = true
+            CoroutineScope(Main).launch {
+                igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+            }
         }catch (e: Exception){
             CoroutineScope(Main).launch {
                 setAlert("Probléma a tétel 3-ra írásával $e")
+                igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
             }
         }
     }
     fun updateItemAtvevo(itemId: String){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try{
+            CoroutineScope(Main).launch {
+                igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
+            }
             connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(resources.getString(R.string.updateCikkAtvevo))
             statement.setNull(1,Types.INTEGER)
             statement.setString(2, itemId)
             statement.executeUpdate()
+            CoroutineScope(Main).launch {
+                igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+            }
         }catch (e: Exception){
             CoroutineScope(Main).launch {
                 setAlert("Nem tudom az átvevőt kinullázni $e")
+                igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
             }
         }
     }
@@ -1498,20 +1519,18 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         val mozgatott: Double
         val szallito: String
         try{
+            CoroutineScope(Main).launch {
+                igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
+            }
             connection = DriverManager.getConnection(connectionString)
-           /* val statement = connection.prepareStatement(resources.getString(R.string.kontenerCikkEllenorzes))
-            statement.setString(1,container)
-            val resultSet = statement.executeQuery()
-            if(!resultSet.next()){
-                CoroutineScope(Main).launch {
-                    setAlert("Nincs több 3as cikk")
-                }
-            }else{*/
                 val statement1 = connection.prepareStatement(resources.getString(R.string.getMozgatottMennyiseg))
                 statement1.setString(1,itemId)
                 val resultSet1 = statement1.executeQuery()
                 if(!resultSet1.next()){
                     Log.d(TAG, "checkIfContainerIsDone: nincs mozgatott mennyiség (hazugság)")
+                    CoroutineScope(Main).launch {
+                        igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                    }
                 }else{
                     mozgatott = resultSet1.getDouble("mozgatott_mennyiseg")
                     val statement2 = connection.prepareStatement(resources.getString(R.string.getSzallitoJarmu))
@@ -1529,20 +1548,15 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         statement3.setString(5,itemId)
                         statement3.executeUpdate()
                         Log.d(TAG, "checkIfContainerIsDone: Sikeres update")
-                        /*val statement = connection.prepareStatement(resources.getString(R.string.kontenerCikkEllenorzes))
-                        statement.setString(1,container)
-                        val resultSet = statement.executeQuery()
-                        if(!resultSet.next()) {
-                            CoroutineScope(Main).launch {
-                                setAlert("Nincs több 3as cikk")
-                            }
-                        }*/
                     }
+                    CoroutineScope(Main).launch {
+                        igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
                 }
-            //}
+            }
         }catch (e: Exception){
             CoroutineScope(Main).launch {
                 setAlert("Probléma a konténer ellenőrzésével $e")
+                igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
             }
         }
     }

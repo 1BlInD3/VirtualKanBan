@@ -8,10 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Activities.MainActivity
@@ -140,6 +137,12 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                             )
                         }
                     }
+                }else{
+                    Toast.makeText(
+                        view.context,
+                        "Nincs polchely, vagy van mennyiség beírva, így nem zárhatod le!",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
                 Log.d(TAG, "onCreateView: Megnyomtam az IGEN gombot")
             }
