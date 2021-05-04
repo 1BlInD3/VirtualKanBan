@@ -1,6 +1,8 @@
 package com.fusetech.virtualkanban.Activities
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -9,9 +11,12 @@ import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.fusetech.virtualkanban.DataItems.*
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.R
+import com.fusetech.virtualkanban.Utils.SaveFile
+import com.fusetech.virtualkanban.Utils.XML
 import com.honeywell.aidc.*
 import com.honeywell.aidc.BarcodeReader.BarcodeListener
 import kotlinx.android.synthetic.main.activity_main.*
@@ -19,7 +24,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
+import java.io.File
 import java.sql.*
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class MainActivity : AppCompatActivity(), BarcodeListener,
     CikklekerdezesFragment.SetItemOrBinManually,
@@ -97,6 +105,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private val kontenerList: ArrayList<KontenerItem> = ArrayList()
     private val listIgenyItems: ArrayList<IgenyItem> = ArrayList()
     private lateinit var progress: ProgressBar
+    private val xml = XML()
+    private val save = SaveFile()
     //private val xmlList: ArrayList<XmlData> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -1598,8 +1608,15 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }
     }
-    override fun sendXmlData(cikk: String, polc: String, mennyiseg: Double) {
-        Log.d(TAG, "sendXmlData: ")
+    @SuppressLint("SimpleDateFormat")
+    override fun sendXmlData(cikk: String, polc: String?, mennyiseg: Double?) {
+        val currentDate =  SimpleDateFormat("yyyy-MM-dd").format(Date())
+        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+            val path: File? = this.getExternalFilesDir(null)
+            val name = SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + polc + ".xml"
+            val file = File(path,name)
+            save.saveXml(file,xml.createXml(currentDate,mennyiseg,cikk,"02",polc,"21","SZ01",dolgKod))
+        }
     }
 
 }

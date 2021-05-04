@@ -57,7 +57,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     var isUpdated = false
 
     interface SendXmlData {
-        fun sendXmlData(cikk: String, polc: String, mennyiseg: Double)
+        fun sendXmlData(cikk: String, polc: String?, mennyiseg: Double?)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -168,6 +168,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     val a = mennyiseg.text?.trim().toString().toDouble()
                     val b = polc.text.trim().toString()
                     val c = cikkNumber.text.trim().toString()
+                    val cikk = cikkEdit.text.trim().toString()
                     val d = kontenerNumber.text.trim().toString()
                     CoroutineScope(IO).launch {
                         async {
@@ -226,6 +227,11 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                         if (isUpdated) {
                                             mainActivity.updateItemAtvevo(c)
                                             mainActivity.checkIfContainerIsDone(d, c, "02", b)
+                                            async {
+                                                for(i in 0 until tempLocations.size){
+                                                    xmlData.sendXmlData(cikk,tempLocations[i].polc,tempLocations[i].mennyiseg?.toDouble())
+                                                }
+                                            }.await()
                                             mainActivity.loadMenuFragment(true)
                                             mainActivity.loadKiszedesFragment()
                                             mainActivity.checkIfContainerStatus(
@@ -309,7 +315,6 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         intrem.text = arguments?.getString("K_INT")
         igenyeltMennyiseg = arguments?.getDouble("K_IGENY")!!
         igenyeltMennyisegAmiNemValtozik = arguments?.getDouble("K_IGENY")!!
-        //igeny.setText(arguments?.getDouble("K_IGENY").toString())
         igeny.setText(igenyeltMennyiseg.toString())
         Log.d(TAG, "onCreateView: ${arguments?.getString("K_IGENY").toString()}")
         unit.text = arguments?.getString("K_UNIT")
