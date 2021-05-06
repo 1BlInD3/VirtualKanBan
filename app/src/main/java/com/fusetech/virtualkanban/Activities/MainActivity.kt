@@ -15,6 +15,9 @@ import androidx.core.content.ContextCompat
 import com.fusetech.virtualkanban.DataItems.*
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.R
+import com.fusetech.virtualkanban.Retrofit.SendAPI
+import com.fusetech.virtualkanban.Retrofit.UploadRequestBody
+import com.fusetech.virtualkanban.Retrofit.UploadResponse
 import com.fusetech.virtualkanban.Utils.SaveFile
 import com.fusetech.virtualkanban.Utils.XML
 import com.honeywell.aidc.*
@@ -24,6 +27,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
 import java.sql.*
 import java.text.SimpleDateFormat
@@ -1617,6 +1626,26 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 val name = SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + polc + ".xml"
                 val file = File(path,name)
                 save.saveXml(file,xml.createXml(currentDate,mennyiseg,cikk,"02",polc,"21","SZ01",dolgKod))
+
+                val body = UploadRequestBody(file, "xml")
+                SendAPI().uploadXml(
+                    MultipartBody.Part.createFormData("xml",file.name,body),
+                    RequestBody.create(MediaType.parse("multipart/form-data"),"xml a kutyurol")
+                ).enqueue(object: Callback<UploadResponse>{
+                    override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
+                        Log.d(TAG, "onFailure: $t")
+                    }
+                    override fun onResponse(
+                        call: Call<UploadResponse>,
+                        response: Response<UploadResponse>
+                    ) {
+                        Log.d(TAG, "onResponse: ${response.body()?.message.toString()}")
+                        if(file.exists()){
+                            file.delete()
+                            Log.d(TAG, "onResponse: delete successful")
+                        }
+                    }
+                })
             }
         }catch (e: Exception){
             Log.d(TAG, "sendXmlData: $e")
