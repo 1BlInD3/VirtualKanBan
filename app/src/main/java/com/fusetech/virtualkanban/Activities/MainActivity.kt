@@ -1610,13 +1610,16 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     }
     @SuppressLint("SimpleDateFormat")
     override fun sendXmlData(cikk: String, polc: String?, mennyiseg: Double?) {
-        val currentDate =  SimpleDateFormat("yyyy-MM-dd").format(Date())
-        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
-            val path: File? = this.getExternalFilesDir(null)
-            val name = SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + polc + ".xml"
-            val file = File(path,name)
-            save.saveXml(file,xml.createXml(currentDate,mennyiseg,cikk,"02",polc,"21","SZ01",dolgKod))
+        try{
+            val currentDate =  SimpleDateFormat("yyyy-MM-dd").format(Date())
+            if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+                val path = this.getExternalFilesDir(null)
+                val name = SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + polc + ".xml"
+                val file = File(path,name)
+                save.saveXml(file,xml.createXml(currentDate,mennyiseg,cikk,"02",polc,"21","SZ01",dolgKod))
+            }
+        }catch (e: Exception){
+            Log.d(TAG, "sendXmlData: $e")
         }
     }
-
 }
