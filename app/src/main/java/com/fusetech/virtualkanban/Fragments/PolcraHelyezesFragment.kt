@@ -4,10 +4,12 @@ import android.content.Context
 import android.os.Bundle
 import android.text.InputFilter
 import android.text.Spanned
+import android.text.method.TextKeyListener
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.fusetech.virtualkanban.Activities.MainActivity
@@ -35,6 +37,7 @@ class PolcraHelyezesFragment : Fragment() {
     var megjegyzes2Text: TextView? = null
     var intremText: TextView? = null
     var unitText: TextView? = null
+
     interface SendCode{
         fun sendCode(code: String)
     }
@@ -43,6 +46,8 @@ class PolcraHelyezesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_polcra_helyezes, container, false)
+        var context: Context
+        context = view.context
         mainActivity = activity as MainActivity
         kilepButton = view.kilep_polc_btn
         megjegyzes1Text = view.description1Txt
@@ -138,15 +143,42 @@ class PolcraHelyezesFragment : Fragment() {
                 }
             }
         kilepButton.setOnClickListener {
-            mainActivity.loadMenuFragment(true)
-            cikkText.setText("")
-            mennyisegText.setText("")
+            if(view != null){
+                val ihm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                ihm.hideSoftInputFromWindow(view!!.windowToken,0)
+            }
+            //kilepButton.requestFocus()
+            cikkText.requestFocus()
+            //cikkText.text.clear()
+            TextKeyListener.clear(cikkText.text)
+            cikkText.isEnabled = false
+            cikkText.isFocusable = false
+            cikkText.isFocusableInTouchMode = false
+            mennyisegText.requestFocus()
+            TextKeyListener.clear(mennyisegText.text)
+           // mennyisegText.text.clear()
+            mennyisegText.isEnabled = false
+            mennyisegText.isFocusable = false
+            mennyisegText.isFocusableInTouchMode = false
+            polcText.requestFocus()
+            TextKeyListener.clear(polcText.text)
+            //polcText.text.clear()
+            polcText.isEnabled = false
+            polcText.isFocusable = false
+            polcText.isFocusableInTouchMode = false
+            mennyisegText.text.clear()
+            mennyisegText.filters = arrayOf<InputFilter>()
             megjegyzes1Text?.text = ""
             megjegyzes2Text?.text = ""
             intremText?.text = ""
             unitText?.text = ""
-            polcText.setText("")
+            polcText.text.clear()
             tranzitQtyText.text = ""
+            if(view != null){
+                val ihm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                ihm.toggleSoftInputFromWindow(view.applicationWindowToken,InputMethodManager.SHOW_FORCED,0)
+            }
+            mainActivity.loadMenuFragment(true)
 
         }
         return view
@@ -264,5 +296,8 @@ class PolcraHelyezesFragment : Fragment() {
             mPattern =
                 Pattern.compile("[0-9]{0," + (digitsBeforeZero - 1) + "}+((\\.[0-9]{0," + (digitsAfterZero - 1) + "})?)||(\\.)?")
         }
+    }
+    fun onKilepPressed(){
+        kilepButton.performClick()
     }
 }

@@ -69,10 +69,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     *
     * 4es opció
     * bonyolult.. tudja amit a 6-os opció. ha rámegyek egy tételre átírja a státuszát 2-re. be kell iktatni egy szállítójármű bekérést, onnantól jöhetnek a tételek
-    * kiszedés: ha nulla a mennyiség akkor cikk lezárás és 3as státusz, ha felvette a megfelelő mennyiséget akkor is 3as státusz, ha nem vesz fel annyit akkor beírja a raktar
+    * kiszedés: ha nulla a mennyiség ( v dedikált gomb )akkor cikk lezárás és 3as státusz, ha felvette a megfelelő mennyiséget akkor is 3as státusz, ha nem vesz fel annyit akkor beírja a raktar
     * tetel adatbazisba és ha kilepek lezaras nelkul akkor visszairja 1-re. ha aztán megint megnyitom akkor abból kiolvassa az értéket és azt kivonja az igényelt mennyiségből
     * és a polcot amit be kell frissíteni. esetleg másik színezés???
-    * amikor kiválasztom a konténert, akkor csak azok a cikkek jelenjenek meg amiknél az átvevő NULL
+    * amikor kiválasztom a konténert, akkor csak azok a cikkek jelenjenek meg amiknél az átvevő NULL vagy én nyitottam meg
     *
     * 6os opció
     * Kiírja az 1es és 2 státuszú konténereket, majd kattintással belemegy és kiírja a tételeket ami benne van, átszínezi a 2-es státuszú konténereket
@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private lateinit var connection : Connection
     private var cikkItems: ArrayList<CikkItems> = ArrayList()
     private var polcItems: ArrayList<PolcItems> = ArrayList()
-    private val polcHelyezesFragment = PolcraHelyezesFragment()
+    private lateinit var polcHelyezesFragment: PolcraHelyezesFragment
     private lateinit var igenyFragment: IgenyKontenerOsszeallitasFragment
     private lateinit var igenyLezarasFragment: IgenyKontenerLezarasFragment
     private lateinit var igenyKiszedesFragment: IgenyKontenerKiszedesFragment
@@ -124,6 +124,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance("","")
+        polcHelyezesFragment = PolcraHelyezesFragment()
         igenyLezarasFragment = IgenyKontenerLezarasFragment()
         igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
         igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
@@ -195,10 +196,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     fun loadPolcHelyezesFragment(){
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,polcHelyezesFragment,"POLC").addToBackStack(null).commit()
     }
-    fun loadIgenyOsszeallitasFragment(kontener: String, polc: String?){
-        igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance(kontener,polc)
-        supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyFragment,"IGENY").addToBackStack(null).commit()
-    }
     fun loadSzallitoJarmu(kontener_id: String){
         kontener = kontener_id
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,szallitoJarmuFragment,"SZALLITO").addToBackStack(null).commit()
@@ -257,6 +254,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if(getMenuFragment())
         {
+            /*val ihm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            ihm.hideSoftInputFromWindow(currentFocus!!.windowToken,0)*/
            when(keyCode){
                7 -> finishAndRemoveTask()
                8 -> loadPolcHelyezesFragment()
@@ -309,6 +308,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private fun chechPolcAndSetBin(code: String){
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try{
+            CoroutineScope(Main).launch {
+                igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
+            }
             connection = DriverManager.getConnection(url)
             val statement = connection.prepareStatement(resources.getString(R.string.isPolc))
             statement.setString(1,code)
@@ -316,14 +318,17 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             if(!resultSet.next()){
                 CoroutineScope(Main).launch {
                     setAlert("Nincs ilyen polc")
+                    igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
                 }
             }else{CoroutineScope(Main).launch {
                 igenyKontenerKiszedesCikkKiszedes.setBin(code)
+                igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
             }
             }
         }catch(e: Exception){
             CoroutineScope(Main).launch {
                 setAlert("Probléma $e")
+                igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
             }
         }
     }
@@ -369,7 +374,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 val resultSet1 = statment3.executeQuery()
                 if(!resultSet1.next()){
                     CoroutineScope(Main).launch {
-                        setAlert("A konténer üres")
+                        //setAlert("A konténer üres")
                         igenyKiszedesFragment.setProgressBarOff()
                     }
                     supportFragmentManager.beginTransaction().replace(R.id.frame_container,ellenorzoKodFragment,"ELLENOR").commit()
@@ -983,7 +988,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         val bundle = Bundle()
                         bundle.putString("KONTENER",nullasKontener)
                         igenyFragment.arguments = bundle
-                        supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyFragment).addToBackStack(null).commit()
+                        supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyFragment,"IGENY").addToBackStack(null).commit()
                         CoroutineScope(Main).launch {
                             menuFragment.setMenuProgressOff()
                         }
@@ -1269,6 +1274,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 getFragment("ELLENOR") -> {
                     loadMenuFragment(true)
                     igenyKontenerKiszedes()
+                }
+                getFragment("DUMMY")-> {
+                    loadMenuFragment(true)
+                }
+                getFragment("POLC") ->{
+                    polcHelyezesFragment.onKilepPressed()
                 }
                 else -> {
                     super.onBackPressed()

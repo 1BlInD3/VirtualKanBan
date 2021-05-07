@@ -1,6 +1,5 @@
 package com.fusetech.virtualkanban.Fragments
 
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,7 +10,6 @@ import android.widget.Button
 import android.widget.ProgressBar
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.R
-import kotlinx.android.synthetic.main.fragment_load.*
 import kotlinx.android.synthetic.main.fragment_menu.view.*
 
 private const val ARG_PARAM1 = "param1"
@@ -83,7 +81,7 @@ class MenuFragment : Fragment() {
         }
         igenyOssze.setOnClickListener {
             if(igenyOssze.isEnabled){
-                mainActivity.loadIgenyOsszeallitasFragment("","")// ez csak megjelenítés semmi sql nem fut alatta
+                //mainActivity.loadIgenyOsszeallitasFragment("","")// ez csak megjelenítés semmi sql nem fut alatta
             }
         }
         kilepes.setOnClickListener {
