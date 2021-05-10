@@ -241,6 +241,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     ellenorzoKodFragment.setCode(barcodeData)
                     checkEllenorzoKod(barcodeData)
                 }
+                getFragment("POLC") ->{
+                    polcHelyezesFragment.setCode(barcodeData)
+                }
             }
         }
     }
@@ -289,6 +292,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         kontener1List.clear()
         kontenerList.clear()
         listIgenyItems.clear()
+        polcLocation?.clear()
         if (barcodeReader != null) {
             barcodeReader?.release()
         }

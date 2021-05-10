@@ -300,4 +300,11 @@ class PolcraHelyezesFragment : Fragment() {
     fun onKilepPressed(){
         kilepButton.performClick()
     }
+    fun setCode(code: String){
+        if(cikkText.text.isEmpty()){
+            cikkText.setText(code)
+        }else{
+            polcText.setText(code)
+        }
+    }
 }
