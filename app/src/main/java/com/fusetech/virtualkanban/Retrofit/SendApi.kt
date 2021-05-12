@@ -12,16 +12,16 @@ import retrofit2.http.Part
 interface SendAPI {
 
     @Multipart
-    @POST("Api.php?apicall=upload")
+    @POST("uploadFile")
     fun uploadXml(
         @Part xml: MultipartBody.Part,
-        @Part("desc") desc: RequestBody
+        @Part("file") desc: RequestBody
     ): Call<UploadResponse>
 
     companion object{
         operator fun invoke(): SendAPI{
             return Retrofit.Builder()
-                .baseUrl("http://10.0.2.149:8080/ImageUploader/")
+                .baseUrl("http://10.0.2.149:8030/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(SendAPI::class.java)

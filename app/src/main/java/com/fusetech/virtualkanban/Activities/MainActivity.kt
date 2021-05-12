@@ -1642,9 +1642,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 val file = File(path,name)
                 save.saveXml(file,xml.createXml(currentDate,mennyiseg,cikk,"02",polc,"21","SZ01",dolgKod))
 
-                val body = UploadRequestBody(file, "xml")
+                val body = UploadRequestBody(file, "file")
                 SendAPI().uploadXml(
-                    MultipartBody.Part.createFormData("xml",file.name,body),
+                    MultipartBody.Part.createFormData("file",file.name,body),
                     RequestBody.create(MediaType.parse("multipart/form-data"),"xml a kutyurol")
                 ).enqueue(object: Callback<UploadResponse>{
                     override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
@@ -1655,9 +1655,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         response: Response<UploadResponse>
                     ) {
                         Log.d(TAG, "onResponse: ${response.body()?.message.toString()}")
-                        if(file.exists()){
-                            file.delete()
-                            Log.d(TAG, "onResponse: delete successful")
+                        if (response.body()?.message.toString() == "success") {
+                            if (file.exists()) {
+                                file.delete()
+                                Log.d(TAG, "onResponse: delete successful")
+                            }
                         }
                     }
                 })
