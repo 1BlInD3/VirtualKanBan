@@ -15,9 +15,7 @@ import androidx.core.content.ContextCompat
 import com.fusetech.virtualkanban.DataItems.*
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.R
-import com.fusetech.virtualkanban.Retrofit.SendAPI
-import com.fusetech.virtualkanban.Retrofit.UploadRequestBody
-import com.fusetech.virtualkanban.Retrofit.UploadResponse
+import com.fusetech.virtualkanban.Retrofit.RetrofitFunctions
 import com.fusetech.virtualkanban.Utils.SaveFile
 import com.fusetech.virtualkanban.Utils.XML
 import com.honeywell.aidc.*
@@ -27,12 +25,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.File
 import java.sql.*
 import java.text.SimpleDateFormat
@@ -47,7 +39,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     KiszedesreVaroIgenyFragment.SendCode6,
     IgenyKontnerKiszedesCikk.KiszedesAdatok,
     IgenyKontenerLezarasCikkLezaras.CikkCode,
-    IgenyKontenerKiszedesCikkKiszedes.SendXmlData{
+    IgenyKontenerKiszedesCikkKiszedes.SendXmlData,
+    RetrofitFunctions.RetrofitMessage{
     // 1es opció pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
     // át kell rakni máshova
@@ -79,7 +72,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     *
     * írjon bele ha belelépek ha már van szállító jármű h ki vette át
     *
-    * a szállítójármű beolvasásnl olyan polc kell ami van a 21-es raktárban*/
+    * a szállítójármű beolvasásnl olyan polc kell ami van a 21-es raktárban
+    *
+    * A SpringBoot fel van készítve és service-be is működik! csak át kell írni a uploadDir-t inputxml-re jar-t csinálni és feltelepíteni a service-t a 10.0.1.69-en
+    * */
     private var manager : AidcManager? = null
     private var barcodeReader : BarcodeReader? = null
     private lateinit var barcodeData : String
@@ -116,7 +112,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private lateinit var progress: ProgressBar
     private val xml = XML()
     private val save = SaveFile()
-    //private val xmlList: ArrayList<XmlData> = ArrayList()
+    private val retro = RetrofitFunctions(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -902,7 +898,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 val desc2: String? = resultSet.getString("Description2")
                 val intRem: String? = resultSet.getString("InternRem1")
                 val unit: String? = resultSet.getString("Description")
-                val balance: Int? = resultSet.getInt("BalanceQty")
+                val balance: Int = resultSet.getInt("BalanceQty")
                 Log.d(TAG, "checkTrannzit: 0")
                 CoroutineScope(Main).launch {
                    polcHelyezesFragment.setTextViews(desc1.toString(),desc2.toString(),intRem.toString(),unit.toString(),balance.toString())
@@ -926,7 +922,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     }
                     do{
                         val binNumber: String? = resultSet1.getString("BinNumber")
-                        val balanceQty: Int? = resultSet1.getInt("BalanceQty")
+                        val balanceQty: Int = resultSet1.getInt("BalanceQty")
                         polcLocation?.add(PolcLocation(binNumber,balanceQty.toString()))
                     }while (resultSet1.next())
                     val bundle = Bundle()
@@ -1636,36 +1632,26 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     override fun sendXmlData(cikk: String, polc: String?, mennyiseg: Double?) {
         try{
             val currentDate =  SimpleDateFormat("yyyy-MM-dd").format(Date())
-            if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+            if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 val path = this.getExternalFilesDir(null)
                 val name = SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + polc + ".xml"
-                val file = File(path,name)
-                save.saveXml(file,xml.createXml(currentDate,mennyiseg,cikk,"02",polc,"21","SZ01",dolgKod))
-
-                val body = UploadRequestBody(file, "file")
-                SendAPI().uploadXml(
-                    MultipartBody.Part.createFormData("file",file.name,body),
-                    RequestBody.create(MediaType.parse("multipart/form-data"),"xml a kutyurol")
-                ).enqueue(object: Callback<UploadResponse>{
-                    override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
-                        Log.d(TAG, "onFailure: $t")
-                    }
-                    override fun onResponse(
-                        call: Call<UploadResponse>,
-                        response: Response<UploadResponse>
-                    ) {
-                        Log.d(TAG, "onResponse: ${response.body()?.message.toString()}")
-                        if (response.body()?.message.toString() == "success") {
-                            if (file.exists()) {
-                                file.delete()
-                                Log.d(TAG, "onResponse: delete successful")
-                            }
-                        }
-                    }
-                })
+                val file = File(path, name)
+                save.saveXml(
+                    file,
+                    xml.createXml(currentDate, mennyiseg, cikk, "02", polc, "21", "SZ01", dolgKod)
+                )
+                retro.retrofitGet(file)
             }
         }catch (e: Exception){
-            Log.d(TAG, "sendXmlData: $e")
+            CoroutineScope(Main).launch {
+                setAlert("$e")
+            }
+        }
+    }
+
+    override fun retrofitAlert(message: String) {
+        CoroutineScope(Main).launch {
+            setAlert(message)
         }
     }
 }

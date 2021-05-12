@@ -5,6 +5,7 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -17,6 +18,9 @@ interface SendAPI {
         @Part xml: MultipartBody.Part,
         @Part("file") desc: RequestBody
     ): Call<UploadResponse>
+
+    @GET("test")
+    fun getTest():Call<UploadResponse>
 
     companion object{
         operator fun invoke(): SendAPI{
