@@ -1640,6 +1640,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     file,
                     xml.createXml(currentDate, mennyiseg, cikk, "02", polc, "21", "SZ01", dolgKod)
                 )
+                Log.d("IOTHREAD", "sendXmlData: ${Thread.currentThread().name}")
                 retro.retrofitGet(file)
             }
         }catch (e: Exception){

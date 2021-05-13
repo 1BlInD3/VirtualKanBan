@@ -228,10 +228,18 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                             mainActivity.updateItemAtvevo(c)
                                             mainActivity.checkIfContainerIsDone(d, c, "02", b)
                                             async {
+                                                Log.d(
+                                                    "IOTHREAD",
+                                                    "onCreateView: ${Thread.currentThread().name}"
+                                                )
                                                 for(i in 0 until tempLocations.size){
                                                     xmlData.sendXmlData(cikk,tempLocations[i].polc,tempLocations[i].mennyiseg?.toDouble())
                                                 }
                                             }.await()
+                                            Log.d(
+                                                "IOTHREAD",
+                                                "onCreateView: ${Thread.currentThread().name}"
+                                            )
                                             mainActivity.loadMenuFragment(true)
                                             mainActivity.loadKiszedesFragment()
                                             mainActivity.checkIfContainerStatus(

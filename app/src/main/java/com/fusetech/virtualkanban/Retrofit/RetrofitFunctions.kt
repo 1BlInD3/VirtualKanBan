@@ -10,6 +10,7 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.awaitResponse
 import java.io.File
 
 class RetrofitFunctions(val retro: RetrofitMessage) {
@@ -19,24 +20,29 @@ class RetrofitFunctions(val retro: RetrofitMessage) {
     }
 
     fun retrofitGet(file: File) {
-        var errorCode: String
-        SendAPI().getTest().enqueue(object : Callback<UploadResponse> {
-            override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
-                retro.retrofitAlert("$t")
-            }
-
-            override fun onResponse(
-                call: Call<UploadResponse>,
-                response: Response<UploadResponse>
-            ) {
-                errorCode = response.body()?.message.toString()
-                if (errorCode == "OK") {
-                    uploadXml(file)
-                } else {
-                    retro.retrofitAlert("Nincs endpoint")
+      //  CoroutineScope(IO).launch {
+            var errorCode: String
+            val response = SendAPI().getTest().execute()
+            val res: String = response.body()!!.message
+            Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + res}")/*.enqueue(object : Callback<UploadResponse> {
+                override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
+                    retro.retrofitAlert("$t")
                 }
-            }
-        })
+
+                override fun onResponse(
+                    call: Call<UploadResponse>,
+                    response: Response<UploadResponse>
+                ) {
+                    errorCode = response.body()?.message.toString()
+                    if (errorCode == "OK") {
+                        uploadXml(file)
+                        Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name}")
+                    } else {
+                        retro.retrofitAlert("Nincs endpoint")
+                    }
+                }
+            })*/
+        //}
     }
 
     fun uploadXml(file: File) {
