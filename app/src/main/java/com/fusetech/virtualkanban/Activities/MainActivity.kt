@@ -1107,7 +1107,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         val builder = AlertDialog.Builder(this@MainActivity)
         builder.setTitle("Figyelem")
             .setMessage(text)
-        //builder.setPositiveButton("Igen")
         builder.create()
         builder.show()
     }

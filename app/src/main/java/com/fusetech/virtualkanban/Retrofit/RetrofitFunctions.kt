@@ -1,17 +1,11 @@
 package com.fusetech.virtualkanban.Retrofit
 
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.awaitResponse
 import java.io.File
+import com.fusetech.virtualkanban.Fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
 
 class RetrofitFunctions(val retro: RetrofitMessage) {
 
@@ -21,10 +15,13 @@ class RetrofitFunctions(val retro: RetrofitMessage) {
 
     fun retrofitGet(file: File) {
       //  CoroutineScope(IO).launch {
-            var errorCode: String
             val response = SendAPI().getTest().execute()
-            val res: String = response.body()!!.message
-            Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + res}")/*.enqueue(object : Callback<UploadResponse> {
+            val res: String = response.body()!!.message.trim()
+            if(res == "OK"){
+                Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + res}")
+                uploadXml(file)
+            }
+            /*.enqueue(object : Callback<UploadResponse> {
                 override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
                     retro.retrofitAlert("$t")
                 }
@@ -47,10 +44,17 @@ class RetrofitFunctions(val retro: RetrofitMessage) {
 
     fun uploadXml(file: File) {
         val body = UploadRequestBody(file, "file")
-        SendAPI().uploadXml(
-            MultipartBody.Part.createFormData("file", file.name, body),
-            RequestBody.create(MediaType.parse("multipart/form-data"), "xml a kutyurol")
-        ).enqueue(object : Callback<UploadResponse> {
+        val xmlResponse = SendAPI().uploadXml(MultipartBody.Part.createFormData("file", file.name, body),RequestBody.create(MediaType.parse("multipart/form-data"), "xml a kutyurol")).execute()
+        val xmlRes = xmlResponse.body()!!.message.trim()
+        Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + xmlRes}")
+        if(xmlRes == "success"){
+            isSent = true
+            if (file.exists()) {
+                file.delete()
+                Log.d("MainActivity", "onResponse: delete successful")
+            }
+        }
+    /*.enqueue(object : Callback<UploadResponse> {
             override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
                 Log.d("MainActivity", "onFailure: $t")
             }
@@ -66,6 +70,6 @@ class RetrofitFunctions(val retro: RetrofitMessage) {
                     }
                 }
             }
-        })
+        })*/
     }
 }

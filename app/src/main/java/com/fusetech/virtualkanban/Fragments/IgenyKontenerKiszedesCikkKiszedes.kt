@@ -60,6 +60,10 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         fun sendXmlData(cikk: String, polc: String?, mennyiseg: Double?)
     }
 
+    companion object {
+        var isSent = false
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -220,34 +224,41 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                 if (igenyeltMennyiseg == 0.0) {
                                     isUpdated = false
                                     CoroutineScope(IO).launch {
-                                        mainActivity.checkIfContainerIsDone(d, c, "02", b)
                                         async {
-                                            mainActivity.updateItemStatus(c)
-                                        }.await()
-                                        if (isUpdated) {
-                                            mainActivity.updateItemAtvevo(c)
-                                            mainActivity.checkIfContainerIsDone(d, c, "02", b)
-                                            async {
-                                                Log.d(
-                                                    "IOTHREAD",
-                                                    "onCreateView: ${Thread.currentThread().name}"
-                                                )
-                                                for(i in 0 until tempLocations.size){
-                                                    xmlData.sendXmlData(cikk,tempLocations[i].polc,tempLocations[i].mennyiseg?.toDouble())
-                                                }
-                                            }.await()
                                             Log.d(
                                                 "IOTHREAD",
                                                 "onCreateView: ${Thread.currentThread().name}"
                                             )
-                                            mainActivity.loadMenuFragment(true)
-                                            mainActivity.loadKiszedesFragment()
-                                            mainActivity.checkIfContainerStatus(
-                                                kontenerIDKiszedes.text.trim().toString()
-                                            )
+                                            for(i in 0 until tempLocations.size){
+                                                isSent = false
+                                                xmlData.sendXmlData(cikk,tempLocations[i].polc,tempLocations[i].mennyiseg?.toDouble())
+                                            }
+                                        }.await()
+                                        if(isSent){
+                                            mainActivity.checkIfContainerIsDone(d, c, "02", b)
+                                            async {
+                                                mainActivity.updateItemStatus(c)
+                                            }.await()
+                                            if (isUpdated) {
+                                                mainActivity.updateItemAtvevo(c)
+                                                mainActivity.checkIfContainerIsDone(d, c, "02", b)
+                                                Log.d(
+                                                    "IOTHREAD",
+                                                    "onCreateView: ${Thread.currentThread().name}"
+                                                )
+                                                mainActivity.loadMenuFragment(true)
+                                                mainActivity.loadKiszedesFragment()
+                                                mainActivity.checkIfContainerStatus(
+                                                    kontenerIDKiszedes.text.trim().toString()
+                                                )
+                                            }
+                                        }else{
+                                            CoroutineScope(Main).launch {
+                                                mainActivity.setAlert("Hiba volt az XML feltöltésnél")
+                                            }
                                         }
-                                    }
-                                    Log.d(TAG, "onCreateView: LEFUTOTT")
+                                        Log.d(TAG, "onCreateView: LEFUTOTT")
+                                        }
 
                                 } else {
                                     Log.d(TAG, "onCreateView: Frissíteni a táblákat")
@@ -256,12 +267,12 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                     }
                                 }
                                 locationRecycler.adapter?.notifyDataSetChanged()
-                                for (i in 0 until tempLocations.size) {
+                                /*for (i in 0 until tempLocations.size) {
                                     Log.d(
                                         TAG,
                                         "NEM ${tempLocations[i].polc} + ${tempLocations[i].mennyiseg}"
                                     )
-                                }
+                                }*/
                             }
                         }
                     }
@@ -280,17 +291,6 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             polc.requestFocus()
         }
         return view
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            IgenyKontenerKiszedesCikkKiszedes().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 
     fun loadData() {
