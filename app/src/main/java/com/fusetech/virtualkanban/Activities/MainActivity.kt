@@ -35,7 +35,6 @@ import java.util.Date
 class MainActivity : AppCompatActivity(), BarcodeListener,
     CikklekerdezesFragment.SetItemOrBinManually,
     PolcraHelyezesFragment.SendCode,
-    PolcLocationFragment.SetPolcLocation,
     IgenyKontenerOsszeallitasFragment.SendBinCode,
     IgenyKontenerLezarasFragment.IgenyKontnerLezaras,
     KiszedesreVaroIgenyFragment.SendCode6,
@@ -98,7 +97,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private lateinit var ellenorzoKodFragment: EllenorzoKodFragment
     private val TAG = "MainActivity"
     private val cikklekerdezesFragment = CikklekerdezesFragment()
-    val polcLocationFragment = PolcLocationFragment()
     private var polcLocation: ArrayList<PolcLocation>? = ArrayList()
     private var kontener = ""
     private lateinit var menuFragment: MenuFragment
@@ -1180,27 +1178,23 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             sql.checkTrannzit(code,this@MainActivity,polcLocation)
     }
 
-     fun removeLocationFragment() {
+    override fun sendTranzitData(
+        cikk: String,
+        polc: String?,
+        mennyiseg: Double?,
+        raktarbol: String,
+        raktarba: String,
+        polcra: String
+    ) {
+        scalaSend(cikk,polc,mennyiseg,raktarbol,raktarba,polcra)
+    }
+
+    fun removeLocationFragment() {
         val isLocFragment = supportFragmentManager.findFragmentByTag("LOC")
         if (isLocFragment != null && isLocFragment.isVisible) {
             supportFragmentManager.beginTransaction().remove(isLocFragment).commit()
         }
     }
-
-    override fun setPolcLocation(binNumber: String?, selected: Boolean, position: Int) {
-        polcHelyezesFragment.setBinNumber(binNumber)
-        polcHelyezesFragment.getAll(selected, position, binNumber)
-        polcHelyezesFragment.focusToBin()
-    }
-
-    fun setRecData(position: Int, value: Double) {
-        polcHelyezesFragment.getDataFromList(position, value)
-    }
-
-    fun checkIfContainsBin(falseBin: String, value: Double) {
-        polcHelyezesFragment.checkBinIsInTheList(falseBin, value)
-    }
-
     fun polcCheckIO(code: String) {
         CoroutineScope(IO).launch {
             checkPolc(code)
@@ -1235,24 +1229,17 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             checkItem(code)
         }
     }
-
-    fun checkList(code: String): Boolean {
-        return polcLocationFragment.checkList(code)
-    }
-
     private fun containerCheck(id: String) {
         CoroutineScope(IO).launch {
             containerManagement(id)
         }
     }
-
     fun igenyKontenerCheck() {
         CoroutineScope(IO).launch {
             loadIgenyLezaras()
             Log.d(TAG, "igenyKontenerCheck: Lefutott")
         }
     }
-
     override fun sendContainer(container: String) {
         lezarandoKontener = container
         CoroutineScope(IO).launch {
@@ -1719,9 +1706,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }
     }
-
+    override fun sendXmlData(cikk: String, polc: String?, mennyiseg: Double?,raktarbol: String, raktarba: String, polcra: String) {
+        scalaSend(cikk,polc,mennyiseg, raktarbol,raktarba,polcra)
+    }
     @SuppressLint("SimpleDateFormat")
-    override fun sendXmlData(cikk: String, polc: String?, mennyiseg: Double?) {
+    private fun scalaSend(cikkszam: String, polchely: String?, mennyisege: Double?, rbol: String, rba: String, polchelyre: String){
         try {
             val currentDate = SimpleDateFormat("yyyy-MM-dd").format(Date())
             if (ContextCompat.checkSelfPermission(
@@ -1730,11 +1719,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
                 val path = this.getExternalFilesDir(null)
-                val name = SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + polc + ".xml"
+                val name = SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + polchely + ".xml"
                 val file = File(path, name)
                 save.saveXml(
                     file,
-                    xml.createXml(currentDate, mennyiseg, cikk, "02", polc, "21", "SZ01", dolgKod)
+                    xml.createXml(currentDate, mennyisege, cikkszam, rbol, polchely, rba, polchelyre, dolgKod)
                 )
                 Log.d("IOTHREAD", "sendXmlData: ${Thread.currentThread().name}")
                 retro.retrofitGet(file)

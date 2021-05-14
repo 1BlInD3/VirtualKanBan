@@ -6,6 +6,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 import com.fusetech.virtualkanban.Fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
+import com.fusetech.virtualkanban.Fragments.PolcraHelyezesFragment.Companion.isSentTranzit
 
 class RetrofitFunctions{
 
@@ -27,6 +28,7 @@ class RetrofitFunctions{
         val xmlRes = xmlResponse.body()!!.message.trim()
         Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + xmlRes}")
         if (xmlRes == "success") {
+            isSentTranzit = true
             isSent = true
             if (file.exists()) {
                 file.delete()

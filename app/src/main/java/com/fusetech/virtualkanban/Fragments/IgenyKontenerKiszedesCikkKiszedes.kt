@@ -57,7 +57,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     private val sql = SQL(this)
 
     interface SendXmlData {
-        fun sendXmlData(cikk: String, polc: String?, mennyiseg: Double?)
+        fun sendXmlData(cikk: String, polc: String?, mennyiseg: Double?,raktarbol: String, raktarba: String, polcra: String)
     }
 
     companion object {
@@ -237,7 +237,10 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                                 xmlData.sendXmlData(
                                                     cikk,
                                                     tempLocations[i].polc,
-                                                    tempLocations[i].mennyiseg?.toDouble()
+                                                    tempLocations[i].mennyiseg?.toDouble(),
+                                                    "02",
+                                                    "21",
+                                                    "SZ01"
                                                 )
                                             }
                                         }.await()

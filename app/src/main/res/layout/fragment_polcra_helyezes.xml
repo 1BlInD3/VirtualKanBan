@@ -189,7 +189,8 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cikkEditTxt" />
+        app:layout_constraintTop_toBottomOf="@+id/cikkEditTxt"
+        android:elevation="0dp"/>
 
     <TextView
         android:id="@+id/description2Txt"
@@ -200,7 +201,8 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description1Txt" />
+        app:layout_constraintTop_toBottomOf="@+id/description1Txt"
+        android:elevation="0dp"/>
 
     <TextView
         android:id="@+id/intremTxt"
@@ -211,7 +213,8 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description2Txt" />
+        app:layout_constraintTop_toBottomOf="@+id/description2Txt"
+        android:elevation="0dp"/>
 
     <TextView
         android:id="@+id/unitTxt"
@@ -348,7 +351,8 @@
         android:indeterminate="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cikkEditTxt" />
+        app:layout_constraintTop_toBottomOf="@+id/cikkEditTxt"
+        android:elevation="16dp"/>
 
     <Button
         android:id="@+id/ujCikkPolcHelyezes"

@@ -23,11 +23,12 @@ import kotlinx.android.synthetic.main.fragment_polcra_helyezes.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
 
-class PolcraHelyezesFragment : Fragment(),PolcLocationAdapter.PolcItemClickListener {
+class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickListener {
     private lateinit var cikkText: EditText
     private lateinit var mainActivity: MainActivity
     private lateinit var sendCode: SendCode
@@ -37,24 +38,33 @@ class PolcraHelyezesFragment : Fragment(),PolcLocationAdapter.PolcItemClickListe
     private lateinit var sideContainer: FrameLayout
     private lateinit var progressBar: ProgressBar
     private lateinit var kilepButton: Button
-    private lateinit var recycler : RecyclerView
+    private lateinit var recycler: RecyclerView
     private val TAG = "PolcraHelyezesFragment"
     private var binSelected: Boolean = false
     private var binPos: Int = -1
     private var binValue: String? = ""
-    var megjegyzes1Text: TextView? = null
-    var megjegyzes2Text: TextView? = null
-    var intremText: TextView? = null
-    var unitText: TextView? = null
+    private var megjegyzes1Text: TextView? = null
+    private var megjegyzes2Text: TextView? = null
+    private var intremText: TextView? = null
+    private var unitText: TextView? = null
 
-    companion object{
+    companion object {
         val myItems: ArrayList<PolcLocation> = ArrayList()
+        var isSentTranzit = false
     }
 
-    interface SendCode{
+    interface SendCode {
         fun sendCode(code: String)
-        fun setPolcLocation(binNumber: String?,selected: Boolean,position: Int)
+        fun sendTranzitData(
+            cikk: String,
+            polc: String?,
+            mennyiseg: Double?,
+            raktarbol: String,
+            raktarba: String,
+            polcra: String
+        )
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -84,11 +94,11 @@ class PolcraHelyezesFragment : Fragment(),PolcLocationAdapter.PolcItemClickListe
         recycler.adapter = PolcLocationAdapter(myItems, this)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
-       /* myItems.add(PolcLocation("IT","200"))
-        recycler.adapter?.notifyDataSetChanged()*/
+        /* myItems.add(PolcLocation("IT","200"))
+         recycler.adapter?.notifyDataSetChanged()*/
 
-        cikkText.setOnClickListener{
-            if(!cikkText.text.isBlank()){
+        cikkText.setOnClickListener {
+            if (cikkText.text.isNotBlank()) {
                 cikkText.selectAll()
                 CoroutineScope(IO).launch {
                     sendCode.sendCode(cikkText.text.trim().toString())
@@ -96,8 +106,8 @@ class PolcraHelyezesFragment : Fragment(),PolcLocationAdapter.PolcItemClickListe
             }
         }
         mennyisegText.setOnClickListener {
-            if(sideContainer.visibility == View.VISIBLE){
-                if(!mennyisegText.text.isBlank()) {
+            if (sideContainer.visibility == View.VISIBLE) {
+                if (mennyisegText.text.isNotBlank()) {
                     val trQty = tranzitQtyText.text.toString().toDouble()
                     val qty = mennyisegText.text.toString().toDouble()
                     if (trQty < qty) {
@@ -109,8 +119,7 @@ class PolcraHelyezesFragment : Fragment(),PolcLocationAdapter.PolcItemClickListe
                         polcText.isEnabled = true
                     }
                 }
-            }
-            else{
+            } else {
                 val trQty = tranzitQtyText.text.toString().toInt()
                 val qty = mennyisegText.text.toString().toInt()
                 if (trQty < qty) {
@@ -124,48 +133,74 @@ class PolcraHelyezesFragment : Fragment(),PolcLocationAdapter.PolcItemClickListe
             }
         }
         polcText.setOnClickListener {
-            if(!polcText.text.isBlank()){
-              val bin = polcText.text.toString()
-              val trQty = tranzitQtyText.text.toString().toDouble()
-              val qty = mennyisegText.text.toString().toDouble()
-                    if(mainActivity.checkList(bin)){
-                        if(trQty>qty){
-                        tranzitQtyTxt.setText((trQty-qty).toString())
-                            polcText.setText("")
-                            polcText.isEnabled = false
-                            mennyisegText.isEnabled = true
-                            mennyisegText.selectAll()
-                            mennyisegText.requestFocus()
-                            mainActivity.checkIfContainsBin(bin,qty)
+            if (polcText.text.isNotBlank()) {
+                val bin = polcText.text.toString()
+                val trQty = tranzitQtyText.text.toString().toDouble()
+                val qty = mennyisegText.text.toString().toDouble()
+                val cikk = cikkText.text.toString().trim()
+                isSentTranzit = false
+                CoroutineScope(IO).launch {
+                    CoroutineScope(Main).launch {
+                        setProgressBarOn()
+                    }
+                    async {
+                        Log.d("IOTHREAD", "${Thread.currentThread().name} 1es opcio")
+                        sendCode.sendTranzitData(cikk, "STD03", qty, "03", "02", bin)
+                    }.await()
+                    if (isSentTranzit) {
+                        if (checkList(bin)) {
+                            if (trQty > qty) {
+                                CoroutineScope(Main).launch {
+                                    tranzitQtyTxt.setText((trQty - qty).toString())
+                                    polcText.setText("")
+                                    polcText.isEnabled = false
+                                    mennyisegText.isEnabled = true
+                                    mennyisegText.selectAll()
+                                    mennyisegText.requestFocus()
+                                    checkBinIsInTheList(bin, qty)
+                                }
+                            } else if (trQty == qty) {
+                                CoroutineScope(Main).launch {
+                                    checkBinIsInTheList(bin, qty)
+                                    tranzitQtyTxt.setText("0")
+                                    getDataFromList(binPos, qty)
+                                    mennyisegText.setText("")
+                                    tranzitQtyText.text = ""
+                                    polcText.setText("")
+                                    megjegyzes1Text?.text = ""
+                                    megjegyzes2Text?.text = ""
+                                    intremText?.text = ""
+                                    unitText?.text = ""
+                                    mennyisegText.isEnabled = false
+                                    polcText.isEnabled = false
+                                    cikkText.isEnabled = true
+                                    cikkText.setText("")
+                                    cikkText.requestFocus()
+                                    myItems.clear()
+                                    recycler.adapter?.notifyDataSetChanged()
+                                }
+                            }
+                        } else {
+                            CoroutineScope(Main).launch {
+                                mainActivity.polcCheckIO(bin)   // ezt átteni az SQL osztályba
+                            }
                         }
-                        else if(trQty == qty) {
-                            mainActivity.checkIfContainsBin(bin,qty)
-                            tranzitQtyTxt.setText("0")
-                            mainActivity.setRecData(binPos,qty)
-                            mennyisegText.setText("")
-                            tranzitQtyText.text = ""
-                            polcText.setText("")
-                            megjegyzes1Text?.text = ""
-                            megjegyzes2Text?.text = ""
-                            intremText?.text = ""
-                            unitText?.text = ""
-                            mennyisegText.isEnabled = false
-                            polcText.isEnabled = false
-                            cikkText.isEnabled = true
-                            cikkText.setText("")
-                            cikkText.requestFocus()
-                            myItems.clear()
-                            recycler.adapter?.notifyDataSetChanged()
+                        CoroutineScope(Main).launch {
+                            setProgressBarOff()
                         }
                     }else{
-                        mainActivity.polcCheckIO(bin)
+                        CoroutineScope(Main).launch {
+                            setProgressBarOff()
+                        }
                     }
                 }
             }
+        }
         kilepButton.setOnClickListener {
-            if(view != null){
-                val ihm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                ihm.hideSoftInputFromWindow(view.windowToken,0)
+            if (view != null) {
+                val ihm =
+                    activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                ihm.hideSoftInputFromWindow(view.windowToken, 0)
             }
             cikkText.requestFocus()
             TextKeyListener.clear(cikkText.text)
@@ -192,16 +227,27 @@ class PolcraHelyezesFragment : Fragment(),PolcLocationAdapter.PolcItemClickListe
             tranzitQtyText.text = ""
             myItems.clear()
             recycler.adapter?.notifyDataSetChanged()
-            if(view != null){
-                val ihm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                ihm.toggleSoftInputFromWindow(view.applicationWindowToken,InputMethodManager.SHOW_FORCED,0)
+            if (view != null) {
+                val ihm =
+                    activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                ihm.toggleSoftInputFromWindow(
+                    view.applicationWindowToken,
+                    InputMethodManager.SHOW_FORCED,
+                    0
+                )
             }
             mainActivity.loadMenuFragment(true)
         }
         return view
     }
 
-    fun setTextViews(megjegyzes1: String,megjegyzes2: String,intrem: String,unit: String,mennyiseg: String){
+    fun setTextViews(
+        megjegyzes1: String,
+        megjegyzes2: String,
+        intrem: String,
+        unit: String,
+        mennyiseg: String
+    ) {
         megjegyzes1Text?.text = megjegyzes1
         megjegyzes2Text?.text = megjegyzes2
         intremText?.text = intrem
@@ -209,14 +255,16 @@ class PolcraHelyezesFragment : Fragment(),PolcLocationAdapter.PolcItemClickListe
         tranzitQtyText.text = mennyiseg
         mennyisegText.requestFocus()
     }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        sendCode = if(context is SendCode){
+        sendCode = if (context is SendCode) {
             context //as SendCode
-        }else{
+        } else {
             throw RuntimeException(context.toString() + "must implement")
         }
     }
+
     /*fun setContainerOn(){
         sideContainer.visibility = View.VISIBLE
         sideContainer.isEnabled = false
@@ -224,59 +272,64 @@ class PolcraHelyezesFragment : Fragment(),PolcLocationAdapter.PolcItemClickListe
     /*fun setContainerOff(){
         sideContainer.visibility = View.GONE
     }*/
-    fun setProgressBarOn(){
+    fun setProgressBarOn() {
         progressBar.visibility = View.VISIBLE
     }
-    fun setProgressBarOff(){
-        progressBar.visibility = View.GONE
+
+    fun setProgressBarOff() {
+        progressBar.visibility = View.INVISIBLE
     }
-    fun setBinNumber(binNumber: String?){
+
+    private fun setBinNumber(binNumber: String?) {
         polcText.setText(binNumber)
         polcText.requestFocus()
         polcText.selectAll()
     }
-    fun focusToQty(){
+
+    fun focusToQty() {
         mennyisegText.isEnabled = true
         mennyisegText.requestFocus()
         cikkText.isEnabled = false
     }
-    fun focusToBin(){
+
+    fun focusToBin() {
         polcText.isEnabled = true
         polcText.selectAll()
         polcText.requestFocus()
     }
-    fun getAll(selected: Boolean,pos: Int, value: String?){
+
+    fun getAll(selected: Boolean, pos: Int, value: String?) {
         binSelected = selected
         binPos = pos
         binValue = value
     }
-    fun polcCheck(){
+
+    fun polcCheck() {
         val bin = polcText.text.toString()
         val trQty = tranzitQtyText.text.toString().toDouble()
         val qty = mennyisegText.text.toString().toDouble()
         binValue = ""
         binPos = -1
         binSelected = false
-        if(trQty>qty){
+        if (trQty > qty) {
             // tranzitQtyTxt.setText(trQty-qty)
             try {
-                mainActivity.checkIfContainsBin(bin,qty)
-            }catch(e: Exception){
+                checkBinIsInTheList(bin, qty)
+            } catch (e: Exception) {
                 Log.d(TAG, "polcCheck: $e")
             }
-            tranzitQtyTxt.setText((trQty-qty).toString())
+            tranzitQtyTxt.setText((trQty - qty).toString())
             polcText.setText("")
             polcText.isEnabled = false
             mennyisegText.isEnabled = true
             mennyisegText.selectAll()
             mennyisegText.requestFocus()
-        }
-        else if(trQty == qty) {
+        } else if (trQty == qty) {
             tranzitQtyTxt.setText("0")
             //ide egy interface hogy letöröljük a listából
             try {
-                mainActivity.checkIfContainsBin(polcText.text.toString(),qty)
-            }catch(e: Exception){
+                checkBinIsInTheList(polcText.text.toString(), qty)
+            } catch (e: Exception) {
                 Log.d(TAG, "polcCheck: $e")
             }
             mennyisegText.setText("")
@@ -293,9 +346,12 @@ class PolcraHelyezesFragment : Fragment(),PolcLocationAdapter.PolcItemClickListe
             cikkText.requestFocus()
         }
     }
+
     class DecimalDigitsInputFilter(digitsBeforeZero: Int, digitsAfterZero: Int) :
         InputFilter {
-        var mPattern: Pattern
+        var mPattern: Pattern =
+            Pattern.compile("[0-9]{0," + (digitsBeforeZero - 1) + "}+((\\.[0-9]{0," + (digitsAfterZero - 1) + "})?)||(\\.)?")
+
         override fun filter(
             source: CharSequence,
             start: Int,
@@ -308,18 +364,16 @@ class PolcraHelyezesFragment : Fragment(),PolcLocationAdapter.PolcItemClickListe
             return if (!matcher.matches()) "" else null
         }
 
-        init {
-            mPattern =
-                Pattern.compile("[0-9]{0," + (digitsBeforeZero - 1) + "}+((\\.[0-9]{0," + (digitsAfterZero - 1) + "})?)||(\\.)?")
-        }
     }
-    fun onKilepPressed(){
+
+    fun onKilepPressed() {
         kilepButton.performClick()
     }
-    fun setCode(code: String){
-        if(cikkText.text.isEmpty()){
+
+    fun setCode(code: String) {
+        if (cikkText.text.isEmpty()) {
             cikkText.setText(code)
-        }else{
+        } else {
             polcText.setText(code)
         }
     }
@@ -327,36 +381,42 @@ class PolcraHelyezesFragment : Fragment(),PolcLocationAdapter.PolcItemClickListe
     override fun polcItemClick(position: Int) {
         val value: String? = myItems[position].polc?.trim()
         val isSelected = true
-        val pos = position
-        sendCode.setPolcLocation(value,isSelected,pos)
+        setBinNumber(value)
+        getAll(isSelected, position, value)
+        focusToBin()
     }
 
-    fun getDataFromList(position: Int, value: Double){
+    private fun getDataFromList(position: Int, value: Double) {
         val quantity = myItems[position].mennyiseg?.toDouble()
         myItems[position].mennyiseg = (quantity?.plus(value)).toString()
         recycler.adapter?.notifyDataSetChanged()
     }
-    fun checkBinIsInTheList(falseBin: String, value: Double){
-        for (i in 0 until myItems.size){
-            if(myItems[i].polc?.trim() == falseBin){
+
+    private fun checkBinIsInTheList(falseBin: String, value: Double) {
+        for (i in 0 until myItems.size) {
+            if (myItems[i].polc?.trim() == falseBin) {
                 val quantity = myItems[i].mennyiseg?.toDouble()
-                myItems[i].mennyiseg =(quantity?.plus(value)).toString()
+                myItems[i].mennyiseg = (quantity?.plus(value)).toString()
                 Log.d(TAG, "checkBinIsInTheList: van ilyen")
                 recycler.adapter?.notifyDataSetChanged()
                 break
-            }
-            else{
-                Log.d(TAG, "checkBinIsInTheList: nincs ilyen ${myItems[i].polc}\tfasle bin =  $falseBin")
+            } else {
+                Log.d(
+                    TAG,
+                    "checkBinIsInTheList: nincs ilyen ${myItems[i].polc}\tfasle bin =  $falseBin"
+                )
             }
         }
     }
-    /*fun checkList(bin: String): Boolean{
-        for (i in 0 until myItems.size){
+
+    fun checkList(bin: String): Boolean {
+        for (i in 0 until myItems.size) {
             return myItems[i].polc?.trim() == bin
         }
         return false
-    }*/
-    fun reload(){
+    }
+
+    fun reload() {
         CoroutineScope(Main).launch {
             recycler.adapter?.notifyDataSetChanged()
         }
