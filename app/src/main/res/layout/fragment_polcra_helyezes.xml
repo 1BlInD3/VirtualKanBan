@@ -78,8 +78,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="14dp"
         android:text="Cikkszám"
-        android:textSize="16sp"
         android:textColor="@android:color/black"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
@@ -108,8 +108,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
         android:text="Mennyiség"
-        android:textSize="16sp"
         android:textColor="@android:color/black"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -137,8 +137,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="22dp"
         android:text="Polc"
-        android:textSize="16sp"
         android:textColor="@android:color/black"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
@@ -151,11 +151,11 @@
         android:background="@drawable/editbuttn"
         android:ems="10"
         android:inputType="textPersonName"
-        android:textAllCaps="true"
         android:paddingStart="4dp"
         android:paddingTop="4dp"
         android:paddingEnd="4dp"
         android:paddingBottom="4dp"
+        android:textAllCaps="true"
         app:layout_constraintStart_toEndOf="@+id/textView15"
         app:layout_constraintTop_toBottomOf="@+id/mennyisegTxt" />
 
@@ -196,8 +196,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:textSize="16sp"
         android:textColor="@android:color/black"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description1Txt" />
@@ -207,8 +207,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:textSize="16sp"
         android:textColor="@android:color/black"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description2Txt" />
@@ -238,6 +238,77 @@
         app:layout_constraintTop_toBottomOf="@+id/polcTxt"
         app:layout_constraintVertical_bias="1.0">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView7"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    app:cardBackgroundColor="@color/pocakszin4"
+                    app:cardCornerRadius="1dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:maxLines="1"
+                        android:paddingStart="4dp"
+                        android:text="Polchely"
+                        android:textAlignment="textStart"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView8"
+                    android:layout_width="70dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    app:cardBackgroundColor="@color/pocakszin4"
+                    app:cardCornerRadius="1dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/cardView7"
+                    app:layout_constraintTop_toTopOf="@+id/cardView7">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:paddingStart="4dp"
+                        android:text="Menny."
+                        android:textAlignment="textStart"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+                </androidx.cardview.widget.CardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/locationRecyclerOne"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout4" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
 
     <TextView
@@ -247,8 +318,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="86dp"
         android:text="Tranzit mennyiség "
-        android:textSize="16sp"
         android:textColor="@android:color/black"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cikkEditTxt" />
 

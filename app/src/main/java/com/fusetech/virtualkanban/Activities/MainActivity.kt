@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private lateinit var connection: Connection
     private var cikkItems: ArrayList<CikkItems> = ArrayList()
     private var polcItems: ArrayList<PolcItems> = ArrayList()
-    private lateinit var polcHelyezesFragment: PolcraHelyezesFragment
+    var polcHelyezesFragment = PolcraHelyezesFragment()
     private lateinit var igenyFragment: IgenyKontenerOsszeallitasFragment
     private lateinit var igenyLezarasFragment: IgenyKontenerLezarasFragment
     private lateinit var igenyKiszedesFragment: IgenyKontenerKiszedesFragment
@@ -958,79 +958,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             Log.d(TAG, "checkPolc: visszajött hibával")
         }
     }
-    private fun checkTrannzit(code: String) {
-        Class.forName("net.sourceforge.jtds.jdbc.Driver")
-        try {
-            CoroutineScope(Main).launch {
-                polcHelyezesFragment.setContainerOff()
-                polcHelyezesFragment.setProgressBarOn()
-            }
-            removeLocationFragment()
-            polcLocation?.clear()
-            connection = DriverManager.getConnection(url)
-            val statement: PreparedStatement =
-                connection.prepareStatement(resources.getString(R.string.tranzitCheck))
-            statement.setString(1, code)
-            val resultSet: ResultSet = statement.executeQuery()
-            if (!resultSet.next()) {
-                Log.d(TAG, "checkTrannzit: Hülyeség nincs a tranzitban")
-                CoroutineScope(Main).launch {
-                    setAlert("A cikk vagy zárolt, vagy nincs a tranzit raktárban!")
-                    polcHelyezesFragment.setProgressBarOff()
-                }
-            } else {
-                val desc1: String? = resultSet.getString("Description1")
-                val desc2: String? = resultSet.getString("Description2")
-                val intRem: String? = resultSet.getString("InternRem1")
-                val unit: String? = resultSet.getString("Description")
-                val balance: Int = resultSet.getInt("BalanceQty")
-                Log.d(TAG, "checkTrannzit: 0")
-                CoroutineScope(Main).launch {
-                    polcHelyezesFragment.setTextViews(
-                        desc1.toString(),
-                        desc2.toString(),
-                        intRem.toString(),
-                        unit.toString(),
-                        balance.toString()
-                    )
-                    polcHelyezesFragment.focusToQty()
-                    Log.d(TAG, "checkTrannzit: 1")
-                }
-                Log.d(TAG, "checkTrannzit: 2")
-                val statement1: PreparedStatement =
-                    connection.prepareStatement(resources.getString(R.string.raktarCheck))
-                statement1.setString(1, code)
-                val resultSet1: ResultSet = statement1.executeQuery()
-                if (!resultSet1.next()) {
-                    CoroutineScope(Main).launch {
-                        polcHelyezesFragment.setProgressBarOff()
-                    }
-                    Log.d(TAG, "checkTrannzit: Nincs a 02-es raktárban")
-                } else {
-                    CoroutineScope(Main).launch {
-                        polcHelyezesFragment.setContainerOn()
-                        polcHelyezesFragment.setProgressBarOff()
-                    }
-                    do {
-                        val binNumber: String? = resultSet1.getString("BinNumber")
-                        val balanceQty: Int = resultSet1.getInt("BalanceQty")
-                        polcLocation?.add(PolcLocation(binNumber, balanceQty.toString()))
-                    } while (resultSet1.next())
-                    val bundle = Bundle()
-                    bundle.putSerializable("02RAKTAR", polcLocation)
-                    polcLocationFragment.arguments = bundle
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.side_container, polcLocationFragment, "LOC").commit()
-                }
-            }
-        } catch (e: java.lang.Exception) {
-            Log.d(TAG, "checkTrannzit: $e")
-            CoroutineScope(Main).launch {
-                polcHelyezesFragment.setProgressBarOff()
-            }
-        }
-    }
-
     private fun containerManagement(id: String) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -1250,12 +1177,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     }
 
     override fun sendCode(code: String) {
-        CoroutineScope(IO).launch {
-            checkTrannzit(code)
-        }
+            sql.checkTrannzit(code,this@MainActivity,polcLocation)
     }
 
-    private fun removeLocationFragment() {
+     fun removeLocationFragment() {
         val isLocFragment = supportFragmentManager.findFragmentByTag("LOC")
         if (isLocFragment != null && isLocFragment.isVisible) {
             supportFragmentManager.beginTransaction().remove(isLocFragment).commit()
@@ -1268,16 +1193,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         polcHelyezesFragment.focusToBin()
     }
 
-    fun setRecOn() {
-        polcLocationFragment.setRecyclerOn()
-    }
-
     fun setRecData(position: Int, value: Double) {
-        polcLocationFragment.getDataFromList(position, value)
+        polcHelyezesFragment.getDataFromList(position, value)
     }
 
     fun checkIfContainsBin(falseBin: String, value: Double) {
-        polcLocationFragment.checkBinIsInTheList(falseBin, value)
+        polcHelyezesFragment.checkBinIsInTheList(falseBin, value)
     }
 
     fun polcCheckIO(code: String) {

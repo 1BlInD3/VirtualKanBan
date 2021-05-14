@@ -16,7 +16,7 @@ import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_polc_location.view.*
 
 class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListener {
-   private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: RecyclerView
     private var myItems: ArrayList<PolcLocation> = ArrayList()
     private lateinit var setPolcLocation: SetPolcLocation
     private val TAG = "PolcLocationFragment"
@@ -56,7 +56,6 @@ class PolcLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListen
     }
 
     override fun polcItemClick(position: Int) {
-        //Toast.makeText(view?.context,"Positiion $position",Toast.LENGTH_SHORT).show()
         if(recyclerView.isEnabled){
             val value: String? = myItems[position].polc?.trim()
             var isSelected = true

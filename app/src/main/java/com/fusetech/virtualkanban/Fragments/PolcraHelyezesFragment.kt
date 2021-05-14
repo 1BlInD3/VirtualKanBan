@@ -12,14 +12,22 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Activities.MainActivity
+import com.fusetech.virtualkanban.Adapters.PolcLocationAdapter
+import com.fusetech.virtualkanban.DataItems.PolcLocation
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_polcra_helyezes.*
 import kotlinx.android.synthetic.main.fragment_polcra_helyezes.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
 
-class PolcraHelyezesFragment : Fragment() {
+class PolcraHelyezesFragment : Fragment(),PolcLocationAdapter.PolcItemClickListener {
     private lateinit var cikkText: EditText
     private lateinit var mainActivity: MainActivity
     private lateinit var sendCode: SendCode
@@ -29,6 +37,7 @@ class PolcraHelyezesFragment : Fragment() {
     private lateinit var sideContainer: FrameLayout
     private lateinit var progressBar: ProgressBar
     private lateinit var kilepButton: Button
+    private lateinit var recycler : RecyclerView
     private val TAG = "PolcraHelyezesFragment"
     private var binSelected: Boolean = false
     private var binPos: Int = -1
@@ -38,16 +47,19 @@ class PolcraHelyezesFragment : Fragment() {
     var intremText: TextView? = null
     var unitText: TextView? = null
 
+    companion object{
+        val myItems: ArrayList<PolcLocation> = ArrayList()
+    }
+
     interface SendCode{
         fun sendCode(code: String)
+        fun setPolcLocation(binNumber: String?,selected: Boolean,position: Int)
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_polcra_helyezes, container, false)
-        var context: Context
-        context = view.context
         mainActivity = activity as MainActivity
         kilepButton = view.kilep_polc_btn
         megjegyzes1Text = view.description1Txt
@@ -57,7 +69,7 @@ class PolcraHelyezesFragment : Fragment() {
         polcText = view.polcTxt
         tranzitQtyText = view.tranzitQtyTxt
         sideContainer = view.side_container
-        setContainerOff()
+        recycler = view.locationRecyclerOne
         progressBar = view.polcProgressBar
         setProgressBarOff()
         tranzitQtyText.isFocusable = false
@@ -65,14 +77,22 @@ class PolcraHelyezesFragment : Fragment() {
         mennyisegText.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(9, 2))
         cikkText = view.cikkEditTxt
         cikkText.requestFocus()
-        sideContainer.visibility = View.GONE
         mennyisegText.isEnabled = false
         polcText.isEnabled = false
         polcText.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
+
+        recycler.adapter = PolcLocationAdapter(myItems, this)
+        recycler.layoutManager = LinearLayoutManager(view.context)
+        recycler.setHasFixedSize(true)
+       /* myItems.add(PolcLocation("IT","200"))
+        recycler.adapter?.notifyDataSetChanged()*/
+
         cikkText.setOnClickListener{
             if(!cikkText.text.isBlank()){
                 cikkText.selectAll()
-                sendCode.sendCode(cikkText.text.trim().toString())
+                CoroutineScope(IO).launch {
+                    sendCode.sendCode(cikkText.text.trim().toString())
+                }
             }
         }
         mennyisegText.setOnClickListener {
@@ -87,7 +107,6 @@ class PolcraHelyezesFragment : Fragment() {
                         mennyisegText.isEnabled = false
                         sideContainer.requestFocus()
                         polcText.isEnabled = true
-                        mainActivity.setRecOn()
                     }
                 }
             }
@@ -135,7 +154,8 @@ class PolcraHelyezesFragment : Fragment() {
                             cikkText.isEnabled = true
                             cikkText.setText("")
                             cikkText.requestFocus()
-                            setContainerOff()
+                            myItems.clear()
+                            recycler.adapter?.notifyDataSetChanged()
                         }
                     }else{
                         mainActivity.polcCheckIO(bin)
@@ -145,24 +165,20 @@ class PolcraHelyezesFragment : Fragment() {
         kilepButton.setOnClickListener {
             if(view != null){
                 val ihm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                ihm.hideSoftInputFromWindow(view!!.windowToken,0)
+                ihm.hideSoftInputFromWindow(view.windowToken,0)
             }
-            //kilepButton.requestFocus()
             cikkText.requestFocus()
-            //cikkText.text.clear()
             TextKeyListener.clear(cikkText.text)
             cikkText.isEnabled = false
             cikkText.isFocusable = false
             cikkText.isFocusableInTouchMode = false
             mennyisegText.requestFocus()
             TextKeyListener.clear(mennyisegText.text)
-           // mennyisegText.text.clear()
             mennyisegText.isEnabled = false
             mennyisegText.isFocusable = false
             mennyisegText.isFocusableInTouchMode = false
             polcText.requestFocus()
             TextKeyListener.clear(polcText.text)
-            //polcText.text.clear()
             polcText.isEnabled = false
             polcText.isFocusable = false
             polcText.isFocusableInTouchMode = false
@@ -174,12 +190,13 @@ class PolcraHelyezesFragment : Fragment() {
             unitText?.text = ""
             polcText.text.clear()
             tranzitQtyText.text = ""
+            myItems.clear()
+            recycler.adapter?.notifyDataSetChanged()
             if(view != null){
                 val ihm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 ihm.toggleSoftInputFromWindow(view.applicationWindowToken,InputMethodManager.SHOW_FORCED,0)
             }
             mainActivity.loadMenuFragment(true)
-
         }
         return view
     }
@@ -200,13 +217,13 @@ class PolcraHelyezesFragment : Fragment() {
             throw RuntimeException(context.toString() + "must implement")
         }
     }
-    fun setContainerOn(){
+    /*fun setContainerOn(){
         sideContainer.visibility = View.VISIBLE
         sideContainer.isEnabled = false
-    }
-    fun setContainerOff(){
+    }*/
+    /*fun setContainerOff(){
         sideContainer.visibility = View.GONE
-    }
+    }*/
     fun setProgressBarOn(){
         progressBar.visibility = View.VISIBLE
     }
@@ -274,7 +291,6 @@ class PolcraHelyezesFragment : Fragment() {
             cikkText.isEnabled = true
             cikkText.setText("")
             cikkText.requestFocus()
-            setContainerOff()
         }
     }
     class DecimalDigitsInputFilter(digitsBeforeZero: Int, digitsAfterZero: Int) :
@@ -307,4 +323,43 @@ class PolcraHelyezesFragment : Fragment() {
             polcText.setText(code)
         }
     }
+
+    override fun polcItemClick(position: Int) {
+        val value: String? = myItems[position].polc?.trim()
+        val isSelected = true
+        val pos = position
+        sendCode.setPolcLocation(value,isSelected,pos)
+    }
+
+    fun getDataFromList(position: Int, value: Double){
+        val quantity = myItems[position].mennyiseg?.toDouble()
+        myItems[position].mennyiseg = (quantity?.plus(value)).toString()
+        recycler.adapter?.notifyDataSetChanged()
+    }
+    fun checkBinIsInTheList(falseBin: String, value: Double){
+        for (i in 0 until myItems.size){
+            if(myItems[i].polc?.trim() == falseBin){
+                val quantity = myItems[i].mennyiseg?.toDouble()
+                myItems[i].mennyiseg =(quantity?.plus(value)).toString()
+                Log.d(TAG, "checkBinIsInTheList: van ilyen")
+                recycler.adapter?.notifyDataSetChanged()
+                break
+            }
+            else{
+                Log.d(TAG, "checkBinIsInTheList: nincs ilyen ${myItems[i].polc}\tfasle bin =  $falseBin")
+            }
+        }
+    }
+    /*fun checkList(bin: String): Boolean{
+        for (i in 0 until myItems.size){
+            return myItems[i].polc?.trim() == bin
+        }
+        return false
+    }*/
+    fun reload(){
+        CoroutineScope(Main).launch {
+            recycler.adapter?.notifyDataSetChanged()
+        }
+    }
+
 }
