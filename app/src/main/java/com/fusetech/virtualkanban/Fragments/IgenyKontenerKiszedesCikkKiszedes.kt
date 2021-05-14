@@ -177,6 +177,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     val c = cikkNumber.text.trim().toString()
                     val cikk = cikkEdit.text.trim().toString()
                     val d = kontenerNumber.text.trim().toString()
+                    val k = kontenerIDKiszedes.text.trim().toString()
                     CoroutineScope(IO).launch {
                         async {
                             mainActivity.insertDataToRaktarTetel(
@@ -225,6 +226,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                 }
                                 // megnézni, hogy kész e az igény
                                 if (igenyeltMennyiseg <= 0.0) {
+                                    CoroutineScope(Main).launch {
+                                        setProgressBarOn()
+                                    }
                                     isUpdated = false
                                     CoroutineScope(IO).launch {
                                         async {
@@ -262,18 +266,19 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                             mainActivity.loadMenuFragment(true)
                                             mainActivity.loadKiszedesFragment()
                                             mainActivity.checkIfContainerStatus(
-                                                kontenerIDKiszedes.text.trim().toString()
+                                                k
                                             )
                                         } else {
                                             //kitörölni az utolsó tranzakciót
                                             sql.deleteKontenerRaktarTetel(c)
                                             CoroutineScope(Main).launch {
+                                                setProgressBarOff()
                                                 mainActivity.setAlert("Hiba volt az XML feltöltésnél")
                                             }
                                             mainActivity.loadMenuFragment(true)
                                             mainActivity.loadKiszedesFragment()
                                             mainActivity.checkIfContainerStatus(
-                                                kontenerIDKiszedes.text.trim().toString()
+                                                k
                                             )
                                         }
                                         Log.d(TAG, "onCreateView: LEFUTOTT")
