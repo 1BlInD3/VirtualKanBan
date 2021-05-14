@@ -2,6 +2,7 @@ package com.fusetech.virtualkanban.Fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Adapters.KontenerbenLezarasAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerbenLezarasItem
 import com.fusetech.virtualkanban.R
+import com.fusetech.virtualkanban.Utils.SQL
 import kotlinx.android.synthetic.main.kontenerben_lezaras_view.view.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -24,7 +26,7 @@ import kotlinx.android.synthetic.main.kontenerben_lezaras_view.view.*
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClickListener {
+class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClickListener{
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var recycler : RecyclerView

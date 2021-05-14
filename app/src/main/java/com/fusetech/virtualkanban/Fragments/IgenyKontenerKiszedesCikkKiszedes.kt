@@ -15,6 +15,7 @@ import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Adapters.PolcLocationAdapter
 import com.fusetech.virtualkanban.DataItems.PolcLocation
 import com.fusetech.virtualkanban.R
+import com.fusetech.virtualkanban.Utils.SQL
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes_cikk_kiszedes.*
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes_cikk_kiszedes.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -23,13 +24,11 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private const val TAG = "IgenyKontenerKiszedesCi"
 
-class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcItemClickListener {
+class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcItemClickListener,SQL.SQLAlert {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var cikkEdit: EditText
@@ -55,6 +54,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     private var maxMennyiseg: Double = 0.0
     var isSaved = false
     var isUpdated = false
+    private val sql = SQL(this)
 
     interface SendXmlData {
         fun sendXmlData(cikk: String, polc: String?, mennyiseg: Double?)
@@ -121,7 +121,10 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             builder.setTitle("Figyelem")
                 .setMessage("Biztos le akarod így zárni?")
             builder.setPositiveButton("Igen") { dialog, which ->
-                if(!polc.text.trim().toString().isEmpty() && (mennyiseg.text.trim().toString().isEmpty() || mennyiseg.text.trim().toString() == "0" || mennyiseg.text.trim().toString() == "0.0")) {
+                if (!polc.text.trim().toString().isEmpty() && (mennyiseg.text.trim().toString()
+                        .isEmpty() || mennyiseg.text.trim()
+                        .toString() == "0" || mennyiseg.text.trim().toString() == "0.0")
+                ) {
                     CoroutineScope(IO).launch {
                         async {
                             mainActivity.updateItemStatus(cikkNumber.text.trim().toString())
@@ -141,7 +144,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                             )
                         }
                     }
-                }else{
+                } else {
                     Toast.makeText(
                         view.context,
                         "Nincs polchely, vagy van mennyiség beírva, így nem zárhatod le!",
@@ -221,7 +224,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                     }
                                 }
                                 // megnézni, hogy kész e az igény
-                                if (igenyeltMennyiseg == 0.0) {
+                                if (igenyeltMennyiseg <= 0.0) {
                                     isUpdated = false
                                     CoroutineScope(IO).launch {
                                         async {
@@ -229,36 +232,49 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                                 "IOTHREAD",
                                                 "onCreateView: ${Thread.currentThread().name}"
                                             )
-                                            for(i in 0 until tempLocations.size){
+                                            for (i in 0 until tempLocations.size) {
                                                 isSent = false
-                                                xmlData.sendXmlData(cikk,tempLocations[i].polc,tempLocations[i].mennyiseg?.toDouble())
+                                                xmlData.sendXmlData(
+                                                    cikk,
+                                                    tempLocations[i].polc,
+                                                    tempLocations[i].mennyiseg?.toDouble()
+                                                )
                                             }
                                         }.await()
-                                        if(isSent){
-                                            mainActivity.checkIfContainerIsDone(d, c, "02", b)
-                                            async {
+                                        if (isSent) {
+                                            try {
+                                                mainActivity.checkIfContainerIsDone(d, c, "02", b)
                                                 mainActivity.updateItemStatus(c)
-                                            }.await()
-                                            if (isUpdated) {
                                                 mainActivity.updateItemAtvevo(c)
                                                 mainActivity.checkIfContainerIsDone(d, c, "02", b)
-                                                Log.d(
-                                                    "IOTHREAD",
-                                                    "onCreateView: ${Thread.currentThread().name}"
-                                                )
-                                                mainActivity.loadMenuFragment(true)
-                                                mainActivity.loadKiszedesFragment()
-                                                mainActivity.checkIfContainerStatus(
-                                                    kontenerIDKiszedes.text.trim().toString()
-                                                )
+                                            } catch (e: Exception) {
+                                                CoroutineScope(Main).launch {
+                                                    mainActivity.setAlert("isSent után\n $e")
+                                                }
                                             }
-                                        }else{
+                                            Log.d(
+                                                "IOTHREAD",
+                                                "onCreateView: ${Thread.currentThread().name}"
+                                            )
+                                            mainActivity.loadMenuFragment(true)
+                                            mainActivity.loadKiszedesFragment()
+                                            mainActivity.checkIfContainerStatus(
+                                                kontenerIDKiszedes.text.trim().toString()
+                                            )
+                                        } else {
+                                            //kitörölni az utolsó tranzakciót
+                                            sql.deleteKontenerRaktarTetel(c)
                                             CoroutineScope(Main).launch {
                                                 mainActivity.setAlert("Hiba volt az XML feltöltésnél")
                                             }
+                                            mainActivity.loadMenuFragment(true)
+                                            mainActivity.loadKiszedesFragment()
+                                            mainActivity.checkIfContainerStatus(
+                                                kontenerIDKiszedes.text.trim().toString()
+                                            )
                                         }
                                         Log.d(TAG, "onCreateView: LEFUTOTT")
-                                        }
+                                    }
 
                                 } else {
                                     Log.d(TAG, "onCreateView: Frissíteni a táblákat")
@@ -293,7 +309,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         return view
     }
 
-    fun loadData() {
+    private fun loadData() {
         itemLocationList.clear()
         val myList: ArrayList<PolcLocation> =
             arguments?.getSerializable("K_LIST") as ArrayList<PolcLocation>
@@ -341,11 +357,11 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             }
             locationRecycler.adapter?.notifyDataSetChanged()
         }
-        if(tempTomb.size > 0){
-            for (i in 0 until tempTomb.size){
-                tempLocations.add(PolcLocation(tempTomb[i].polc,tempTomb[i].mennyiseg))
+        if (tempTomb.size > 0) {
+            for (i in 0 until tempTomb.size) {
+                tempLocations.add(PolcLocation(tempTomb[i].polc, tempTomb[i].mennyiseg))
             }
-            for (i in 0 until tempLocations.size){
+            for (i in 0 until tempLocations.size) {
                 Log.d(TAG, "onResume: ${tempLocations[i].polc}, ${tempLocations[i].mennyiseg}")
             }
         }
@@ -353,7 +369,8 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
 
     fun szazalek(x: Int): Double {
         val ceiling: Int
-        ceiling = ((igenyeltMennyisegAmiNemValtozik / mennyiseg.text.toString().toDouble()) * x).toInt()
+        ceiling =
+            ((igenyeltMennyisegAmiNemValtozik / mennyiseg.text.toString().toDouble()) * x).toInt()
         return igenyeltMennyisegAmiNemValtozik + ceiling
     }
 
@@ -394,5 +411,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         } else {
             throw RuntimeException(context.toString() + "must implement")
         }
+    }
+
+    override fun sendMessage(message: String) {
+        TODO("Not yet implemented")
     }
 }
