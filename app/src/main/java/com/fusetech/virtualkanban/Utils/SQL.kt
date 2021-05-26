@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.core.content.ContextCompat
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.R
@@ -14,6 +15,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.connectionString
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.res
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.progress
 import com.fusetech.virtualkanban.DataItems.*
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.Fragments.PolcraHelyezesFragment.Companion.myItems
@@ -888,6 +890,198 @@ private const val TAG = "SQL"
              Log.d(TAG, "loadKontenerCikkek: $e")
              CoroutineScope(Dispatchers.Main).launch {
                  context.kiszedesreVaroIgenyFragment.setProgressBarOff()
+             }
+         }
+     }
+     fun cikkAdataokSql(
+         cikk: String?,
+         megj1: String?,
+         megj2: String?,
+         intrem: String?,
+         igeny: Double,
+         unit: String?,
+         id: Int,
+         kontnerNumber: Int,
+         context: MainActivity
+     ) {
+         val connection: Connection
+         Class.forName("net.sourceforge.jtds.jdbc.Driver")
+         try {
+             CoroutineScope(Dispatchers.Main).launch {
+                 progress.visibility = View.VISIBLE
+             }
+             connection = DriverManager.getConnection(connectionString)
+             val statement =
+                 connection.prepareStatement(res.getString(R.string.cikkCheck))// ezt is ki kell javítani, hogy 1 v kettő legyen jó státusz
+             statement.setInt(1, id)
+             statement.setString(2, context.dolgKod)
+             val resultSet = statement.executeQuery()
+             if (!resultSet.next()) {
+                 CoroutineScope(Dispatchers.Main).launch {
+                     context.setAlert("Nem tudod megnyitni, mert már valaki dolgozik benne")
+                     progress.visibility = View.GONE
+                 }
+             } else {
+                 val listOfBin: ArrayList<PolcLocation> = ArrayList()
+                 val statement1 =
+                     connection.prepareStatement(res.getString(R.string.cikkUpdate))
+                 statement1.setInt(1, 2)
+                 statement1.setString(2, context.dolgKod)
+                 statement1.setInt(3, id)
+                 statement1.executeUpdate()
+                 val tempPolcLocations: ArrayList<PolcLocation> = ArrayList()
+                 val statement6 =
+                     connection.prepareStatement(res.getString(R.string.fillArray))
+                 statement6.setInt(1, id)
+                 val resultSet6 = statement6.executeQuery()
+                 if (!resultSet6.next()) {
+                     Log.d(TAG, "cikkAdatok: nincsenek ilyen rekordok")
+                     CoroutineScope(Dispatchers.Main).launch {
+                         progress.visibility = View.GONE
+                     }
+                 } else {
+                     do {
+                         val bin = resultSet6.getString("kiado_rakhely")
+                         val sum = resultSet6.getString("mozgatott_mennyiseg")
+                         tempPolcLocations.add(PolcLocation(bin, sum))
+                     } while (resultSet6.next())
+                 }
+                 //ide kell hogy megnézze mi van a raktar_kontenerben
+                 val statement5 =
+                     connection.prepareStatement(res.getString(R.string.raktarTetelIdeiglenes))
+                 statement5.setInt(1, id)
+                 val resultSet5 = statement5.executeQuery()
+                 if (!resultSet5.next()) {
+                     //HA NINCS AZ ÁTMENETI ADATTÁBLÁBA ÉRTÉK
+                     val statement2 =
+                         connection.prepareStatement(res.getString(R.string.raktarCheck))
+                     statement2.setString(1, cikk)
+                     val resultSet2 = statement2.executeQuery()
+                     if (!resultSet2.next()) {
+                         CoroutineScope(Dispatchers.Main).launch {
+                             context.setAlert("Nincs készleten")
+                             progress.visibility = View.GONE
+                         }
+                     } else {
+                         val myList: ArrayList<PolcLocation> = ArrayList()
+                         do {
+                             val polc = resultSet2.getString("BinNumber")
+                             val mennyiseg = resultSet2.getString("BalanceQty")
+                             myList.add(PolcLocation(polc, mennyiseg))
+                         } while (resultSet2.next())
+                         val bundle = Bundle()
+                         bundle.putString("K_CIKK", cikk)
+                         bundle.putString("K_MEGJ1", megj1)
+                         bundle.putString("K_MEGJ2", megj2)
+                         bundle.putString("K_INT", intrem)
+                         bundle.putDouble("K_IGENY", igeny)
+                         bundle.putString("K_UNIT", unit)
+                         bundle.putInt("K_KONTENER", kontnerNumber)
+                         bundle.putInt("K_ID", id)
+                         bundle.putSerializable("K_LIST", myList)
+                         bundle.putSerializable("K_POLC", listOfBin)
+                         bundle.putSerializable("K_TOMB", tempPolcLocations)
+                         context.igenyKontenerKiszedesCikkKiszedes.arguments = bundle
+                         context.supportFragmentManager.beginTransaction().replace(
+                             R.id.frame_container,
+                             context.igenyKontenerKiszedesCikkKiszedes,
+                             "KISZEDESCIKK"
+                         ).commit()
+                     }
+                     CoroutineScope(Dispatchers.Main).launch {
+                         progress.visibility = View.GONE
+                     }
+                 } else {
+                     //HA VAN AZ ÁTMENETI ADATTÁBLÁBA ÉRTÉK
+                     var a = 0.0
+                     do {
+                         a += resultSet5.getDouble("mozgatott_mennyiseg")
+                         listOfBin.add(
+                             PolcLocation(
+                                 resultSet5.getString("kiado_rakhely"),
+                                 resultSet5.getDouble("mozgatott_mennyiseg").toString()
+                             )
+                         )
+                     } while (resultSet5.next())
+                     val ujIgeny = igeny - a
+                     val statement2 =
+                         connection.prepareStatement(res.getString(R.string.raktarCheck))
+                     statement2.setString(1, cikk)
+                     val resultSet2 = statement2.executeQuery()
+                     if (!resultSet2.next()) {
+                         CoroutineScope(Dispatchers.Main).launch {
+                             context.setAlert("Nincs készleten")
+                             progress.visibility = View.GONE
+                         }
+                     } else {
+                         val myList: ArrayList<PolcLocation> = ArrayList()
+                         do {
+                             val polc = resultSet2.getString("BinNumber")
+                             val mennyiseg = resultSet2.getString("BalanceQty")
+                             myList.add(PolcLocation(polc, mennyiseg))
+                         } while (resultSet2.next())
+                         val bundle = Bundle()
+                         bundle.putString("K_CIKK", cikk)
+                         bundle.putString("K_MEGJ1", megj1)
+                         bundle.putString("K_MEGJ2", megj2)
+                         bundle.putString("K_INT", intrem)
+                         bundle.putDouble("K_IGENY", ujIgeny)
+                         bundle.putString("K_UNIT", unit)
+                         bundle.putInt("K_KONTENER", kontnerNumber)
+                         bundle.putInt("K_ID", id)
+                         bundle.putSerializable("K_LIST", myList)
+                         bundle.putSerializable("K_POLC", listOfBin)
+                         bundle.putSerializable("K_TOMB", tempPolcLocations)
+                         context.igenyKontenerKiszedesCikkKiszedes.arguments = bundle
+                         context.supportFragmentManager.beginTransaction().replace(
+                             R.id.frame_container,
+                             context.igenyKontenerKiszedesCikkKiszedes,
+                             "KISZEDESCIKK"
+                         ).commit()
+                     }
+                 }
+                 CoroutineScope(Dispatchers.Main).launch {
+                     progress.visibility = View.GONE
+                 }
+             }
+         } catch (e: Exception) {
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.setAlert("Csekk\n $e")
+             }
+         }
+         Log.d(TAG, "cikkAdatok: ")
+     }
+     fun cikkCodeSql(code: Int, context: MainActivity){
+         val connection: Connection
+         Class.forName("net.sourceforge.jtds.jdbc.Driver")
+         try {
+             connection = DriverManager.getConnection(MainActivity.url)
+             val statement = connection.prepareStatement(res.getString(R.string.getAtvevo))
+             statement.setInt(1, code)
+             val resultSet = statement.executeQuery()
+             if (!resultSet.next()) {
+                 CoroutineScope(Dispatchers.Main).launch {
+                     context.setAlert("Nincs neki átvevője")
+                 }
+             } else {
+                 val atvevo = resultSet.getString("atvevo")
+                 val statement1 = connection.prepareStatement(res.getString(R.string.nev))
+                 statement1.setString(1, atvevo)
+                 val resultSet1 = statement1.executeQuery()
+                 if (!resultSet1.next()) {
+                     CoroutineScope(Dispatchers.Main).launch {
+                         context.setAlert("Nem fogja senki")
+                     }
+                 } else {
+                     val nev = resultSet1.getString("TextDescription")
+                     CoroutineScope(Dispatchers.Main).launch {
+                         context.setAlert(nev + " fogja a cikket")
+                     }
+                 }
+             }
+         } catch (e: Exception) {
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.setAlert("Probléma a nevekkel $e")
              }
          }
      }

@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private lateinit var igenyKiszedesCikkLezaras: IgenyKontenerLezarasCikkLezaras
     var kiszedesreVaroIgenyFragment = KiszedesreVaroIgenyFragment()
     private lateinit var szallitoJarmuFragment: SzallitoJartmuFragment
-    private lateinit var igenyKontenerKiszedesCikkKiszedes: IgenyKontenerKiszedesCikkKiszedes
+    var igenyKontenerKiszedesCikkKiszedes= IgenyKontenerKiszedesCikkKiszedes()
     var ellenorzoKodFragment = EllenorzoKodFragment()
     private val TAG = "MainActivity"
     private val cikklekerdezesFragment = CikklekerdezesFragment()
@@ -101,7 +101,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     val myList: ArrayList<KontenerItem> = ArrayList()
     val kontenerList: ArrayList<KontenerItem> = ArrayList()
     val listIgenyItems: ArrayList<IgenyItem> = ArrayList()
-    private lateinit var progress: ProgressBar
     val xml = XML()
     val save = SaveFile()
     val retro = RetrofitFunctions()
@@ -113,6 +112,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         val connectionString =
             "jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
         lateinit var res: Resources
+        lateinit var progress: ProgressBar
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -125,7 +125,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         polcHelyezesFragment = PolcraHelyezesFragment()
         igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
         szallitoJarmuFragment = SzallitoJartmuFragment()
-        igenyKontenerKiszedesCikkKiszedes = IgenyKontenerKiszedesCikkKiszedes()
         ellenorzoKodFragment = EllenorzoKodFragment()
         igenyKiszedesCikk = IgenyKontnerKiszedesCikk()
         progress = progressBar2
@@ -642,7 +641,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }
     }
-
     override fun cikkAdatok(
         cikk: String?,
         megj1: String?,
@@ -654,188 +652,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         kontnerNumber: Int
     ) {
         CoroutineScope(IO).launch {
-            Class.forName("net.sourceforge.jtds.jdbc.Driver")
-            try {
-                CoroutineScope(Main).launch {
-                    progress.visibility = View.VISIBLE
-                }
-                connection = DriverManager.getConnection(connectionString)
-                val statement =
-                    connection.prepareStatement(resources.getString(R.string.cikkCheck))// ezt is ki kell javítani, hogy 1 v kettő legyen jó státusz
-                statement.setInt(1, id)
-                statement.setString(2, dolgKod)
-                val resultSet = statement.executeQuery()
-                if (!resultSet.next()) {
-                    CoroutineScope(Main).launch {
-                        setAlert("Nem tudod megnyitni, mert már valaki dolgozik benne")
-                        progress.visibility = View.GONE
-                    }
-                } else {
-                    val listOfBin: ArrayList<PolcLocation> = ArrayList()
-                    val statement1 =
-                        connection.prepareStatement(resources.getString(R.string.cikkUpdate))
-                    statement1.setInt(1, 2)
-                    statement1.setString(2, dolgKod)
-                    statement1.setInt(3, id)
-                    statement1.executeUpdate()
-                    val tempPolcLocations: ArrayList<PolcLocation> = ArrayList()
-                    val statement6 =
-                        connection.prepareStatement(resources.getString(R.string.fillArray))
-                    statement6.setInt(1, id)
-                    val resultSet6 = statement6.executeQuery()
-                    if (!resultSet6.next()) {
-                        Log.d(TAG, "cikkAdatok: nincsenek ilyen rekordok")
-                        CoroutineScope(Main).launch {
-                            progress.visibility = View.GONE
-                        }
-                    } else {
-                        do {
-                            val bin = resultSet6.getString("kiado_rakhely")
-                            val sum = resultSet6.getString("mozgatott_mennyiseg")
-                            tempPolcLocations.add(PolcLocation(bin, sum))
-                        } while (resultSet6.next())
-                    }
-                    //ide kell hogy megnézze mi van a raktar_kontenerben
-                    val statement5 =
-                        connection.prepareStatement(resources.getString(R.string.raktarTetelIdeiglenes))
-                    statement5.setInt(1, id)
-                    val resultSet5 = statement5.executeQuery()
-                    if (!resultSet5.next()) {
-                        //HA NINCS AZ ÁTMENETI ADATTÁBLÁBA ÉRTÉK
-                        val statement2 =
-                            connection.prepareStatement(resources.getString(R.string.raktarCheck))
-                        statement2.setString(1, cikk)
-                        val resultSet2 = statement2.executeQuery()
-                        if (!resultSet2.next()) {
-                            CoroutineScope(Main).launch {
-                                setAlert("Nincs készleten")
-                                progress.visibility = View.GONE
-                            }
-                        } else {
-                            val myList: ArrayList<PolcLocation> = ArrayList()
-                            do {
-                                val polc = resultSet2.getString("BinNumber")
-                                val mennyiseg = resultSet2.getString("BalanceQty")
-                                myList.add(PolcLocation(polc, mennyiseg))
-                            } while (resultSet2.next())
-                            val bundle = Bundle()
-                            bundle.putString("K_CIKK", cikk)
-                            bundle.putString("K_MEGJ1", megj1)
-                            bundle.putString("K_MEGJ2", megj2)
-                            bundle.putString("K_INT", intrem)
-                            bundle.putDouble("K_IGENY", igeny)
-                            bundle.putString("K_UNIT", unit)
-                            bundle.putInt("K_KONTENER", kontnerNumber)
-                            bundle.putInt("K_ID", id)
-                            bundle.putSerializable("K_LIST", myList)
-                            bundle.putSerializable("K_POLC", listOfBin)
-                            bundle.putSerializable("K_TOMB", tempPolcLocations)
-                            igenyKontenerKiszedesCikkKiszedes.arguments = bundle
-                            supportFragmentManager.beginTransaction().replace(
-                                R.id.frame_container,
-                                igenyKontenerKiszedesCikkKiszedes,
-                                "KISZEDESCIKK"
-                            ).commit()
-                        }
-                        CoroutineScope(Main).launch {
-                            progress.visibility = View.GONE
-                        }
-                    } else {
-                        //HA VAN AZ ÁTMENETI ADATTÁBLÁBA ÉRTÉK
-                        var a = 0.0
-                        do {
-                            a += resultSet5.getDouble("mozgatott_mennyiseg")
-                            listOfBin.add(
-                                PolcLocation(
-                                    resultSet5.getString("kiado_rakhely"),
-                                    resultSet5.getDouble("mozgatott_mennyiseg").toString()
-                                )
-                            )
-                        } while (resultSet5.next())
-                        val ujIgeny = igeny - a
-                        val statement2 =
-                            connection.prepareStatement(resources.getString(R.string.raktarCheck))
-                        statement2.setString(1, cikk)
-                        val resultSet2 = statement2.executeQuery()
-                        if (!resultSet2.next()) {
-                            CoroutineScope(Main).launch {
-                                setAlert("Nincs készleten")
-                                progress.visibility = View.GONE
-                            }
-                        } else {
-                            val myList: ArrayList<PolcLocation> = ArrayList()
-                            do {
-                                val polc = resultSet2.getString("BinNumber")
-                                val mennyiseg = resultSet2.getString("BalanceQty")
-                                myList.add(PolcLocation(polc, mennyiseg))
-                            } while (resultSet2.next())
-                            val bundle = Bundle()
-                            bundle.putString("K_CIKK", cikk)
-                            bundle.putString("K_MEGJ1", megj1)
-                            bundle.putString("K_MEGJ2", megj2)
-                            bundle.putString("K_INT", intrem)
-                            bundle.putDouble("K_IGENY", ujIgeny)
-                            bundle.putString("K_UNIT", unit)
-                            bundle.putInt("K_KONTENER", kontnerNumber)
-                            bundle.putInt("K_ID", id)
-                            bundle.putSerializable("K_LIST", myList)
-                            bundle.putSerializable("K_POLC", listOfBin)
-                            bundle.putSerializable("K_TOMB", tempPolcLocations)
-                            igenyKontenerKiszedesCikkKiszedes.arguments = bundle
-                            supportFragmentManager.beginTransaction().replace(
-                                R.id.frame_container,
-                                igenyKontenerKiszedesCikkKiszedes,
-                                "KISZEDESCIKK"
-                            ).commit()
-                        }
-                    }
-                    CoroutineScope(Main).launch {
-                        progress.visibility = View.GONE
-                    }
-                }
-            } catch (e: Exception) {
-                CoroutineScope(Main).launch {
-                    setAlert("Csekk\n $e")
-                }
-            }
-
+            sql.cikkAdataokSql(cikk,megj1,megj2,intrem,igeny,unit,id,kontnerNumber,this@MainActivity)
         }
-        Log.d(TAG, "cikkAdatok: ")
     }
-
     override fun cikkCode(code: Int) {
         CoroutineScope(IO).launch {
-            Class.forName("net.sourceforge.jtds.jdbc.Driver")
-            try {
-                connection = DriverManager.getConnection(url)
-                val statement = connection.prepareStatement(resources.getString(R.string.getAtvevo))
-                statement.setInt(1, code)
-                val resultSet = statement.executeQuery()
-                if (!resultSet.next()) {
-                    CoroutineScope(Main).launch {
-                        setAlert("Nincs neki átvevője")
-                    }
-                } else {
-                    val atvevo = resultSet.getString("atvevo")
-                    val statement1 = connection.prepareStatement(resources.getString(R.string.nev))
-                    statement1.setString(1, atvevo)
-                    val resultSet1 = statement1.executeQuery()
-                    if (!resultSet1.next()) {
-                        CoroutineScope(Main).launch {
-                            setAlert("Nem fogja senki")
-                        }
-                    } else {
-                        val nev = resultSet1.getString("TextDescription")
-                        CoroutineScope(Main).launch {
-                            setAlert(nev + " fogja a cikket")
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                CoroutineScope(Main).launch {
-                    setAlert("Probléma a nevekkel $e")
-                }
-            }
+            sql.cikkCodeSql(code, this@MainActivity)
         }
     }
 
