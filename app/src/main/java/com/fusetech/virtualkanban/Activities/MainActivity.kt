@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     IgenyKontnerKiszedesCikk.KiszedesAdatok,
     IgenyKontenerLezarasCikkLezaras.CikkCode,
     IgenyKontenerKiszedesCikkKiszedes.SendXmlData,
-    SQL.SQLAlert{
+    SQL.SQLAlert {
     // 1es opció pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
     // át kell rakni máshova
@@ -113,12 +113,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private val retro = RetrofitFunctions()
     private val sql = SQL(this)
 
-    companion object{
-         val url =
+    companion object {
+        val url =
             "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10"
-         val connectionString =
+        val connectionString =
             "jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
-         lateinit var res: Resources
+        lateinit var res: Resources
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -235,7 +235,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     dolgKod = barcodeData
                     loginFragment.StartSpinning()
                     CoroutineScope(IO).launch {
-                        sql.checkRightSql(dolgKod,this@MainActivity)
+                        sql.checkRightSql(dolgKod, this@MainActivity)
                     }
                 }
                 cikklekerdezesFragment.isVisible -> {
@@ -933,29 +933,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }
     }
-
-    private fun checkPolc(code: String) {
-        Class.forName("net.sourceforge.jtds.jdbc.Driver")
-        try {
-            connection = DriverManager.getConnection(url)
-            val statement: PreparedStatement =
-                connection.prepareStatement(resources.getString(R.string.isPolc))
-            statement.setString(1, code)
-            val resultSet: ResultSet = statement.executeQuery()
-            if (!resultSet.next()) {
-                CoroutineScope(Main).launch {
-                    setAlert("Nem polc")
-                    polcHelyezesFragment.focusToBin()
-                }
-            } else {
-                CoroutineScope(Main).launch {
-                    polcHelyezesFragment.polcCheck()
-                }
-            }
-        } catch (e: Exception) {
-            Log.d(TAG, "checkPolc: visszajött hibával")
-        }
-    }
     private fun containerManagement(id: String) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -1175,7 +1152,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     }
 
     override fun sendCode(code: String) {
-            sql.checkTrannzit(code,this@MainActivity,polcLocation)
+        sql.checkTrannzit(code, this@MainActivity, polcLocation)
     }
 
     override fun sendTranzitData(
@@ -1186,7 +1163,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         raktarba: String,
         polcra: String
     ) {
-        scalaSend(cikk,polc,mennyiseg,raktarbol,raktarba,polcra)
+        scalaSend(cikk, polc, mennyiseg, raktarbol, raktarba, polcra)
     }
 
     fun removeLocationFragment() {
@@ -1195,9 +1172,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             supportFragmentManager.beginTransaction().remove(isLocFragment).commit()
         }
     }
+
     fun polcCheckIO(code: String) {
         CoroutineScope(IO).launch {
-            checkPolc(code)
+            sql.checkPolc(code,this@MainActivity)
         }
     }
 
@@ -1229,17 +1207,20 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             checkItem(code)
         }
     }
+
     private fun containerCheck(id: String) {
         CoroutineScope(IO).launch {
             containerManagement(id)
         }
     }
+
     fun igenyKontenerCheck() {
         CoroutineScope(IO).launch {
             loadIgenyLezaras()
             Log.d(TAG, "igenyKontenerCheck: Lefutott")
         }
     }
+
     override fun sendContainer(container: String) {
         lezarandoKontener = container
         CoroutineScope(IO).launch {
@@ -1355,6 +1336,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }
     }
+
     override fun cikkAdatok(
         cikk: String?,
         megj1: String?,
@@ -1706,11 +1688,27 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }
     }
-    override fun sendXmlData(cikk: String, polc: String?, mennyiseg: Double?,raktarbol: String, raktarba: String, polcra: String) {
-        scalaSend(cikk,polc,mennyiseg, raktarbol,raktarba,polcra)
+
+    override fun sendXmlData(
+        cikk: String,
+        polc: String?,
+        mennyiseg: Double?,
+        raktarbol: String,
+        raktarba: String,
+        polcra: String
+    ) {
+        scalaSend(cikk, polc, mennyiseg, raktarbol, raktarba, polcra)
     }
+
     @SuppressLint("SimpleDateFormat")
-    private fun scalaSend(cikkszam: String, polchely: String?, mennyisege: Double?, rbol: String, rba: String, polchelyre: String){
+    private fun scalaSend(
+        cikkszam: String,
+        polchely: String?,
+        mennyisege: Double?,
+        rbol: String,
+        rba: String,
+        polchelyre: String
+    ) {
         try {
             val currentDate = SimpleDateFormat("yyyy-MM-dd").format(Date())
             if (ContextCompat.checkSelfPermission(
@@ -1723,7 +1721,16 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 val file = File(path, name)
                 save.saveXml(
                     file,
-                    xml.createXml(currentDate, mennyisege, cikkszam, rbol, polchely, rba, polchelyre, dolgKod)
+                    xml.createXml(
+                        currentDate,
+                        mennyisege,
+                        cikkszam,
+                        rbol,
+                        polchely,
+                        rba,
+                        polchelyre,
+                        dolgKod
+                    )
                 )
                 Log.d("IOTHREAD", "sendXmlData: ${Thread.currentThread().name}")
                 retro.retrofitGet(file)

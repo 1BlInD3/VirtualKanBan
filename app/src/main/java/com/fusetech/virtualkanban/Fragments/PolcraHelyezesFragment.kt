@@ -94,8 +94,6 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         recycler.adapter = PolcLocationAdapter(myItems, this)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
-        /* myItems.add(PolcLocation("IT","200"))
-         recycler.adapter?.notifyDataSetChanged()*/
 
         cikkText.setOnClickListener {
             if (cikkText.text.isNotBlank()) {
@@ -182,7 +180,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                             }
                         } else {
                             CoroutineScope(Main).launch {
-                                mainActivity.polcCheckIO(bin)   // ezt átteni az SQL osztályba
+                                mainActivity.polcCheckIO(bin)
                             }
                         }
                         CoroutineScope(Main).launch {
@@ -265,13 +263,6 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         }
     }
 
-    /*fun setContainerOn(){
-        sideContainer.visibility = View.VISIBLE
-        sideContainer.isEnabled = false
-    }*/
-    /*fun setContainerOff(){
-        sideContainer.visibility = View.GONE
-    }*/
     fun setProgressBarOn() {
         progressBar.visibility = View.VISIBLE
     }
@@ -312,7 +303,6 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         binPos = -1
         binSelected = false
         if (trQty > qty) {
-            // tranzitQtyTxt.setText(trQty-qty)
             try {
                 checkBinIsInTheList(bin, qty)
             } catch (e: Exception) {
