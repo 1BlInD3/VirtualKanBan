@@ -28,53 +28,61 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 private const val TAG = "SQL"
- class SQL (val sqlMessage: SQLAlert){
+ class SQL (val sqlMessage: SQLAlert) {
 
-    interface SQLAlert{
-        fun sendMessage(message: String)
-    }
-    fun deleteKontenerRaktarTetel(konenerTetelId: String){
-        var connection: Connection
-        CoroutineScope(IO).launch {
-            Class.forName("net.sourceforge.jtds.jdbc.Driver")
-            try{
-                connection = DriverManager.getConnection(connectionString)
-                val statement = connection.prepareStatement(res.getString(R.string.deleteEmptyRaktarTetel))
-                statement.setString(1,konenerTetelId)
-                statement.executeUpdate()
-            }catch (e: Exception){
-                sqlMessage.sendMessage("Hiba van az üres letörlésénél $e")
-            }
-        }
-    }
-    fun checkRightSql(code: String, context: MainActivity) {
-        val connection: Connection
-        Class.forName("net.sourceforge.jtds.jdbc.Driver")
-        try {
-            connection = DriverManager.getConnection(connectionString)
-            val statement: PreparedStatement =
-                connection.prepareStatement(res.getString(R.string.jog))
-            statement.setString(1, code)
-            val resultSet: ResultSet = statement.executeQuery()
-            if (!resultSet.next()) {
-                Log.d(TAG, "checkRightSql: hülyeséggel lép be")
-                context.loadMenuFragment(false)
-            } else {
-                if (resultSet.getInt("Jog") == 1) {
-                    context.loadMenuFragment(true)
-                } else {
-                    context.loadMenuFragment(false)
-                }
-            }
-        } catch (e: Exception) {
-            Log.d(TAG, "Nincs kapcsolat")
-            CoroutineScope(Dispatchers.Main).launch {
-                context.loginFragment.StopSpinning()
-                context.loginFragment.SetId("Hiaba lépett fel a feldolgozás során")
-            }
-        }
-    }
-     fun checkTrannzit(code: String, context: MainActivity, polcLocation: ArrayList<PolcLocation>?) {
+     interface SQLAlert {
+         fun sendMessage(message: String)
+     }
+
+     fun deleteKontenerRaktarTetel(konenerTetelId: String) {
+         var connection: Connection
+         CoroutineScope(IO).launch {
+             Class.forName("net.sourceforge.jtds.jdbc.Driver")
+             try {
+                 connection = DriverManager.getConnection(connectionString)
+                 val statement =
+                     connection.prepareStatement(res.getString(R.string.deleteEmptyRaktarTetel))
+                 statement.setString(1, konenerTetelId)
+                 statement.executeUpdate()
+             } catch (e: Exception) {
+                 sqlMessage.sendMessage("Hiba van az üres letörlésénél $e")
+             }
+         }
+     }
+
+     fun checkRightSql(code: String, context: MainActivity) {
+         val connection: Connection
+         Class.forName("net.sourceforge.jtds.jdbc.Driver")
+         try {
+             connection = DriverManager.getConnection(connectionString)
+             val statement: PreparedStatement =
+                 connection.prepareStatement(res.getString(R.string.jog))
+             statement.setString(1, code)
+             val resultSet: ResultSet = statement.executeQuery()
+             if (!resultSet.next()) {
+                 Log.d(TAG, "checkRightSql: hülyeséggel lép be")
+                 context.loadMenuFragment(false)
+             } else {
+                 if (resultSet.getInt("Jog") == 1) {
+                     context.loadMenuFragment(true)
+                 } else {
+                     context.loadMenuFragment(false)
+                 }
+             }
+         } catch (e: Exception) {
+             Log.d(TAG, "Nincs kapcsolat")
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.loginFragment.StopSpinning()
+                 context.loginFragment.SetId("Hiaba lépett fel a feldolgozás során")
+             }
+         }
+     }
+
+     fun checkTrannzit(
+         code: String,
+         context: MainActivity,
+         polcLocation: ArrayList<PolcLocation>?
+     ) {
          val connection: Connection
          Class.forName("net.sourceforge.jtds.jdbc.Driver")
          try {
@@ -141,7 +149,8 @@ private const val TAG = "SQL"
              }
          }
      }
-     fun checkPolc(code: String,context: MainActivity) {
+
+     fun checkPolc(code: String, context: MainActivity) {
          val connection: Connection
          Class.forName("net.sourceforge.jtds.jdbc.Driver")
          try {
@@ -165,6 +174,7 @@ private const val TAG = "SQL"
          }
 
      }
+
      fun containerManagement(id: String, context: MainActivity) {
          val connection: Connection
          Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -249,7 +259,8 @@ private const val TAG = "SQL"
                      bundle1.putString("TERMRAKH", rakhely)
                      context.igenyFragment.arguments = bundle1
                      context.supportFragmentManager.beginTransaction()
-                         .replace(R.id.frame_container, context.igenyFragment).addToBackStack(null).commit()
+                         .replace(R.id.frame_container, context.igenyFragment).addToBackStack(null)
+                         .commit()
                      CoroutineScope(Dispatchers.Main).launch {
                          context.menuFragment.setMenuProgressOff()
                      }
@@ -266,7 +277,8 @@ private const val TAG = "SQL"
                      bundle.putString("TERMRAKH", rakhely)
                      context.igenyFragment.arguments = bundle
                      context.supportFragmentManager.beginTransaction()
-                         .replace(R.id.frame_container, context.igenyFragment).addToBackStack(null).commit()
+                         .replace(R.id.frame_container, context.igenyFragment).addToBackStack(null)
+                         .commit()
                      CoroutineScope(Dispatchers.Main).launch {
                          context.menuFragment.setMenuProgressOff()
                      }
@@ -279,6 +291,7 @@ private const val TAG = "SQL"
              }
          }
      }
+
      fun check01(code: String, context: MainActivity) {
          val connection: Connection
          CoroutineScope(Dispatchers.Main).launch {
@@ -315,7 +328,14 @@ private const val TAG = "SQL"
              }
          }
      }
-     fun uploadItem(cikk: String, menny: Double, term: String, unit: String, context: MainActivity) {
+
+     fun uploadItem(
+         cikk: String,
+         menny: Double,
+         term: String,
+         unit: String,
+         context: MainActivity
+     ) {
          val connection: Connection
          Class.forName("net.sourceforge.jtds.jdbc.Driver")
          try {
@@ -337,6 +357,7 @@ private const val TAG = "SQL"
              }
          }
      }
+
      fun closeContainerSql(statusz: Int, datum: String, context: MainActivity) {
          val connection: Connection
          Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -367,6 +388,7 @@ private const val TAG = "SQL"
              Log.d(TAG, "closeContainerSql: $e")
          }
      }
+
      fun loadIgenyLezaras(context: MainActivity) {
          val connection: Connection
          Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -392,7 +414,16 @@ private const val TAG = "SQL"
                      val tetelszam = resultSet.getInt("tetelszam")
                      val id: String? = resultSet.getString("id")
                      val status: Int = resultSet.getInt("statusz")
-                     context.kontener1List.add(KontenerItem(kontener, polc, datum, tetelszam, id, status))
+                     context.kontener1List.add(
+                         KontenerItem(
+                             kontener,
+                             polc,
+                             datum,
+                             tetelszam,
+                             id,
+                             status
+                         )
+                     )
                  } while (resultSet.next())
                  val bundle = Bundle()
                  bundle.putSerializable("KONTENERLISTA", context.kontener1List)
@@ -412,6 +443,7 @@ private const val TAG = "SQL"
              }
          }
      }
+
      fun loadKontenerCikkek(kontener_id: String, context: MainActivity) {
          val connection: Connection
          Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -484,8 +516,9 @@ private const val TAG = "SQL"
              }
          }
      }
+
      fun cikkPolcQuery(code: String, context: MainActivity) {
-         val connection : Connection
+         val connection: Connection
          val polcResultFragment = PolcResultFragment()
          val cikkResultFragment = CikkResultFragment()
          val bundle = Bundle()
@@ -562,10 +595,12 @@ private const val TAG = "SQL"
          } catch (e: Exception) {
              Log.d(TAG, "$e")
              val loadFragment = LoadFragment.newInstance("A feldolgozás során hiba lépett fel")
-             context.supportFragmentManager.beginTransaction().replace(R.id.cikk_container, loadFragment)
+             context.supportFragmentManager.beginTransaction()
+                 .replace(R.id.cikk_container, loadFragment)
                  .commit()
          }
      }
+
      @SuppressLint("SimpleDateFormat")
      fun scalaSend(
          cikkszam: String,
@@ -608,6 +643,7 @@ private const val TAG = "SQL"
              }
          }
      }
+
      fun checkItem(code: String, context: MainActivity) {
          val connection: Connection
          CoroutineScope(Dispatchers.Main).launch {
@@ -631,7 +667,12 @@ private const val TAG = "SQL"
                  val intremIgeny: String = resultSet.getString("IntRem")
                  val unitIgeny: String = resultSet.getString("Unit")
                  CoroutineScope(Dispatchers.Main).launch {
-                     context.igenyFragment.setInfo(megjegyzesIgeny, megjegyzes2Igeny, intremIgeny, unitIgeny)
+                     context.igenyFragment.setInfo(
+                         megjegyzesIgeny,
+                         megjegyzes2Igeny,
+                         intremIgeny,
+                         unitIgeny
+                     )
                      context.igenyFragment.setProgressBarOff()
                      context.igenyFragment.setFocusToQuantity()
                  }
@@ -643,6 +684,7 @@ private const val TAG = "SQL"
              }
          }
      }
+
      fun loadIgenyKiszedes(context: MainActivity) {
          val connection: Connection
          Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -670,7 +712,16 @@ private const val TAG = "SQL"
                      val tetelszam = resultSet.getInt("tetelszam")
                      val id: String = resultSet.getString("id")
                      val status: Int = resultSet.getInt("statusz")
-                     context.kontenerList.add(KontenerItem(kontener, polc, datum, tetelszam, id, status))
+                     context.kontenerList.add(
+                         KontenerItem(
+                             kontener,
+                             polc,
+                             datum,
+                             tetelszam,
+                             id,
+                             status
+                         )
+                     )
                  } while (resultSet.next())
                  val bundle = Bundle()
                  bundle.putSerializable("KISZEDESLISTA", context.kontenerList)
@@ -690,8 +741,9 @@ private const val TAG = "SQL"
              }
          }
      }
+
      fun checkIfContainerIsOpen(kontener: String, context: MainActivity) {
-         val connection : Connection
+         val connection: Connection
          Class.forName("net.sourceforge.jtds.jdbc.Driver")
          try {
              CoroutineScope(Dispatchers.Main).launch {
@@ -726,7 +778,8 @@ private const val TAG = "SQL"
                          context.igenyKiszedesFragment.setProgressBarOff()
                      }
                      context.supportFragmentManager.beginTransaction()
-                         .replace(R.id.frame_container, context.ellenorzoKodFragment, "ELLENOR").commit()
+                         .replace(R.id.frame_container, context.ellenorzoKodFragment, "ELLENOR")
+                         .commit()
                  } else {
                      val fragment = IgenyKontnerKiszedesCikk()
                      val konteneresCikkek: ArrayList<KontenerbenLezarasItem> = ArrayList()
@@ -776,6 +829,7 @@ private const val TAG = "SQL"
              }
          }
      }
+
      fun loadKiszedesreVaro(context: MainActivity) {
          val connection: Connection
          Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -823,8 +877,9 @@ private const val TAG = "SQL"
              }
          }
      }
+
      fun loadKontenerCikkekHatos(kontener_id: String, context: MainActivity) {
-         val connection : Connection
+         val connection: Connection
          Class.forName("net.sourceforge.jtds.jdbc.Driver")
          try {
              CoroutineScope(Dispatchers.Main).launch {
@@ -880,7 +935,11 @@ private const val TAG = "SQL"
                  bundle.putBoolean("LEZARBUTN", false)
                  igenyKiszedesCikkLezaras.arguments = bundle
                  context.supportFragmentManager.beginTransaction()
-                     .replace(R.id.data_frame3, igenyKiszedesCikkLezaras, "CIKKLEZARASFRAGMENTHATOS")
+                     .replace(
+                         R.id.data_frame3,
+                         igenyKiszedesCikkLezaras,
+                         "CIKKLEZARASFRAGMENTHATOS"
+                     )
                      .addToBackStack(null).commit()
                  CoroutineScope(Dispatchers.Main).launch {
                      context.kiszedesreVaroIgenyFragment.setProgressBarOff()
@@ -893,6 +952,7 @@ private const val TAG = "SQL"
              }
          }
      }
+
      fun cikkAdataokSql(
          cikk: String?,
          megj1: String?,
@@ -1051,7 +1111,8 @@ private const val TAG = "SQL"
          }
          Log.d(TAG, "cikkAdatok: ")
      }
-     fun cikkCodeSql(code: Int, context: MainActivity){
+
+     fun cikkCodeSql(code: Int, context: MainActivity) {
          val connection: Connection
          Class.forName("net.sourceforge.jtds.jdbc.Driver")
          try {
@@ -1082,6 +1143,168 @@ private const val TAG = "SQL"
          } catch (e: Exception) {
              CoroutineScope(Dispatchers.Main).launch {
                  context.setAlert("Probléma a nevekkel $e")
+             }
+         }
+     }
+
+     fun checkEllenorzoKodSql(code: String, context: MainActivity) {
+         val connection: Connection
+         Class.forName("net.sourceforge.jtds.jdbc.Driver")
+         try {
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.ellenorzoKodFragment.setProgressBarOn()
+             }
+             connection = DriverManager.getConnection(connectionString)
+             val statement =
+                 connection.prepareStatement(res.getString(R.string.kontenerBinDesciption))
+             statement.setString(1, context.selectedContainer)
+             val resultSet = statement.executeQuery()
+             if (!resultSet.next()) {
+                 CoroutineScope(Dispatchers.Main).launch {
+                     context.setAlert("Gáz van")
+                     context.ellenorzoKodFragment.setProgressBarOff()
+                 }
+             } else {
+                 val ellKod = resultSet.getString("BinDescript2")
+                 if (code.trim().equals(ellKod)) {
+                     CoroutineScope(Dispatchers.Main).launch {
+                         context.setAlert("ITT kell lezárni a konténert")
+                         context.ellenorzoKodFragment.setProgressBarOff()
+                     }
+                 } else {
+                     CoroutineScope(Dispatchers.Main).launch {
+                         context.setAlert("Nem egyezik a kód a szállító járművel")
+                         context.ellenorzoKodFragment.setProgressBarOff()
+                     }
+                 }
+             }
+         } catch (e: Exception) {
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.setAlert("Ellenorzo\n $e")
+                 context.ellenorzoKodFragment.setProgressBarOff()
+             }
+         }
+     }
+
+     fun checkIfContainerIsDoneSql(
+         container: String,
+         itemId: String,
+         raktar: String,
+         polc: String,
+         context: MainActivity
+     ) {
+         val connection: Connection
+         Class.forName("net.sourceforge.jtds.jdbc.Driver")
+         val mozgatott: Double
+         val szallito: String
+         try {
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
+             }
+             connection = DriverManager.getConnection(connectionString)
+             val statement1 =
+                 connection.prepareStatement(res.getString(R.string.getMozgatottMennyiseg))
+             statement1.setString(1, itemId)
+             val resultSet1 = statement1.executeQuery()
+             if (!resultSet1.next()) {
+                 Log.d(TAG, "checkIfContainerIsDone: nincs mozgatott mennyiség (hazugság)")
+                 CoroutineScope(Dispatchers.Main).launch {
+                     context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                 }
+             } else {
+                 mozgatott = resultSet1.getDouble("mozgatott_mennyiseg")
+                 val statement2 =
+                     connection.prepareStatement(res.getString(R.string.getSzallitoJarmu))
+                 statement2.setString(1, container)
+                 val resultSet2 = statement2.executeQuery()
+                 if (!resultSet2.next()) {
+                     Log.d(TAG, "checkIfContainerIsDone: nincs szállítójármű")
+                 } else {
+                     szallito = resultSet2.getString("SzallitoJarmu")
+                     val statement3 =
+                         connection.prepareStatement(res.getString(R.string.updateKontenerTetel))
+                     statement3.setDouble(1, mozgatott)
+                     statement3.setString(2, raktar)
+                     statement3.setString(3, polc)
+                     statement3.setString(4, szallito)
+                     statement3.setString(5, itemId)
+                     statement3.executeUpdate()
+                     Log.d(TAG, "checkIfContainerIsDone: Sikeres update")
+                 }
+                 CoroutineScope(Dispatchers.Main).launch {
+                     context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                 }
+             }
+         } catch (e: Exception) {
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.setAlert("Probléma a konténer ellenőrzésével $e")
+                 context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+             }
+         }
+     }
+     fun updateItemAtvevoSql(itemId: String, context: MainActivity){
+         val connection: Connection
+         Class.forName("net.sourceforge.jtds.jdbc.Driver")
+         try {
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
+             }
+             connection = DriverManager.getConnection(connectionString)
+             val statement =
+                 connection.prepareStatement(res.getString(R.string.updateCikkAtvevo))
+             statement.setString(1, context.dolgKod)
+             statement.setString(2, itemId)
+             statement.executeUpdate()
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+             }
+         } catch (e: Exception) {
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.setAlert("Nem tudom az átvevőt kinullázni $e")
+                 context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+             }
+         }
+     }
+     fun updtaeItemStatusSql(itemId: String, context: MainActivity){
+         val connection: Connection
+         Class.forName("net.sourceforge.jtds.jdbc.Driver")
+         try {
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
+             }
+             connection = DriverManager.getConnection(connectionString)
+             val statement =
+                 connection.prepareStatement(res.getString(R.string.updateKontenerTeletStatusz))
+             statement.setInt(1, 3)
+             statement.setString(2, itemId)
+             statement.executeUpdate()
+             context.igenyKontenerKiszedesCikkKiszedes.isUpdated = true
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+             }
+         } catch (e: Exception) {
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.setAlert("Probléma a tétel 3-ra írásával $e")
+                 context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+             }
+         }
+     }
+     fun insertDataToRaktarTetelSql(cikk: String, mennyiseg: Double, raktarKod: String, polc: String, context: MainActivity){
+         val connection: Connection
+         Class.forName("net.sourceforge.jtds.jdbc.Driver")
+         try {
+             connection = DriverManager.getConnection(connectionString)
+             val statement =
+                 connection.prepareStatement(res.getString(R.string.insertTemporary))
+             statement.setString(1, cikk)
+             statement.setDouble(2, mennyiseg)
+             statement.setString(3, raktarKod)
+             statement.setString(4, polc)
+             statement.executeUpdate()
+             context.igenyKontenerKiszedesCikkKiszedes.isSaved = true
+         } catch (e: Exception) {
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.setAlert("Probléma a ratar_tetel feltöltésnél $e")
              }
          }
      }
