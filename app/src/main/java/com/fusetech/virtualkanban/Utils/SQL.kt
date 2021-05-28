@@ -11,8 +11,6 @@ import com.fusetech.virtualkanban.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.sql.Connection
-import java.sql.DriverManager
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.connectionString
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.res
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.progress
@@ -21,10 +19,9 @@ import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.Fragments.PolcraHelyezesFragment.Companion.myItems
 import kotlinx.coroutines.Dispatchers.IO
 import java.io.File
-import java.sql.PreparedStatement
-import java.sql.ResultSet
+import java.sql.*
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 import kotlin.collections.ArrayList
 
 private const val TAG = "SQL"
@@ -639,7 +636,7 @@ private const val TAG = "SQL"
              }
          } catch (e: Exception) {
              CoroutineScope(Dispatchers.Main).launch {
-                 context.setAlert("$e")
+                 context.setAlert("Scala send $e")
              }
          }
      }
@@ -1306,6 +1303,65 @@ private const val TAG = "SQL"
              CoroutineScope(Dispatchers.Main).launch {
                  context.setAlert("Probléma a ratar_tetel feltöltésnél $e")
              }
+         }
+     }
+     fun cikkUpdateSql(cikk: Int, context: MainActivity){
+         val connection: Connection
+         Class.forName("net.sourceforge.jtds.jdbc.Driver")
+         try {
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
+             }
+             connection = DriverManager.getConnection(connectionString)
+             val statement =
+                 connection.prepareStatement(res.getString(R.string.cikkUpdate))
+             statement.setInt(1, 1)
+             statement.setNull(2, Types.INTEGER)
+             statement.setInt(3, cikk)
+             statement.executeUpdate()
+             Log.d(TAG, "cikkUpdate: sikeres")
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+             }
+         } catch (e: Exception) {
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.setAlert("CikkUpdateHiba $e")
+                 context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+             }
+         }
+     }
+     fun updateCikkSql(kontener_id: String, context: MainActivity){
+         val connection: Connection
+         Class.forName("net.sourceforge.jtds.jdbc.Driver")
+         try {
+             connection = DriverManager.getConnection(connectionString)
+             val statement =
+                 connection.prepareStatement(res.getString(R.string.updateItemStatus))
+             statement.setString(1, kontener_id)
+             statement.executeUpdate()
+             Log.d(TAG, "updateCikkAndKontener: Cikkek lezárva")
+         } catch (e: Exception) {
+             Log.d(TAG, "updateCikkAndKontener: $e")
+             context.setAlert("Probléma van\n $e")
+         }
+     }
+     fun updateKontenerSql(kontener_id: String, context: MainActivity){
+         val connection: Connection
+         Class.forName("net.sourceforge.jtds.jdbc.Driver")
+         try {
+             connection = DriverManager.getConnection(connectionString)
+             val statment =
+                 connection.prepareStatement(res.getString(R.string.updateContainerStatus))
+             statment.setInt(1, 1)
+             statment.setString(2, "NULL")//ide kell majd valami
+             statment.setString(3, context.dolgKod)//ide kell a bejelentkezős kód
+             statment.setString(4, kontener_id)
+             statment.executeUpdate()
+             Log.d(TAG, "updateCikkAndKontener: Konténer lezárva")
+             context.lezarandoKontener = ""
+         } catch (e: Exception) {
+             Log.d(TAG, "updateKontener: $e")
+             context.setAlert("Probléma van a konténer 1-re átírásánál\n $e")
          }
      }
  }

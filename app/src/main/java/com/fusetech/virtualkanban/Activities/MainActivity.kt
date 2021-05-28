@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private var polcLocation: ArrayList<PolcLocation>? = ArrayList()
     var kontener = ""
     var menuFragment = MenuFragment()
-    private var lezarandoKontener = ""
+    var lezarandoKontener = ""
     var igenyLezarCikkVisible: Boolean = false
     var selectedContainer = ""
     val kontener1List: ArrayList<KontenerItem> = ArrayList()
@@ -364,7 +364,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             return false
         }
     }
-
     private fun updateKontenerKiszedesre(kontener: String) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -399,41 +398,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }
     }
-
     private fun updateKontener(kontener_id: String) {
-        Class.forName("net.sourceforge.jtds.jdbc.Driver")
-        try {
-            connection = DriverManager.getConnection(connectionString)
-            val statment =
-                connection.prepareStatement(resources.getString(R.string.updateContainerStatus))
-            statment.setInt(1, 1)
-            statment.setString(2, "NULL")
-            statment.setString(3, dolgKod)//ide kell a bejelentkezős kód
-            statment.setString(4, kontener_id)
-            statment.executeUpdate()
-            Log.d(TAG, "updateCikkAndKontener: Konténer lezárva")
-            lezarandoKontener = ""
-        } catch (e: Exception) {
-            Log.d(TAG, "updateKontener: $e")
-            setAlert("Probléma van a konténer 1-re átírásánál\n $e")
-        }
+        sql.updateKontenerSql(kontener_id,this@MainActivity)
     }
-
     private fun updateCikk(kontener_id: String) {
-        Class.forName("net.sourceforge.jtds.jdbc.Driver")
-        try {
-            connection = DriverManager.getConnection(connectionString)
-            val statement =
-                connection.prepareStatement(resources.getString(R.string.updateItemStatus))
-            statement.setString(1, kontener_id)
-            statement.executeUpdate()
-            Log.d(TAG, "updateCikkAndKontener: Cikkek lezárva")
-        } catch (e: Exception) {
-            Log.d(TAG, "updateCikkAndKontener: $e")
-            setAlert("Probléma van\n $e")
-        }
+        sql.updateCikkSql(kontener_id,this@MainActivity)
     }
-
     fun setAlert(text: String) {
         val builder = AlertDialog.Builder(this@MainActivity)
         builder.setTitle("Figyelem")
@@ -441,7 +411,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         builder.create()
         builder.show()
     }
-
     override fun setValue(value: String) {
         if (value.isNotEmpty()) {
             loadLoadFragment("Várom az eredményt")
@@ -455,11 +424,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             loadLoadFragment("")
         }
     }
-
     override fun sendCode(code: String) {
         sql.checkTrannzit(code, this@MainActivity, polcLocation)
     }
-
     override fun sendTranzitData(
         cikk: String,
         polc: String?,
@@ -470,26 +437,22 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     ) {
         sql.scalaSend(cikk, polc, mennyiseg, raktarbol, raktarba, polcra, this@MainActivity)
     }
-
     fun removeLocationFragment() {
         val isLocFragment = supportFragmentManager.findFragmentByTag("LOC")
         if (isLocFragment != null && isLocFragment.isVisible) {
             supportFragmentManager.beginTransaction().remove(isLocFragment).commit()
         }
     }
-
     fun polcCheckIO(code: String) {
         CoroutineScope(IO).launch {
             sql.checkPolc(code, this@MainActivity)
         }
     }
-
     override fun sendBinCode(code: String) {
         CoroutineScope(IO).launch {
             sql.check01(code, this@MainActivity)
         }
     }
-
     override fun sendDetails(
         cikkszam: String,
         mennyiseg: Double,
@@ -500,13 +463,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             sql.uploadItem(cikkszam, mennyiseg, term_rakhely, unit, this@MainActivity)
         }
     }
-
     override fun closeContainer(statusz: Int, datum: String) {
         CoroutineScope(IO).launch {
             sql.closeContainerSql(statusz, datum, this@MainActivity)
         }
     }
-
     fun isItem(code: String) {
         CoroutineScope(IO).launch {
             sql.checkItem(code, this@MainActivity)
@@ -614,34 +575,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             super.onBackPressed()
         }
     }
-
     fun cikkUpdate(cikk: Int) {
         CoroutineScope(IO).launch {
-            Class.forName("net.sourceforge.jtds.jdbc.Driver")
-            try {
-                CoroutineScope(Main).launch {
-                    igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
-                }
-                connection = DriverManager.getConnection(connectionString)
-                val statement =
-                    connection.prepareStatement(resources.getString(R.string.cikkUpdate))
-                statement.setInt(1, 1)
-                statement.setNull(2, Types.INTEGER)
-                statement.setInt(3, cikk)
-                statement.executeUpdate()
-                Log.d(TAG, "cikkUpdate: sikeres")
-                CoroutineScope(Main).launch {
-                    igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
-                }
-            } catch (e: Exception) {
-                CoroutineScope(Main).launch {
-                    setAlert("CikkUpdateHiba $e")
-                    igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
-                }
-            }
+            sql.cikkUpdateSql(cikk,this@MainActivity)
         }
     }
-
     override fun cikkAdatok(
         cikk: String?,
         megj1: String?,
