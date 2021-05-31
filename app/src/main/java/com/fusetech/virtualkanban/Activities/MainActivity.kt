@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private var barcodeReader: BarcodeReader? = null
     private lateinit var barcodeData: String
     var loginFragment = LoginFragment()
-    var dolgKod: String = "1GU"// vissza ide
+    var dolgKod: String = ""// vissza ide
     private lateinit var connection: Connection
     var cikkItems: ArrayList<CikkItems> = ArrayList()
     var polcItems: ArrayList<PolcItems> = ArrayList()
@@ -410,6 +410,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     ) {
         sql.scalaSend(cikk, polc, mennyiseg, raktarbol, raktarba, polcra, this@MainActivity)
     }
+
+    fun sendBin(bin: String){
+         sql.checkPolc(bin,this@MainActivity)
+    }
+
     fun removeLocationFragment() {
         val isLocFragment = supportFragmentManager.findFragmentByTag("LOC")
         if (isLocFragment != null && isLocFragment.isVisible) {

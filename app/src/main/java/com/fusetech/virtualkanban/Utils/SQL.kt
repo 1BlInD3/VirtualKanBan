@@ -97,6 +97,7 @@ private const val TAG = "SQL"
                  Log.d(TAG, "checkTrannzit: Hülyeség nincs a tranzitban")
                  CoroutineScope(Dispatchers.Main).launch {
                      context.setAlert("A cikk vagy zárolt, vagy nincs a tranzit raktárban!")
+                     context.polcHelyezesFragment.setCikkNumberBack()
                      context.polcHelyezesFragment.setProgressBarOff()
                  }
              } else {//ha van a tranzitba

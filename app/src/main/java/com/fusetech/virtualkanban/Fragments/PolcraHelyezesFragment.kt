@@ -39,6 +39,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
     private lateinit var progressBar: ProgressBar
     private lateinit var kilepButton: Button
     private lateinit var recycler: RecyclerView
+    private lateinit var ujCikk: Button
     private val TAG = "PolcraHelyezesFragment"
     private var binSelected: Boolean = false
     private var binPos: Int = -1
@@ -81,6 +82,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         sideContainer = view.side_container
         recycler = view.locationRecyclerOne
         progressBar = view.polcProgressBar
+        ujCikk = view.ujCikkPolcHelyezes
         setProgressBarOff()
         tranzitQtyText.isFocusable = false
         mennyisegText = view.mennyisegTxt
@@ -94,6 +96,22 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         recycler.adapter = PolcLocationAdapter(myItems, this)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
+
+        ujCikk.setOnClickListener {
+            cikkText.setText("")
+            mennyisegText.setText("")
+            tranzitQtyText.text = ""
+            megjegyzes1Text?.text = ""
+            megjegyzes2Text?.text = ""
+            intremText?.text = ""
+            unitText?.text = ""
+            myItems.clear()
+            recycler.adapter?.notifyDataSetChanged()
+            mennyisegText.isEnabled = false
+            cikkText.isEnabled = true
+            cikkText.requestFocus()
+            polcText.setText("")
+        }
 
         cikkText.setOnClickListener {
             if (cikkText.text.isNotBlank()) {
@@ -143,7 +161,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                     }
                     async {
                         Log.d("IOTHREAD", "${Thread.currentThread().name} 1es opcio")
-                        sendCode.sendTranzitData(cikk, "STD03", qty, "03", "02", bin)
+                            sendCode.sendTranzitData(cikk, "STD03", qty, "03", "02", bin)
                     }.await()
                     if (isSentTranzit) {
                         if (checkList(bin)) {
@@ -336,7 +354,6 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             cikkText.requestFocus()
         }
     }
-
     class DecimalDigitsInputFilter(digitsBeforeZero: Int, digitsAfterZero: Int) :
         InputFilter {
         var mPattern: Pattern =
@@ -363,8 +380,13 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
     fun setCode(code: String) {
         if (cikkText.text.isEmpty()) {
             cikkText.setText(code)
+            cikkText.selectAll()
+            CoroutineScope(IO).launch {
+                sendCode.sendCode(cikkText.text.trim().toString())
+            }
         } else {
             polcText.setText(code)
+            polcText.performClick()
         }
     }
 
@@ -411,5 +433,8 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             recycler.adapter?.notifyDataSetChanged()
         }
     }
-
+    fun setCikkNumberBack(){
+        cikkText.setText("")
+        cikkText.requestFocus()
+    }
 }
