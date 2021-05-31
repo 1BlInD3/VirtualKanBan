@@ -1364,4 +1364,34 @@ private const val TAG = "SQL"
              context.setAlert("Probléma van a konténer 1-re átírásánál\n $e")
          }
      }
+     fun chekcPolcAndSetBinSql(code: String, context: MainActivity){
+         val connection: Connection
+         Class.forName("net.sourceforge.jtds.jdbc.Driver")
+         try {
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
+             }
+             connection = DriverManager.getConnection(MainActivity.url)
+             val statement = connection.prepareStatement(res.getString(R.string.isPolc))
+             statement.setString(1, code)
+             val resultSet = statement.executeQuery()
+             if (!resultSet.next()) {
+                 CoroutineScope(Dispatchers.Main).launch {
+                     context.setAlert("Nincs ilyen polc")
+                     context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                 }
+             } else {
+                 CoroutineScope(Dispatchers.Main).launch {
+                     context.igenyKontenerKiszedesCikkKiszedes.setBin(code)
+                     context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                 }
+             }
+         } catch (e: Exception) {
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.setAlert("Probléma $e")
+                 context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+             }
+         }
+     }
+
  }

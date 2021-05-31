@@ -320,36 +320,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             barcodeReader?.close()
         }
     }
-
     private fun chechPolcAndSetBin(code: String) {
-        Class.forName("net.sourceforge.jtds.jdbc.Driver")
-        try {
-            CoroutineScope(Main).launch {
-                igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
-            }
-            connection = DriverManager.getConnection(url)
-            val statement = connection.prepareStatement(resources.getString(R.string.isPolc))
-            statement.setString(1, code)
-            val resultSet = statement.executeQuery()
-            if (!resultSet.next()) {
-                CoroutineScope(Main).launch {
-                    setAlert("Nincs ilyen polc")
-                    igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
-                }
-            } else {
-                CoroutineScope(Main).launch {
-                    igenyKontenerKiszedesCikkKiszedes.setBin(code)
-                    igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
-                }
-            }
-        } catch (e: Exception) {
-            CoroutineScope(Main).launch {
-                setAlert("Probléma $e")
-                igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
-            }
-        }
+        sql.chekcPolcAndSetBinSql(code, this@MainActivity)
     }
-
     private fun chechIfPolcHasChanged(kontener: String): Boolean {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -532,49 +505,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             sql.loadKontenerCikkekHatos(kontener, this@MainActivity)
         }
     }
-
-    override fun onBackPressed() {
-        try {
-            when {
-                getFragment("CIKKLEZARASFRAGMENT") -> {
-                    igenyKiszedesCikkLezaras.buttonPerform()
-                }
-                getFragment("CIKKLEZARASFRAGMENTHATOS") -> {
-                    igenyKiszedesCikkLezaras.buttonPerform()
-                }
-                getFragment("SZALLITO") -> {
-                    loadMenuFragment(true)
-                    igenyKontenerKiszedes()
-                }
-                getFragment("KISZEDESCIKK") -> {
-                    /* loadMenuFragment(true)
-                     igenyKontenerKiszedes()*/
-                    igenyKontenerKiszedesCikkKiszedes.performButton()
-                }
-                getFragment("NEGYESCIKKEK") -> {
-                    loadMenuFragment(true)
-                    //loadKiszedesFragment()
-                    igenyKontenerKiszedes()
-                }
-                getFragment("ELLENOR") -> {
-                    loadMenuFragment(true)
-                    igenyKontenerKiszedes()
-                }
-                getFragment("DUMMY") -> {
-                    loadMenuFragment(true)
-                }
-                getFragment("POLC") -> {
-                    polcHelyezesFragment.onKilepPressed()
-                }
-                else -> {
-                    super.onBackPressed()
-                }
-            }
-        } catch (e: Exception) {
-            Log.d(TAG, "onBackPressed: $e")
-            super.onBackPressed()
-        }
-    }
     fun cikkUpdate(cikk: Int) {
         CoroutineScope(IO).launch {
             sql.cikkUpdateSql(cikk,this@MainActivity)
@@ -640,6 +570,48 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     override fun sendMessage(message: String) {
         CoroutineScope(Main).launch {
             setAlert(message)
+        }
+    }
+    override fun onBackPressed() {
+        try {
+            when {
+                getFragment("CIKKLEZARASFRAGMENT") -> {
+                    igenyKiszedesCikkLezaras.buttonPerform()
+                }
+                getFragment("CIKKLEZARASFRAGMENTHATOS") -> {
+                    igenyKiszedesCikkLezaras.buttonPerform()
+                }
+                getFragment("SZALLITO") -> {
+                    loadMenuFragment(true)
+                    igenyKontenerKiszedes()
+                }
+                getFragment("KISZEDESCIKK") -> {
+                    /* loadMenuFragment(true)
+                     igenyKontenerKiszedes()*/
+                    igenyKontenerKiszedesCikkKiszedes.performButton()
+                }
+                getFragment("NEGYESCIKKEK") -> {
+                    loadMenuFragment(true)
+                    //loadKiszedesFragment()
+                    igenyKontenerKiszedes()
+                }
+                getFragment("ELLENOR") -> {
+                    loadMenuFragment(true)
+                    igenyKontenerKiszedes()
+                }
+                getFragment("DUMMY") -> {
+                    loadMenuFragment(true)
+                }
+                getFragment("POLC") -> {
+                    polcHelyezesFragment.onKilepPressed()
+                }
+                else -> {
+                    super.onBackPressed()
+                }
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "onBackPressed: $e")
+            super.onBackPressed()
         }
     }
 }
