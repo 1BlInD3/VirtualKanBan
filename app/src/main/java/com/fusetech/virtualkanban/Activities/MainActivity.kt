@@ -256,6 +256,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 getFragment("POLC") -> {
                     polcHelyezesFragment.setCode(barcodeData)
                 }
+                getFragment("IGENY") -> {
+                    igenyFragment.setCode(barcodeData)
+                }
             }
         }
     }
@@ -268,8 +271,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (getMenuFragment()) {
-            /*val ihm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            ihm.hideSoftInputFromWindow(currentFocus!!.windowToken,0)*/
             when (keyCode) {
                 7 -> finishAndRemoveTask()
                 8 -> loadPolcHelyezesFragment()
@@ -545,6 +546,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
 
+    fun checkPolc(code: String): Boolean{
+        return sql.checkPolc(code,this@MainActivity)
+    }
     override fun cikkCode(code: Int) {
         CoroutineScope(IO).launch {
             sql.cikkCodeSql(code, this@MainActivity)

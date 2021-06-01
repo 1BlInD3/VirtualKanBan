@@ -148,7 +148,7 @@ private const val TAG = "SQL"
          }
      }
 
-     /*fun checkPolc(code: String, context: MainActivity) {
+     fun checkPolc(code: String, context: MainActivity): Boolean{
          val connection: Connection
          Class.forName("net.sourceforge.jtds.jdbc.Driver")
          try {
@@ -157,21 +157,13 @@ private const val TAG = "SQL"
                  connection.prepareStatement(res.getString(R.string.isPolc))
              statement.setString(1, code)
              val resultSet: ResultSet = statement.executeQuery()
-             if (!resultSet.next()) {
-                 CoroutineScope(Dispatchers.Main).launch {
-                     context.setAlert("Nem polc")
-                     context.polcHelyezesFragment.focusToBin()
-                 }
-             } else {
-                 CoroutineScope(Dispatchers.Main).launch {
-                     context.polcHelyezesFragment.polcCheck()
-                 }
-             }
+             return resultSet.next()
          } catch (e: Exception) {
              Log.d(TAG, "checkPolc: visszajött hibával")
+             return false
          }
 
-     }*/
+     }
 
      fun containerManagement(id: String, context: MainActivity) {
          val connection: Connection
@@ -257,7 +249,7 @@ private const val TAG = "SQL"
                      bundle1.putString("TERMRAKH", rakhely)
                      context.igenyFragment.arguments = bundle1
                      context.supportFragmentManager.beginTransaction()
-                         .replace(R.id.frame_container, context.igenyFragment).addToBackStack(null)
+                         .replace(R.id.frame_container, context.igenyFragment,"IGENY").addToBackStack(null)
                          .commit()
                      CoroutineScope(Dispatchers.Main).launch {
                          context.menuFragment.setMenuProgressOff()
@@ -275,7 +267,7 @@ private const val TAG = "SQL"
                      bundle.putString("TERMRAKH", rakhely)
                      context.igenyFragment.arguments = bundle
                      context.supportFragmentManager.beginTransaction()
-                         .replace(R.id.frame_container, context.igenyFragment).addToBackStack(null)
+                         .replace(R.id.frame_container, context.igenyFragment,"IGENY").addToBackStack(null)
                          .commit()
                      CoroutineScope(Dispatchers.Main).launch {
                          context.menuFragment.setMenuProgressOff()

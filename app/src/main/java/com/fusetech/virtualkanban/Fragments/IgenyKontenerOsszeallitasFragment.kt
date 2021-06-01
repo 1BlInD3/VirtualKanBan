@@ -277,4 +277,13 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
                 Pattern.compile("[0-9]{0," + (digitsBeforeZero - 1) + "}+((\\.[0-9]{0," + (digitsAfterZero - 1) + "})?)||(\\.)?")
         }
     }
+    fun setCode(code: String){
+        if(polcTextIgeny.text.isEmpty()){
+            polcTextIgeny.setText(code)
+            sendBinCode.sendBinCode(code)
+        }else{
+            cikkItem_igeny.setText(code)
+            mainActivity.isItem(code)
+        }
+    }
 }
