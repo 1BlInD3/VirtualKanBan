@@ -147,24 +147,6 @@ private const val TAG = "SQL"
              }
          }
      }
-
-     fun checkPolc(code: String, context: MainActivity): Boolean{
-         val connection: Connection
-         Class.forName("net.sourceforge.jtds.jdbc.Driver")
-         try {
-             connection = DriverManager.getConnection(MainActivity.url)
-             val statement: PreparedStatement =
-                 connection.prepareStatement(res.getString(R.string.isPolc))
-             statement.setString(1, code)
-             val resultSet: ResultSet = statement.executeQuery()
-             return resultSet.next()
-         } catch (e: Exception) {
-             Log.d(TAG, "checkPolc: visszajött hibával")
-             return false
-         }
-
-     }
-
      fun containerManagement(id: String, context: MainActivity) {
          val connection: Connection
          Class.forName("net.sourceforge.jtds.jdbc.Driver")

@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     IgenyKontenerLezarasCikkLezaras.CikkCode,
     IgenyKontenerKiszedesCikkKiszedes.SendXmlData,
     SQL.SQLAlert {
+    /*
     // 1es opció pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
     // át kell rakni máshova
@@ -50,7 +51,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     // jön a cikk (megnézzük h van e), beírjuk a 4dolgot mint mindig
     // mennyiség elfogadása enterrel, kéri a következő cikket ÉS beleír a [Leltar].[dbo].kontener_tetel-be (fénykép)
     // a [Leltar].[dbo]. kontener beíródik a statusz = 1, igenyelve = datetime
-    /*
     * 3as opció
     * csak azok a konténerek legyenek megjelenítve, amelyek KanBan státusza 1 ÉS A státusza 0 (írja ki amit ki kell írni) illetve a tételek státusza is 0
     * a lezárás a másik fülön átírja a tételeknél a státuszt 1-re, a konténereknél a státusz is 1 lesz és beírja az igénylés dátumát
@@ -215,7 +215,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, kiszedes)
             .addToBackStack(null).commit()
     }
-
+    private fun loadKihelyezesFragment(){
+        val kihelyezes = IgenyKontenerKiszedese()
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container,kihelyezes).addToBackStack(null).commit()
+    }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread {
             barcodeData = p0?.barcodeData!!
@@ -277,7 +280,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 9 -> containerCheck(dolgKod)
                 10 -> igenyKontenerCheck()
                 11 -> igenyKontenerKiszedes()//Log.d(TAG, "onKeyDown: $keyCode")
-                12 -> Log.d(TAG, "onKeyDown: $keyCode")
+                12 -> loadKihelyezesFragment()//Log.d(TAG, "onKeyDown: $keyCode")
                 13 -> kiszedesreVaro()//Log.d(TAG, "onKeyDown: $keyCode")
                 14 -> Log.d(TAG, "onKeyDown: $keyCode")
                 15 -> Log.d(TAG, "onKeyDown: $keyCode")
@@ -544,10 +547,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 this@MainActivity
             )
         }
-    }
-
-    fun checkPolc(code: String): Boolean{
-        return sql.checkPolc(code,this@MainActivity)
     }
     override fun cikkCode(code: Int) {
         CoroutineScope(IO).launch {

@@ -44,6 +44,7 @@ private var igenyReveresed: ArrayList<IgenyItem> = ArrayList()
 private lateinit var kilepButton: Button
 private const val TAG = "IgenyKontenerOsszeallit"
 
+@Suppress("UNCHECKED_CAST")
 class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItemClick {
     private var param1: String? = null
     private var param2: String? = null
@@ -82,7 +83,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         unit_igeny2 = view.unit_igeny
         cikkItem_igeny = view.cikk_igeny
         mennyiseg_igeny2 = view.mennyiseg_igeny
-        mennyiseg_igeny2.filters = arrayOf<InputFilter>(PolcraHelyezesFragment.DecimalDigitsInputFilter(9,2))
+        mennyiseg_igeny2.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(9,2))
         kilepButton = view.kilep_igeny_button
         kontenerText.text = arguments?.getString("KONTENER")
         polcTextIgeny.setText(arguments?.getString("TERMRAKH"))

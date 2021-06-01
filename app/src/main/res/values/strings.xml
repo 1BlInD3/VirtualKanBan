@@ -43,4 +43,5 @@
     <string name="fillArray">SELECT SUM ([mozgatott_mennyiseg])as mozgatott_mennyiseg, [kiado_rakhely] FROM [leltar].[dbo].[kontener_raktar_tetel] WHERE kontener_tetel_id = ? GROUP BY kiado_rakhely</string>
     <string name="kontenerBinDesciption">SELECT [id],[atado],[atvevo],[kontener],[kontener_tipus],[statusz],[igenyelve],[osszegyujtve],[kihelyezve],[termeles_raktar],[termeles_rakhely],[KanbanStatus],[SzallitoJarmu],info.BinDescript2 FROM [leltar].[dbo].[kontener] left outer join [ScaCompDB].[dbo].[VF_SC360300_StockBinNo] as info ON SzallitoJarmu = info.BinNumber where id = ?</string>
     <string name="deleteEmptyRaktarTetel">DELETE [leltar].[dbo].[kontener_raktar_tetel] WHERE kontener_tetel_id = ? </string>
+    <string name="igenyKontenerKihelyezesLista">SELECT [termeles_rakhely] FROM [leltar].[dbo].[kontener] where statusz = 3 AND SzallitoJarmu = ? GROUP BY termeles_rakhely</string>
 </resources>
