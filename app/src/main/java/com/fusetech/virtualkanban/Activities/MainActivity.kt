@@ -410,20 +410,25 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     ) {
         sql.scalaSend(cikk, polc, mennyiseg, raktarbol, raktarba, polcra, this@MainActivity)
     }
-
-    fun sendBin(bin: String){
-         sql.checkPolc(bin,this@MainActivity)
-    }
-
     fun removeLocationFragment() {
         val isLocFragment = supportFragmentManager.findFragmentByTag("LOC")
         if (isLocFragment != null && isLocFragment.isVisible) {
             supportFragmentManager.beginTransaction().remove(isLocFragment).commit()
         }
     }
-    fun polcCheckIO(code: String) {
-        CoroutineScope(IO).launch {
-            sql.checkPolc(code, this@MainActivity)
+    fun check02Polc(bin: String): Boolean{
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try {
+            connection = DriverManager.getConnection(connectionString)
+            val statement = connection.prepareStatement(resources.getString(R.string.is02Polc))
+            statement.setString(1,bin)
+            val resultSet = statement.executeQuery()
+            return resultSet.next()
+        }catch (e: Exception){
+            CoroutineScope(Main).launch {
+                setAlert("$e")
+            }
+            return false
         }
     }
     override fun sendBinCode(code: String) {

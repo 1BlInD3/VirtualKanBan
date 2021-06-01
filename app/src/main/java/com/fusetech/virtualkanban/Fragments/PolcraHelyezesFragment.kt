@@ -27,7 +27,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
-
 class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickListener {
     private lateinit var cikkText: EditText
     private lateinit var mainActivity: MainActivity
@@ -161,10 +160,15 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                     }
                     async {
                         Log.d("IOTHREAD", "${Thread.currentThread().name} 1es opcio")
-                            sendCode.sendTranzitData(cikk, "STD03", qty, "03", "02", bin)
+                            if(mainActivity.check02Polc(bin)) {
+                                sendCode.sendTranzitData(cikk, "STD03", qty, "03", "02", bin)
+                            }else{
+                                CoroutineScope(Main).launch {
+                                    mainActivity.setAlert("Nincs ilyen polc a 02 raktárban")
+                                }
+                            }
                     }.await()
                     if (isSentTranzit) {
-                        if (checkList(bin)) {
                             if (trQty > qty) {
                                 CoroutineScope(Main).launch {
                                     tranzitQtyTxt.setText((trQty - qty).toString())
@@ -196,11 +200,6 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                                     recycler.adapter?.notifyDataSetChanged()
                                 }
                             }
-                        } else {
-                            CoroutineScope(Main).launch {
-                                mainActivity.polcCheckIO(bin)
-                            }
-                        }
                         CoroutineScope(Main).launch {
                             setProgressBarOff()
                         }
@@ -312,48 +311,6 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         binPos = pos
         binValue = value
     }
-
-    fun polcCheck() {
-        val bin = polcText.text.toString()
-        val trQty = tranzitQtyText.text.toString().toDouble()
-        val qty = mennyisegText.text.toString().toDouble()
-        binValue = ""
-        binPos = -1
-        binSelected = false
-        if (trQty > qty) {
-            try {
-                checkBinIsInTheList(bin, qty)
-            } catch (e: Exception) {
-                Log.d(TAG, "polcCheck: $e")
-            }
-            tranzitQtyTxt.setText((trQty - qty).toString())
-            polcText.setText("")
-            polcText.isEnabled = false
-            mennyisegText.isEnabled = true
-            mennyisegText.selectAll()
-            mennyisegText.requestFocus()
-        } else if (trQty == qty) {
-            tranzitQtyTxt.setText("0")
-            //ide egy interface hogy letöröljük a listából
-            try {
-                checkBinIsInTheList(polcText.text.toString(), qty)
-            } catch (e: Exception) {
-                Log.d(TAG, "polcCheck: $e")
-            }
-            mennyisegText.setText("")
-            tranzitQtyText.text = ""
-            polcText.setText("")
-            megjegyzes1Text?.text = ""
-            megjegyzes2Text?.text = ""
-            intremText?.text = ""
-            unitText?.text = ""
-            mennyisegText.isEnabled = false
-            polcText.isEnabled = false
-            cikkText.isEnabled = true
-            cikkText.setText("")
-            cikkText.requestFocus()
-        }
-    }
     class DecimalDigitsInputFilter(digitsBeforeZero: Int, digitsAfterZero: Int) :
         InputFilter {
         var mPattern: Pattern =
@@ -386,6 +343,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             }
         } else {
             polcText.setText(code)
+            polcText.selectAll()
             polcText.performClick()
         }
     }
@@ -420,14 +378,6 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             }
         }
     }
-
-    fun checkList(bin: String): Boolean {
-        for (i in 0 until myItems.size) {
-            return myItems[i].polc?.trim() == bin
-        }
-        return false
-    }
-
     fun reload() {
         CoroutineScope(Main).launch {
             recycler.adapter?.notifyDataSetChanged()

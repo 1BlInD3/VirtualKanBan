@@ -148,7 +148,7 @@ private const val TAG = "SQL"
          }
      }
 
-     fun checkPolc(code: String, context: MainActivity) {
+     /*fun checkPolc(code: String, context: MainActivity) {
          val connection: Connection
          Class.forName("net.sourceforge.jtds.jdbc.Driver")
          try {
@@ -171,7 +171,7 @@ private const val TAG = "SQL"
              Log.d(TAG, "checkPolc: visszajött hibával")
          }
 
-     }
+     }*/
 
      fun containerManagement(id: String, context: MainActivity) {
          val connection: Connection
