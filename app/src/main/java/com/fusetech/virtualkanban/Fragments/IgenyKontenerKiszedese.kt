@@ -5,10 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Adapters.SzerelohelyItemAdapter
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.kihelyezesItems
 import com.fusetech.virtualkanban.DataItems.SzerelohelyItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedese.view.*
@@ -20,7 +22,10 @@ class IgenyKontenerKiszedese : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var recycler : RecyclerView
-    private val lista: ArrayList<SzerelohelyItem> = ArrayList()
+    private lateinit var szallitoText: EditText
+    private lateinit var mainActivity: MainActivity
+    private lateinit var szerelohely: EditText
+    //private val lista: ArrayList<SzerelohelyItem> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,36 +40,34 @@ class IgenyKontenerKiszedese : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_igeny_kontener_kiszedese, container, false)
+        mainActivity = activity as MainActivity
+        szallitoText = view.szallitoJarmuText
+        szerelohely = view.szereloText
+        szerelohely.isEnabled = false
+        szallitoText.requestFocus()
         recycler = view.recyclerSzerelo
-        recycler.adapter = SzerelohelyItemAdapter(lista)
-        //recycler.layoutManager = LinearLayoutManager(view.context)
+        recycler.adapter = SzerelohelyItemAdapter(kihelyezesItems)
         recycler.layoutManager = GridLayoutManager(view.context,3)
         recycler.setHasFixedSize(true)
-        lista.add(SzerelohelyItem("LM1"))
-        lista.add(SzerelohelyItem("LM2"))
-        lista.add(SzerelohelyItem("LM3"))
-        lista.add(SzerelohelyItem("LM4"))
-        recycler.adapter?.notifyDataSetChanged()
         return view
     }
 
-    /*companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment IgenyKontenerKiszedese.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            IgenyKontenerKiszedese().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    fun setCode(code: String){
+        kihelyezesItems.clear()
+        if(szallitoText.text.isEmpty()){
+            if(code.equals("SZ01")){
+                szallitoText.setText(code)
+                szallitoText.selectAll()
+                mainActivity.getContainerList(code)
+                szallitoText.isEnabled = false
+                szerelohely.isEnabled = true
+                szerelohely.requestFocus()
             }
-    }*/
+        }else{
+
+        }
+    }
+    fun updateList(){
+        recycler.adapter?.notifyDataSetChanged()
+    }
 }

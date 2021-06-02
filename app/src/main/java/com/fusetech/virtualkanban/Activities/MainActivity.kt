@@ -105,6 +105,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     val save = SaveFile()
     val retro = RetrofitFunctions()
     val sql = SQL(this)
+    val kihelyezes = IgenyKontenerKiszedese()
 
     companion object {
         val url =
@@ -113,6 +114,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             "jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
         lateinit var res: Resources
         lateinit var progress: ProgressBar
+        val kihelyezesItems: ArrayList<SzerelohelyItem> = ArrayList()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -216,8 +218,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             .addToBackStack(null).commit()
     }
     private fun loadKihelyezesFragment(){
-        val kihelyezes = IgenyKontenerKiszedese()
-        supportFragmentManager.beginTransaction().replace(R.id.frame_container,kihelyezes).addToBackStack(null).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container,kihelyezes,"KIHELYEZES").addToBackStack(null).commit()
     }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread {
@@ -261,6 +262,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 }
                 getFragment("IGENY") -> {
                     igenyFragment.setCode(barcodeData)
+                }
+                getFragment("KIHELYEZES") -> {
+                    kihelyezes.setCode(barcodeData)
                 }
             }
         }
@@ -583,6 +587,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     override fun sendMessage(message: String) {
         CoroutineScope(Main).launch {
             setAlert(message)
+        }
+    }
+    fun getContainerList(code: String){
+        CoroutineScope(IO).launch {
+            sql.getContainersFromVehicle(code,this@MainActivity)
         }
     }
     override fun onBackPressed() {

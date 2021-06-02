@@ -14,10 +14,10 @@ import kotlinx.coroutines.launch
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.connectionString
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.res
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.progress
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.kihelyezesItems
 import com.fusetech.virtualkanban.DataItems.*
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.Fragments.PolcraHelyezesFragment.Companion.myItems
-import kotlinx.coroutines.Dispatchers.IO
 import java.io.File
 import java.sql.*
 import java.text.SimpleDateFormat
@@ -33,7 +33,7 @@ private const val TAG = "SQL"
 
      fun deleteKontenerRaktarTetel(konenerTetelId: String) {
          var connection: Connection
-         CoroutineScope(IO).launch {
+         CoroutineScope(Dispatchers.IO).launch {
              Class.forName("net.sourceforge.jtds.jdbc.Driver")
              try {
                  connection = DriverManager.getConnection(connectionString)
@@ -1369,4 +1369,31 @@ private const val TAG = "SQL"
          }
      }
 
+     fun getContainersFromVehicle(code: String, context: MainActivity){
+         try{
+             val connection : Connection
+             Class.forName("net.sourceforge.jtds.jdbc.Driver")
+             connection = DriverManager.getConnection(connectionString)
+             val statement = connection.prepareStatement(res.getString(R.string.igenyKontenerKihelyezesLista))
+             statement.setString(1,code)
+             val resultSet = statement.executeQuery()
+             if(!resultSet.next()){
+                 CoroutineScope(Dispatchers.Main).launch {
+                     context.setAlert("Nem jó szállítójármű")
+                 }
+             }else{
+                 do {
+                     val szerelohely = resultSet.getString("termeles_rakhely")
+                    kihelyezesItems.add(SzerelohelyItem(szerelohely))
+                 }while(resultSet.next())
+                 CoroutineScope(Dispatchers.Main).launch{
+                     context.kihelyezes.updateList()
+                 }
+             }
+         }catch (e: Exception){
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.setAlert("$e")
+             }
+         }
+     }
  }
