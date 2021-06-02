@@ -5,13 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Adapters.SzerelohelyItemAdapter
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.kihelyezesItems
-import com.fusetech.virtualkanban.DataItems.SzerelohelyItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedese.view.*
 
@@ -21,11 +21,11 @@ private const val ARG_PARAM2 = "param2"
 class IgenyKontenerKiszedese : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var recycler : RecyclerView
+    private lateinit var kilep : Button
     private lateinit var szallitoText: EditText
     private lateinit var mainActivity: MainActivity
     private lateinit var szerelohely: EditText
-    //private val lista: ArrayList<SzerelohelyItem> = ArrayList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,33 +41,32 @@ class IgenyKontenerKiszedese : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_igeny_kontener_kiszedese, container, false)
         mainActivity = activity as MainActivity
+        kilep = view.exit5Btn
         szallitoText = view.szallitoJarmuText
         szerelohely = view.szereloText
         szerelohely.isEnabled = false
         szallitoText.requestFocus()
-        recycler = view.recyclerSzerelo
-        recycler.adapter = SzerelohelyItemAdapter(kihelyezesItems)
-        recycler.layoutManager = GridLayoutManager(view.context,3)
-        recycler.setHasFixedSize(true)
+        kilep.setOnClickListener {
+            mainActivity.loadKihelyezesElemek()
+        }
         return view
     }
 
     fun setCode(code: String){
         kihelyezesItems.clear()
         if(szallitoText.text.isEmpty()){
-            if(code.equals("SZ01")){
-                szallitoText.setText(code)
-                szallitoText.selectAll()
-                mainActivity.getContainerList(code)
-                szallitoText.isEnabled = false
-                szerelohely.isEnabled = true
-                szerelohely.requestFocus()
-            }
+            szallitoText.setText(code)
+            szallitoText.isEnabled = false
+            szerelohely.isEnabled = true
+            mainActivity.getContainerList(code)
         }else{
 
         }
     }
-    fun updateList(){
-        recycler.adapter?.notifyDataSetChanged()
+    fun mindentVissza(){
+        szallitoText.setText("")
+        szallitoText.isEnabled = true
+        szallitoText.requestFocus()
+        szerelohely.isEnabled = false
     }
 }

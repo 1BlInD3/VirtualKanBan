@@ -220,6 +220,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private fun loadKihelyezesFragment(){
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,kihelyezes,"KIHELYEZES").addToBackStack(null).commit()
     }
+    fun loadKihelyezesElemek(){
+        val kihelyezesFragmentLista = KihelyezesListaFragment()
+        supportFragmentManager.beginTransaction().replace(R.id.kihelyezesFrame,kihelyezesFragmentLista).commit()
+    }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread {
             barcodeData = p0?.barcodeData!!

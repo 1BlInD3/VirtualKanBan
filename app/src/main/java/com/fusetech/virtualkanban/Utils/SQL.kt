@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.connectionString
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.res
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.progress
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.kihelyezesItems
 import com.fusetech.virtualkanban.DataItems.*
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.Fragments.PolcraHelyezesFragment.Companion.myItems
@@ -1372,6 +1371,7 @@ private const val TAG = "SQL"
      fun getContainersFromVehicle(code: String, context: MainActivity){
          try{
              val connection : Connection
+             val fragment = SzerelohelyListaFragment()
              Class.forName("net.sourceforge.jtds.jdbc.Driver")
              connection = DriverManager.getConnection(connectionString)
              val statement = connection.prepareStatement(res.getString(R.string.igenyKontenerKihelyezesLista))
@@ -1380,15 +1380,18 @@ private const val TAG = "SQL"
              if(!resultSet.next()){
                  CoroutineScope(Dispatchers.Main).launch {
                      context.setAlert("Nem jó szállítójármű")
+                     context.kihelyezes.mindentVissza()
                  }
              }else{
+                 val myList: ArrayList<SzerelohelyItem> = ArrayList()
                  do {
                      val szerelohely = resultSet.getString("termeles_rakhely")
-                    kihelyezesItems.add(SzerelohelyItem(szerelohely))
+                     myList.add(SzerelohelyItem(szerelohely))
                  }while(resultSet.next())
-                 CoroutineScope(Dispatchers.Main).launch{
-                     context.kihelyezes.updateList()
-                 }
+                 val bundle = Bundle()
+                 bundle.putSerializable("KILISTA",myList)
+                 fragment.arguments = bundle
+                 context.supportFragmentManager.beginTransaction().replace(R.id.kihelyezesFrame,fragment).commit()
              }
          }catch (e: Exception){
              CoroutineScope(Dispatchers.Main).launch {
