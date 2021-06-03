@@ -106,6 +106,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     val retro = RetrofitFunctions()
     val sql = SQL(this)
     val kihelyezes = IgenyKontenerKiszedese()
+    val kihelyezesFragmentLista = KihelyezesListaFragment()
 
     companion object {
         val url =
@@ -221,7 +222,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,kihelyezes,"KIHELYEZES").addToBackStack(null).commit()
     }
     fun loadKihelyezesElemek(){
-        val kihelyezesFragmentLista = KihelyezesListaFragment()
         supportFragmentManager.beginTransaction().replace(R.id.kihelyezesFrame,kihelyezesFragmentLista).commit()
     }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
@@ -503,6 +503,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
 
+    fun loadKihelyezesItems(code: String){
+        CoroutineScope(IO).launch {
+            sql.loadKihelyezesItemsSql(code, this@MainActivity)
+        }
+    }
+
     fun igenyKontenerKiszedes() {
         CoroutineScope(IO).launch {
             sql.loadIgenyKiszedes(this@MainActivity)
@@ -635,6 +641,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     loadMenuFragment(true)
                 }
                 getFragment("KIHELYEZES") ->{
+                    kihelyezes.exit()
                     loadMenuFragment(true)
                 }
                 else -> {

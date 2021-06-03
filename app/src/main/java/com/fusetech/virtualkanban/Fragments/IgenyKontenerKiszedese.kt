@@ -1,14 +1,12 @@
 package com.fusetech.virtualkanban.Fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.kihelyezesItems
 import com.fusetech.virtualkanban.DataItems.SzerelohelyItem
@@ -17,7 +15,6 @@ import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedese.view.*
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-private const val TAG = "IgenyKontenerKiszedese"
 
 class IgenyKontenerKiszedese : Fragment() {
     private var param1: String? = null
@@ -64,6 +61,8 @@ class IgenyKontenerKiszedese : Fragment() {
             if(isCodeInList(code)){
                 szerelohely.setText(code)
                 szerelohely.isEnabled = false
+                mainActivity.loadKihelyezesItems(code)
+
             }else{
                 mainActivity.setAlert("Nincs a vonalkód a listában!")
             }
@@ -76,7 +75,12 @@ class IgenyKontenerKiszedese : Fragment() {
         szerelohely.isEnabled = false
     }
     fun isCodeInList(code: String): Boolean{
-        var bool = kihelyezesItems.contains(SzerelohelyItem(code))
+        val bool = kihelyezesItems.contains(SzerelohelyItem(code))
         return bool
+    }
+    fun exit(){
+        kilep.requestFocus()
+        szallitoText.setText("")
+        szerelohely.setText("")
     }
 }

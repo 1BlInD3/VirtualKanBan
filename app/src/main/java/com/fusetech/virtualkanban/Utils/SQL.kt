@@ -1406,4 +1406,39 @@ private const val TAG = "SQL"
              }
          }
      }
+     fun loadKihelyezesItemsSql(code: String,context: MainActivity){
+         try{
+             val myList : ArrayList<KihelyezesKontenerElemek> = ArrayList()
+             val connection: Connection
+             Class.forName("net.sourceforge.jtds.jdbc.Driver")
+             connection = DriverManager.getConnection(connectionString)
+             val statement = connection.prepareStatement(res.getString(R.string.igenyKontenerKihelyezesElemekLista))
+             statement.setString(1,code)
+             val resultSet = statement.executeQuery()
+             if(!resultSet.next()){
+                 CoroutineScope(Dispatchers.Main).launch {
+                     context.setAlert("Üres a konténer")
+                 }
+             }else{
+                 do{
+                     val id = resultSet.getInt("id")
+                     val cikk = resultSet.getString("cikkszam")
+                     val megj1 = resultSet.getString("Description1")
+                     val megj2 = resultSet.getString("Description2")
+                     val intrem = resultSet.getString("InternRem1")
+                     val igenyelve = resultSet.getString("igenyelt_mennyiseg")+" "+ resultSet.getString("Unit")
+                     val kiadva = resultSet.getInt("mozgatott_mennyiseg")
+                     myList.add(KihelyezesKontenerElemek(id,cikk,megj1,megj2,intrem,igenyelve,kiadva))
+                 }while (resultSet.next())
+                 val bundle = Bundle()
+                 bundle.putSerializable("KIHELYEZESLISTA",myList)
+                 context.kihelyezesFragmentLista.arguments = bundle
+                 context.supportFragmentManager.beginTransaction().replace(R.id.kihelyezesFrame,context.kihelyezesFragmentLista).commit()
+             }
+         }catch (e: Exception){
+             CoroutineScope(Dispatchers.Main).launch {
+                context.setAlert("$e")
+             }
+         }
+     }
  }

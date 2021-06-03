@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.kihelyezes_header.view.*
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
+@Suppress("UNCHECKED_CAST")
 class KihelyezesListaFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
@@ -39,14 +40,28 @@ class KihelyezesListaFragment : Fragment() {
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
 
-        myList.add(KihelyezesKontenerElemek(1,"03011001","Doboz","Doboz2","DD","10 db",0))
-        myList.add(KihelyezesKontenerElemek(1,"03011001","Doboz","Doboz2","DD","10 db",5))
+        getData()
 
-        recycler.adapter?.notifyDataSetChanged()
         return view
     }
-    fun getData(){
 
+    fun getData() {
+        val myItems: ArrayList<KihelyezesKontenerElemek> =
+            arguments?.getSerializable("KIHELYEZESLISTA") as ArrayList<KihelyezesKontenerElemek>
+        for (i in 0 until myItems.size) {
+            myList.add(
+                KihelyezesKontenerElemek(
+                    myItems[i].id,
+                    myItems[i].vonalkod,
+                    myItems[i].megjegyzes1,
+                    myItems[i].megjegyzes2,
+                    myItems[i].intrem,
+                    myItems[i].igenyelve,
+                    myItems[i].kiadva
+                )
+            )
+            recycler.adapter?.notifyDataSetChanged()
+        }
     }
 
 }
