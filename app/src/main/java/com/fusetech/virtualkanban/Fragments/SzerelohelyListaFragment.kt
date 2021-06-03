@@ -11,6 +11,7 @@ import com.fusetech.virtualkanban.Adapters.SzerelohelyItemAdapter
 import com.fusetech.virtualkanban.DataItems.SzerelohelyItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_szerelohely_lista.view.*
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.kihelyezesItems
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -36,7 +37,7 @@ class SzerelohelyListaFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_szerelohely_lista, container, false)
         recycler = view.recyclerHely
-        recycler.adapter = SzerelohelyItemAdapter(myList)
+        recycler.adapter = SzerelohelyItemAdapter(kihelyezesItems)
         recycler.layoutManager = GridLayoutManager(view.context,3)
         recycler.setHasFixedSize(true)
 
@@ -46,9 +47,10 @@ class SzerelohelyListaFragment : Fragment() {
     }
 
     fun getData(){
+        kihelyezesItems.clear()
         val lista : ArrayList<SzerelohelyItem> = arguments?.getSerializable("KILISTA") as ArrayList<SzerelohelyItem>
         for (i in 0 until lista.size){
-            myList.add(SzerelohelyItem(lista[i].szerelohely))
+            kihelyezesItems.add(SzerelohelyItem(lista[i].szerelohely))
         }
        recycler.adapter?.notifyDataSetChanged()
     }

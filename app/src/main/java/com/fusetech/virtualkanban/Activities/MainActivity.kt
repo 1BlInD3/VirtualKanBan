@@ -631,6 +631,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 getFragment("POLC") -> {
                     polcHelyezesFragment.onKilepPressed()
                 }
+                getFragment("KISZEDES") -> {
+                    loadMenuFragment(true)
+                }
+                getFragment("KIHELYEZES") ->{
+                    loadMenuFragment(true)
+                }
                 else -> {
                     super.onBackPressed()
                 }

@@ -39,10 +39,14 @@ class KihelyezesListaFragment : Fragment() {
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
 
-        myList.add(KihelyezesKontenerElemek(1,"03011001","Doboz","Doboz2","DD","10 db","2db"))
+        myList.add(KihelyezesKontenerElemek(1,"03011001","Doboz","Doboz2","DD","10 db",0))
+        myList.add(KihelyezesKontenerElemek(1,"03011001","Doboz","Doboz2","DD","10 db",5))
 
         recycler.adapter?.notifyDataSetChanged()
         return view
+    }
+    fun getData(){
+
     }
 
 }

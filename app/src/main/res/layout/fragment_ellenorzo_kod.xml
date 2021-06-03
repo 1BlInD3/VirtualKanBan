@@ -33,7 +33,8 @@
             android:padding="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView21" />
+            app:layout_constraintTop_toBottomOf="@+id/textView21"
+            android:inputType="textPassword"/>
 
         <ProgressBar
             android:id="@+id/ellenorzoProgress"

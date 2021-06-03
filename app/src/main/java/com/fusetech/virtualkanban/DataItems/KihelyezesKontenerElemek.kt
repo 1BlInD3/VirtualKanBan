@@ -7,5 +7,5 @@ data class KihelyezesKontenerElemek(
     val megjegyzes2: String,
     val intrem: String,
     val igenyelve: String,
-    val kiadva: String
+    val kiadva: Int
 )

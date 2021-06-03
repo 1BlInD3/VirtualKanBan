@@ -374,7 +374,7 @@ private const val TAG = "SQL"
              if (!resultSet.next()) {
                  Log.d(TAG, "loadIgenyLezaras: Nincs ilyen konténer")
                  CoroutineScope(Dispatchers.Main).launch {
-                     context.setAlert("loadIgenyLezaras: Nincs ilyen konténer")
+                     context.setAlert("Nincs lezárni való konténer!!!")
                  }
              } else {
                  context.kontener1List.clear()
@@ -1118,6 +1118,7 @@ private const val TAG = "SQL"
          }
      }
 
+     @SuppressLint("SimpleDateFormat")
      fun checkEllenorzoKodSql(code: String, context: MainActivity) {
          val connection: Connection
          Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -1138,8 +1139,14 @@ private const val TAG = "SQL"
              } else {
                  val ellKod = resultSet.getString("BinDescript2")
                  if (code.trim().equals(ellKod)) {
+                     val state = connection.prepareStatement(res.getString(R.string.kontenerKiszedve))
+                     val myDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+                     state.setString(1,myDate)
+                     state.setString(2, context.selectedContainer)
+                     state.executeUpdate()
+                     context.igenyKontenerKiszedes()
                      CoroutineScope(Dispatchers.Main).launch {
-                         context.setAlert("ITT kell lezárni a konténert")
+                         //context.setAlert("ITT kell lezárni a konténert")
                          context.ellenorzoKodFragment.setProgressBarOff()
                      }
                  } else {
