@@ -45,7 +45,7 @@ class IgenyKontenerKiszedese : Fragment() {
         szerelohely.isEnabled = false
         szallitoText.requestFocus()
         kilep.setOnClickListener {
-            mainActivity.loadKihelyezesElemek()
+            mainActivity.setAlert("Megnyomtam a kilépést")
         }
         return view
     }
@@ -81,6 +81,11 @@ class IgenyKontenerKiszedese : Fragment() {
     fun exit(){
         kilep.requestFocus()
         szallitoText.setText("")
+        szerelohely.setText("")
+    }
+    fun onBack(){
+        szerelohely.isEnabled = true
+        szerelohely.requestFocus()
         szerelohely.setText("")
     }
 }

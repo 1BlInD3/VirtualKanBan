@@ -14,10 +14,10 @@ class KihelyezesKontenerAdapter(val lista: ArrayList<KihelyezesKontenerElemek>):
     class KihelyezesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
      val cikkszam = itemView.textView33
      val megj1 = itemView.textView34
-     val megj2 = itemView.textView35
+     val megj2 = itemView.textView38
      val intrem = itemView.textView36
      val igeny = itemView.textView37
-     val kiadva = itemView.textView38
+     val kiadva = itemView.textView35
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KihelyezesViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.kihelyezes_item,parent,false)

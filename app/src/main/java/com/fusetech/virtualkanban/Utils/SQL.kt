@@ -1433,7 +1433,7 @@ private const val TAG = "SQL"
                  val bundle = Bundle()
                  bundle.putSerializable("KIHELYEZESLISTA",myList)
                  context.kihelyezesFragmentLista.arguments = bundle
-                 context.supportFragmentManager.beginTransaction().replace(R.id.kihelyezesFrame,context.kihelyezesFragmentLista).commit()
+                 context.supportFragmentManager.beginTransaction().replace(R.id.kihelyezesFrame,context.kihelyezesFragmentLista,"KIHELYEZESITEMS").commit()
              }
          }catch (e: Exception){
              CoroutineScope(Dispatchers.Main).launch {

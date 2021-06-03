@@ -5,8 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Adapters.KihelyezesKontenerAdapter
 import com.fusetech.virtualkanban.DataItems.KihelyezesKontenerElemek
 import com.fusetech.virtualkanban.R
@@ -21,6 +23,8 @@ class KihelyezesListaFragment : Fragment() {
     private var param2: String? = null
     private lateinit var recycler: RecyclerView
     val myList: ArrayList<KihelyezesKontenerElemek> = ArrayList()
+    private lateinit var kihelyezes : Button
+    private lateinit var mainActivity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,12 +39,18 @@ class KihelyezesListaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.kihelyezes_header, container, false)
+        mainActivity = activity as MainActivity
+        kihelyezes = view.kihelyezesBtn
         recycler = view.recKihelyezesLista
         recycler.adapter = KihelyezesKontenerAdapter(myList)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
 
         getData()
+
+        kihelyezes.setOnClickListener {
+            mainActivity.setAlert("Megnyomtam a kihelyezest")
+        }
 
         return view
     }

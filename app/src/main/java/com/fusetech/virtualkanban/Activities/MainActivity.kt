@@ -221,9 +221,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private fun loadKihelyezesFragment(){
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,kihelyezes,"KIHELYEZES").addToBackStack(null).commit()
     }
-    fun loadKihelyezesElemek(){
+   /* fun loadKihelyezesElemek(){
         supportFragmentManager.beginTransaction().replace(R.id.kihelyezesFrame,kihelyezesFragmentLista).commit()
-    }
+    }*/
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread {
             barcodeData = p0?.barcodeData!!
@@ -639,6 +639,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 }
                 getFragment("KISZEDES") -> {
                     loadMenuFragment(true)
+                }
+                getFragment("KIHELYEZESITEMS") -> {
+                    kihelyezes.onBack()
+                    getContainerList("SZ01")
                 }
                 getFragment("KIHELYEZES") ->{
                     kihelyezes.exit()
