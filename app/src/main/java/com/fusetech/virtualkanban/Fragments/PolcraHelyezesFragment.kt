@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -212,22 +211,23 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             }
         }
         kilepButton.setOnClickListener {
-            if (view != null) {
+           /* if (view != null) {
                 val ihm =
                     activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 ihm.hideSoftInputFromWindow(view.windowToken, 0)
-            }
-            cikkText.requestFocus()
+            }*/
+            ujCikk.requestFocus()
+            //cikkText.requestFocus()
             TextKeyListener.clear(cikkText.text)
             cikkText.isEnabled = false
             cikkText.isFocusable = false
             cikkText.isFocusableInTouchMode = false
-            mennyisegText.requestFocus()
+            //mennyisegText.requestFocus()
             TextKeyListener.clear(mennyisegText.text)
             mennyisegText.isEnabled = false
             mennyisegText.isFocusable = false
             mennyisegText.isFocusableInTouchMode = false
-            polcText.requestFocus()
+           // polcText.requestFocus()
             TextKeyListener.clear(polcText.text)
             polcText.isEnabled = false
             polcText.isFocusable = false
@@ -242,7 +242,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             tranzitQtyText.text = ""
             myItems.clear()
             recycler.adapter?.notifyDataSetChanged()
-            if (view != null) {
+            /*if (view != null) {
                 val ihm =
                     activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 ihm.toggleSoftInputFromWindow(
@@ -250,7 +250,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                     InputMethodManager.SHOW_FORCED,
                     0
                 )
-            }
+            }*/
             mainActivity.loadMenuFragment(true)
         }
         return view
