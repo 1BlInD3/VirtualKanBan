@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.kihelyezesItems
 import com.fusetech.virtualkanban.DataItems.SzerelohelyItem
@@ -23,6 +24,7 @@ class IgenyKontenerKiszedese : Fragment() {
     private lateinit var szallitoText: EditText
     private lateinit var mainActivity: MainActivity
     private lateinit var szerelohely: EditText
+    private lateinit var progress : ProgressBar
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +41,8 @@ class IgenyKontenerKiszedese : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_igeny_kontener_kiszedese, container, false)
         mainActivity = activity as MainActivity
+        progress = view.kihelyezesProgressBar
+        progressBarOff()
         kilep = view.exit5Btn
         szallitoText = view.szallitoJarmuText
         szerelohely = view.szereloText
@@ -75,7 +79,6 @@ class IgenyKontenerKiszedese : Fragment() {
                 szerelohely.setText(code)
                 szerelohely.isEnabled = false
                 mainActivity.loadKihelyezesItems(code)
-
             }else{
                 mainActivity.setAlert("Nincs a vonalkód a listában!")
             }
@@ -102,5 +105,11 @@ class IgenyKontenerKiszedese : Fragment() {
         szerelohely.isEnabled = true
         szerelohely.requestFocus()
         szerelohely.setText("")
+    }
+    fun progressBarOn(){
+        progress.visibility = View.VISIBLE
+    }
+    fun progressBarOff(){
+        progress.visibility = View.INVISIBLE
     }
 }

@@ -57,6 +57,9 @@ class KihelyezesListaFragment : Fragment() {
         myList.clear()
         getData()
         kihelyezes.setOnClickListener {
+            kihelyezes.setBackgroundResource(R.drawable.disabled)
+            kihelyezes.isEnabled = false
+            mainActivity.kihelyezes.progressBarOn()
             try{
                 var a = 0
                 CoroutineScope(IO).launch {
@@ -86,7 +89,11 @@ class KihelyezesListaFragment : Fragment() {
                 }
             }catch (e: Exception){
                 mainActivity.setAlert("$e")
+                mainActivity.kihelyezes.progressBarOff()
+                kihelyezes.isEnabled = true
             }
+            mainActivity.kihelyezes.progressBarOff()
+            kihelyezes.isEnabled = true
         }
 
         return view
