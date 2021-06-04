@@ -1445,4 +1445,41 @@ private const val TAG = "SQL"
              }
          }
      }
+
+     fun closeCikkek(code: Int, context: MainActivity){
+         try{
+             val connection: Connection
+             Class.forName("net.sourceforge.jtds.jdbc.Driver")
+             connection = DriverManager.getConnection(connectionString)
+             val statement = connection.prepareStatement(res.getString(R.string.cikkLezarva))
+             statement.setInt(1,code)
+             statement.executeUpdate()
+         }catch (e: Exception){
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.setAlert("$e")
+             }
+         }
+     }
+     @SuppressLint("SimpleDateFormat")
+     fun closeContainer(code: Int, context: MainActivity){
+         try {
+             val connection: Connection
+             Class.forName("net.sourceforge.jtds.jdbc.Driver")
+             connection = DriverManager.getConnection(connectionString)
+             val statement = connection.prepareStatement(res.getString(R.string.kontenerKiszedve))
+             val datum = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+             statement.setString(1,datum)
+             statement.setInt(2, code)
+             statement.executeUpdate()
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.kihelyezes.onBack()
+                 context.getContainerList("SZ01")
+             }
+         }catch (e: Exception){
+             CoroutineScope(Dispatchers.Main).launch {
+                 context.setAlert("$e")
+             }
+         }
+     }
+
  }

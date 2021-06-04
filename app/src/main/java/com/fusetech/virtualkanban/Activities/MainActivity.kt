@@ -614,6 +614,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             sql.getContainersFromVehicle(code,this@MainActivity)
         }
     }
+    fun updateCikkAfterSend(code: Int){
+        sql.closeCikkek(code,this@MainActivity)
+    }
+    fun closeItem(code: Int){
+        sql.closeContainer(code,this@MainActivity)
+    }
     override fun onBackPressed() {
         try {
             when {

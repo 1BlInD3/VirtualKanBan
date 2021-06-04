@@ -1,6 +1,7 @@
 package com.fusetech.virtualkanban.Fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,9 +18,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import com.fusetech.virtualkanban.Fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
+import java.lang.Exception
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+private const val TAG = "KihelyezesListaFragment"
 
 @Suppress("UNCHECKED_CAST")
 class KihelyezesListaFragment : Fragment() {
@@ -27,7 +31,7 @@ class KihelyezesListaFragment : Fragment() {
     private var param2: String? = null
     private lateinit var recycler: RecyclerView
     val myList: ArrayList<KihelyezesKontenerElemek> = ArrayList()
-    private lateinit var kihelyezes : Button
+    private lateinit var kihelyezes: Button
     private lateinit var mainActivity: MainActivity
     private lateinit var szerelohely: String
 
@@ -53,22 +57,35 @@ class KihelyezesListaFragment : Fragment() {
         myList.clear()
         getData()
         kihelyezes.setOnClickListener {
-            CoroutineScope(IO).launch {
-            for(i in 0 until myList.size){
-                if(myList[i].kiadva != 0){
-                        async {
-                            mainActivity.sendKihelyezesXmlData(
-                                myList[i].vonalkod,
-                                "SZ01",
-                                myList[i].kiadva.toDouble(),
-                                "21",
-                                "01",
-                                szerelohely
-                            )
-                        }.await()
-                        //ide kell uploadolni a cikkeket
+            try{
+                var a = 0
+                CoroutineScope(IO).launch {
+                    for (i in 0 until myList.size) {
+                        isSent = false
+                        if (myList[i].kiadva != 0) {
+                            async {
+                                mainActivity.sendKihelyezesXmlData(
+                                    myList[i].vonalkod,
+                                    "SZ01",
+                                    myList[i].kiadva.toDouble(),
+                                    "21",
+                                    "01",
+                                    szerelohely
+                                )
+                            }.await()
+                            if (isSent) {
+                                mainActivity.updateCikkAfterSend(myList[i].id)
+                                a++
+                            }
+                        }
+                    }
+                    if(a == myList.size){
+                        mainActivity.closeItem(myList[0].kontenerID)
+                        Log.d(TAG, "Minden cikk lefutott")
                     }
                 }
+            }catch (e: Exception){
+                mainActivity.setAlert("$e")
             }
         }
 

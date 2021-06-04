@@ -45,6 +45,6 @@
     <string name="deleteEmptyRaktarTetel">DELETE [leltar].[dbo].[kontener_raktar_tetel] WHERE kontener_tetel_id = ? </string>
     <string name="igenyKontenerKihelyezesLista">SELECT [termeles_rakhely] FROM [leltar].[dbo].[kontener] where statusz = 3 AND SzallitoJarmu = ? GROUP BY termeles_rakhely</string>
     <string name="igenyKontenerKihelyezesElemekLista">SELECT tetel.id as id, tetel.kontener_id as kontener_id, tetel.cikkszam as cikkszam, adat.Description1, adat.Description2, adat.InternRem1, tetel.statusz as statusz, tetel.igenyelt_mennyiseg as igenyelt_mennyiseg, tetel.mozgatott_mennyiseg as mozgatott_mennyiseg, fej.termeles_rakhely as kiszallitas, unit.Description as Unit FROM [leltar].[dbo].[kontener_tetel] as tetel LEFT OUTER JOIN [leltar].[dbo].[kontener]as fej on tetel.kontener_id = fej.id LEFT OUTER JOIN [ScaCompDB].[dbo].[VF_SC010300_Stockfile] as adat ON tetel.cikkszam = adat.StockCode LEFT OUTER JOIN [ScaCompDB].[dbo].[VF_SCUN0300_UnitCode] as unit ON adat.UnitCodeStoc = unit.UnitCode  where fej.termeles_rakhely = ? and fej.statusz = 3</string>
-    <string name="kontenerKiszedve">UPDATE [leltar].[dbo].[kontener] SET osszegyujtve = ?, statusz = 3 WHERE id = ?</string>
+    <string name="kontenerKiszedve">UPDATE [leltar].[dbo].[kontener] SET kihelyezve = ?, statusz = 5 WHERE id = ?</string>
     <string name="cikkLezarva">UPDATE [leltar].[dbo].[kontener_tetel] SET statusz = 5 WHERE id = ?</string>
 </resources>
