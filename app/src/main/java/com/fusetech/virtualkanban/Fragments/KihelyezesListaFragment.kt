@@ -87,7 +87,8 @@ class KihelyezesListaFragment : Fragment() {
                     myItems[i].megjegyzes2,
                     myItems[i].intrem,
                     myItems[i].igenyelve,
-                    myItems[i].kiadva
+                    myItems[i].kiadva,
+                    myItems[i].kontenerID
                 )
             )
             recycler.adapter?.notifyDataSetChanged()
