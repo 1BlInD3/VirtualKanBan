@@ -45,7 +45,20 @@ class IgenyKontenerKiszedese : Fragment() {
         szerelohely.isEnabled = false
         szallitoText.requestFocus()
         kilep.setOnClickListener {
-            mainActivity.setAlert("Megnyomtam a kilépést")
+            when{
+                mainActivity.getFragment("KIHELYEZESLISTA") -> {
+                    exit()
+                    mainActivity.loadMenuFragment(true)
+                }
+                mainActivity.getFragment("KIHELYEZESITEMS") -> {
+                    onBack()
+                    mainActivity.getContainerList("SZ01")
+                }
+                else -> {
+                    exit()
+                    mainActivity.loadMenuFragment(true)
+                }
+            }
         }
         return view
     }
@@ -80,6 +93,8 @@ class IgenyKontenerKiszedese : Fragment() {
     }
     fun exit(){
         kilep.requestFocus()
+        szallitoText.isEnabled = false
+        szerelohely.isEnabled = false
         szallitoText.setText("")
         szerelohely.setText("")
     }

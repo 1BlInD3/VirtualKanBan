@@ -22,6 +22,7 @@ import java.sql.*
 import java.text.SimpleDateFormat
 import java.util.Date
 import kotlin.collections.ArrayList
+import kotlin.random.Random
 
 private const val TAG = "SQL"
  class SQL (val sqlMessage: SQLAlert) {
@@ -375,6 +376,7 @@ private const val TAG = "SQL"
                  Log.d(TAG, "loadIgenyLezaras: Nincs ilyen konténer")
                  CoroutineScope(Dispatchers.Main).launch {
                      context.setAlert("Nincs lezárni való konténer!!!")
+                     context.menuFragment.setMenuProgressOff()
                  }
              } else {
                  context.kontener1List.clear()
@@ -590,7 +592,7 @@ private const val TAG = "SQL"
                  ) == PackageManager.PERMISSION_GRANTED
              ) {
                  val path = context.getExternalFilesDir(null)
-                 val name = SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + polchely + ".xml"
+                 val name = SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + Random.nextInt(0,10000) + ".xml"
                  val file = File(path, name)
                  context.save.saveXml(
                      file,
@@ -1398,7 +1400,7 @@ private const val TAG = "SQL"
                  val bundle = Bundle()
                  bundle.putSerializable("KILISTA",myList)
                  fragment.arguments = bundle
-                 context.supportFragmentManager.beginTransaction().replace(R.id.kihelyezesFrame,fragment).commit()
+                 context.supportFragmentManager.beginTransaction().replace(R.id.kihelyezesFrame,fragment,"KIHELYEZESLISTA").commit()
              }
          }catch (e: Exception){
              CoroutineScope(Dispatchers.Main).launch {
@@ -1432,6 +1434,7 @@ private const val TAG = "SQL"
                  }while (resultSet.next())
                  val bundle = Bundle()
                  bundle.putSerializable("KIHELYEZESLISTA",myList)
+                 bundle.putString("KIHELYEZESHELY",code)
                  context.kihelyezesFragmentLista.arguments = bundle
                  context.supportFragmentManager.beginTransaction().replace(R.id.kihelyezesFrame,context.kihelyezesFragmentLista,"KIHELYEZESITEMS").commit()
              }

@@ -594,6 +594,16 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     ) {
         sql.scalaSend(cikk, polc, mennyiseg, raktarbol, raktarba, polcra, this@MainActivity)
     }
+    fun sendKihelyezesXmlData(
+        cikk: String,
+        polc: String?,
+        mennyiseg: Double?,
+        raktarbol: String,
+        raktarba: String,
+        polcra: String
+    ){
+        sql.scalaSend(cikk,polc,mennyiseg,raktarbol,raktarba,polcra,this@MainActivity)
+    }
     override fun sendMessage(message: String) {
         CoroutineScope(Main).launch {
             setAlert(message)
@@ -638,6 +648,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     polcHelyezesFragment.onKilepPressed()
                 }
                 getFragment("KISZEDES") -> {
+                    loadMenuFragment(true)
+                }
+                getFragment("KIHELYEZESLISTA") -> {
+                    kihelyezes.exit()
                     loadMenuFragment(true)
                 }
                 getFragment("KIHELYEZESITEMS") -> {
