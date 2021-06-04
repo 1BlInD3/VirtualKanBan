@@ -70,7 +70,15 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     * a szállítójármű beolvasásnl olyan polc kell ami van a 21-es raktárban
     *
     * A SpringBoot fel van készítve és service-be is működik! csak át kell írni a uploadDir-t inputxml-re jar-t csinálni és feltelepíteni a service-t a 10.0.1.69-en
-    * */
+    * 5-ös opció.
+    * Bekéri a szállító járművet és megjeleníti az összes szerelőhelyet ahol van konténer. Utána megnyitjuk szerelőhelyet vonalkóddal és betölti az elemeket
+    * és pirossal kiírja aminek 0 van megadva mennyiségnek. A kihelyezés gombbal először elküldi a szervernek az XML-t majd frissíti a tétel táblában a státuszt 5re
+    * Ha ezeket megcsinálta akkor a végén átírja a konténer táblát 5re és beírja a kihelyezés dátumát, illetve frissíti az "atvevo"-t arra aki kihelyezi
+    *
+    * 7-es opció
+    * nyit egy konténert beírja az id-t, atado, kontener, statusz= 6, kontener_tipus = 2
+    * a 2-es opció layoutját használhatom plusz xml küldésnél fordítva történik. 01 ből 21 be
+    */
     private var manager: AidcManager? = null
     private var barcodeReader: BarcodeReader? = null
     private lateinit var barcodeData: String
@@ -107,6 +115,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     val sql = SQL(this)
     val kihelyezes = IgenyKontenerKiszedese()
     val kihelyezesFragmentLista = KihelyezesListaFragment()
+    val tobbletOsszeallitasFragment = TobbletKontenerOsszeallitasaFragment()
 
     companion object {
         val url =
@@ -221,6 +230,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private fun loadKihelyezesFragment(){
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,kihelyezes,"KIHELYEZES").addToBackStack(null).commit()
     }
+    private fun loadTobbleOsszeallitasFragment(){
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container,tobbletOsszeallitasFragment,"TOBBLETOSSZE").commit()
+    }
    /* fun loadKihelyezesElemek(){
         supportFragmentManager.beginTransaction().replace(R.id.kihelyezesFrame,kihelyezesFragmentLista).commit()
     }*/
@@ -290,7 +302,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 11 -> igenyKontenerKiszedes()//Log.d(TAG, "onKeyDown: $keyCode")
                 12 -> loadKihelyezesFragment()//Log.d(TAG, "onKeyDown: $keyCode")
                 13 -> kiszedesreVaro()//Log.d(TAG, "onKeyDown: $keyCode")
-                14 -> Log.d(TAG, "onKeyDown: $keyCode")
+                14 -> loadTobbleOsszeallitasFragment()//Log.d(TAG, "onKeyDown: $keyCode")
                 15 -> Log.d(TAG, "onKeyDown: $keyCode")
                 16 -> loadCikklekerdezesFragment()
             }
@@ -666,6 +678,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 }
                 getFragment("KIHELYEZES") ->{
                     kihelyezes.exit()
+                    loadMenuFragment(true)
+                }
+                getFragment("TOBBLETOSSZE") -> {
                     loadMenuFragment(true)
                 }
                 else -> {
