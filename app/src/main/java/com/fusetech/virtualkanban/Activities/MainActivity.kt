@@ -490,9 +490,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     }
 
     override fun closeContainer2(statusz: Int, datum: String) {
-        CoroutineScope(IO).launch {
             sql.closeContainerSql(statusz, datum, this@MainActivity)
-        }
     }
 
     fun isItem(code: String) {

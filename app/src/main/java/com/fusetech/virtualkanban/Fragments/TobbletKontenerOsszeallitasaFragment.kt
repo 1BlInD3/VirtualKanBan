@@ -23,6 +23,7 @@ import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_tobblet_kontener_osszeallitasa.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -76,7 +77,6 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
     ): View? {
         val view =
             inflater.inflate(R.layout.fragment_tobblet_kontener_osszeallitasa, container, false)
-        isSent = false
         mainActivity = activity as MainActivity
         recyclerView = view.trecycler_igeny
         recyclerView.isEnabled = false
@@ -126,7 +126,10 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             sendBinCode2.sendBinCode2(polcTextIgeny.text.toString())
         }
         cikkItem_igeny.setOnClickListener {
-            mainActivity.isItem2(cikkItem_igeny.text.toString(), polcTextIgeny.text.trim().toString())
+            mainActivity.isItem2(
+                cikkItem_igeny.text.toString(),
+                polcTextIgeny.text.trim().toString()
+            )
         }
         mennyiseg_igeny2.setOnClickListener {
             igenyList.add(
@@ -191,26 +194,50 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             }
         }
         lezarButton.setOnClickListener {
+            val polc = polcTextIgeny.text.trim().toString()
             setProgressBarOn()
             val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+            var a = 0
             CoroutineScope(IO).launch {
-                async {
-
-                }.await()
-                if(isSent){
+                for (i in 0 until igenyReveresed.size){
+                    isSent = false
+                    if (igenyReveresed[i].mennyiseg.toDouble() != 0.0){
+                        async {
+                            mainActivity.sendKihelyezesXmlData(
+                                igenyReveresed[i].cikkszam, polc,
+                                igenyReveresed[i].mennyiseg.toDouble(),
+                                "01",
+                                "21",
+                                "SZ01"
+                            )
+                        }.await()
+                        if(isSent){
+                            a++
+                        }
+                    }
+                }
+                if(a == igenyReveresed.size){
                     Log.d(TAG, "onCreateView: $currentDateAndTime")
                     if (polcTextIgeny.text.isEmpty() && igenyReveresed.size == 0) {
                         sendBinCode2.closeContainer2(7, currentDateAndTime)
-                        setProgressBarOff()
-                        clearAll()
+                        CoroutineScope(Main).launch {
+                            setProgressBarOff()
+                            clearAll()
+                            Log.d(TAG, "onCreateView: lezártam az üreset")
+                        }
                         mainActivity.loadMenuFragment(true)
-                        Log.d(TAG, "onCreateView: lezártam az üreset")
                     } else {
-                        sendBinCode2.closeContainer2(7, currentDateAndTime) // ezt 1esre kéne átírni
-                        setProgressBarOff()
-                        clearAll()
+                        sendBinCode2.closeContainer2(7, currentDateAndTime)
+                        CoroutineScope(Main).launch {
+                            setProgressBarOff()
+                            clearAll()
+                            Log.d(TAG, "onCreateView: lezártam amibe volt adat")
+                        }
                         mainActivity.loadMenuFragment(true)
-                        Log.d(TAG, "onCreateView: lezártam amibe volt adat")
+                    }
+                }else{
+                    CoroutineScope(Main).launch {
+                        mainActivity.setAlert("Nem teljes a siker")
                     }
                 }
             }
@@ -356,7 +383,8 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             mainActivity.isItem2(code, polcTextIgeny.text.trim().toString())
         }
     }
-    fun onKilepPressed(){
+
+    fun onKilepPressed() {
         kilepButton.performClick()
     }
 }
