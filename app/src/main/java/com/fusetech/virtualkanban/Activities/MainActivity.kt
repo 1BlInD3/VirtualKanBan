@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     CikklekerdezesFragment.SetItemOrBinManually,
     PolcraHelyezesFragment.SendCode,
     IgenyKontenerOsszeallitasFragment.SendBinCode,
+    TobbletKontenerOsszeallitasaFragment.SendBinCode2,
     IgenyKontenerLezarasFragment.IgenyKontnerLezaras,
     KiszedesreVaroIgenyFragment.SendCode6,
     IgenyKontnerKiszedesCikk.KiszedesAdatok,
@@ -233,9 +234,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private fun loadTobbleOsszeallitasFragment(){
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,tobbletOsszeallitasFragment,"TOBBLETOSSZE").commit()
     }
-   /* fun loadKihelyezesElemek(){
-        supportFragmentManager.beginTransaction().replace(R.id.kihelyezesFrame,kihelyezesFragmentLista).commit()
-    }*/
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread {
             barcodeData = p0?.barcodeData!!
@@ -302,7 +300,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 11 -> igenyKontenerKiszedes()//Log.d(TAG, "onKeyDown: $keyCode")
                 12 -> loadKihelyezesFragment()//Log.d(TAG, "onKeyDown: $keyCode")
                 13 -> kiszedesreVaro()//Log.d(TAG, "onKeyDown: $keyCode")
-                14 -> loadTobbleOsszeallitasFragment()//Log.d(TAG, "onKeyDown: $keyCode")
+                14 -> containerCheck7(dolgKod)//Log.d(TAG, "onKeyDown: $keyCode")
                 15 -> Log.d(TAG, "onKeyDown: $keyCode")
                 16 -> loadCikklekerdezesFragment()
             }
@@ -475,15 +473,44 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             sql.closeContainerSql(statusz, datum, this@MainActivity)
         }
     }
+    override fun sendBinCode2(code: String) {
+        CoroutineScope(IO).launch {
+            sql.checkCode02(code, this@MainActivity)
+        }
+    }
+    override fun sendDetails2(
+        cikkszam: String,
+        mennyiseg: Double,
+        term_rakhely: String,
+        unit: String
+    ) {
+        CoroutineScope(IO).launch {
+            sql.uploadItem7(cikkszam, mennyiseg, term_rakhely, unit, this@MainActivity)
+        }
+    }
+
+    override fun closeContainer2(statusz: Int, datum: String) {
+        sql.closeContainerSql(statusz, datum, this@MainActivity)
+    }
+
     fun isItem(code: String) {
         CoroutineScope(IO).launch {
             sql.checkItem(code, this@MainActivity)
         }
     }
-
+    fun isItem2(code: String){
+        CoroutineScope(IO).launch {
+            sql.checkItem2(code, this@MainActivity)
+        }
+    }
     private fun containerCheck(id: String) {
         CoroutineScope(IO).launch {
             sql.containerManagement(id, this@MainActivity)
+        }
+    }
+    private fun containerCheck7(id: String){
+        CoroutineScope(IO).launch {
+            sql.containerManagement7(id, this@MainActivity)
         }
     }
 
@@ -692,4 +719,5 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             super.onBackPressed()
         }
     }
+
 }
