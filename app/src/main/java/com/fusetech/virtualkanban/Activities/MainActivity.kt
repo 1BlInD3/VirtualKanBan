@@ -277,6 +277,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 getFragment("KIHELYEZES") -> {
                     kihelyezes.setCode(barcodeData)
                 }
+                getFragment("TOBBLET") -> {
+                    tobbletOsszeallitasFragment.setCode(barcodeData)
+                }
             }
         }
     }

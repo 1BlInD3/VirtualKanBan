@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.fusetech.virtualkanban.Fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,10 @@ import com.fusetech.virtualkanban.Adapters.IgenyItemAdapter
 import com.fusetech.virtualkanban.DataItems.IgenyItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_tobblet_kontener_osszeallitasa.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
@@ -71,7 +76,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
     ): View? {
         val view =
             inflater.inflate(R.layout.fragment_tobblet_kontener_osszeallitasa, container, false)
-
+        isSent = false
         mainActivity = activity as MainActivity
         recyclerView = view.trecycler_igeny
         recyclerView.isEnabled = false
@@ -188,19 +193,26 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         lezarButton.setOnClickListener {
             setProgressBarOn()
             val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
-            Log.d(TAG, "onCreateView: $currentDateAndTime")
-            if (polcTextIgeny.text.isEmpty() && igenyReveresed.size == 0) {
-                sendBinCode2.closeContainer2(7, currentDateAndTime)
-                setProgressBarOff()
-                clearAll()
-                mainActivity.loadMenuFragment(true)
-                Log.d(TAG, "onCreateView: lezártam az üreset")
-            } else {
-                sendBinCode2.closeContainer2(7, currentDateAndTime) // ezt 1esre kéne átírni
-                setProgressBarOff()
-                clearAll()
-                mainActivity.loadMenuFragment(true)
-                Log.d(TAG, "onCreateView: lezártam amibe volt adat")
+            CoroutineScope(IO).launch {
+                async {
+
+                }.await()
+                if(isSent){
+                    Log.d(TAG, "onCreateView: $currentDateAndTime")
+                    if (polcTextIgeny.text.isEmpty() && igenyReveresed.size == 0) {
+                        sendBinCode2.closeContainer2(7, currentDateAndTime)
+                        setProgressBarOff()
+                        clearAll()
+                        mainActivity.loadMenuFragment(true)
+                        Log.d(TAG, "onCreateView: lezártam az üreset")
+                    } else {
+                        sendBinCode2.closeContainer2(7, currentDateAndTime) // ezt 1esre kéne átírni
+                        setProgressBarOff()
+                        clearAll()
+                        mainActivity.loadMenuFragment(true)
+                        Log.d(TAG, "onCreateView: lezártam amibe volt adat")
+                    }
+                }
             }
         }
 
