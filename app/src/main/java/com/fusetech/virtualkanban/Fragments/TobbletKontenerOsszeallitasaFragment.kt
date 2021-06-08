@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +19,6 @@ import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Adapters.IgenyItemAdapter
 import com.fusetech.virtualkanban.DataItems.IgenyItem
 import com.fusetech.virtualkanban.R
-import kotlinx.android.synthetic.main.fragment_igeny_kontener_osszeallitas.*
 import kotlinx.android.synthetic.main.fragment_tobblet_kontener_osszeallitasa.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -121,7 +121,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             sendBinCode2.sendBinCode2(polcTextIgeny.text.toString())
         }
         cikkItem_igeny.setOnClickListener {
-            mainActivity.isItem2(cikkItem_igeny.text.toString())
+            mainActivity.isItem2(cikkItem_igeny.text.toString(), polcTextIgeny.text.trim().toString())
         }
         mennyiseg_igeny2.setOnClickListener {
             igenyList.add(
@@ -169,7 +169,21 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         }
 
         kilepButton.setOnClickListener {
+            if (view != null) {
+                val ihm =
+                    activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                ihm.hideSoftInputFromWindow(view.windowToken, 0)
+            }
             clearAll()
+            if (view != null) {
+                val ihm =
+                    activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                ihm.toggleSoftInputFromWindow(
+                    view.applicationWindowToken,
+                    InputMethodManager.SHOW_FORCED,
+                    0
+                )
+            }
         }
         lezarButton.setOnClickListener {
             setProgressBarOn()
@@ -257,7 +271,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
     }
 
     fun setInfo(megj: String, megj2: String, intRem: String, unit: String) {
-        megjegyzes_igeny?.text = megj
+        megjegyzes1_igeny.text = megj
         megjegyzes2_igeny2.text = megj2
         intrem_igeny2.text = intRem
         unit_igeny2.text = unit
@@ -327,7 +341,10 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             sendBinCode2.sendBinCode2(code)
         } else {
             cikkItem_igeny.setText(code)
-            mainActivity.isItem(code)
+            mainActivity.isItem2(code, polcTextIgeny.text.trim().toString())
         }
+    }
+    fun onKilepPressed(){
+        kilepButton.performClick()
     }
 }

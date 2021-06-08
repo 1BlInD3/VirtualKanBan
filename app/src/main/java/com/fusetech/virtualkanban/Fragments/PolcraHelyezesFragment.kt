@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -211,11 +212,11 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             }
         }
         kilepButton.setOnClickListener {
-           /* if (view != null) {
+            if (view != null) {
                 val ihm =
                     activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 ihm.hideSoftInputFromWindow(view.windowToken, 0)
-            }*/
+            }
             ujCikk.requestFocus()
             //cikkText.requestFocus()
             TextKeyListener.clear(cikkText.text)
@@ -242,7 +243,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             tranzitQtyText.text = ""
             myItems.clear()
             recycler.adapter?.notifyDataSetChanged()
-            /*if (view != null) {
+            if (view != null) {
                 val ihm =
                     activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 ihm.toggleSoftInputFromWindow(
@@ -250,7 +251,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                     InputMethodManager.SHOW_FORCED,
                     0
                 )
-            }*/
+            }
             mainActivity.loadMenuFragment(true)
         }
         return view
@@ -333,7 +334,6 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
     fun onKilepPressed() {
         kilepButton.performClick()
     }
-
     fun setCode(code: String) {
         if (cikkText.text.isEmpty()) {
             cikkText.setText(code)

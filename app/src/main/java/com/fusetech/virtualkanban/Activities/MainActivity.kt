@@ -231,9 +231,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     private fun loadKihelyezesFragment(){
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,kihelyezes,"KIHELYEZES").addToBackStack(null).commit()
     }
-    private fun loadTobbleOsszeallitasFragment(){
-        supportFragmentManager.beginTransaction().replace(R.id.frame_container,tobbletOsszeallitasFragment,"TOBBLETOSSZE").commit()
-    }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread {
             barcodeData = p0?.barcodeData!!
@@ -490,7 +487,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     }
 
     override fun closeContainer2(statusz: Int, datum: String) {
-        sql.closeContainerSql(statusz, datum, this@MainActivity)
+        CoroutineScope(IO).launch {
+            sql.closeContainerSql(statusz, datum, this@MainActivity)
+        }
     }
 
     fun isItem(code: String) {
@@ -498,9 +497,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             sql.checkItem(code, this@MainActivity)
         }
     }
-    fun isItem2(code: String){
+    fun isItem2(code: String,bin: String){
         CoroutineScope(IO).launch {
-            sql.checkItem2(code, this@MainActivity)
+            sql.checkItem2(code, bin,this@MainActivity)
         }
     }
     private fun containerCheck(id: String) {
@@ -709,6 +708,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 }
                 getFragment("TOBBLETOSSZE") -> {
                     loadMenuFragment(true)
+                }
+                getFragment("TOBBLET") -> {
+                    tobbletOsszeallitasFragment.onKilepPressed()
                 }
                 else -> {
                     super.onBackPressed()

@@ -436,7 +436,7 @@ class SQL(val sqlMessage: SQLAlert) {
             connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.is01))
             statement.setString(1, code)
-            statement.setString(2,"02")
+            statement.setString(2,"01")
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -854,7 +854,7 @@ class SQL(val sqlMessage: SQLAlert) {
         }
     }
 
-    fun checkItem2(code: String, context: MainActivity) {
+    fun checkItem2(code: String, bin: String, context: MainActivity) {
         val connection: Connection
         CoroutineScope(Dispatchers.Main).launch {
             context.tobbletOsszeallitasFragment.setProgressBarOn()
@@ -862,12 +862,13 @@ class SQL(val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             connection = DriverManager.getConnection(MainActivity.url)
-            val statement = connection.prepareStatement(res.getString(R.string.cikkSql))
+            val statement = connection.prepareStatement(res.getString(R.string.cikkSql2))
             statement.setString(1, code)
+            statement.setString(2, bin)
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.setAlert("Nincs ilyen cikk a rendszerben")
+                    context.setAlert("Nincs ilyen cikk a polcon")
                     context.tobbletOsszeallitasFragment.setProgressBarOff()
                     context.tobbletOsszeallitasFragment.setFocusToItem()
                 }
