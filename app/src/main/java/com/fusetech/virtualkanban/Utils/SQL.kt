@@ -333,6 +333,7 @@ class SQL(val sqlMessage: SQLAlert) {
                     Log.d(TAG, "containerManagement: $e")
                     CoroutineScope(Dispatchers.Main).launch {
                         context.menuFragment.setMenuProgressOff()
+                        context.setAlert("Konténer nyitás\n$e")
                     }
                 }
             } else {
@@ -469,14 +470,15 @@ class SQL(val sqlMessage: SQLAlert) {
         menny: Double,
         term: String,
         unit: String,
-        context: MainActivity
+        context: MainActivity,
+        konti: String
     ) {
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.insertItem))
-            statement.setString(1, context.kontener)
+            statement.setString(1, konti)
             statement.setString(2, cikk)
             statement.setInt(3, 0) //ez a státusz
             statement.setDouble(4, menny)
@@ -488,7 +490,7 @@ class SQL(val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             Log.d(TAG, "uploadItem: $e")
             CoroutineScope(Dispatchers.Main).launch {
-                context.setAlert("Hiba történt, lépj vissza a 'Kilépés' gombbal a menübe, majd vissza, hogy megnézd mi lett utoljára felvéve")
+                context.setAlert("Hiba történt, lépj vissza a 'Kilépés' gombbal a menübe, majd vissza, hogy megnézd mi lett utoljára felvéve\n $e")
             }
         }
     }
@@ -498,18 +500,19 @@ class SQL(val sqlMessage: SQLAlert) {
         menny: Double,
         term: String,
         unit: String,
-        context: MainActivity
+        context: MainActivity,
+        konti: String
     ) {
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.insertItem))
-            statement.setString(1, context.kontener)
+            statement.setString(1, konti)
             statement.setString(2, cikk)
             statement.setInt(3, 6) //ez a státusz
             statement.setDouble(4, menny)
-            statement.setInt(5, 0)
+            statement.setDouble(5, 0.0)
             statement.setString(6, "01")
             statement.setString(7, term)
             statement.setString(8, unit)
@@ -529,6 +532,37 @@ class SQL(val sqlMessage: SQLAlert) {
             connection = DriverManager.getConnection(connectionString)
             val statement =
                 connection.prepareStatement(res.getString(R.string.closeContainer))
+            statement.setInt(1, statusz)
+            statement.setString(2, datum)
+            statement.setString(3, context.kontener)
+            statement.executeUpdate()
+            Log.d(TAG, "closeContainerSql: sikeres lezárás")
+            CoroutineScope(Dispatchers.Main).launch {
+                context.setAlert("Sikeres konténer lezárás!")
+            }
+            val statement1 =
+                connection.prepareStatement(res.getString(R.string.updateItemStatus))
+            statement1.setInt(1,statusz)
+            statement1.setString(2, context.kontener)
+            try {
+                statement1.executeUpdate()
+            } catch (e: Exception) {
+                Log.d(TAG, "closeContainerSql: $e")
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.setAlert("A cikk státuszok felülírásánál hiba lépett fel, gyere az IT-re")
+                }
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "closeContainerSql: $e")
+        }
+    }
+    fun closeContainerSql7(statusz: Int, datum: String, context: MainActivity) {
+        val connection: Connection
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try {
+            connection = DriverManager.getConnection(connectionString)
+            val statement =
+                connection.prepareStatement(res.getString(R.string.closeContainer7))
             statement.setInt(1, statusz)
             statement.setString(2, datum)
             statement.setString(3, context.kontener)

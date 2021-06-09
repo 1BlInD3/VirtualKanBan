@@ -58,7 +58,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
 
     interface SendBinCode2 {
         fun sendBinCode2(code: String)
-        fun sendDetails2(cikkszam: String, mennyiseg: Double, term_rakhely: String, unit: String)
+        fun sendDetails2(cikkszam: String, mennyiseg: Double, term_rakhely: String, unit: String, kontener: String)
         fun closeContainer2(statusz: Int, datum: String)
     }
 
@@ -132,6 +132,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             )
         }
         mennyiseg_igeny2.setOnClickListener {
+            val konti = kontenerText.text.trim().substring(4,kontenerText.text.trim().length)
             igenyList.add(
                 IgenyItem(
                     cikkItem_igeny.text.toString().trim(), megjegyzes1_igeny.text.toString().trim(),
@@ -163,7 +164,8 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             }
             sendBinCode2.sendDetails2(
                 cikkItem_igeny.text.toString().trim(), mennyiseg_igeny2.text.toString().toDouble(),
-                polcTextIgeny.text.toString().trim(), unit_igeny2.text.toString()
+                polcTextIgeny.text.toString().trim(), unit_igeny2.text.toString(),
+                konti
             )
             cikkItem_igeny.isEnabled = true
             cikkItem_igeny.selectAll()

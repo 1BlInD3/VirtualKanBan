@@ -462,10 +462,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         cikkszam: String,
         mennyiseg: Double,
         term_rakhely: String,
-        unit: String
+        unit: String,
+        kont: String
     ) {
         CoroutineScope(IO).launch {
-            sql.uploadItem(cikkszam, mennyiseg, term_rakhely, unit, this@MainActivity)
+            sql.uploadItem(cikkszam, mennyiseg, term_rakhely, unit, this@MainActivity,kont)
         }
     }
     override fun closeContainer(statusz: Int, datum: String) {
@@ -482,15 +483,16 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         cikkszam: String,
         mennyiseg: Double,
         term_rakhely: String,
-        unit: String
+        unit: String,
+        kontener: String
     ) {
         CoroutineScope(IO).launch {
-            sql.uploadItem7(cikkszam, mennyiseg, term_rakhely, unit, this@MainActivity)
+            sql.uploadItem7(cikkszam, mennyiseg, term_rakhely, unit, this@MainActivity,kontener)
         }
     }
 
     override fun closeContainer2(statusz: Int, datum: String) {
-            sql.closeContainerSql(statusz, datum, this@MainActivity)
+            sql.closeContainerSql7(statusz, datum, this@MainActivity)
     }
 
     fun isItem(code: String) {
