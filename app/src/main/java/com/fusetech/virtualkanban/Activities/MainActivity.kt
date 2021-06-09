@@ -463,10 +463,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         mennyiseg: Double,
         term_rakhely: String,
         unit: String,
-        kont: String
+        kontener: String
     ) {
         CoroutineScope(IO).launch {
-            sql.uploadItem(cikkszam, mennyiseg, term_rakhely, unit, this@MainActivity,kont)
+            sql.uploadItem(cikkszam, mennyiseg, term_rakhely, unit, this@MainActivity,kontener)
         }
     }
     override fun closeContainer(statusz: Int, datum: String) {

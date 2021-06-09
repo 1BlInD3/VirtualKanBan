@@ -706,6 +706,7 @@ class SQL(val sqlMessage: SQLAlert) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.igenyLezarasFragment.setProgressBarOff()
                 }
+                kontenerCikkLezar.clear()
             }
         } catch (e: Exception) {
             Log.d(TAG, "loadKontenerCikkek: $e")

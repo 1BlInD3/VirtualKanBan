@@ -31,6 +31,7 @@ private const val TAG = "IgenyKontenerLezarasCik"
 private lateinit var progress: ProgressBar
 private lateinit var sendItemCode : IgenyKontenerLezarasCikkLezaras.CikkCode
 
+@Suppress("UNCHECKED_CAST")
 class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.onItemClickListener {
     private var param1: String? = null
     private var param2: String? = null
@@ -132,5 +133,10 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
 
     override fun onItemClick(position: Int) {
         sendItemCode.cikkCode(kontItem[position].id)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        kontItem.clear()
     }
 }
