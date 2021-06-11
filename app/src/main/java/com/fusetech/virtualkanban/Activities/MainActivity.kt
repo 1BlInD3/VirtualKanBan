@@ -3,6 +3,7 @@ package com.fusetech.virtualkanban.Activities
 import android.app.AlertDialog
 import android.content.res.Resources
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -117,6 +118,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     val kihelyezes = IgenyKontenerKiszedese()
     val kihelyezesFragmentLista = KihelyezesListaFragment()
     val tobbletOsszeallitasFragment = TobbletKontenerOsszeallitasaFragment()
+    private lateinit var myTimer: CountDownTimer
+    var a = 0
 
     companion object {
         val url =
@@ -140,6 +143,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         szallitoJarmuFragment = SzallitoJartmuFragment()
         ellenorzoKodFragment = EllenorzoKodFragment()
         igenyKiszedesCikk = IgenyKontnerKiszedesCikk()
+        loginFragment = LoginFragment()
         progress = progressBar2
         progress.visibility = View.GONE
         AidcManager.create(this) { aidcManager ->
@@ -169,10 +173,92 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
             barcodeReader?.addBarcodeListener(this@MainActivity)
         }
-        loginFragment = LoginFragment()
+
+        loadLoginFragment()
+
+        myTimer = object : CountDownTimer(1 * 60 * 1000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                //Some code
+                a++
+                //Toast.makeText(this@MainActivity, "$a", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onFinish() {
+                when{
+                    getFragment("POLC") -> { //1
+                        polcHelyezesFragment.onTimeout()
+                    }
+                    getFragment("IGENY") -> { //2
+                        igenyFragment.clearAll()
+                        loadLoginFragment()
+                    }
+                    getFragment("IGENYLEZARAS") -> { //3-1
+                        loadLoginFragment()
+                    }
+                    getFragment("CIKKLEZARASFRAGMENT") -> { //3-2
+                        igenyKiszedesCikkLezaras.onTimeout()
+                        loadLoginFragment()
+                    }
+                    getFragment("TOBBLETOSSZE") -> {
+                        loadLoginFragment()
+                    }
+                    getFragment("CIKKLEZARASFRAGMENTHATOS") -> {
+                        igenyKiszedesCikkLezaras.buttonPerform()
+                    }
+                    getFragment("SZALLITO") -> {
+                        loadMenuFragment(true)
+                        igenyKontenerKiszedes()
+                    }
+                    getFragment("KISZEDESCIKK") -> {
+                        /* loadMenuFragment(true)
+                         igenyKontenerKiszedes()*/
+                        igenyKontenerKiszedesCikkKiszedes.performButton()
+                    }
+                    getFragment("NEGYESCIKKEK") -> {
+                        loadMenuFragment(true)
+                        //loadKiszedesFragment()
+                        igenyKontenerKiszedes()
+                    }
+                    getFragment("ELLENOR") -> {
+                        loadMenuFragment(true)
+                        igenyKontenerKiszedes()
+                    }
+                    getFragment("DUMMY") -> {
+                        loadMenuFragment(true)
+                    }
+                    getFragment("KISZEDES") -> {
+                        loadMenuFragment(true)
+                    }
+                    getFragment("KIHELYEZESLISTA") -> {
+                        kihelyezes.exit()
+                        loadMenuFragment(true)
+                    }
+                    getFragment("KIHELYEZESITEMS") -> {
+                        kihelyezes.onBack()
+                        getContainerList("SZ01")
+                    }
+                    getFragment("KIHELYEZES") ->{
+                        kihelyezes.exit()
+                        loadMenuFragment(true)
+                    }
+                    getFragment("TOBBLET") -> {
+                        tobbletOsszeallitasFragment.onKilepPressed()
+                    }
+                    else -> {
+                        loadLoginFragment()
+                    }
+                }
+            }
+        }
+        myTimer.start()
+    }
+    private fun cancelTimer(){
+        a = 0
+        myTimer.cancel()
+    }
+    fun loadLoginFragment(){
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_container, loginFragment, "LOGIN").commit()
-
     }
 
     private fun getMenuFragment(): Boolean {
@@ -233,6 +319,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     }
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread {
+            //cancelTimer()
             barcodeData = p0?.barcodeData!!
             when {
                 loginFragment.isVisible -> {
@@ -281,6 +368,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     tobbletOsszeallitasFragment.setCode(barcodeData)
                 }
             }
+            myTimer.start()
         }
     }
 
@@ -291,6 +379,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        cancelTimer()
         if (getMenuFragment()) {
             when (keyCode) {
                 7 -> finishAndRemoveTask()
@@ -305,6 +394,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 16 -> loadCikklekerdezesFragment()
             }
         }
+        myTimer.start()
         return super.onKeyDown(keyCode, event)
     }
 

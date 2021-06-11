@@ -47,6 +47,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
     private var megjegyzes2Text: TextView? = null
     private var intremText: TextView? = null
     private var unitText: TextView? = null
+    private lateinit var myView : View
 
     companion object {
         val myItems: ArrayList<PolcLocation> = ArrayList()
@@ -68,32 +69,32 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_polcra_helyezes, container, false)
+    ): View {
+        myView = inflater.inflate(R.layout.fragment_polcra_helyezes, container, false)
         mainActivity = activity as MainActivity
-        kilepButton = view.kilep_polc_btn
-        megjegyzes1Text = view.description1Txt
-        megjegyzes2Text = view.description2Txt
-        intremText = view.intremTxt
-        unitText = view.unitTxt
-        polcText = view.polcTxt
-        tranzitQtyText = view.tranzitQtyTxt
-        sideContainer = view.side_container
-        recycler = view.locationRecyclerOne
-        progressBar = view.polcProgressBar
-        ujCikk = view.ujCikkPolcHelyezes
+        kilepButton = myView.kilep_polc_btn
+        megjegyzes1Text = myView.description1Txt
+        megjegyzes2Text = myView.description2Txt
+        intremText = myView.intremTxt
+        unitText = myView.unitTxt
+        polcText = myView.polcTxt
+        tranzitQtyText = myView.tranzitQtyTxt
+        sideContainer = myView.side_container
+        recycler = myView.locationRecyclerOne
+        progressBar = myView.polcProgressBar
+        ujCikk = myView.ujCikkPolcHelyezes
         setProgressBarOff()
         tranzitQtyText.isFocusable = false
-        mennyisegText = view.mennyisegTxt
+        mennyisegText = myView.mennyisegTxt
         mennyisegText.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(9, 2))
-        cikkText = view.cikkEditTxt
+        cikkText = myView.cikkEditTxt
         cikkText.requestFocus()
         mennyisegText.isEnabled = false
         polcText.isEnabled = false
         polcText.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
 
         recycler.adapter = PolcLocationAdapter(myItems, this)
-        recycler.layoutManager = LinearLayoutManager(view.context)
+        recycler.layoutManager = LinearLayoutManager(myView.context)
         recycler.setHasFixedSize(true)
 
         ujCikk.setOnClickListener {
@@ -215,7 +216,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             if (view != null) {
                 val ihm =
                     activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                ihm.hideSoftInputFromWindow(view.windowToken, 0)
+                ihm.hideSoftInputFromWindow(myView.windowToken, 0)
             }
             ujCikk.requestFocus()
             //cikkText.requestFocus()
@@ -247,14 +248,14 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                 val ihm =
                     activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 ihm.toggleSoftInputFromWindow(
-                    view.applicationWindowToken,
+                    myView.applicationWindowToken,
                     InputMethodManager.SHOW_FORCED,
                     0
                 )
             }
             mainActivity.loadMenuFragment(true)
         }
-        return view
+        return myView
     }
 
     fun setTextViews(
@@ -333,6 +334,49 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
 
     fun onKilepPressed() {
         kilepButton.performClick()
+    }
+    fun onTimeout(){
+        if (view != null) {
+            val ihm =
+                activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            ihm.hideSoftInputFromWindow(myView.windowToken, 0)
+        }
+        ujCikk.requestFocus()
+        //cikkText.requestFocus()
+        TextKeyListener.clear(cikkText.text)
+        cikkText.isEnabled = false
+        cikkText.isFocusable = false
+        cikkText.isFocusableInTouchMode = false
+        //mennyisegText.requestFocus()
+        TextKeyListener.clear(mennyisegText.text)
+        mennyisegText.isEnabled = false
+        mennyisegText.isFocusable = false
+        mennyisegText.isFocusableInTouchMode = false
+        // polcText.requestFocus()
+        TextKeyListener.clear(polcText.text)
+        polcText.isEnabled = false
+        polcText.isFocusable = false
+        polcText.isFocusableInTouchMode = false
+        mennyisegText.text.clear()
+        mennyisegText.filters = arrayOf<InputFilter>()
+        megjegyzes1Text?.text = ""
+        megjegyzes2Text?.text = ""
+        intremText?.text = ""
+        unitText?.text = ""
+        polcText.text.clear()
+        tranzitQtyText.text = ""
+        myItems.clear()
+        recycler.adapter?.notifyDataSetChanged()
+        if (view != null) {
+            val ihm =
+                activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            ihm.toggleSoftInputFromWindow(
+                myView.applicationWindowToken,
+                InputMethodManager.SHOW_FORCED,
+                0
+            )
+        }
+        mainActivity.loadLoginFragment()
     }
     fun setCode(code: String) {
         if (cikkText.text.isEmpty()) {

@@ -164,6 +164,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
 
         kilepButton.setOnClickListener {
             clearAll()
+            mainActivity.loadMenuFragment(true)
         }
         lezarButton.setOnClickListener {
             setProgressBarOn()
@@ -186,7 +187,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         return view
     }
 
-    private fun clearAll() {
+     fun clearAll() {
         lezarButton.requestFocus()
         kontenerText.text = ""
         igenyList.clear()
@@ -198,7 +199,6 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         intrem_igeny2.text = ""
         cikkItem_igeny.setText("")
         polcTextIgeny.setText("")
-        mainActivity.loadMenuFragment(true)
     }
 
     fun setProgressBarOff() {

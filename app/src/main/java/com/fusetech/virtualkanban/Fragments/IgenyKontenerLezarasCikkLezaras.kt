@@ -99,6 +99,9 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
         }
         return view
     }
+    fun onTimeout(){
+        kontItem.clear()
+    }
 
     companion object {
         @JvmStatic
@@ -130,7 +133,6 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
     fun buttonPerform(){
         exitBtn.performClick()
     }
-
     override fun onItemClick(position: Int) {
         sendItemCode.cikkCode(kontItem[position].id)
     }

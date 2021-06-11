@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.konteneres_view.view.*
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
+@Suppress("UNCHECKED_CAST")
 class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClickListener {
     private lateinit var dataFrame: FrameLayout
     private lateinit var childRecycler: RecyclerView
