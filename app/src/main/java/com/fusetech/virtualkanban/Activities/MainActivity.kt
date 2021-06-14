@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     val kihelyezes = IgenyKontenerKiszedese()
     val kihelyezesFragmentLista = KihelyezesListaFragment()
     val tobbletOsszeallitasFragment = TobbletKontenerOsszeallitasaFragment()
-    private lateinit var myTimer: CountDownTimer
+    //private lateinit var myTimer: CountDownTimer
     var a = 0
 
     companion object {
@@ -129,6 +129,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         lateinit var res: Resources
         lateinit var progress: ProgressBar
         val kihelyezesItems: ArrayList<SzerelohelyItem> = ArrayList()
+        val cikkItem4: ArrayList<KontenerbenLezarasItem> = ArrayList()
+        val kontItem: ArrayList<KontenerbenLezarasItem> = ArrayList()
+        val tempLocations: ArrayList<PolcLocation> = ArrayList()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -176,7 +179,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
 
         loadLoginFragment()
 
-        myTimer = object : CountDownTimer(1 * 60 * 1000, 1000) {
+        /*myTimer = object : CountDownTimer(1 * 60 * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 //Some code
                 a++
@@ -249,13 +252,13 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     }
                 }
             }
-        }
-        myTimer.start()
+        }*/
+        //myTimer.start()
     }
-    private fun cancelTimer(){
+   /* private fun cancelTimer(){
         a = 0
         myTimer.cancel()
-    }
+    }*/
     fun loadLoginFragment(){
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_container, loginFragment, "LOGIN").commit()
@@ -368,7 +371,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     tobbletOsszeallitasFragment.setCode(barcodeData)
                 }
             }
-            myTimer.start()
+            //myTimer.start()
         }
     }
 
@@ -379,7 +382,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        cancelTimer()
+        //cancelTimer()
         if (getMenuFragment()) {
             when (keyCode) {
                 7 -> finishAndRemoveTask()
@@ -394,7 +397,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 16 -> loadCikklekerdezesFragment()
             }
         }
-        myTimer.start()
+        //myTimer.start()
         return super.onKeyDown(keyCode, event)
     }
 
@@ -412,11 +415,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
 
     override fun onPause() {
         super.onPause()
-        myList.clear()
+        /*myList.clear()
         kontener1List.clear()
         kontenerList.clear()
         listIgenyItems.clear()
-        polcLocation?.clear()
+        polcLocation?.clear()*/
         if (barcodeReader != null) {
             barcodeReader?.release()
         }
@@ -425,8 +428,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
 
     override fun onDestroy() {
         super.onDestroy()
-        polcItems.clear()
-        cikkItems.clear()
+        /*polcItems.clear()
+        cikkItems.clear()*/
         if (barcodeReader != null) {
             barcodeReader?.removeBarcodeListener(this)
             barcodeReader?.close()

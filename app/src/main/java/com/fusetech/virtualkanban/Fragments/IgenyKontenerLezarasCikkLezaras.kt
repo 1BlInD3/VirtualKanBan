@@ -12,6 +12,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.kontItem
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Adapters.KontenerbenLezarasAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerbenLezarasItem
@@ -21,7 +22,6 @@ import kotlinx.android.synthetic.main.kontenerben_lezaras_view.view.*
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private lateinit var recycler: RecyclerView
-private val kontItem: ArrayList<KontenerbenLezarasItem> = ArrayList()
 private lateinit var exitBtn: Button
 private lateinit var lezarBtn: Button
 private lateinit var mainActivity: MainActivity
@@ -134,10 +134,5 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
     }
     override fun onItemClick(position: Int) {
         sendItemCode.cikkCode(kontItem[position].id)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        kontItem.clear()
     }
 }
