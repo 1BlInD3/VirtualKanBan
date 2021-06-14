@@ -232,8 +232,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     }
                     getFragment("TOBBLET") -> { //7
                         tobbletOsszeallitasFragment.onKilepPressed()
-                    }
-                    getFragment("TOBBLETOSSZE") -> {
                         loadLoginFragment()
                     }
                     getFragment("SZALLITO") -> {
@@ -243,9 +241,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     getFragment("ELLENOR") -> {
                         loadMenuFragment(true)
                         igenyKontenerKiszedes()
-                    }
-                    getFragment("DUMMY") -> {
-                        loadMenuFragment(true)
                     }
                     else -> {
                         loadLoginFragment()

@@ -389,7 +389,4 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
     fun onKilepPressed() {
         kilepButton.performClick()
     }
-    fun onTimeout(){
-        
-    }
 }
