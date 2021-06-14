@@ -338,7 +338,10 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     fun performButton() {
         vissza.performClick()
     }
-
+    fun onTimeout(){
+        mainActivity.cikkUpdate(cikkIDKiszedes.text.trim().toString().toInt())
+        mainActivity.loadLoginFragment()
+    }
     override fun onResume() {
         super.onResume()
         tempLocations.clear()
