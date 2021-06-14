@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.Fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Activities.MainActivity
@@ -17,7 +17,6 @@ import com.fusetech.virtualkanban.Adapters.KontenerAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes.view.*
-import kotlinx.android.synthetic.main.fragment_load.*
 import kotlinx.android.synthetic.main.konteneres_view.view.*
 
 private const val ARG_PARAM1 = "param1"
@@ -30,6 +29,7 @@ private lateinit var exit3Btn: Button
 private lateinit var mainActivity: MainActivity
 private const val TAG = "IgenyKontenerKiszedesFr"
 
+@Suppress("UNCHECKED_CAST")
 class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClickListener{
 
     private var param1: String? = null
@@ -43,6 +43,7 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
         }
     }
 
+    @SuppressLint("InflateParams")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
