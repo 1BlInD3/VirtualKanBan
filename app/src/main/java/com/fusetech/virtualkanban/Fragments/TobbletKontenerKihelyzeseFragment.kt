@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.fragment_tobblet_kontener_kihelyzese.view.
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
+@Suppress("UNCHECKED_CAST")
 class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontenerClickListener {
     private var param1: String? = null
     private var param2: String? = null
@@ -35,26 +36,33 @@ class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontener
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_tobblet_kontener_kihelyzese, container, false)
         recycler = view.tobbletRecycler
+        progress = view.tobbletProgress
         recycler.adapter = KontenerAdapter(kontenerItem,this)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
-        kontenerItem.add(KontenerItem("256137","P20","2020",5,"000256",1))
-        //setProgressBarOff()
-
+        //kontenerItem.add(KontenerItem("256137","P20","2020",5,"000256",1))
+        setProgressBar8Off()
+        loadData()
         return view
     }
 
     override fun onKontenerClick(position: Int) {
         TODO("Not yet implemented")
     }
-    fun setProgressBarOff(){
-        progress.visibility = View.INVISIBLE
+    fun setProgressBar8Off(){
+        progress.visibility = View.GONE
     }
-    fun setProgressBarOn(){
+    fun setProgressBar8On(){
         progress.visibility = View.VISIBLE
+    }
+    fun loadData(){
+        val myList: ArrayList<KontenerItem> = arguments?.getSerializable("TOBBLETKONTENEREK") as ArrayList<KontenerItem>
+        for(i in 0 until myList.size){
+            kontenerItem.add(KontenerItem(myList[i].kontener,myList[i].polc,"1900-01-01",myList[i].tetelszam,myList[i].kontner_id,myList[i].status))
+        }
+        recycler.adapter?.notifyDataSetChanged()
     }
 
 }

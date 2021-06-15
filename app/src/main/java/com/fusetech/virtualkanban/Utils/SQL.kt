@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.connectionString
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.res
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.progress
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tobbletKontener
 import com.fusetech.virtualkanban.DataItems.*
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.Fragments.PolcraHelyezesFragment.Companion.myItems
@@ -148,7 +149,8 @@ class SQL(val sqlMessage: SQLAlert) {
             }
         }
     }
-//////////////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////////////
     fun containerManagement(id: String, context: MainActivity) {
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -323,7 +325,11 @@ class SQL(val sqlMessage: SQLAlert) {
                         bundle.putString("KONTENER", nullasKontener)
                         context.tobbletOsszeallitasFragment.arguments = bundle
                         context.supportFragmentManager.beginTransaction()
-                            .replace(R.id.frame_container, context.tobbletOsszeallitasFragment, "TOBBLET")
+                            .replace(
+                                R.id.frame_container,
+                                context.tobbletOsszeallitasFragment,
+                                "TOBBLET"
+                            )
                             .addToBackStack(null).commit()
                         CoroutineScope(Dispatchers.Main).launch {
                             context.menuFragment.setMenuProgressOff()
@@ -353,7 +359,11 @@ class SQL(val sqlMessage: SQLAlert) {
                     bundle1.putString("TERMRAKH", rakhely)
                     context.tobbletOsszeallitasFragment.arguments = bundle1
                     context.supportFragmentManager.beginTransaction()
-                        .replace(R.id.frame_container, context.tobbletOsszeallitasFragment, "TOBBLET")
+                        .replace(
+                            R.id.frame_container,
+                            context.tobbletOsszeallitasFragment,
+                            "TOBBLET"
+                        )
                         .addToBackStack(null)
                         .commit()
                     CoroutineScope(Dispatchers.Main).launch {
@@ -373,7 +383,11 @@ class SQL(val sqlMessage: SQLAlert) {
                     bundle.putString("TERMRAKH", rakhely)
                     context.tobbletOsszeallitasFragment.arguments = bundle
                     context.supportFragmentManager.beginTransaction()
-                        .replace(R.id.frame_container, context.tobbletOsszeallitasFragment, "TOBBLET")
+                        .replace(
+                            R.id.frame_container,
+                            context.tobbletOsszeallitasFragment,
+                            "TOBBLET"
+                        )
                         .addToBackStack(null)
                         .commit()
                     CoroutineScope(Dispatchers.Main).launch {
@@ -399,7 +413,7 @@ class SQL(val sqlMessage: SQLAlert) {
             connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.is01))
             statement.setString(1, code)
-            statement.setString(2,"01")
+            statement.setString(2, "01")
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -427,7 +441,7 @@ class SQL(val sqlMessage: SQLAlert) {
         }
     }
 
-    fun checkCode02(code: String, context: MainActivity){
+    fun checkCode02(code: String, context: MainActivity) {
         val connection: Connection
         CoroutineScope(Dispatchers.Main).launch {
             context.tobbletOsszeallitasFragment.setProgressBarOn()
@@ -437,7 +451,7 @@ class SQL(val sqlMessage: SQLAlert) {
             connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.is01))
             statement.setString(1, code)
-            statement.setString(2,"01")
+            statement.setString(2, "01")
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -542,7 +556,7 @@ class SQL(val sqlMessage: SQLAlert) {
             }
             val statement1 =
                 connection.prepareStatement(res.getString(R.string.updateItemStatus))
-            statement1.setInt(1,statusz)
+            statement1.setInt(1, statusz)
             statement1.setString(2, context.kontener)
             try {
                 statement1.executeUpdate()
@@ -556,6 +570,7 @@ class SQL(val sqlMessage: SQLAlert) {
             Log.d(TAG, "closeContainerSql: $e")
         }
     }
+
     fun closeContainerSql7(statusz: Int, datum: String, context: MainActivity) {
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -573,7 +588,7 @@ class SQL(val sqlMessage: SQLAlert) {
             }
             val statement1 =
                 connection.prepareStatement(res.getString(R.string.updateItemStatus))
-            statement1.setInt(1,statusz)
+            statement1.setInt(1, statusz)
             statement1.setString(2, context.kontener)
             try {
                 statement1.executeUpdate()
@@ -1780,9 +1795,9 @@ class SQL(val sqlMessage: SQLAlert) {
             val statement = connection.prepareStatement(res.getString(R.string.cikkLezarva))
             statement.setInt(1, code)
             statement.executeUpdate()
-           /* CoroutineScope(Dispatchers.Main).launch {
-                context.kihelyezes.progressBarOff()
-            }*/
+            /* CoroutineScope(Dispatchers.Main).launch {
+                 context.kihelyezes.progressBarOff()
+             }*/
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("$e")
@@ -1814,6 +1829,62 @@ class SQL(val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("$e")
                 context.kihelyezes.progressBarOff()
+            }
+        }
+    }
+
+    fun tobbletKontenerElemek(context: MainActivity) {
+        try {
+            CoroutineScope(Dispatchers.Main).launch {
+                context.menuFragment.setMenuProgressOn()
+            }
+            tobbletKontener.clear()
+            val connection: Connection
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            connection = DriverManager.getConnection(connectionString)
+            val statement =
+                connection.prepareStatement(res.getString(R.string.tobbletKontenerCikkLista))
+            val resultSet = statement.executeQuery()
+            if (!resultSet.next()) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.setAlert("Nincs többlet konténer")
+                    context.menuFragment.setMenuProgressOff()
+                }
+            } else {
+                do {
+                    val id: String? = resultSet.getString("id")
+                    val kontener = resultSet.getString("kontener")
+                    val statusz = resultSet.getInt("statusz")
+                    val igenyel: String? = resultSet.getString("igenyelve")
+                    val tetelszam = resultSet.getInt("tetelszam")
+                    val polc: String? = resultSet.getString("polc")
+                    tobbletKontener.add(
+                        KontenerItem(
+                            kontener,
+                            polc,
+                            igenyel,
+                            tetelszam,
+                            id,
+                            statusz
+                        )
+                    )
+                } while (resultSet.next())
+                val bundle = Bundle()
+                bundle.putSerializable("TOBBLETKONTENEREK", tobbletKontener)
+                context.tobbletKontenerKihelyzeseFragment.arguments = bundle
+                context.supportFragmentManager.beginTransaction().replace(
+                    R.id.frame_container,
+                    context.tobbletKontenerKihelyzeseFragment,
+                    "TOBBLETKIHELYEZESKONTENER"
+                ).commit()
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.menuFragment.setMenuProgressOn()
+                }
+            }
+        } catch (e: Exception) {
+            CoroutineScope(Dispatchers.Main).launch {
+                context.setAlert("$e")
+                context.menuFragment.setMenuProgressOff()
             }
         }
     }

@@ -133,6 +133,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         val cikkItem4: ArrayList<KontenerbenLezarasItem> = ArrayList()
         val kontItem: ArrayList<KontenerbenLezarasItem> = ArrayList()
         val tempLocations: ArrayList<PolcLocation> = ArrayList()
+        val tobbletKontener: ArrayList<KontenerItem> = ArrayList()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -398,7 +399,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 12 -> loadKihelyezesFragment()//Log.d(TAG, "onKeyDown: $keyCode")
                 13 -> kiszedesreVaro()//Log.d(TAG, "onKeyDown: $keyCode")
                 14 -> containerCheck7(dolgKod)//Log.d(TAG, "onKeyDown: $keyCode")
-                15 -> loadTobbletKihelezesFragment()//Log.d(TAG, "onKeyDown: $keyCode")
+                15 -> loadTobbletKontenerKihelyezes()//Log.d(TAG, "onKeyDown: $keyCode")
                 16 -> loadCikklekerdezesFragment()
             }
         }
@@ -695,6 +696,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     fun cikkUpdate(cikk: Int) {
         CoroutineScope(IO).launch {
             sql.cikkUpdateSql(cikk, this@MainActivity)
+        }
+    }
+
+    fun loadTobbletKontenerKihelyezes(){
+        CoroutineScope(IO).launch {
+            sql.tobbletKontenerElemek(this@MainActivity)
         }
     }
 
