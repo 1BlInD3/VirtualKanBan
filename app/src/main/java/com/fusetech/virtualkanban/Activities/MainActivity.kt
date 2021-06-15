@@ -118,6 +118,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     val kihelyezes = IgenyKontenerKiszedese()
     val kihelyezesFragmentLista = KihelyezesListaFragment()
     val tobbletOsszeallitasFragment = TobbletKontenerOsszeallitasaFragment()
+    val tobbletKontenerKihelyzeseFragment = TobbletKontenerKihelyzeseFragment()
     private lateinit var myTimer: CountDownTimer
     var a = 0
 
@@ -187,7 +188,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
 
             override fun onFinish() {
-                when{
+                when {
                     getFragment("POLC") -> { //1
                         polcHelyezesFragment.onTimeout()
                     }
@@ -211,7 +212,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     getFragment("KISZEDESCIKK") -> { //4-3
                         igenyKontenerKiszedesCikkKiszedes.onTimeout()
                     }
-                    getFragment("KIHELYEZES") ->{ //5-1
+                    getFragment("KIHELYEZES") -> { //5-1
                         kihelyezes.exit()
                         loadLoginFragment()
                     }
@@ -235,12 +236,10 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         loadLoginFragment()
                     }
                     getFragment("SZALLITO") -> {
-                        loadMenuFragment(true)
-                        igenyKontenerKiszedes()
+                        loadLoginFragment()
                     }
                     getFragment("ELLENOR") -> {
-                        loadMenuFragment(true)
-                        igenyKontenerKiszedes()
+                        loadLoginFragment()
                     }
                     else -> {
                         loadLoginFragment()
@@ -250,11 +249,13 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
         myTimer.start()
     }
-    private fun cancelTimer(){
+
+    private fun cancelTimer() {
         a = 0
         myTimer.cancel()
     }
-    fun loadLoginFragment(){
+
+    fun loadLoginFragment() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_container, loginFragment, "LOGIN").commit()
     }
@@ -312,9 +313,18 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, kiszedes)
             .addToBackStack(null).commit()
     }
-    private fun loadKihelyezesFragment(){
-        supportFragmentManager.beginTransaction().replace(R.id.frame_container,kihelyezes,"KIHELYEZES").addToBackStack(null).commit()
+
+    private fun loadKihelyezesFragment() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.frame_container, kihelyezes, "KIHELYEZES").addToBackStack(null).commit()
     }
+
+    private fun loadTobbletKihelezesFragment() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.frame_container, tobbletKontenerKihelyzeseFragment, "TOBBLETKIHELYEZES")
+            .addToBackStack(null).commit()
+    }
+
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread {
             cancelTimer()
@@ -388,7 +398,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 12 -> loadKihelyezesFragment()//Log.d(TAG, "onKeyDown: $keyCode")
                 13 -> kiszedesreVaro()//Log.d(TAG, "onKeyDown: $keyCode")
                 14 -> containerCheck7(dolgKod)//Log.d(TAG, "onKeyDown: $keyCode")
-                15 -> Log.d(TAG, "onKeyDown: $keyCode")
+                15 -> loadTobbletKihelezesFragment()//Log.d(TAG, "onKeyDown: $keyCode")
                 16 -> loadCikklekerdezesFragment()
             }
         }
@@ -430,9 +440,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             barcodeReader?.close()
         }
     }
+
     private fun chechPolcAndSetBin(code: String) {
         sql.chekcPolcAndSetBinSql(code, this@MainActivity)
     }
+
     private fun chechIfPolcHasChanged(kontener: String): Boolean {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -447,6 +459,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             return false
         }
     }
+
     private fun updateKontenerKiszedesre(kontener: String) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -481,12 +494,15 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }
     }
+
     private fun updateKontener(kontener_id: String) {
-        sql.updateKontenerSql(kontener_id,this@MainActivity)
+        sql.updateKontenerSql(kontener_id, this@MainActivity)
     }
+
     private fun updateCikk(kontener_id: String) {
-        sql.updateCikkSql(kontener_id,this@MainActivity)
+        sql.updateCikkSql(kontener_id, this@MainActivity)
     }
+
     fun setAlert(text: String) {
         val builder = AlertDialog.Builder(this@MainActivity)
         builder.setTitle("Figyelem")
@@ -494,6 +510,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         builder.create()
         builder.show()
     }
+
     override fun setValue(value: String) {
         if (value.isNotEmpty()) {
             loadLoadFragment("Várom az eredményt")
@@ -507,9 +524,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             loadLoadFragment("")
         }
     }
+
     override fun sendCode(code: String) {
         sql.checkTrannzit(code, this@MainActivity, polcLocation)
     }
+
     override fun sendTranzitData(
         cikk: String,
         polc: String?,
@@ -520,32 +539,36 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     ) {
         sql.scalaSend(cikk, polc, mennyiseg, raktarbol, raktarba, polcra, this@MainActivity)
     }
+
     fun removeLocationFragment() {
         val isLocFragment = supportFragmentManager.findFragmentByTag("LOC")
         if (isLocFragment != null && isLocFragment.isVisible) {
             supportFragmentManager.beginTransaction().remove(isLocFragment).commit()
         }
     }
-    fun check02Polc(bin: String): Boolean{
+
+    fun check02Polc(bin: String): Boolean {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(resources.getString(R.string.is02Polc))
-            statement.setString(1,bin)
+            statement.setString(1, bin)
             val resultSet = statement.executeQuery()
             return resultSet.next()
-        }catch (e: Exception){
+        } catch (e: Exception) {
             CoroutineScope(Main).launch {
                 setAlert("$e")
             }
             return false
         }
     }
+
     override fun sendBinCode(code: String) {
         CoroutineScope(IO).launch {
             sql.check01(code, this@MainActivity)
         }
     }
+
     override fun sendDetails(
         cikkszam: String,
         mennyiseg: Double,
@@ -554,19 +577,22 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         kontener: String
     ) {
         CoroutineScope(IO).launch {
-            sql.uploadItem(cikkszam, mennyiseg, term_rakhely, unit, this@MainActivity,kontener)
+            sql.uploadItem(cikkszam, mennyiseg, term_rakhely, unit, this@MainActivity, kontener)
         }
     }
+
     override fun closeContainer(statusz: Int, datum: String) {
         CoroutineScope(IO).launch {
             sql.closeContainerSql(statusz, datum, this@MainActivity)
         }
     }
+
     override fun sendBinCode2(code: String) {
         CoroutineScope(IO).launch {
             sql.checkCode02(code, this@MainActivity)
         }
     }
+
     override fun sendDetails2(
         cikkszam: String,
         mennyiseg: Double,
@@ -575,12 +601,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         kontener: String
     ) {
         CoroutineScope(IO).launch {
-            sql.uploadItem7(cikkszam, mennyiseg, term_rakhely, unit, this@MainActivity,kontener)
+            sql.uploadItem7(cikkszam, mennyiseg, term_rakhely, unit, this@MainActivity, kontener)
         }
     }
 
     override fun closeContainer2(statusz: Int, datum: String) {
-            sql.closeContainerSql7(statusz, datum, this@MainActivity)
+        sql.closeContainerSql7(statusz, datum, this@MainActivity)
     }
 
     fun isItem(code: String) {
@@ -588,17 +614,20 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             sql.checkItem(code, this@MainActivity)
         }
     }
-    fun isItem2(code: String,bin: String){
+
+    fun isItem2(code: String, bin: String) {
         CoroutineScope(IO).launch {
-            sql.checkItem2(code, bin,this@MainActivity)
+            sql.checkItem2(code, bin, this@MainActivity)
         }
     }
+
     private fun containerCheck(id: String) {
         CoroutineScope(IO).launch {
             sql.containerManagement(id, this@MainActivity)
         }
     }
-    private fun containerCheck7(id: String){
+
+    private fun containerCheck7(id: String) {
         CoroutineScope(IO).launch {
             sql.containerManagement7(id, this@MainActivity)
         }
@@ -632,7 +661,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
 
-    fun loadKihelyezesItems(code: String){
+    fun loadKihelyezesItems(code: String) {
         CoroutineScope(IO).launch {
             sql.loadKihelyezesItemsSql(code, this@MainActivity)
         }
@@ -662,11 +691,13 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             sql.loadKontenerCikkekHatos(kontener, this@MainActivity)
         }
     }
+
     fun cikkUpdate(cikk: Int) {
         CoroutineScope(IO).launch {
-            sql.cikkUpdateSql(cikk,this@MainActivity)
+            sql.cikkUpdateSql(cikk, this@MainActivity)
         }
     }
+
     override fun cikkAdatok(
         cikk: String?,
         megj1: String?,
@@ -691,28 +722,35 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             )
         }
     }
+
     override fun cikkCode(code: Int) {
         CoroutineScope(IO).launch {
             sql.cikkCodeSql(code, this@MainActivity)
         }
     }
+
     fun insertDataToRaktarTetel(cikk: String, mennyiseg: Double, raktarKod: String, polc: String) {
-        sql.insertDataToRaktarTetelSql(cikk,mennyiseg,raktarKod,polc,this@MainActivity)
+        sql.insertDataToRaktarTetelSql(cikk, mennyiseg, raktarKod, polc, this@MainActivity)
     }
+
     fun updateItemStatus(itemId: String) {
-        sql.updtaeItemStatusSql(itemId,this@MainActivity)
+        sql.updtaeItemStatusSql(itemId, this@MainActivity)
     }
+
     fun updateItemAtvevo(itemId: String) {
         sql.updateItemAtvevoSql(itemId, this@MainActivity)
     }
+
     fun checkIfContainerIsDone(container: String, itemId: String, raktar: String, polc: String) {
-        sql.checkIfContainerIsDoneSql(container,itemId,raktar,polc,this@MainActivity)
+        sql.checkIfContainerIsDoneSql(container, itemId, raktar, polc, this@MainActivity)
     }
+
     fun checkEllenorzoKod(code: String) {
         CoroutineScope(IO).launch {
             sql.checkEllenorzoKodSql(code, this@MainActivity)
         }
     }
+
     override fun sendXmlData(
         cikk: String,
         polc: String?,
@@ -723,6 +761,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     ) {
         sql.scalaSend(cikk, polc, mennyiseg, raktarbol, raktarba, polcra, this@MainActivity)
     }
+
     fun sendKihelyezesXmlData(
         cikk: String,
         polc: String?,
@@ -730,25 +769,30 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         raktarbol: String,
         raktarba: String,
         polcra: String
-    ){
-        sql.scalaSend(cikk,polc,mennyiseg,raktarbol,raktarba,polcra,this@MainActivity)
+    ) {
+        sql.scalaSend(cikk, polc, mennyiseg, raktarbol, raktarba, polcra, this@MainActivity)
     }
+
     override fun sendMessage(message: String) {
         CoroutineScope(Main).launch {
             setAlert(message)
         }
     }
-    fun getContainerList(code: String){
+
+    fun getContainerList(code: String) {
         CoroutineScope(IO).launch {
-            sql.getContainersFromVehicle(code,this@MainActivity)
+            sql.getContainersFromVehicle(code, this@MainActivity)
         }
     }
-    fun updateCikkAfterSend(code: Int){
-        sql.closeCikkek(code,this@MainActivity)
+
+    fun updateCikkAfterSend(code: Int) {
+        sql.closeCikkek(code, this@MainActivity)
     }
-    fun closeItem(code: Int){
-        sql.closeContainer(code,this@MainActivity)
+
+    fun closeItem(code: Int) {
+        sql.closeContainer(code, this@MainActivity)
     }
+
     override fun onBackPressed() {
         try {
             when {
@@ -793,7 +837,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     kihelyezes.onBack()
                     getContainerList("SZ01")
                 }
-                getFragment("KIHELYEZES") ->{
+                getFragment("KIHELYEZES") -> {
                     kihelyezes.exit()
                     loadMenuFragment(true)
                 }
