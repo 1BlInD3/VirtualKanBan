@@ -319,13 +319,6 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_container, kihelyezes, "KIHELYEZES").addToBackStack(null).commit()
     }
-
-    private fun loadTobbletKihelezesFragment() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_container, tobbletKontenerKihelyzeseFragment, "TOBBLETKIHELYEZES")
-            .addToBackStack(null).commit()
-    }
-
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread {
             cancelTimer()
@@ -387,7 +380,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         cancelTimer()
         if (getMenuFragment()) {
             when (keyCode) {
@@ -404,7 +397,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }
         myTimer.start()
-        return super.onKeyDown(keyCode, event)
+        return super.onKeyUp(keyCode, event)
     }
 
     override fun onResume() {
@@ -857,6 +850,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 getFragment("VARAS") -> {
                     loadMenuFragment(true)
                 }
+                //getFragment()
                 else -> {
                     super.onBackPressed()
                 }

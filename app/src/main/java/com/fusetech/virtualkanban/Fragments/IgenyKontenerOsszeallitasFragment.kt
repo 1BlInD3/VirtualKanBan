@@ -51,7 +51,14 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
 
     interface SendBinCode {
         fun sendBinCode(code: String)
-        fun sendDetails(cikkszam: String, mennyiseg: Double, term_rakhely: String, unit: String, kontener: String)
+        fun sendDetails(
+            cikkszam: String,
+            mennyiseg: Double,
+            term_rakhely: String,
+            unit: String,
+            kontener: String
+        )
+
         fun closeContainer(statusz: Int, datum: String)
     }
 
@@ -187,8 +194,8 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         return view
     }
 
-     fun clearAll() {
-        lezarButton.requestFocus()
+    fun clearAll() {
+
         kontenerText.text = ""
         igenyList.clear()
         igenyReveresed.clear()
@@ -197,8 +204,13 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         megjegyzes2_igeny2.text = ""
         unit_igeny2.text = ""
         intrem_igeny2.text = ""
+        mennyiseg_igeny2.setText("")
+        mennyiseg_igeny2.isEnabled = false
         cikkItem_igeny.setText("")
+        cikkItem_igeny.isEnabled = false
         polcTextIgeny.setText("")
+        polcTextIgeny.isEnabled = false
+        lezarButton.requestFocus()
     }
 
     fun setProgressBarOff() {
