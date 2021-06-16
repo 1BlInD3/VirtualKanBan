@@ -181,7 +181,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
 
         loadLoginFragment()
 
-        myTimer = object : CountDownTimer(1 * 60 * 1000, 1000) {
+        myTimer = object : CountDownTimer(10 * 60 * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 //Some code
                 a++
