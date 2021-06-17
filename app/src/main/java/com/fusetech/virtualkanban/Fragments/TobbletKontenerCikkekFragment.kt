@@ -66,5 +66,8 @@ class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onIt
         }
         recycler.adapter?.notifyDataSetChanged()
     }
+    fun getContainer(): String{
+        return kontenerID!!
+    }
 
 }

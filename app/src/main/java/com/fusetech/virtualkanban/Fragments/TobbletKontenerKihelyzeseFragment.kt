@@ -12,6 +12,7 @@ import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Adapters.KontenerAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerItem
 import com.fusetech.virtualkanban.R
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tobbletKontener
 import kotlinx.android.synthetic.main.fragment_tobblet_kontener_kihelyzese.view.*
 
 private const val ARG_PARAM1 = "param1"
@@ -22,7 +23,7 @@ class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontener
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var recycler: RecyclerView
-    private val kontenerItem: ArrayList<KontenerItem> = ArrayList()
+   // private
     private lateinit var progress: ProgressBar
     private lateinit var mainActivity: MainActivity
 
@@ -42,7 +43,7 @@ class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontener
         mainActivity = activity as MainActivity
         recycler = view.tobbletRecycler
         progress = view.tobbletProgress
-        recycler.adapter = KontenerAdapter(kontenerItem,this)
+        recycler.adapter = KontenerAdapter(tobbletKontener,this)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
         //kontenerItem.add(KontenerItem("256137","P20","2020",5,"000256",1))
@@ -52,7 +53,11 @@ class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontener
     }
 
     override fun onKontenerClick(position: Int) {
-        mainActivity.setContainerStatusAndGetItems(kontenerItem[position].kontner_id)
+        if(tobbletKontener[position].status == 8){
+            mainActivity.setAlert("Ezt már megnyitotta valaki")
+        }else{
+            mainActivity.setContainerStatusAndGetItems(tobbletKontener[position].kontner_id)
+        }
         //mainActivity.loadCTobbletCikkek()
     }
     fun setProgressBar8Off(){
@@ -64,7 +69,7 @@ class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontener
     fun loadData(){
         val myList: ArrayList<KontenerItem> = arguments?.getSerializable("TOBBLETKONTENEREK") as ArrayList<KontenerItem>
         for(i in 0 until myList.size){
-            kontenerItem.add(KontenerItem(myList[i].kontener,myList[i].polc,"1900-01-01",myList[i].tetelszam,myList[i].kontner_id,myList[i].status))
+            tobbletKontener.add(KontenerItem(myList[i].kontener,myList[i].polc,"1900-01-01",myList[i].tetelszam,myList[i].kontner_id,myList[i].status))
         }
         recycler.adapter?.notifyDataSetChanged()
     }

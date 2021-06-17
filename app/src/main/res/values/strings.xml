@@ -16,6 +16,7 @@
     <string name="insertItem">INSERT INTO [leltar].[dbo].kontener_tetel
         (kontener_id,cikkszam,statusz,igenyelt_mennyiseg,mozgatott_mennyiseg,termeles_raktar,termeles_rakhely,igenyelt_mennyiseg_egyseg) Values(?,?,?,?,?,?,?,?)</string>
     <string name="updateContainerValue">UPDATE [leltar].[dbo].kontener SET kontener = ? where atado = ? and statusz = ?</string>
+    <string name="updateContainerStatusJust">UPDATE [leltar].[dbo].kontener SET statusz = ? where id = ?</string>
     <string name="updateBin">UPDATE [leltar].[dbo].kontener SET termeles_rakhely = ? where atado = ? and statusz = ?</string>
     <string name="updateItemStatus">UPDATE [leltar].[dbo].[kontener_tetel] SET statusz = ? where kontener_id = ?</string>
     <string name="updateContainerStatus">UPDATE [leltar].[dbo].[kontener] SET statusz = ?, SzallitoJarmu = ?, atvevo = ? where id = ?</string>

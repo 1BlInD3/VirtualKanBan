@@ -1836,10 +1836,10 @@ class SQL(val sqlMessage: SQLAlert) {
 
     fun tobbletKontenerElemek(context: MainActivity) {
         try {
+            val kontenerItem: ArrayList<KontenerItem> = ArrayList()
             CoroutineScope(Dispatchers.Main).launch {
                 context.menuFragment.setMenuProgressOn()
             }
-            tobbletKontener.clear()
             val connection: Connection
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             connection = DriverManager.getConnection(connectionString)
@@ -1852,6 +1852,7 @@ class SQL(val sqlMessage: SQLAlert) {
                     context.menuFragment.setMenuProgressOff()
                 }
             } else {
+                tobbletKontener.clear()
                 do {
                     val id: String? = resultSet.getString("id")
                     val kontener = resultSet.getString("kontener")
@@ -1859,7 +1860,7 @@ class SQL(val sqlMessage: SQLAlert) {
                     val igenyel: String? = resultSet.getString("igenyelve")
                     val tetelszam = resultSet.getInt("tetelszam")
                     val polc: String? = resultSet.getString("polc")
-                    tobbletKontener.add(
+                    kontenerItem.add(
                         KontenerItem(
                             kontener,
                             polc,
@@ -1871,12 +1872,12 @@ class SQL(val sqlMessage: SQLAlert) {
                     )
                 } while (resultSet.next())
                 val bundle = Bundle()
-                bundle.putSerializable("TOBBLETKONTENEREK", tobbletKontener)
+                bundle.putSerializable("TOBBLETKONTENEREK", kontenerItem)
                 context.tobbletKontenerKihelyzeseFragment.arguments = bundle
                 context.supportFragmentManager.beginTransaction().replace(
                     R.id.frame_container,
                     context.tobbletKontenerKihelyzeseFragment,
-                    "TOBBLETKIHELYEZESKONTENER"
+                    "TKK"
                 ).commit()
                 CoroutineScope(Dispatchers.Main).launch {
                     context.menuFragment.setMenuProgressOn()
@@ -1949,6 +1950,22 @@ class SQL(val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("8as nem tudta lezárni a konténert és megnyitni a másikat\n$e")
+            }
+        }
+    }
+
+    fun statuszVisszairas(code: String,context: MainActivity){
+        try {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            val connection = DriverManager.getConnection(connectionString)
+            val statement = connection.prepareStatement(res.getString(R.string.updateContainerStatusJust))
+            statement.setInt(1,7)
+            statement.setString(2,code)
+            statement.executeUpdate()
+            context.loadTobbletKontenerKihelyezes()
+        }catch (e: Exception){
+            CoroutineScope(Dispatchers.Main).launch {
+                context.setAlert("Hiba a visszaíráskor \n$e")
             }
         }
     }

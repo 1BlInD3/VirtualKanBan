@@ -184,7 +184,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
 
         loadLoginFragment()
 
-        myTimer = object : CountDownTimer(10 * 60 * 1000, 1000) {
+        myTimer = object : CountDownTimer(1 * 60 * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 //Some code
                 a++
@@ -322,6 +322,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_container, kihelyezes, "KIHELYEZES").addToBackStack(null).commit()
     }
+
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread {
             cancelTimer()
@@ -695,7 +696,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
 
-    fun loadTobbletKontenerKihelyezes(){
+    fun loadTobbletKontenerKihelyezes() {
         CoroutineScope(IO).launch {
             sql.tobbletKontenerElemek(this@MainActivity)
         }
@@ -796,9 +797,15 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         sql.closeContainer(code, this@MainActivity)
     }
 
-    fun setContainerStatusAndGetItems(kontener_id: String?){
+    fun setContainerStatusAndGetItems(kontener_id: String?) {
+        //selectedContainer = kontener_id!!
         CoroutineScope(IO).launch {
-            sql.updateContainerAndOpenItems(kontener_id,this@MainActivity)
+            sql.updateContainerAndOpenItems(kontener_id, this@MainActivity)
+        }
+    }
+    fun setContainerBackToOpen(kontener: String){
+        CoroutineScope(IO).launch {
+            sql.statuszVisszairas(kontener,this@MainActivity)
         }
     }
 
@@ -859,15 +866,19 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 getFragment("VARAS") -> {
                     loadMenuFragment(true)
                 }
+                getFragment("TKK") -> {
+                    loadMenuFragment(true)
+                }
+                getFragment("TOBBLETKIHELYEZESCIKKEK") -> {
+                    setContainerBackToOpen(tobbletCikkek.kontenerID!!)// lehet hogy ez nem is fog kelleni?!
+                }
                 //getFragment()
                 else -> {
                     super.onBackPressed()
                 }
             }
         } catch (e: Exception) {
-            Log.d(TAG, "onBackPressed: $e")
-            super.onBackPressed()
+
         }
     }
-
 }

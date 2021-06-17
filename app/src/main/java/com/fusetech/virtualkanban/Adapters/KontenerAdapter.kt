@@ -35,7 +35,7 @@ class KontenerAdapter(var kontenerItem: ArrayList<KontenerItem>, val listener: o
     @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: KontenerHolder, position: Int) {
         val currentItem = kontenerItem[position]
-        if(kontenerItem[position].status == 2){
+        if(kontenerItem[position].status == 2 || kontenerItem[position].status == 8){
             holder.kontenerText.setBackgroundColor(R.color.vikings)
             holder.polcText.setBackgroundColor(R.color.vikings)
             holder.idoText.setBackgroundColor(R.color.vikings)
