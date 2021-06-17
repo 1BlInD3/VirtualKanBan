@@ -15,6 +15,7 @@ import com.fusetech.virtualkanban.Activities.MainActivity.Companion.connectionSt
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.res
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.progress
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tobbletKontener
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tobbletItem
 import com.fusetech.virtualkanban.DataItems.*
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.Fragments.PolcraHelyezesFragment.Companion.myItems
@@ -526,7 +527,7 @@ class SQL(val sqlMessage: SQLAlert) {
             statement.setString(2, cikk)
             statement.setInt(3, 6) //ez a státusz
             statement.setDouble(4, menny)
-            statement.setDouble(5, 0.0)
+            statement.setDouble(5, menny)
             statement.setString(6, "01")
             statement.setString(7, term)
             statement.setString(8, unit)
@@ -1843,7 +1844,7 @@ class SQL(val sqlMessage: SQLAlert) {
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             connection = DriverManager.getConnection(connectionString)
             val statement =
-                connection.prepareStatement(res.getString(R.string.tobbletKontenerCikkLista))
+                connection.prepareStatement(res.getString(R.string.tobbletKontenerLista))
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -1885,6 +1886,69 @@ class SQL(val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("$e")
                 context.menuFragment.setMenuProgressOff()
+            }
+        }
+    }
+
+    fun updateContainerAndOpenItems(code: String?, context: MainActivity) {
+        try {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            val connection = DriverManager.getConnection(connectionString)
+            val statement =
+                connection.prepareStatement(res.getString(R.string.updateContainerStatus))
+            statement.setInt(1, 8)
+            statement.setString(2, "SZ01")
+            statement.setString(3, context.dolgKod)
+            statement.setString(4, code)
+            statement.executeUpdate()
+            val statement2 =
+                connection.prepareStatement(res.getString(R.string.tobbletKontnerCikkek))
+            statement2.setString(1, code)
+            val resultSet = statement2.executeQuery()
+            if (!resultSet.next()) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.setAlert("Nincsenek elemek")
+                }
+            } else {
+                val tobbletCikkek: ArrayList<KontenerbenLezarasItem> = ArrayList()
+                tobbletItem.clear()
+                do {
+                    val cikk = resultSet.getString("cikkszam")
+                    val megj1 = resultSet.getString("Description1")
+                    val megj2 = resultSet.getString("Description2")
+                    val intrem = resultSet.getString("InternRem1")
+                    val igeny = resultSet.getDouble("igenyelt_mennyiseg").toString()
+                    val mozgatott = resultSet.getDouble("mozgatott_mennyiseg").toString()
+                    val status = resultSet.getInt("statusz")
+                    val unit = resultSet.getString("Unit")
+                    val id = resultSet.getInt("id")
+                    val kontenerId = resultSet.getInt("kontener_id")
+                    tobbletCikkek.add(
+                        KontenerbenLezarasItem(
+                            cikk,
+                            megj1,
+                            megj2,
+                            intrem,
+                            igeny,
+                            mozgatott,
+                            status,
+                            unit,
+                            id,
+                            kontenerId
+                        )
+                    )
+                } while (resultSet.next())
+                val bundle = Bundle()
+                bundle.putSerializable("TOBBLETESCIKKEK", tobbletCikkek)
+                bundle.putString("KONTENERTOBBLETCIKK", code)
+                context.tobbletCikkek.arguments = bundle
+                context.supportFragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, context.tobbletCikkek, "TOBBLETKIHELYEZESCIKKEK")
+                    .commit()
+            }
+        } catch (e: Exception) {
+            CoroutineScope(Dispatchers.Main).launch {
+                context.setAlert("8as nem tudta lezárni a konténert és megnyitni a másikat\n$e")
             }
         }
     }

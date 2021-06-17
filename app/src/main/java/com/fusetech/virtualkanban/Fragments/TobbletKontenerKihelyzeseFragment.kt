@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Adapters.KontenerAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerItem
 import com.fusetech.virtualkanban.R
@@ -23,6 +24,7 @@ class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontener
     private lateinit var recycler: RecyclerView
     private val kontenerItem: ArrayList<KontenerItem> = ArrayList()
     private lateinit var progress: ProgressBar
+    private lateinit var mainActivity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +39,7 @@ class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontener
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_tobblet_kontener_kihelyzese, container, false)
+        mainActivity = activity as MainActivity
         recycler = view.tobbletRecycler
         progress = view.tobbletProgress
         recycler.adapter = KontenerAdapter(kontenerItem,this)
@@ -49,7 +52,8 @@ class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontener
     }
 
     override fun onKontenerClick(position: Int) {
-        TODO("Not yet implemented")
+        mainActivity.setContainerStatusAndGetItems(kontenerItem[position].kontner_id)
+        //mainActivity.loadCTobbletCikkek()
     }
     fun setProgressBar8Off(){
         progress.visibility = View.GONE

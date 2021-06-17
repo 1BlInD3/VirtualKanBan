@@ -79,7 +79,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     *
     * 7-es opció
     * nyit egy konténert beírja az id-t, atado, kontener, statusz= 6, kontener_tipus = 2
-    * a 2-es opció layoutját használhatom plusz xml küldésnél fordítva történik. 01 ből 21 be
+    * a 2-es opció layoutját használhatom plusz xml küldésnél fordítva történik. 01 ből 21 be, a mozgatott mennyiségbe kell beírni a mennyiséget
+    *
     */
     private var manager: AidcManager? = null
     private var barcodeReader: BarcodeReader? = null
@@ -119,6 +120,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     val kihelyezesFragmentLista = KihelyezesListaFragment()
     val tobbletOsszeallitasFragment = TobbletKontenerOsszeallitasaFragment()
     val tobbletKontenerKihelyzeseFragment = TobbletKontenerKihelyzeseFragment()
+    val tobbletCikkek = TobbletKontenerCikkekFragment()
     private lateinit var myTimer: CountDownTimer
     var a = 0
 
@@ -132,6 +134,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         val kihelyezesItems: ArrayList<SzerelohelyItem> = ArrayList()
         val cikkItem4: ArrayList<KontenerbenLezarasItem> = ArrayList()
         val kontItem: ArrayList<KontenerbenLezarasItem> = ArrayList()
+        val tobbletItem: ArrayList<KontenerbenLezarasItem> = ArrayList()
         val tempLocations: ArrayList<PolcLocation> = ArrayList()
         val tobbletKontener: ArrayList<KontenerItem> = ArrayList()
     }
@@ -791,6 +794,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
 
     fun closeItem(code: Int) {
         sql.closeContainer(code, this@MainActivity)
+    }
+
+    fun setContainerStatusAndGetItems(kontener_id: String?){
+        CoroutineScope(IO).launch {
+            sql.updateContainerAndOpenItems(kontener_id,this@MainActivity)
+        }
     }
 
     override fun onBackPressed() {
