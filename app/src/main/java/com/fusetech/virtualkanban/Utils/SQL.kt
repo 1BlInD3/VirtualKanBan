@@ -1969,5 +1969,42 @@ class SQL(val sqlMessage: SQLAlert) {
             }
         }
     }
+    fun openNyolcHarmas(
+        id: Int,
+        kontenerID: Int,
+        megjegyzes: String,
+        megjegyzes2: String,
+        intrem: String,
+        unit: String,
+        mennyiseg: Double,
+        cikkszam: String,
+        context: MainActivity
+    ){
+        try{
+            val raktarBin : ArrayList<PolcLocation> = ArrayList()
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            val connection = DriverManager.getConnection(connectionString)
+            val statement = connection.prepareStatement(res.getString(R.string.raktarCheck))
+            statement.setString(1,cikkszam)
+            val resultSet = statement.executeQuery()
+            if(!resultSet.next()){
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.setAlert("Nincs a raktárban!")
+                }
+            }else{
+                do{
+                    val binNumber = resultSet.getString("BinNumber")
+                    val mennyiseg = resultSet.getString("BalanceQty")
+                    raktarBin.add(PolcLocation(binNumber,mennyiseg))
+                }while(resultSet.next())
+                val bundle = Bundle()
+                bundle.putSerializable("LOCATIONBIN",raktarBin)
+            }
+        }catch (e: Exception){
+            CoroutineScope(Dispatchers.Main).launch {
+                context.setAlert("Open nyolcas \n$e")
+            }
+        }
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.Fragments
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,9 +19,23 @@ import com.fusetech.virtualkanban.DataItems.KontenerbenLezarasItem
 
 @Suppress("UNCHECKED_CAST")
 class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onItemClickListener {
+    interface Tobblet {
+        fun sendTobblet(
+            id: Int,
+            kontenerID: Int,
+            megjegyzes: String,
+            megjegyzes2: String,
+            intrem: String,
+            unit: String,
+            mennyiseg: Double,
+            cikkszam: String
+        )
+    }
     private lateinit var recycler: RecyclerView
     private lateinit var vissza: Button
     private lateinit var kontener: TextView
+    private lateinit var tobblet: Tobblet
+
     var kontenerID: String? = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +56,16 @@ class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onIt
     }
 
     override fun onItemClick(position: Int) {
-        TODO("Not yet implemented")
+        tobblet.sendTobblet(
+            tobbletItem[position].id,
+            tobbletItem[position].kontener_id,
+            tobbletItem[position].megjegyzes1!!,
+            tobbletItem[position].megjegyzes2!!,
+            tobbletItem[position].intrem!!,
+            tobbletItem[position].unit!!,
+            tobbletItem[position].igeny.toString().toDouble(),
+            tobbletItem[position].cikkszam!!
+        )
     }
 
     fun loadData() {
@@ -66,8 +90,17 @@ class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onIt
         }
         recycler.adapter?.notifyDataSetChanged()
     }
-    fun getContainer(): String{
+
+    fun getContainer(): String {
         return kontenerID!!
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        tobblet = if (context is Tobblet) {
+            context
+        } else {
+            throw RuntimeException(context.toString() + "must implement")
+        }
+    }
 }
