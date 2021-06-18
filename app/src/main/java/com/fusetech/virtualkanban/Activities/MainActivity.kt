@@ -871,6 +871,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 }
                 getFragment("TOBBLETKIHELYEZESCIKKEK") -> {
                     setContainerBackToOpen(tobbletCikkek.kontenerID!!)// lehet hogy ez nem is fog kelleni?!
+                    //loadTobbletKontenerKihelyezes()
                 }
                 //getFragment()
                 else -> {
