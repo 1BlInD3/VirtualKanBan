@@ -53,12 +53,13 @@ class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontener
     }
 
     override fun onKontenerClick(position: Int) {
-        if(tobbletKontener[position].status == 8){
+        /*if(tobbletKontener[position].status == 8){
             mainActivity.setAlert("Ezt már megnyitotta valaki")
         }else{
             mainActivity.setContainerStatusAndGetItems(tobbletKontener[position].kontner_id)
-        }
+        }*/
         //mainActivity.loadCTobbletCikkek()
+        mainActivity.setContainerStatusAndGetItems(tobbletKontener[position].kontner_id)
     }
     fun setProgressBar8Off(){
         progress.visibility = View.GONE

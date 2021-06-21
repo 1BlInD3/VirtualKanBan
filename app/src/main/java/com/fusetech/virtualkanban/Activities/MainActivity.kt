@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(),
     IgenyKontenerLezarasCikkLezaras.CikkCode,
     IgenyKontenerKiszedesCikkKiszedes.SendXmlData,
     SQL.SQLAlert,
-    TobbletKontenerCikkekFragment.Tobblet{
+    TobbletKontenerCikkekFragment.Tobblet {
     /*
     // 1es opció pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
@@ -806,9 +806,11 @@ class MainActivity : AppCompatActivity(),
             sql.updateContainerAndOpenItems(kontener_id, this@MainActivity)
         }
     }
-    fun setContainerBackToOpen(kontener: String){
+
+    fun setContainerBackToOpen(kontener: String) {
         CoroutineScope(IO).launch {
-            sql.statuszVisszairas(kontener,this@MainActivity)
+            sql.statuszVisszairas(kontener, this@MainActivity)
+            //loadTobbletKontenerKihelyezes()
         }
     }
 
@@ -893,8 +895,11 @@ class MainActivity : AppCompatActivity(),
         megjegyzes2: String,
         intrem: String,
         unit: String,
-        mennyiseg: Double
+        mennyiseg: Double,
+        cikkszam: String
     ) {
-        TODO("Not yet implemented")
+        CoroutineScope(IO).launch {
+           sql.openNyolcHarmas(id,kontenerID,megjegyzes,megjegyzes2,intrem,unit,mennyiseg,cikkszam,this@MainActivity)
+        }
     }
 }

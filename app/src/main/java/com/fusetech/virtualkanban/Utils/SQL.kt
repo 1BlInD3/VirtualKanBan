@@ -1895,13 +1895,13 @@ class SQL(val sqlMessage: SQLAlert) {
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection = DriverManager.getConnection(connectionString)
-            val statement =
+            /*val statement =
                 connection.prepareStatement(res.getString(R.string.updateContainerStatus))
             statement.setInt(1, 8)
             statement.setString(2, "SZ01")
             statement.setString(3, context.dolgKod)
             statement.setString(4, code)
-            statement.executeUpdate()
+            statement.executeUpdate()*/
             val statement2 =
                 connection.prepareStatement(res.getString(R.string.tobbletKontnerCikkek))
             statement2.setString(1, code)
@@ -1954,21 +1954,23 @@ class SQL(val sqlMessage: SQLAlert) {
         }
     }
 
-    fun statuszVisszairas(code: String,context: MainActivity){
+    fun statuszVisszairas(code: String, context: MainActivity) {
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection = DriverManager.getConnection(connectionString)
-            val statement = connection.prepareStatement(res.getString(R.string.updateContainerStatusJust))
-            statement.setInt(1,7)
-            statement.setString(2,code)
+            val statement =
+                connection.prepareStatement(res.getString(R.string.updateContainerStatusJust))
+            statement.setInt(1, 7)
+            statement.setString(2, code)
             statement.executeUpdate()
             context.loadTobbletKontenerKihelyezes()
-        }catch (e: Exception){
+        } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Hiba a visszaíráskor \n$e")
             }
         }
     }
+
     fun openNyolcHarmas(
         id: Int,
         kontenerID: Int,
@@ -1979,32 +1981,43 @@ class SQL(val sqlMessage: SQLAlert) {
         mennyiseg: Double,
         cikkszam: String,
         context: MainActivity
-    ){
-        try{
-            val raktarBin : ArrayList<PolcLocation> = ArrayList()
+    ) {
+        try {
+            val raktarBin: ArrayList<PolcLocation> = ArrayList()
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.raktarCheck))
-            statement.setString(1,cikkszam)
+            statement.setString(1, cikkszam)
             val resultSet = statement.executeQuery()
-            if(!resultSet.next()){
+            if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nincs a raktárban!")
                 }
-            }else{
-                do{
+            } else {
+                do {
                     val binNumber = resultSet.getString("BinNumber")
-                    val mennyiseg = resultSet.getString("BalanceQty")
-                    raktarBin.add(PolcLocation(binNumber,mennyiseg))
-                }while(resultSet.next())
+                    val mennyiseg2 = resultSet.getString("BalanceQty")
+                    raktarBin.add(PolcLocation(binNumber, mennyiseg2))
+                } while (resultSet.next())
                 val bundle = Bundle()
-                bundle.putSerializable("LOCATIONBIN",raktarBin)
+                bundle.putSerializable("LOCATIONBIN", raktarBin)
+                bundle.putInt("IID", id)
+                bundle.putInt("KID", kontenerID)
+                bundle.putString("MMEGJ1", megjegyzes)
+                bundle.putString("MMEGJ2", megjegyzes2)
+                bundle.putString("IINT", intrem)
+                bundle.putString("UUNIT", unit)
+                bundle.putString("MMENNY", mennyiseg.toString())
+                bundle.putString("MCIKK",cikkszam)
+                context.tobbletCikkekPolcra.arguments = bundle
+                context.supportFragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, context.tobbletCikkekPolcra, "CIKKEKPOLCRA")
+                    .commit()
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Open nyolcas \n$e")
             }
         }
     }
-
 }
