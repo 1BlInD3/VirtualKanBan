@@ -16,6 +16,7 @@ import com.fusetech.virtualkanban.Activities.MainActivity.Companion.res
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.progress
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tobbletKontener
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tobbletItem
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.url
 import com.fusetech.virtualkanban.DataItems.*
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.Fragments.PolcraHelyezesFragment.Companion.myItems
@@ -2017,6 +2018,27 @@ class SQL(val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Open nyolcas \n$e")
+            }
+        }
+    }
+    fun checkBinIn02(code: String, context: MainActivity){
+        try{
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            val connection = DriverManager.getConnection(url)
+            val statement = connection.prepareStatement(res.getString(R.string.is02Polc))
+            statement.setString(1,code)
+            val resultSet = statement.executeQuery()
+            if(!resultSet.next()){
+                context.tobbletCikkekPolcra.clearPocl()
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.setAlert("Nem olyan polc ami a raktárba ")
+                }
+            }else{
+                context.tobbletCikkekPolcra.setPolc()
+            }
+        }catch (e: Exception){
+            CoroutineScope(Dispatchers.Main).launch {
+                context.setAlert("A polc ellenőrzésénél hiba lépett fel \n$e")
             }
         }
     }

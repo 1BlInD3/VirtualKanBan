@@ -376,6 +376,9 @@ class MainActivity : AppCompatActivity(),
                 getFragment("TOBBLET") -> {
                     tobbletOsszeallitasFragment.setCode(barcodeData)
                 }
+                getFragment("CIKKEKPOLCRA") -> {
+                    tobbletCikkekPolcra.setCode(barcodeData)
+                }
             }
             myTimer.start()
         }
@@ -900,6 +903,11 @@ class MainActivity : AppCompatActivity(),
     ) {
         CoroutineScope(IO).launch {
            sql.openNyolcHarmas(id,kontenerID,megjegyzes,megjegyzes2,intrem,unit,mennyiseg,cikkszam,this@MainActivity)
+        }
+    }
+    fun raktarcheck(code: String){
+        CoroutineScope(IO).launch {
+            sql.checkBinIn02(code,this@MainActivity)
         }
     }
 }

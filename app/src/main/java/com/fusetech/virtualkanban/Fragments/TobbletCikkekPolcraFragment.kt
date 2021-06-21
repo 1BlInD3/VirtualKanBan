@@ -12,6 +12,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tempLocations
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_tobblet_cikkek_polcra.view.*
@@ -36,6 +37,7 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
     private lateinit var progressBar : ProgressBar
     private lateinit var lezarasBtn : Button
     private lateinit var visszaBtn : Button
+    private lateinit var mainActivity : MainActivity
     private var cikkid = 0
     private var kontid = 0
     private var cikkkod = ""
@@ -50,6 +52,7 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_tobblet_cikkek_polcra, container, false)
+        mainActivity = activity as MainActivity
         kontenerID = view.tkontenerIDKiszedes
         cikkID = view.tcikkIDKiszedes
         cikkNumber = view.tkiszedesCikkEdit
@@ -67,8 +70,9 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         recyclerView.adapter = PolcLocationAdapter(tempLocations,this)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
         recyclerView.setHasFixedSize(true)
+        mennyiseg.isEnabled = false
         loadData()
-
+        progrssOff()
         return view
     }
 
@@ -82,6 +86,7 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         mintrem = arguments?.getString("IINT")!!
         munit = arguments?.getString("UUNIT")!!
         mcikkszam = arguments?.getString("MCIKK")!!
+        mmennyiseg = arguments?.getString("MMENNY")
         fillWidgets()
     }
     private fun fillWidgets(){
@@ -92,7 +97,6 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         megjegyzes2.text = mmegjegyzes2
         intrem.text = mintrem
         unit.text = munit
-        mmennyiseg = arguments?.getString("MMENY")
         igeny.setText(mmennyiseg)
 
     }
@@ -109,6 +113,28 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
 
     override fun polcItemClick(position: Int) {
         Log.d("TAG", "polcItemClick: ")
+    }
+    fun progrssOff(){
+        progressBar.visibility = View.GONE
+    }
+    fun progrssOn(){
+        progressBar.visibility = View.VISIBLE
+    }
+    fun setCode(code: String){
+        if(polc.text.isEmpty()){
+            mainActivity.raktarcheck(code)
+            polc.setText(code)
+        }
+        else{
+            mainActivity.setAlert("Egy nagy faaaaszt")
+        }
+    }
+    fun clearPocl(){
+        polc.selectAll()
+    }
+    fun setPolc(){
+        mennyiseg.isEnabled = true
+        mennyiseg.requestFocus()
     }
 
 }
