@@ -196,6 +196,12 @@ class MainActivity : AppCompatActivity(),
 
             override fun onFinish() {
                 when {
+                    getFragment("MENU") -> {
+                        loadLoginFragment()
+                    }
+                    getFragment("LOGIN") -> {
+                        Log.d(TAG, "onFinish: Loginhoz vissza")
+                    }
                     getFragment("POLC") -> { //1
                         polcHelyezesFragment.onTimeout()
                     }
@@ -249,7 +255,8 @@ class MainActivity : AppCompatActivity(),
                         loadLoginFragment()
                     }
                     else -> {
-                        loadLoginFragment()
+                        //loadLoginFragment()
+                        Log.d(TAG, "onFinish: ELSE")
                     }
                 }
             }
@@ -820,6 +827,9 @@ class MainActivity : AppCompatActivity(),
     override fun onBackPressed() {
         try {
             when {
+                getFragment("MENU") -> {
+                    loadLoginFragment()
+                }
                 getFragment("CIKKLEZARASFRAGMENT") -> {
                     igenyKiszedesCikkLezaras.buttonPerform()
                 }
@@ -880,6 +890,9 @@ class MainActivity : AppCompatActivity(),
                 getFragment("TOBBLETKIHELYEZESCIKKEK") -> {
                     setContainerBackToOpen(tobbletCikkek.kontenerID!!)// lehet hogy ez nem is fog kelleni?!
                     //loadTobbletKontenerKihelyezes()
+                }
+                getFragment("CIKKEKPOLCRA") -> {
+                    tobbletCikkekPolcra.onButtonPressed()
                 }
                 //getFragment()
                 else -> {

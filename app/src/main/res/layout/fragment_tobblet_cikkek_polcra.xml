@@ -139,32 +139,6 @@
         app:layout_constraintTop_toBottomOf="@+id/tkiszedesIgenyEdit" />
 
     <TextView
-        android:id="@+id/ttextView29"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Mennyiség"
-        android:textColor="@android:color/black"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ttextView28" />
-
-    <EditText
-        android:id="@+id/tkiszedesMennyiseg"
-        android:layout_width="80dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="6dp"
-        android:background="@drawable/editbuttn"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:padding="4dp"
-        android:textColor="@android:color/black"
-        app:layout_constraintStart_toEndOf="@+id/ttextView29"
-        app:layout_constraintTop_toBottomOf="@+id/tkiszedesPolc" />
-
-    <TextView
         android:id="@+id/tkiszedesUnit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -174,8 +148,8 @@
         android:textColor="@android:color/black"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/tkiszedesMennyiseg"
-        app:layout_constraintTop_toTopOf="@+id/tkiszedesMennyiseg" />
+        app:layout_constraintStart_toEndOf="@+id/tkiszedesIgenyEdit"
+        app:layout_constraintTop_toTopOf="@+id/tkiszedesIgenyEdit" />
 
     <Button
         android:id="@+id/tkiszedesVissza"
@@ -201,12 +175,11 @@
         android:background="@drawable/container"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tkiszedesMennyiseg">
+        app:layout_constraintTop_toBottomOf="@+id/tkiszedesPolc">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout3"

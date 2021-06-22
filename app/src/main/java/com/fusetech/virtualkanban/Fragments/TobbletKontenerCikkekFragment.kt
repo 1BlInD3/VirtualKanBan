@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Adapters.KontenerbenLezarasAdapter
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_tobblet_kontener_cikkek.view.*
@@ -35,6 +36,7 @@ class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onIt
     private lateinit var vissza: Button
     private lateinit var kontener: TextView
     private lateinit var tobblet: Tobblet
+    private lateinit var mainActivity: MainActivity
 
     var kontenerID: String? = ""
     override fun onCreateView(
@@ -42,6 +44,7 @@ class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onIt
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_tobblet_kontener_cikkek, container, false)
+        mainActivity = activity as MainActivity
         recycler = view.kihelyezesRecycler
         vissza = view.visszaTobbletButton
         kontener = view.kontenerIDText
@@ -50,8 +53,12 @@ class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onIt
         recycler.setHasFixedSize(true)
         loadData()
         kontener.setText(kontenerID)
-
-        recycler.adapter?.notifyDataSetChanged()
+        vissza.setOnClickListener {
+            mainActivity.run {
+                //loadMenuFragment(true)
+                loadTobbletKontenerKihelyezes()
+            }
+        }
         return view
     }
 

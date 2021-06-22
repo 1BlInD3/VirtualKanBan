@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +27,7 @@ class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontener
    // private
     private lateinit var progress: ProgressBar
     private lateinit var mainActivity: MainActivity
+    private lateinit var button: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,9 +48,13 @@ class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontener
         recycler.adapter = KontenerAdapter(tobbletKontener,this)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
+        button = view.kilepTobbletBtn
         //kontenerItem.add(KontenerItem("256137","P20","2020",5,"000256",1))
         setProgressBar8Off()
         loadData()
+        button.setOnClickListener {
+            mainActivity.loadMenuFragment(true)
+        }
         return view
     }
 

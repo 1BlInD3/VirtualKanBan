@@ -6,17 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tempLocations
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_tobblet_cikkek_polcra.view.*
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tobbletItem
 import com.fusetech.virtualkanban.Adapters.PolcLocationAdapter
 import com.fusetech.virtualkanban.DataItems.PolcLocation
 
@@ -32,7 +28,6 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
     private lateinit var unit : TextView
     private lateinit var igeny : EditText
     private lateinit var polc : EditText
-    private lateinit var mennyiseg : EditText
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar : ProgressBar
     private lateinit var lezarasBtn : Button
@@ -56,13 +51,15 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         kontenerID = view.tkontenerIDKiszedes
         cikkID = view.tcikkIDKiszedes
         cikkNumber = view.tkiszedesCikkEdit
+        cikkNumber.isFocusable = false
+        cikkNumber.isFocusableInTouchMode = false
         megjegyzes1 = view.tkiszedesMegj1
         megjegyzes2 = view.tkiszedesMegj2
         intrem = view.tintrem
         unit = view.tkiszedesUnit
         igeny = view.tkiszedesIgenyEdit
         polc = view.tkiszedesPolc
-        mennyiseg = view.tkiszedesMennyiseg
+        //mennyiseg = view.tkiszedesMennyiseg
         recyclerView = view.tlocationRecycler
         progressBar = view.tkihelyezesProgress
         lezarasBtn = view.tkiszedesLezar
@@ -70,9 +67,16 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         recyclerView.adapter = PolcLocationAdapter(tempLocations,this)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
         recyclerView.setHasFixedSize(true)
-        mennyiseg.isEnabled = false
+        polc.isFocusable = false
+        polc.isFocusableInTouchMode = false
         loadData()
         progrssOff()
+
+        visszaBtn.setOnClickListener {
+            mainActivity.run {
+                setContainerStatusAndGetItems(kontid.toString())
+            }
+        }
         return view
     }
 
@@ -130,11 +134,14 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         }
     }
     fun clearPocl(){
-        polc.selectAll()
+        polc.setText("")
     }
     fun setPolc(){
-        mennyiseg.isEnabled = true
-        mennyiseg.requestFocus()
-    }
+       /* mennyiseg.isEnabled = true
+        mennyiseg.requestFocus()*/
 
+    }
+    fun onButtonPressed(){
+        visszaBtn.performClick()
+    }
 }

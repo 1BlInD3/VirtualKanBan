@@ -2034,11 +2034,14 @@ class SQL(val sqlMessage: SQLAlert) {
                     context.setAlert("Nem olyan polc ami a raktárba ")
                 }
             }else{
-                context.tobbletCikkekPolcra.setPolc()
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.tobbletCikkekPolcra.setPolc()
+                }
             }
         }catch (e: Exception){
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("A polc ellenőrzésénél hiba lépett fel \n$e")
+                context.tobbletCikkekPolcra.clearPocl()
             }
         }
     }
