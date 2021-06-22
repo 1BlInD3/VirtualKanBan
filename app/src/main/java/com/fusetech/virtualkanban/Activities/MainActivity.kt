@@ -27,7 +27,8 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import java.sql.*
 
-class MainActivity : AppCompatActivity(), BarcodeListener,
+class MainActivity : AppCompatActivity(),
+    BarcodeListener,
     CikklekerdezesFragment.SetItemOrBinManually,
     PolcraHelyezesFragment.SendCode,
     IgenyKontenerOsszeallitasFragment.SendBinCode,
@@ -37,7 +38,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     IgenyKontnerKiszedesCikk.KiszedesAdatok,
     IgenyKontenerLezarasCikkLezaras.CikkCode,
     IgenyKontenerKiszedesCikkKiszedes.SendXmlData,
-    SQL.SQLAlert {
+    SQL.SQLAlert,
+    TobbletKontenerCikkekFragment.Tobblet {
     /*
     // 1es opció pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
@@ -79,7 +81,8 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     *
     * 7-es opció
     * nyit egy konténert beírja az id-t, atado, kontener, statusz= 6, kontener_tipus = 2
-    * a 2-es opció layoutját használhatom plusz xml küldésnél fordítva történik. 01 ből 21 be
+    * a 2-es opció layoutját használhatom plusz xml küldésnél fordítva történik. 01 ből 21 be, a mozgatott mennyiségbe kell beírni a mennyiséget
+    *
     */
     private var manager: AidcManager? = null
     private var barcodeReader: BarcodeReader? = null
@@ -118,6 +121,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     val kihelyezes = IgenyKontenerKiszedese()
     val kihelyezesFragmentLista = KihelyezesListaFragment()
     val tobbletOsszeallitasFragment = TobbletKontenerOsszeallitasaFragment()
+    val tobbletKontenerKihelyzeseFragment = TobbletKontenerKihelyzeseFragment()
+    val tobbletCikkek = TobbletKontenerCikkekFragment()
+    val tobbletCikkekPolcra = TobbletCikkekPolcraFragment()
     private lateinit var myTimer: CountDownTimer
     var a = 0
 
@@ -129,6 +135,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         lateinit var res: Resources
         lateinit var progress: ProgressBar
         val kihelyezesItems: ArrayList<SzerelohelyItem> = ArrayList()
+        val cikkItem4: ArrayList<KontenerbenLezarasItem> = ArrayList()
+        val kontItem: ArrayList<KontenerbenLezarasItem> = ArrayList()
+        val tobbletItem: ArrayList<KontenerbenLezarasItem> = ArrayList()
+        val tempLocations: ArrayList<PolcLocation> = ArrayList()
+        val tobbletKontener: ArrayList<KontenerItem> = ArrayList()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -184,7 +195,13 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
 
             override fun onFinish() {
-                when{
+                when {
+                    getFragment("MENU") -> {
+                        loadLoginFragment()
+                    }
+                    getFragment("LOGIN") -> {
+                        Log.d(TAG, "onFinish: Loginhoz vissza")
+                    }
                     getFragment("POLC") -> { //1
                         polcHelyezesFragment.onTimeout()
                     }
@@ -199,64 +216,60 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                         igenyKiszedesCikkLezaras.onTimeout()
                         loadLoginFragment()
                     }
-                    getFragment("TOBBLETOSSZE") -> {
+                    getFragment("KISZEDES") -> { //4-1
                         loadLoginFragment()
                     }
-                    getFragment("CIKKLEZARASFRAGMENTHATOS") -> {
-                        igenyKiszedesCikkLezaras.buttonPerform()
+                    getFragment("NEGYESCIKKEK") -> { //4-2
+                        loadLoginFragment()
+                    }
+                    getFragment("KISZEDESCIKK") -> { //4-3
+                        igenyKontenerKiszedesCikkKiszedes.onTimeout()
+                    }
+                    getFragment("KIHELYEZES") -> { //5-1
+                        kihelyezes.exit()
+                        loadLoginFragment()
+                    }
+                    getFragment("KIHELYEZESLISTA") -> { //5-2
+                        kihelyezes.exit()
+                        loadLoginFragment()
+                    }
+                    getFragment("KIHELYEZESITEMS") -> { //5-3
+                        kihelyezes.exit()
+                        loadLoginFragment()
+                    }
+                    getFragment("VARAS") -> { //6-1
+                        loadLoginFragment()
+                    }
+                    getFragment("CIKKLEZARASFRAGMENTHATOS") -> { //6-2
+                        igenyKiszedesCikkLezaras.onTimeout()
+                        loadLoginFragment()
+                    }
+                    getFragment("TOBBLET") -> { //7
+                        tobbletOsszeallitasFragment.onKilepPressed()
+                        loadLoginFragment()
                     }
                     getFragment("SZALLITO") -> {
-                        loadMenuFragment(true)
-                        igenyKontenerKiszedes()
-                    }
-                    getFragment("KISZEDESCIKK") -> {
-                        /* loadMenuFragment(true)
-                         igenyKontenerKiszedes()*/
-                        igenyKontenerKiszedesCikkKiszedes.performButton()
-                    }
-                    getFragment("NEGYESCIKKEK") -> {
-                        loadMenuFragment(true)
-                        //loadKiszedesFragment()
-                        igenyKontenerKiszedes()
+                        loadLoginFragment()
                     }
                     getFragment("ELLENOR") -> {
-                        loadMenuFragment(true)
-                        igenyKontenerKiszedes()
-                    }
-                    getFragment("DUMMY") -> {
-                        loadMenuFragment(true)
-                    }
-                    getFragment("KISZEDES") -> {
-                        loadMenuFragment(true)
-                    }
-                    getFragment("KIHELYEZESLISTA") -> {
-                        kihelyezes.exit()
-                        loadMenuFragment(true)
-                    }
-                    getFragment("KIHELYEZESITEMS") -> {
-                        kihelyezes.onBack()
-                        getContainerList("SZ01")
-                    }
-                    getFragment("KIHELYEZES") ->{
-                        kihelyezes.exit()
-                        loadMenuFragment(true)
-                    }
-                    getFragment("TOBBLET") -> {
-                        tobbletOsszeallitasFragment.onKilepPressed()
+                        loadLoginFragment()
                     }
                     else -> {
-                        loadLoginFragment()
+                        //loadLoginFragment()
+                        Log.d(TAG, "onFinish: ELSE")
                     }
                 }
             }
         }
         myTimer.start()
     }
-    private fun cancelTimer(){
+
+    private fun cancelTimer() {
         a = 0
         myTimer.cancel()
     }
-    fun loadLoginFragment(){
+
+    fun loadLoginFragment() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_container, loginFragment, "LOGIN").commit()
     }
@@ -314,12 +327,15 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, kiszedes)
             .addToBackStack(null).commit()
     }
-    private fun loadKihelyezesFragment(){
-        supportFragmentManager.beginTransaction().replace(R.id.frame_container,kihelyezes,"KIHELYEZES").addToBackStack(null).commit()
+
+    private fun loadKihelyezesFragment() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.frame_container, kihelyezes, "KIHELYEZES").addToBackStack(null).commit()
     }
+
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
         runOnUiThread {
-            //cancelTimer()
+            cancelTimer()
             barcodeData = p0?.barcodeData!!
             when {
                 loginFragment.isVisible -> {
@@ -367,6 +383,9 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 getFragment("TOBBLET") -> {
                     tobbletOsszeallitasFragment.setCode(barcodeData)
                 }
+                getFragment("CIKKEKPOLCRA") -> {
+                    tobbletCikkekPolcra.setCode(barcodeData)
+                }
             }
             myTimer.start()
         }
@@ -378,7 +397,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         cancelTimer()
         if (getMenuFragment()) {
             when (keyCode) {
@@ -390,12 +409,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 12 -> loadKihelyezesFragment()//Log.d(TAG, "onKeyDown: $keyCode")
                 13 -> kiszedesreVaro()//Log.d(TAG, "onKeyDown: $keyCode")
                 14 -> containerCheck7(dolgKod)//Log.d(TAG, "onKeyDown: $keyCode")
-                15 -> Log.d(TAG, "onKeyDown: $keyCode")
+                15 -> loadTobbletKontenerKihelyezes()//Log.d(TAG, "onKeyDown: $keyCode")
                 16 -> loadCikklekerdezesFragment()
             }
         }
         myTimer.start()
-        return super.onKeyDown(keyCode, event)
+        return super.onKeyUp(keyCode, event)
     }
 
     override fun onResume() {
@@ -412,11 +431,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
 
     override fun onPause() {
         super.onPause()
-        myList.clear()
+        /*myList.clear()
         kontener1List.clear()
         kontenerList.clear()
         listIgenyItems.clear()
-        polcLocation?.clear()
+        polcLocation?.clear()*/
         if (barcodeReader != null) {
             barcodeReader?.release()
         }
@@ -425,16 +444,18 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
 
     override fun onDestroy() {
         super.onDestroy()
-        polcItems.clear()
-        cikkItems.clear()
+        /*polcItems.clear()
+        cikkItems.clear()*/
         if (barcodeReader != null) {
             barcodeReader?.removeBarcodeListener(this)
             barcodeReader?.close()
         }
     }
+
     private fun chechPolcAndSetBin(code: String) {
         sql.chekcPolcAndSetBinSql(code, this@MainActivity)
     }
+
     private fun chechIfPolcHasChanged(kontener: String): Boolean {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -449,6 +470,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             return false
         }
     }
+
     private fun updateKontenerKiszedesre(kontener: String) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -483,12 +505,15 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             }
         }
     }
+
     private fun updateKontener(kontener_id: String) {
-        sql.updateKontenerSql(kontener_id,this@MainActivity)
+        sql.updateKontenerSql(kontener_id, this@MainActivity)
     }
+
     private fun updateCikk(kontener_id: String) {
-        sql.updateCikkSql(kontener_id,this@MainActivity)
+        sql.updateCikkSql(kontener_id, this@MainActivity)
     }
+
     fun setAlert(text: String) {
         val builder = AlertDialog.Builder(this@MainActivity)
         builder.setTitle("Figyelem")
@@ -496,6 +521,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         builder.create()
         builder.show()
     }
+
     override fun setValue(value: String) {
         if (value.isNotEmpty()) {
             loadLoadFragment("Várom az eredményt")
@@ -509,9 +535,11 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             loadLoadFragment("")
         }
     }
+
     override fun sendCode(code: String) {
         sql.checkTrannzit(code, this@MainActivity, polcLocation)
     }
+
     override fun sendTranzitData(
         cikk: String,
         polc: String?,
@@ -522,32 +550,36 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     ) {
         sql.scalaSend(cikk, polc, mennyiseg, raktarbol, raktarba, polcra, this@MainActivity)
     }
+
     fun removeLocationFragment() {
         val isLocFragment = supportFragmentManager.findFragmentByTag("LOC")
         if (isLocFragment != null && isLocFragment.isVisible) {
             supportFragmentManager.beginTransaction().remove(isLocFragment).commit()
         }
     }
-    fun check02Polc(bin: String): Boolean{
+
+    fun check02Polc(bin: String): Boolean {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(resources.getString(R.string.is02Polc))
-            statement.setString(1,bin)
+            statement.setString(1, bin)
             val resultSet = statement.executeQuery()
             return resultSet.next()
-        }catch (e: Exception){
+        } catch (e: Exception) {
             CoroutineScope(Main).launch {
                 setAlert("$e")
             }
             return false
         }
     }
+
     override fun sendBinCode(code: String) {
         CoroutineScope(IO).launch {
             sql.check01(code, this@MainActivity)
         }
     }
+
     override fun sendDetails(
         cikkszam: String,
         mennyiseg: Double,
@@ -556,19 +588,22 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         kontener: String
     ) {
         CoroutineScope(IO).launch {
-            sql.uploadItem(cikkszam, mennyiseg, term_rakhely, unit, this@MainActivity,kontener)
+            sql.uploadItem(cikkszam, mennyiseg, term_rakhely, unit, this@MainActivity, kontener)
         }
     }
+
     override fun closeContainer(statusz: Int, datum: String) {
         CoroutineScope(IO).launch {
             sql.closeContainerSql(statusz, datum, this@MainActivity)
         }
     }
+
     override fun sendBinCode2(code: String) {
         CoroutineScope(IO).launch {
             sql.checkCode02(code, this@MainActivity)
         }
     }
+
     override fun sendDetails2(
         cikkszam: String,
         mennyiseg: Double,
@@ -577,12 +612,12 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         kontener: String
     ) {
         CoroutineScope(IO).launch {
-            sql.uploadItem7(cikkszam, mennyiseg, term_rakhely, unit, this@MainActivity,kontener)
+            sql.uploadItem7(cikkszam, mennyiseg, term_rakhely, unit, this@MainActivity, kontener)
         }
     }
 
     override fun closeContainer2(statusz: Int, datum: String) {
-            sql.closeContainerSql7(statusz, datum, this@MainActivity)
+        sql.closeContainerSql7(statusz, datum, this@MainActivity)
     }
 
     fun isItem(code: String) {
@@ -590,17 +625,20 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             sql.checkItem(code, this@MainActivity)
         }
     }
-    fun isItem2(code: String,bin: String){
+
+    fun isItem2(code: String, bin: String) {
         CoroutineScope(IO).launch {
-            sql.checkItem2(code, bin,this@MainActivity)
+            sql.checkItem2(code, bin, this@MainActivity)
         }
     }
+
     private fun containerCheck(id: String) {
         CoroutineScope(IO).launch {
             sql.containerManagement(id, this@MainActivity)
         }
     }
-    private fun containerCheck7(id: String){
+
+    private fun containerCheck7(id: String) {
         CoroutineScope(IO).launch {
             sql.containerManagement7(id, this@MainActivity)
         }
@@ -634,7 +672,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         }
     }
 
-    fun loadKihelyezesItems(code: String){
+    fun loadKihelyezesItems(code: String) {
         CoroutineScope(IO).launch {
             sql.loadKihelyezesItemsSql(code, this@MainActivity)
         }
@@ -664,11 +702,19 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             sql.loadKontenerCikkekHatos(kontener, this@MainActivity)
         }
     }
+
     fun cikkUpdate(cikk: Int) {
         CoroutineScope(IO).launch {
-            sql.cikkUpdateSql(cikk,this@MainActivity)
+            sql.cikkUpdateSql(cikk, this@MainActivity)
         }
     }
+
+    fun loadTobbletKontenerKihelyezes() {
+        CoroutineScope(IO).launch {
+            sql.tobbletKontenerElemek(this@MainActivity)
+        }
+    }
+
     override fun cikkAdatok(
         cikk: String?,
         megj1: String?,
@@ -693,28 +739,35 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
             )
         }
     }
+
     override fun cikkCode(code: Int) {
         CoroutineScope(IO).launch {
             sql.cikkCodeSql(code, this@MainActivity)
         }
     }
+
     fun insertDataToRaktarTetel(cikk: String, mennyiseg: Double, raktarKod: String, polc: String) {
-        sql.insertDataToRaktarTetelSql(cikk,mennyiseg,raktarKod,polc,this@MainActivity)
+        sql.insertDataToRaktarTetelSql(cikk, mennyiseg, raktarKod, polc, this@MainActivity)
     }
+
     fun updateItemStatus(itemId: String) {
-        sql.updtaeItemStatusSql(itemId,this@MainActivity)
+        sql.updtaeItemStatusSql(itemId, this@MainActivity)
     }
+
     fun updateItemAtvevo(itemId: String) {
         sql.updateItemAtvevoSql(itemId, this@MainActivity)
     }
+
     fun checkIfContainerIsDone(container: String, itemId: String, raktar: String, polc: String) {
-        sql.checkIfContainerIsDoneSql(container,itemId,raktar,polc,this@MainActivity)
+        sql.checkIfContainerIsDoneSql(container, itemId, raktar, polc, this@MainActivity)
     }
+
     fun checkEllenorzoKod(code: String) {
         CoroutineScope(IO).launch {
             sql.checkEllenorzoKodSql(code, this@MainActivity)
         }
     }
+
     override fun sendXmlData(
         cikk: String,
         polc: String?,
@@ -725,6 +778,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
     ) {
         sql.scalaSend(cikk, polc, mennyiseg, raktarbol, raktarba, polcra, this@MainActivity)
     }
+
     fun sendKihelyezesXmlData(
         cikk: String,
         polc: String?,
@@ -732,28 +786,50 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
         raktarbol: String,
         raktarba: String,
         polcra: String
-    ){
-        sql.scalaSend(cikk,polc,mennyiseg,raktarbol,raktarba,polcra,this@MainActivity)
+    ) {
+        sql.scalaSend(cikk, polc, mennyiseg, raktarbol, raktarba, polcra, this@MainActivity)
     }
+
     override fun sendMessage(message: String) {
         CoroutineScope(Main).launch {
             setAlert(message)
         }
     }
-    fun getContainerList(code: String){
+
+    fun getContainerList(code: String) {
         CoroutineScope(IO).launch {
-            sql.getContainersFromVehicle(code,this@MainActivity)
+            sql.getContainersFromVehicle(code, this@MainActivity)
         }
     }
-    fun updateCikkAfterSend(code: Int){
-        sql.closeCikkek(code,this@MainActivity)
+
+    fun updateCikkAfterSend(code: Int) {
+        sql.closeCikkek(code, this@MainActivity)
     }
-    fun closeItem(code: Int){
-        sql.closeContainer(code,this@MainActivity)
+
+    fun closeItem(code: Int) {
+        sql.closeContainer(code, this@MainActivity)
     }
+
+    fun setContainerStatusAndGetItems(kontener_id: String?) {
+        //selectedContainer = kontener_id!!
+        CoroutineScope(IO).launch {
+            sql.updateContainerAndOpenItems(kontener_id, this@MainActivity)
+        }
+    }
+
+    fun setContainerBackToOpen(kontener: String) {
+        CoroutineScope(IO).launch {
+            sql.statuszVisszairas(kontener, this@MainActivity)
+            //loadTobbletKontenerKihelyezes()
+        }
+    }
+
     override fun onBackPressed() {
         try {
             when {
+                getFragment("MENU") -> {
+                    loadLoginFragment()
+                }
                 getFragment("CIKKLEZARASFRAGMENT") -> {
                     igenyKiszedesCikkLezaras.buttonPerform()
                 }
@@ -795,7 +871,7 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                     kihelyezes.onBack()
                     getContainerList("SZ01")
                 }
-                getFragment("KIHELYEZES") ->{
+                getFragment("KIHELYEZES") -> {
                     kihelyezes.exit()
                     loadMenuFragment(true)
                 }
@@ -805,14 +881,46 @@ class MainActivity : AppCompatActivity(), BarcodeListener,
                 getFragment("TOBBLET") -> {
                     tobbletOsszeallitasFragment.onKilepPressed()
                 }
+                getFragment("VARAS") -> {
+                    loadMenuFragment(true)
+                }
+                getFragment("TKK") -> {
+                    loadMenuFragment(true)
+                }
+                getFragment("TOBBLETKIHELYEZESCIKKEK") -> {
+                    setContainerBackToOpen(tobbletCikkek.kontenerID!!)// lehet hogy ez nem is fog kelleni?!
+                    //loadTobbletKontenerKihelyezes()
+                }
+                getFragment("CIKKEKPOLCRA") -> {
+                    tobbletCikkekPolcra.onButtonPressed()
+                }
+                //getFragment()
                 else -> {
                     super.onBackPressed()
                 }
             }
         } catch (e: Exception) {
-            Log.d(TAG, "onBackPressed: $e")
-            super.onBackPressed()
+
         }
     }
 
+    override fun sendTobblet(
+        id: Int,
+        kontenerID: Int,
+        megjegyzes: String,
+        megjegyzes2: String,
+        intrem: String,
+        unit: String,
+        mennyiseg: Double,
+        cikkszam: String
+    ) {
+        CoroutineScope(IO).launch {
+           sql.openNyolcHarmas(id,kontenerID,megjegyzes,megjegyzes2,intrem,unit,mennyiseg,cikkszam,this@MainActivity)
+        }
+    }
+    fun raktarcheck(code: String){
+        CoroutineScope(IO).launch {
+            sql.checkBinIn02(code,this@MainActivity)
+        }
+    }
 }

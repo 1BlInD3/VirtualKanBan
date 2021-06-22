@@ -23,6 +23,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tempLocations
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -50,7 +51,6 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     private var igenyeltMennyisegAmiNemValtozik: Double = 0.0
     private lateinit var locationRecycler: RecyclerView
     private val itemLocationList: ArrayList<PolcLocation> = ArrayList()
-    private val tempLocations: ArrayList<PolcLocation> = ArrayList()
     private lateinit var xmlData: SendXmlData
     private var maxMennyiseg: Double = 0.0
     var isSaved = false
@@ -338,7 +338,10 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     fun performButton() {
         vissza.performClick()
     }
-
+    fun onTimeout(){
+        mainActivity.cikkUpdate(cikkIDKiszedes.text.trim().toString().toInt())
+        mainActivity.loadLoginFragment()
+    }
     override fun onResume() {
         super.onResume()
         tempLocations.clear()

@@ -2,7 +2,6 @@ package com.fusetech.virtualkanban.Fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,19 +9,16 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Adapters.KontenerbenLezarasAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerbenLezarasItem
 import com.fusetech.virtualkanban.R
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.cikkItem4
 import com.fusetech.virtualkanban.Utils.SQL
 import kotlinx.android.synthetic.main.kontenerben_lezaras_view.view.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
@@ -34,7 +30,6 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
     private lateinit var visszaBtn: Button
     private lateinit var kontenerNev: TextView
     private lateinit var progress: ProgressBar
-    private val cikkItem: ArrayList<KontenerbenLezarasItem> = ArrayList()
     private lateinit var cikkAdatok: KiszedesAdatok
     private lateinit var mainAcitivity: MainActivity
 
@@ -65,7 +60,7 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         kontenerNev.text = arguments?.getString("NEGYESNEV")
         tovabbBtn.text = "Tovább"
         tovabbBtn.visibility = View.GONE
-        recycler.adapter = KontenerbenLezarasAdapter(cikkItem,this)
+        recycler.adapter = KontenerbenLezarasAdapter(cikkItem4,this)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
         loadData()
@@ -91,15 +86,15 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
     }
 
     override fun onItemClick(position: Int) {
-        cikkAdatok.cikkAdatok(cikkItem[position].cikkszam,cikkItem[position].megjegyzes1,cikkItem[position].megjegyzes2,
-        cikkItem[position].intrem,cikkItem[position].igeny.toString().toDouble(),cikkItem[position].unit,cikkItem[position].id,cikkItem[position].kontener_id)
+        cikkAdatok.cikkAdatok(cikkItem4[position].cikkszam,cikkItem4[position].megjegyzes1,cikkItem4[position].megjegyzes2,
+        cikkItem4[position].intrem,cikkItem4[position].igeny.toString().toDouble(),cikkItem4[position].unit,cikkItem4[position].id,cikkItem4[position].kontener_id)
 
     }
     private fun loadData(){
-        cikkItem.clear()
+        cikkItem4.clear()
         val myList: ArrayList<KontenerbenLezarasItem> = arguments?.getSerializable("NEGYESCIKKEK") as ArrayList<KontenerbenLezarasItem>
         for(i in 0 until myList.size){
-            cikkItem.add(KontenerbenLezarasItem(myList[i].cikkszam,myList[i].megjegyzes1,myList[i].megjegyzes2,myList[i].intrem,myList[i].igeny,myList[i].kiadva,myList[i].statusz,myList[i].unit,myList[i].id,myList[i].kontener_id))
+            cikkItem4.add(KontenerbenLezarasItem(myList[i].cikkszam,myList[i].megjegyzes1,myList[i].megjegyzes2,myList[i].intrem,myList[i].igeny,myList[i].kiadva,myList[i].statusz,myList[i].unit,myList[i].id,myList[i].kontener_id))
         }
     }
     override fun onAttach(context: Context) {

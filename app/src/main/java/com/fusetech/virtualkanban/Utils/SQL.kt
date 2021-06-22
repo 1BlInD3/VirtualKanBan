@@ -14,6 +14,9 @@ import kotlinx.coroutines.launch
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.connectionString
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.res
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.progress
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tobbletKontener
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tobbletItem
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.url
 import com.fusetech.virtualkanban.DataItems.*
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.Fragments.PolcraHelyezesFragment.Companion.myItems
@@ -148,7 +151,8 @@ class SQL(val sqlMessage: SQLAlert) {
             }
         }
     }
-//////////////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////////////
     fun containerManagement(id: String, context: MainActivity) {
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -323,7 +327,11 @@ class SQL(val sqlMessage: SQLAlert) {
                         bundle.putString("KONTENER", nullasKontener)
                         context.tobbletOsszeallitasFragment.arguments = bundle
                         context.supportFragmentManager.beginTransaction()
-                            .replace(R.id.frame_container, context.tobbletOsszeallitasFragment, "TOBBLET")
+                            .replace(
+                                R.id.frame_container,
+                                context.tobbletOsszeallitasFragment,
+                                "TOBBLET"
+                            )
                             .addToBackStack(null).commit()
                         CoroutineScope(Dispatchers.Main).launch {
                             context.menuFragment.setMenuProgressOff()
@@ -353,7 +361,11 @@ class SQL(val sqlMessage: SQLAlert) {
                     bundle1.putString("TERMRAKH", rakhely)
                     context.tobbletOsszeallitasFragment.arguments = bundle1
                     context.supportFragmentManager.beginTransaction()
-                        .replace(R.id.frame_container, context.tobbletOsszeallitasFragment, "TOBBLET")
+                        .replace(
+                            R.id.frame_container,
+                            context.tobbletOsszeallitasFragment,
+                            "TOBBLET"
+                        )
                         .addToBackStack(null)
                         .commit()
                     CoroutineScope(Dispatchers.Main).launch {
@@ -373,7 +385,11 @@ class SQL(val sqlMessage: SQLAlert) {
                     bundle.putString("TERMRAKH", rakhely)
                     context.tobbletOsszeallitasFragment.arguments = bundle
                     context.supportFragmentManager.beginTransaction()
-                        .replace(R.id.frame_container, context.tobbletOsszeallitasFragment, "TOBBLET")
+                        .replace(
+                            R.id.frame_container,
+                            context.tobbletOsszeallitasFragment,
+                            "TOBBLET"
+                        )
                         .addToBackStack(null)
                         .commit()
                     CoroutineScope(Dispatchers.Main).launch {
@@ -399,7 +415,7 @@ class SQL(val sqlMessage: SQLAlert) {
             connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.is01))
             statement.setString(1, code)
-            statement.setString(2,"01")
+            statement.setString(2, "01")
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -427,7 +443,7 @@ class SQL(val sqlMessage: SQLAlert) {
         }
     }
 
-    fun checkCode02(code: String, context: MainActivity){
+    fun checkCode02(code: String, context: MainActivity) {
         val connection: Connection
         CoroutineScope(Dispatchers.Main).launch {
             context.tobbletOsszeallitasFragment.setProgressBarOn()
@@ -437,7 +453,7 @@ class SQL(val sqlMessage: SQLAlert) {
             connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.is01))
             statement.setString(1, code)
-            statement.setString(2,"01")
+            statement.setString(2, "01")
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -512,7 +528,7 @@ class SQL(val sqlMessage: SQLAlert) {
             statement.setString(2, cikk)
             statement.setInt(3, 6) //ez a státusz
             statement.setDouble(4, menny)
-            statement.setDouble(5, 0.0)
+            statement.setDouble(5, menny)
             statement.setString(6, "01")
             statement.setString(7, term)
             statement.setString(8, unit)
@@ -542,7 +558,7 @@ class SQL(val sqlMessage: SQLAlert) {
             }
             val statement1 =
                 connection.prepareStatement(res.getString(R.string.updateItemStatus))
-            statement1.setInt(1,statusz)
+            statement1.setInt(1, statusz)
             statement1.setString(2, context.kontener)
             try {
                 statement1.executeUpdate()
@@ -556,6 +572,7 @@ class SQL(val sqlMessage: SQLAlert) {
             Log.d(TAG, "closeContainerSql: $e")
         }
     }
+
     fun closeContainerSql7(statusz: Int, datum: String, context: MainActivity) {
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -573,7 +590,7 @@ class SQL(val sqlMessage: SQLAlert) {
             }
             val statement1 =
                 connection.prepareStatement(res.getString(R.string.updateItemStatus))
-            statement1.setInt(1,statusz)
+            statement1.setInt(1, statusz)
             statement1.setString(2, context.kontener)
             try {
                 statement1.executeUpdate()
@@ -1780,9 +1797,9 @@ class SQL(val sqlMessage: SQLAlert) {
             val statement = connection.prepareStatement(res.getString(R.string.cikkLezarva))
             statement.setInt(1, code)
             statement.executeUpdate()
-           /* CoroutineScope(Dispatchers.Main).launch {
-                context.kihelyezes.progressBarOff()
-            }*/
+            /* CoroutineScope(Dispatchers.Main).launch {
+                 context.kihelyezes.progressBarOff()
+             }*/
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("$e")
@@ -1818,4 +1835,214 @@ class SQL(val sqlMessage: SQLAlert) {
         }
     }
 
+    fun tobbletKontenerElemek(context: MainActivity) {
+        try {
+            val kontenerItem: ArrayList<KontenerItem> = ArrayList()
+            CoroutineScope(Dispatchers.Main).launch {
+                context.menuFragment.setMenuProgressOn()
+            }
+            val connection: Connection
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            connection = DriverManager.getConnection(connectionString)
+            val statement =
+                connection.prepareStatement(res.getString(R.string.tobbletKontenerLista))
+            val resultSet = statement.executeQuery()
+            if (!resultSet.next()) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.setAlert("Nincs többlet konténer")
+                    context.menuFragment.setMenuProgressOff()
+                }
+            } else {
+                tobbletKontener.clear()
+                do {
+                    val id: String? = resultSet.getString("id")
+                    val kontener = resultSet.getString("kontener")
+                    val statusz = resultSet.getInt("statusz")
+                    val igenyel: String? = resultSet.getString("igenyelve")
+                    val tetelszam = resultSet.getInt("tetelszam")
+                    val polc: String? = resultSet.getString("polc")
+                    kontenerItem.add(
+                        KontenerItem(
+                            kontener,
+                            polc,
+                            igenyel,
+                            tetelszam,
+                            id,
+                            statusz
+                        )
+                    )
+                } while (resultSet.next())
+                val bundle = Bundle()
+                bundle.putSerializable("TOBBLETKONTENEREK", kontenerItem)
+                context.tobbletKontenerKihelyzeseFragment.arguments = bundle
+                context.supportFragmentManager.beginTransaction().replace(
+                    R.id.frame_container,
+                    context.tobbletKontenerKihelyzeseFragment,
+                    "TKK"
+                ).commit()
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.menuFragment.setMenuProgressOn()
+                }
+            }
+        } catch (e: Exception) {
+            CoroutineScope(Dispatchers.Main).launch {
+                context.setAlert("$e")
+                context.menuFragment.setMenuProgressOff()
+            }
+        }
+    }
+
+    fun updateContainerAndOpenItems(code: String?, context: MainActivity) {
+        try {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            val connection = DriverManager.getConnection(connectionString)
+            /*val statement =
+                connection.prepareStatement(res.getString(R.string.updateContainerStatus))
+            statement.setInt(1, 8)
+            statement.setString(2, "SZ01")
+            statement.setString(3, context.dolgKod)
+            statement.setString(4, code)
+            statement.executeUpdate()*/
+            val statement2 =
+                connection.prepareStatement(res.getString(R.string.tobbletKontnerCikkek))
+            statement2.setString(1, code)
+            val resultSet = statement2.executeQuery()
+            if (!resultSet.next()) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.setAlert("Nincsenek elemek")
+                }
+            } else {
+                val tobbletCikkek: ArrayList<KontenerbenLezarasItem> = ArrayList()
+                tobbletItem.clear()
+                do {
+                    val cikk = resultSet.getString("cikkszam")
+                    val megj1 = resultSet.getString("Description1")
+                    val megj2 = resultSet.getString("Description2")
+                    val intrem = resultSet.getString("InternRem1")
+                    val igeny = resultSet.getDouble("igenyelt_mennyiseg").toString()
+                    val mozgatott = resultSet.getDouble("mozgatott_mennyiseg").toString()
+                    val status = resultSet.getInt("statusz")
+                    val unit = resultSet.getString("Unit")
+                    val id = resultSet.getInt("id")
+                    val kontenerId = resultSet.getInt("kontener_id")
+                    tobbletCikkek.add(
+                        KontenerbenLezarasItem(
+                            cikk,
+                            megj1,
+                            megj2,
+                            intrem,
+                            igeny,
+                            mozgatott,
+                            status,
+                            unit,
+                            id,
+                            kontenerId
+                        )
+                    )
+                } while (resultSet.next())
+                val bundle = Bundle()
+                bundle.putSerializable("TOBBLETESCIKKEK", tobbletCikkek)
+                bundle.putString("KONTENERTOBBLETCIKK", code)
+                context.tobbletCikkek.arguments = bundle
+                context.supportFragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, context.tobbletCikkek, "TOBBLETKIHELYEZESCIKKEK")
+                    .commit()
+            }
+        } catch (e: Exception) {
+            CoroutineScope(Dispatchers.Main).launch {
+                context.setAlert("8as nem tudta lezárni a konténert és megnyitni a másikat\n$e")
+            }
+        }
+    }
+
+    fun statuszVisszairas(code: String, context: MainActivity) {
+        try {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            val connection = DriverManager.getConnection(connectionString)
+            val statement =
+                connection.prepareStatement(res.getString(R.string.updateContainerStatusJust))
+            statement.setInt(1, 7)
+            statement.setString(2, code)
+            statement.executeUpdate()
+            context.loadTobbletKontenerKihelyezes()
+        } catch (e: Exception) {
+            CoroutineScope(Dispatchers.Main).launch {
+                context.setAlert("Hiba a visszaíráskor \n$e")
+            }
+        }
+    }
+
+    fun openNyolcHarmas(
+        id: Int,
+        kontenerID: Int,
+        megjegyzes: String,
+        megjegyzes2: String,
+        intrem: String,
+        unit: String,
+        mennyiseg: Double,
+        cikkszam: String,
+        context: MainActivity
+    ) {
+        try {
+            val raktarBin: ArrayList<PolcLocation> = ArrayList()
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            val connection = DriverManager.getConnection(connectionString)
+            val statement = connection.prepareStatement(res.getString(R.string.raktarCheck))
+            statement.setString(1, cikkszam)
+            val resultSet = statement.executeQuery()
+            if (!resultSet.next()) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.setAlert("Nincs a raktárban!")
+                }
+            } else {
+                do {
+                    val binNumber = resultSet.getString("BinNumber")
+                    val mennyiseg2 = resultSet.getString("BalanceQty")
+                    raktarBin.add(PolcLocation(binNumber, mennyiseg2))
+                } while (resultSet.next())
+                val bundle = Bundle()
+                bundle.putSerializable("LOCATIONBIN", raktarBin)
+                bundle.putInt("IID", id)
+                bundle.putInt("KID", kontenerID)
+                bundle.putString("MMEGJ1", megjegyzes)
+                bundle.putString("MMEGJ2", megjegyzes2)
+                bundle.putString("IINT", intrem)
+                bundle.putString("UUNIT", unit)
+                bundle.putString("MMENNY", mennyiseg.toString())
+                bundle.putString("MCIKK",cikkszam)
+                context.tobbletCikkekPolcra.arguments = bundle
+                context.supportFragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, context.tobbletCikkekPolcra, "CIKKEKPOLCRA")
+                    .commit()
+            }
+        } catch (e: Exception) {
+            CoroutineScope(Dispatchers.Main).launch {
+                context.setAlert("Open nyolcas \n$e")
+            }
+        }
+    }
+    fun checkBinIn02(code: String, context: MainActivity){
+        try{
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            val connection = DriverManager.getConnection(url)
+            val statement = connection.prepareStatement(res.getString(R.string.is02Polc))
+            statement.setString(1,code)
+            val resultSet = statement.executeQuery()
+            if(!resultSet.next()){
+                context.tobbletCikkekPolcra.clearPocl()
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.setAlert("Nem olyan polc ami a raktárba ")
+                }
+            }else{
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.tobbletCikkekPolcra.setPolc()
+                }
+            }
+        }catch (e: Exception){
+            CoroutineScope(Dispatchers.Main).launch {
+                context.setAlert("A polc ellenőrzésénél hiba lépett fel \n$e")
+                context.tobbletCikkekPolcra.clearPocl()
+            }
+        }
+    }
 }
