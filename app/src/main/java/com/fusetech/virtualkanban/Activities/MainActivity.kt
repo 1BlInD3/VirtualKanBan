@@ -140,7 +140,8 @@ class MainActivity : AppCompatActivity(),
         val tobbletItem: ArrayList<KontenerbenLezarasItem> = ArrayList()
         val tempLocations: ArrayList<PolcLocation> = ArrayList()
         val tobbletKontener: ArrayList<KontenerItem> = ArrayList()
-        val mainUrl: String = "http://10.0.2.149:8030/"
+        var mainUrl = "http://10.0.2.149:8030/"
+        var backupURL = "http://10.0.1.199:8030/"
 
     }
 

@@ -17,6 +17,8 @@ import com.fusetech.virtualkanban.Activities.MainActivity.Companion.progress
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tobbletKontener
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tobbletItem
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.url
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.mainUrl
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.backupURL
 import com.fusetech.virtualkanban.DataItems.*
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.Fragments.PolcraHelyezesFragment.Companion.myItems
@@ -859,9 +861,10 @@ class SQL(val sqlMessage: SQLAlert) {
                 try{
                     context.retro.retrofitGet(file)
                 }catch (e: Exception){
-                    CoroutineScope(Dispatchers.Main).launch {
-                        context.setAlert("Nincs szerver$e")
-                    }
+                    var a = mainUrl
+                    mainUrl = backupURL
+                    context.retro.retrofitGet(file)
+                    mainUrl = a
                 }
 
             }
@@ -2057,7 +2060,7 @@ class SQL(val sqlMessage: SQLAlert) {
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.cikkUpdate))
-            statement.setInt(1,9)
+            statement.setInt(1,8)//9
             statement.setString(2,context.dolgKod)
             statement.setInt(3,cikk)
             statement.executeUpdate()
@@ -2069,7 +2072,7 @@ class SQL(val sqlMessage: SQLAlert) {
                     context.setAlert("A konténer üres")
                 }
                 val statement3 = connection.prepareStatement(res.getString(R.string.updateContainerStatusJust))
-                statement3.setInt(1,9)
+                statement3.setInt(1,8)//
                 statement3.setInt(2,kontener)
                 statement3.executeUpdate()
                 tobbletKontenerElemek(context)
