@@ -11,10 +11,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tempLocations
+import com.fusetech.virtualkanban.Fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_tobblet_cikkek_polcra.view.*
 import com.fusetech.virtualkanban.Adapters.PolcLocationAdapter
 import com.fusetech.virtualkanban.DataItems.PolcLocation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 @Suppress("UNCHECKED_CAST")
 class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClickListener {
@@ -125,9 +131,36 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         progressBar.visibility = View.VISIBLE
     }
     fun setCode(code: String){
+        isSent = false
         if(polc.text.isEmpty()){
             mainActivity.raktarcheck(code)
             polc.setText(code)
+            CoroutineScope(IO).launch {
+                async {
+                    Log.d(
+                        "IOTHREAD",
+                        "onCreateView: ${Thread.currentThread().name}"
+                    )
+                    mainActivity.sendKihelyezesXmlData(
+                        cikkkod,
+                        "SZ01",
+                        mmennyiseg.toString().toDouble(),
+                        "21",
+                        "02",
+                        code
+                    )
+                }.await()
+                if(isSent){
+                    CoroutineScope(Main).launch {
+                        mainActivity.setAlert("BRAVOOO")
+                    }
+                    mainActivity.updateCikkandContainer(cikkid.toInt(),kontid)
+                }else{
+                    CoroutineScope(Main).launch {
+                        mainActivity.setAlert("A picsába")
+                    }
+                }
+            }
         }
         else{
             mainActivity.setAlert("Egy nagy faaaaszt")

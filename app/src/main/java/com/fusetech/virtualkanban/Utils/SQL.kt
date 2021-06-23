@@ -856,7 +856,14 @@ class SQL(val sqlMessage: SQLAlert) {
                     )
                 )
                 Log.d("IOTHREAD", "sendXmlData: ${Thread.currentThread().name}")
-                context.retro.retrofitGet(file)
+                try{
+                    context.retro.retrofitGet(file)
+                }catch (e: Exception){
+                    CoroutineScope(Dispatchers.Main).launch {
+                        context.setAlert("Nincs szerver$e")
+                    }
+                }
+
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
@@ -2042,6 +2049,70 @@ class SQL(val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("A polc ellenőrzésénél hiba lépett fel \n$e")
                 context.tobbletCikkekPolcra.clearPocl()
+            }
+        }
+    }
+    fun closeItemAndCheckContainer(cikk: Int, kontener: Int,context: MainActivity){
+        try{
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            val connection = DriverManager.getConnection(connectionString)
+            val statement = connection.prepareStatement(res.getString(R.string.cikkUpdate))
+            statement.setInt(1,9)
+            statement.setString(2,context.dolgKod)
+            statement.setInt(3,cikk)
+            statement.executeUpdate()
+            val statement2 = connection.prepareStatement(res.getString(R.string.tobbletKontnerCikkek))
+            statement2.setInt(1,kontener)
+            val resultSet = statement2.executeQuery()
+            if(!resultSet.next()){
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.setAlert("A konténer üres")
+                }
+                val statement3 = connection.prepareStatement(res.getString(R.string.updateContainerStatusJust))
+                statement3.setInt(1,9)
+                statement3.setInt(2,kontener)
+                statement3.executeUpdate()
+                tobbletKontenerElemek(context)
+            }else{
+                val tobbletCikkek: ArrayList<KontenerbenLezarasItem> = ArrayList()
+                tobbletItem.clear()
+                do {
+                    val cikk = resultSet.getString("cikkszam")
+                    val megj1 = resultSet.getString("Description1")
+                    val megj2 = resultSet.getString("Description2")
+                    val intrem = resultSet.getString("InternRem1")
+                    val igeny = resultSet.getDouble("igenyelt_mennyiseg").toString()
+                    val mozgatott = resultSet.getDouble("mozgatott_mennyiseg").toString()
+                    val status = resultSet.getInt("statusz")
+                    val unit = resultSet.getString("Unit")
+                    val id = resultSet.getInt("id")
+                    val kontenerId = resultSet.getInt("kontener_id")
+                    tobbletCikkek.add(
+                        KontenerbenLezarasItem(
+                            cikk,
+                            megj1,
+                            megj2,
+                            intrem,
+                            igeny,
+                            mozgatott,
+                            status,
+                            unit,
+                            id,
+                            kontenerId
+                        )
+                    )
+                } while (resultSet.next())
+                val bundle = Bundle()
+                bundle.putSerializable("TOBBLETESCIKKEK", tobbletCikkek)
+                bundle.putString("KONTENERTOBBLETCIKK", kontener.toString())
+                context.tobbletCikkek.arguments = bundle
+                context.supportFragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, context.tobbletCikkek, "TOBBLETKIHELYEZESCIKKEK")
+                    .commit()
+            }
+        }catch (e: Exception){
+            CoroutineScope(Dispatchers.Main).launch {
+                context.setAlert("Visszaírási hiba \n$e")
             }
         }
     }

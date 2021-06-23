@@ -254,6 +254,18 @@ class MainActivity : AppCompatActivity(),
                     getFragment("ELLENOR") -> {
                         loadLoginFragment()
                     }
+                    getFragment("TKK") -> {  //////////////////////////////
+                        loadLoginFragment()
+                    }
+                    getFragment("TOBBLETKIHELYEZESCIKKEK") -> {
+                        setContainerBackToOpen(tobbletCikkek.kontenerID!!)// lehet hogy ez nem is fog kelleni?!
+                        loadLoginFragment()
+                        //loadTobbletKontenerKihelyezes()
+                    }
+                    getFragment("CIKKEKPOLCRA") -> {////////////////////////
+                        tobbletCikkekPolcra.onButtonPressed()
+                        loadLoginFragment()
+                    }
                     else -> {
                         //loadLoginFragment()
                         Log.d(TAG, "onFinish: ELSE")
@@ -922,5 +934,8 @@ class MainActivity : AppCompatActivity(),
         CoroutineScope(IO).launch {
             sql.checkBinIn02(code,this@MainActivity)
         }
+    }
+    fun updateCikkandContainer(cikk: Int, kontener: Int){
+        sql.closeItemAndCheckContainer(cikk,kontener,this@MainActivity)
     }
 }
