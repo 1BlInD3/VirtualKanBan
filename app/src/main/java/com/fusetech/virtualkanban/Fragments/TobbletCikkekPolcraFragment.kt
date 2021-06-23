@@ -79,6 +79,12 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         progrssOff()
 
         visszaBtn.setOnClickListener {
+            cikkNumber.setText("")
+            kontenerID.text = ""
+            cikkID.text = ""
+            tempLocations.clear()
+            polc.setText("")
+            recyclerView.adapter?.notifyDataSetChanged()
             mainActivity.run {
                 setContainerStatusAndGetItems(kontid.toString())
             }
@@ -153,6 +159,12 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
                 if(isSent){
                     CoroutineScope(Main).launch {
                         mainActivity.setAlert("BRAVOOO")
+                        cikkNumber.setText("")
+                        kontenerID.text = ""
+                        cikkID.text = ""
+                        polc.setText("")
+                        tempLocations.clear()
+                        recyclerView.adapter?.notifyDataSetChanged()
                     }
                     mainActivity.updateCikkandContainer(cikkid.toInt(),kontid)
                 }else{

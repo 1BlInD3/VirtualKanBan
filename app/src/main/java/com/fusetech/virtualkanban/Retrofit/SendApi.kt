@@ -5,6 +5,7 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.mainUrl
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -25,7 +26,7 @@ interface SendAPI {
     companion object{
         operator fun invoke(): SendAPI{
             return Retrofit.Builder()
-                .baseUrl("http://10.0.2.149:8030/")
+                .baseUrl(mainUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(SendAPI::class.java)

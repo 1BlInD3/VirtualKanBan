@@ -140,6 +140,8 @@ class MainActivity : AppCompatActivity(),
         val tobbletItem: ArrayList<KontenerbenLezarasItem> = ArrayList()
         val tempLocations: ArrayList<PolcLocation> = ArrayList()
         val tobbletKontener: ArrayList<KontenerItem> = ArrayList()
+        val mainUrl: String = "http://10.0.2.149:8030/"
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
