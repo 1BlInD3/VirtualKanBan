@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,6 +38,7 @@ class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onIt
     private lateinit var kontener: TextView
     private lateinit var tobblet: Tobblet
     private lateinit var mainActivity: MainActivity
+    private lateinit var progress82: ProgressBar
 
     var kontenerID: String? = ""
     override fun onCreateView(
@@ -45,6 +47,8 @@ class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onIt
     ): View? {
         val view = inflater.inflate(R.layout.fragment_tobblet_kontener_cikkek, container, false)
         mainActivity = activity as MainActivity
+        progress82 = view.nyolckettesProgress
+        nyolcaskettesProgressOff()
         recycler = view.kihelyezesRecycler
         vissza = view.visszaTobbletButton
         kontener = view.kontenerIDText
@@ -98,10 +102,6 @@ class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onIt
         recycler.adapter?.notifyDataSetChanged()
     }
 
-    fun getContainer(): String {
-        return kontenerID!!
-    }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         tobblet = if (context is Tobblet) {
@@ -109,5 +109,11 @@ class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onIt
         } else {
             throw RuntimeException(context.toString() + "must implement")
         }
+    }
+    fun nyolcaskettesProgressOn(){
+        progress82.visibility = View.VISIBLE
+    }
+    fun nyolcaskettesProgressOff(){
+        progress82.visibility = View.GONE
     }
 }

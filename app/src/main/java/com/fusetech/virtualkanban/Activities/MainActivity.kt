@@ -261,12 +261,12 @@ class MainActivity : AppCompatActivity(),
                         loadLoginFragment()
                     }
                     getFragment("TOBBLETKIHELYEZESCIKKEK") -> {
-                        setContainerBackToOpen(tobbletCikkek.kontenerID!!)// lehet hogy ez nem is fog kelleni?!
+                        //setContainerBackToOpen(tobbletCikkek.kontenerID!!)// lehet hogy ez nem is fog kelleni?!
                         loadLoginFragment()
                         //loadTobbletKontenerKihelyezes()
                     }
                     getFragment("CIKKEKPOLCRA") -> {////////////////////////
-                        tobbletCikkekPolcra.onButtonPressed()
+                        tobbletCikkekPolcra.onTimeout()
                         loadLoginFragment()
                     }
                     else -> {

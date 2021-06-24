@@ -866,7 +866,6 @@ class SQL(val sqlMessage: SQLAlert) {
                     context.retro.retrofitGet(file)
                     mainUrl = a
                 }
-
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
@@ -1904,6 +1903,9 @@ class SQL(val sqlMessage: SQLAlert) {
 
     fun updateContainerAndOpenItems(code: String?, context: MainActivity) {
         try {
+            CoroutineScope(Dispatchers.Main).launch{
+                context.tobbletKontenerKihelyzeseFragment.setProgressBar8On()
+            }
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection = DriverManager.getConnection(connectionString)
             /*val statement =
@@ -1920,6 +1922,7 @@ class SQL(val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nincsenek elemek")
+                    context.tobbletKontenerKihelyzeseFragment.setProgressBar8Off()
                 }
             } else {
                 val tobbletCikkek: ArrayList<KontenerbenLezarasItem> = ArrayList()
@@ -1954,6 +1957,9 @@ class SQL(val sqlMessage: SQLAlert) {
                 bundle.putSerializable("TOBBLETESCIKKEK", tobbletCikkek)
                 bundle.putString("KONTENERTOBBLETCIKK", code)
                 context.tobbletCikkek.arguments = bundle
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.tobbletKontenerKihelyzeseFragment.setProgressBar8Off()
+                }
                 context.supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_container, context.tobbletCikkek, "TOBBLETKIHELYEZESCIKKEK")
                     .commit()
@@ -1961,6 +1967,7 @@ class SQL(val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("8as nem tudta lezárni a konténert és megnyitni a másikat\n$e")
+                context.tobbletKontenerKihelyzeseFragment.setProgressBar8Off()
             }
         }
     }
@@ -1994,6 +2001,9 @@ class SQL(val sqlMessage: SQLAlert) {
         context: MainActivity
     ) {
         try {
+            CoroutineScope(Dispatchers.Main).launch {
+                context.tobbletCikkek.nyolcaskettesProgressOn()
+            }
             val raktarBin: ArrayList<PolcLocation> = ArrayList()
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection = DriverManager.getConnection(connectionString)
@@ -2003,6 +2013,7 @@ class SQL(val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nincs a raktárban!")
+                    context.tobbletCikkek.nyolcaskettesProgressOff()
                 }
             } else {
                 do {
@@ -2021,6 +2032,9 @@ class SQL(val sqlMessage: SQLAlert) {
                 bundle.putString("MMENNY", mennyiseg.toString())
                 bundle.putString("MCIKK",cikkszam)
                 context.tobbletCikkekPolcra.arguments = bundle
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.tobbletCikkek.nyolcaskettesProgressOff()
+                }
                 context.supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_container, context.tobbletCikkekPolcra, "CIKKEKPOLCRA")
                     .commit()
@@ -2028,11 +2042,15 @@ class SQL(val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Open nyolcas \n$e")
+                context.tobbletCikkek.nyolcaskettesProgressOff()
             }
         }
     }
     fun checkBinIn02(code: String, context: MainActivity){
         try{
+            CoroutineScope(Dispatchers.Main).launch {
+                context.tobbletCikkekPolcra.progrssOn()
+            }
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection = DriverManager.getConnection(url)
             val statement = connection.prepareStatement(res.getString(R.string.is02Polc))
@@ -2042,16 +2060,19 @@ class SQL(val sqlMessage: SQLAlert) {
                 context.tobbletCikkekPolcra.clearPocl()
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nem olyan polc ami a raktárba ")
+                    context.tobbletCikkekPolcra.progrssOff()
                 }
             }else{
                 CoroutineScope(Dispatchers.Main).launch {
                     context.tobbletCikkekPolcra.setPolc()
+                    context.tobbletCikkekPolcra.progrssOff()
                 }
             }
         }catch (e: Exception){
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("A polc ellenőrzésénél hiba lépett fel \n$e")
                 context.tobbletCikkekPolcra.clearPocl()
+                context.tobbletCikkekPolcra.progrssOff()
             }
         }
     }

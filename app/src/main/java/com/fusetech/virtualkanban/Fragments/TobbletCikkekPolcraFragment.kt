@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.Fragments
 
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tempLocations
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.progress
 import com.fusetech.virtualkanban.Fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_tobblet_cikkek_polcra.view.*
@@ -68,7 +70,6 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         //mennyiseg = view.tkiszedesMennyiseg
         recyclerView = view.tlocationRecycler
         progressBar = view.tkihelyezesProgress
-        lezarasBtn = view.tkiszedesLezar
         visszaBtn = view.tkiszedesVissza
         recyclerView.adapter = PolcLocationAdapter(tempLocations,this)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
@@ -141,6 +142,7 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         if(polc.text.isEmpty()){
             mainActivity.raktarcheck(code)
             polc.setText(code)
+            progress.visibility = View.VISIBLE
             CoroutineScope(IO).launch {
                 async {
                     Log.d(
@@ -166,10 +168,14 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
                         tempLocations.clear()
                         recyclerView.adapter?.notifyDataSetChanged()
                     }
+                    CoroutineScope(Main).launch {
+                        progress.visibility = View.GONE
+                    }
                     mainActivity.updateCikkandContainer(cikkid.toInt(),kontid)
                 }else{
                     CoroutineScope(Main).launch {
                         mainActivity.setAlert("A picsába")
+                        progress.visibility = View.GONE
                     }
                 }
             }
@@ -188,5 +194,13 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
     }
     fun onButtonPressed(){
         visszaBtn.performClick()
+    }
+    fun onTimeout(){
+        cikkNumber.setText("")
+        kontenerID.text = ""
+        cikkID.text = ""
+        tempLocations.clear()
+        polc.setText("")
+        recyclerView.adapter?.notifyDataSetChanged()
     }
 }
