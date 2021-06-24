@@ -81,25 +81,41 @@ class MenuFragment : Fragment() {
         igenyOssze.setOnClickListener {
             if(igenyOssze.isEnabled){
                 //mainActivity.loadIgenyOsszeallitasFragment("","")// ez csak megjelenítés semmi sql nem fut alatta
+                mainActivity.containerCheck(mainActivity.dolgKod)
             }
         }
         igenyLezar.setOnClickListener {
-
+            if(igenyLezar.isEnabled){
+                mainActivity.igenyKontenerCheck()
+            }
         }
         igenyKiszed.setOnClickListener {
-
+            if(igenyKiszed.isEnabled){
+                mainActivity.igenyKontenerKiszedes()
+            }
         }
         igenyKihelyez.setOnClickListener {
-
+            if(igenyKihelyez.isEnabled){
+                mainActivity.loadKihelyezesFragment()
+            }
         }
         kiszedesreVar.setOnClickListener {
-
+            if(kiszedesreVar.isEnabled){
+                mainActivity.kiszedesreVaro()
+            }
         }
         tobbletOssze.setOnClickListener {
-
+            if(tobbletOssze.isEnabled){
+                mainActivity.containerCheck(mainActivity.dolgKod)
+            }
         }
         tobbletKihelyez.setOnClickListener {
-
+            if(tobbletKihelyez.isEnabled){
+                mainActivity.loadTobbletKontenerKihelyezes()
+            }
+        }
+        cikkLekerdezes.setOnClickListener {
+            mainActivity.loadCikklekerdezesFragment()
         }
         kilepes.setOnClickListener {
             mainActivity.finishAndRemoveTask()

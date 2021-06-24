@@ -312,7 +312,7 @@ class MainActivity : AppCompatActivity(),
             .replace(R.id.frame_container, menuFragment, "MENU").commit()
     }
 
-    private fun loadCikklekerdezesFragment() {
+    fun loadCikklekerdezesFragment() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_container, cikklekerdezesFragment, "CIKK").addToBackStack(null)
             .commit()
@@ -343,7 +343,7 @@ class MainActivity : AppCompatActivity(),
             .addToBackStack(null).commit()
     }
 
-    private fun loadKihelyezesFragment() {
+    fun loadKihelyezesFragment() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_container, kihelyezes, "KIHELYEZES").addToBackStack(null).commit()
     }
@@ -647,7 +647,7 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    private fun containerCheck(id: String) {
+    fun containerCheck(id: String) {
         CoroutineScope(IO).launch {
             sql.containerManagement(id, this@MainActivity)
         }
