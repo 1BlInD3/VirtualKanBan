@@ -75,8 +75,8 @@ class SQL(val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             Log.d(TAG, "Nincs kapcsolat")
             CoroutineScope(Dispatchers.Main).launch {
-                context.loginFragment.StopSpinning()
-                context.loginFragment.SetId("Hiaba lépett fel a feldolgozás során")
+                context.loginFragment.stopSpinning()
+                context.loginFragment.setId("Hiaba lépett fel a feldolgozás során")
             }
         }
     }
@@ -459,7 +459,7 @@ class SQL(val sqlMessage: SQLAlert) {
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.setAlert("A polc nem a 02 raktárban található")
+                    context.setAlert("A polc nem a 01 raktárban található")
                     context.tobbletOsszeallitasFragment.setBinFocusOn()
                     context.tobbletOsszeallitasFragment.setProgressBarOff()
                 }

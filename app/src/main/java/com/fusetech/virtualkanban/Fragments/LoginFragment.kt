@@ -22,7 +22,7 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view : View = inflater.inflate(R.layout.fragment_login, container, false)
+        val view = inflater.inflate(R.layout.fragment_login, container, false)
 
         progressBar = view.loginProgress
         progressBar.visibility = View.GONE
@@ -35,13 +35,13 @@ class LoginFragment : Fragment() {
         }
         return view
     }
-    fun StartSpinning(){
+    fun startSpinning(){
         progressBar.visibility = View.VISIBLE
     }
-    fun StopSpinning(){
+    fun stopSpinning(){
         progressBar.visibility = View.GONE
     }
-    fun SetId(employeeCode: String){
+    fun setId(employeeCode: String){
         idTxt.text = employeeCode
     }
 }
