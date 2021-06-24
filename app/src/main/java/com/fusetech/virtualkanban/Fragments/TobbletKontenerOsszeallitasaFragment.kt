@@ -106,7 +106,8 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         Log.d(TAG, "onCreateView: ${arguments?.getString("TERMRAKH")}")
         setBinFocusOn()
         if (polcTextIgeny.text.isNotEmpty()) {
-            polcTextIgeny.isEnabled = false
+            polcTextIgeny.isFocusable = false
+            polcTextIgeny.isFocusableInTouchMode = false
             cikkItem_igeny.isEnabled = true
             cikkItem_igeny.requestFocus()
             try {
@@ -292,7 +293,8 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
     fun setFocusToItem() {
         cikkItem_igeny.requestFocus()
         cikkItem_igeny.selectAll()
-        polcTextIgeny.isEnabled = false
+        polcTextIgeny.isFocusable = false
+        polcTextIgeny.isFocusableInTouchMode = false
     }
 
     fun setFocusToQuantity() {

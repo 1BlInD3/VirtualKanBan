@@ -31,7 +31,7 @@ class LoginFragment : Fragment() {
         val mainActivity : MainActivity = activity as MainActivity
 
         cancelBtn.setOnClickListener{
-            mainActivity.loadMenuFragment(true)
+            mainActivity.loadMenuFragment(false)
         }
         return view
     }

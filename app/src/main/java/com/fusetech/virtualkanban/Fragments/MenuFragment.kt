@@ -54,11 +54,10 @@ class MenuFragment : Fragment() {
         menuProgress = view.menu_progress
         kilepes = view.kilepesMenuButton
         setMenuProgressOff()
-        if(!param1!!)
-        {
-           // polcHelyezes.isEnabled = false
+        if(!param1!!){
+            polcHelyezes.isEnabled = false
             polcHelyezes.setBackgroundResource(R.drawable.disabled)
-            //igenyOssze.isEnabled = false
+            igenyOssze.isEnabled = false
             igenyOssze.setBackgroundResource(R.drawable.disabled)
             igenyLezar.isEnabled = false
             igenyLezar.setBackgroundResource(R.drawable.disabled)
@@ -83,6 +82,24 @@ class MenuFragment : Fragment() {
             if(igenyOssze.isEnabled){
                 //mainActivity.loadIgenyOsszeallitasFragment("","")// ez csak megjelenítés semmi sql nem fut alatta
             }
+        }
+        igenyLezar.setOnClickListener {
+
+        }
+        igenyKiszed.setOnClickListener {
+
+        }
+        igenyKihelyez.setOnClickListener {
+
+        }
+        kiszedesreVar.setOnClickListener {
+
+        }
+        tobbletOssze.setOnClickListener {
+
+        }
+        tobbletKihelyez.setOnClickListener {
+
         }
         kilepes.setOnClickListener {
             mainActivity.finishAndRemoveTask()
