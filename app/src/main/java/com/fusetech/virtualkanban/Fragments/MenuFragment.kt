@@ -16,15 +16,15 @@ private const val ARG_PARAM1 = "param1"
 
 class MenuFragment : Fragment() {
     private var param1: Boolean? = null
-    private lateinit var polcHelyezes : Button
-    private lateinit var igenyOssze : Button
-    private lateinit var igenyLezar : Button
-    private lateinit var igenyKiszed : Button
-    private lateinit var igenyKihelyez : Button
-    private lateinit var kiszedesreVar : Button
-    private lateinit var tobbletOssze : Button
-    private lateinit var tobbletKihelyez : Button
-    private lateinit var cikkLekerdezes : Button
+    private lateinit var polcHelyezes: Button
+    private lateinit var igenyOssze: Button
+    private lateinit var igenyLezar: Button
+    private lateinit var igenyKiszed: Button
+    private lateinit var igenyKihelyez: Button
+    private lateinit var kiszedesreVar: Button
+    private lateinit var tobbletOssze: Button
+    private lateinit var tobbletKihelyez: Button
+    private lateinit var cikkLekerdezes: Button
     private lateinit var mainActivity: MainActivity
     private lateinit var menuProgress: ProgressBar
     private lateinit var kilepes: Button
@@ -35,6 +35,7 @@ class MenuFragment : Fragment() {
             param1 = it.getBoolean(ARG_PARAM1)
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,7 +55,7 @@ class MenuFragment : Fragment() {
         menuProgress = view.menu_progress
         kilepes = view.kilepesMenuButton
         setMenuProgressOff()
-        if(!param1!!){
+        if (!param1!!) {
             polcHelyezes.isEnabled = false
             polcHelyezes.setBackgroundResource(R.drawable.disabled)
             igenyOssze.isEnabled = false
@@ -74,43 +75,43 @@ class MenuFragment : Fragment() {
         }
 
         polcHelyezes.setOnClickListener {
-            if(polcHelyezes.isEnabled){
+            if (polcHelyezes.isEnabled) {
                 mainActivity.loadPolcHelyezesFragment()
             }
         }
         igenyOssze.setOnClickListener {
-            if(igenyOssze.isEnabled){
+            if (igenyOssze.isEnabled) {
                 //mainActivity.loadIgenyOsszeallitasFragment("","")// ez csak megjelenítés semmi sql nem fut alatta
                 mainActivity.containerCheck(mainActivity.dolgKod)
             }
         }
         igenyLezar.setOnClickListener {
-            if(igenyLezar.isEnabled){
+            if (igenyLezar.isEnabled) {
                 mainActivity.igenyKontenerCheck()
             }
         }
         igenyKiszed.setOnClickListener {
-            if(igenyKiszed.isEnabled){
+            if (igenyKiszed.isEnabled) {
                 mainActivity.igenyKontenerKiszedes()
             }
         }
         igenyKihelyez.setOnClickListener {
-            if(igenyKihelyez.isEnabled){
+            if (igenyKihelyez.isEnabled) {
                 mainActivity.loadKihelyezesFragment()
             }
         }
         kiszedesreVar.setOnClickListener {
-            if(kiszedesreVar.isEnabled){
+            if (kiszedesreVar.isEnabled) {
                 mainActivity.kiszedesreVaro()
             }
         }
         tobbletOssze.setOnClickListener {
-            if(tobbletOssze.isEnabled){
-                mainActivity.containerCheck(mainActivity.dolgKod)
+            if (tobbletOssze.isEnabled) {
+                mainActivity.containerCheck7(mainActivity.dolgKod)
             }
         }
         tobbletKihelyez.setOnClickListener {
-            if(tobbletKihelyez.isEnabled){
+            if (tobbletKihelyez.isEnabled) {
                 mainActivity.loadTobbletKontenerKihelyezes()
             }
         }
@@ -133,18 +134,20 @@ class MenuFragment : Fragment() {
                 }
             }
     }
-    fun setMenuProgressOn(){
-        try{
+
+    fun setMenuProgressOn() {
+        try {
             menuProgress.visibility = View.VISIBLE
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Log.d("MenuFrag", "setMenuProgressOn: ")
         }
 
     }
-    fun setMenuProgressOff(){
-        try{
+
+    fun setMenuProgressOff() {
+        try {
             menuProgress.visibility = View.GONE
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Log.d("MenuFrag", "setMenuProgressOn: ")
         }
     }

@@ -653,7 +653,7 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    private fun containerCheck7(id: String) {
+    fun containerCheck7(id: String) {
         CoroutineScope(IO).launch {
             sql.containerManagement7(id, this@MainActivity)
         }
