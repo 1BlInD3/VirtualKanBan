@@ -22,6 +22,8 @@ import com.fusetech.virtualkanban.Activities.MainActivity.Companion.backupURL
 import com.fusetech.virtualkanban.DataItems.*
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.Fragments.PolcraHelyezesFragment.Companion.myItems
+import retrofit2.http.Path
+import retrofit2.http.Url
 import java.io.File
 import java.sql.*
 import java.text.SimpleDateFormat
@@ -30,6 +32,7 @@ import kotlin.collections.ArrayList
 import kotlin.random.Random
 
 private const val TAG = "SQL"
+private val path1: String = """//10.0.0.11/TesztWeb"""
 
 class SQL(val sqlMessage: SQLAlert) {
 
@@ -471,7 +474,7 @@ class SQL(val sqlMessage: SQLAlert) {
                 statement1.setString(3, "6")
                 statement1.executeUpdate()
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.tobbletOsszeallitasFragment.setFocusToItem()
+                    context.tobbletOsszeallitasFragment.setFocusToItem(code)
                     context.tobbletOsszeallitasFragment.setProgressBarOff()
                 }
             }
@@ -859,17 +862,17 @@ class SQL(val sqlMessage: SQLAlert) {
                 )
                 Log.d("IOTHREAD", "sendXmlData: ${Thread.currentThread().name}")
                 try{
-                    context.retro.retrofitGet(file)
+                    context.retro.retrofitGet(file,"//10.0.0.11/TesztWeb")
                 }catch (e: Exception){
                     var a = mainUrl
                     mainUrl = backupURL
-                    context.retro.retrofitGet(file)
+                    context.retro.retrofitGet(file,"//10.0.0.11/TesztWeb")
                     mainUrl = a
                 }
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
-                context.setAlert("Scala send $e")
+                context.setAlert("Scala send ${e.printStackTrace()}")
             }
         }
     }
@@ -931,7 +934,7 @@ class SQL(val sqlMessage: SQLAlert) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nincs ilyen cikk a polcon")
                     context.tobbletOsszeallitasFragment.setProgressBarOff()
-                    context.tobbletOsszeallitasFragment.setFocusToItem()
+                    context.tobbletOsszeallitasFragment.setFocusToItem(code)
                 }
             } else {
                 val megjegyzesIgeny: String = resultSet.getString("Description1")

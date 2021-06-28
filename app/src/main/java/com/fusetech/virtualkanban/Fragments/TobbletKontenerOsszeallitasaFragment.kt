@@ -286,11 +286,11 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
     }
 
     fun setBinFocusOn() {
-        polcTextIgeny.selectAll()
         polcTextIgeny.requestFocus()
     }
 
-    fun setFocusToItem() {
+    fun setFocusToItem(code: String) {
+        polcTextIgeny.setText(code)
         cikkItem_igeny.requestFocus()
         cikkItem_igeny.selectAll()
         polcTextIgeny.isFocusable = false
@@ -380,7 +380,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
 
     fun setCode(code: String) {
         if (polcTextIgeny.text.isEmpty()) {
-            polcTextIgeny.setText(code)
+            //polcTextIgeny.setText(code)
             sendBinCode2.sendBinCode2(code)
         } else {
             cikkItem_igeny.setText(code)

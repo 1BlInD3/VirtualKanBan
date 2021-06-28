@@ -6,16 +6,13 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.mainUrl
-import retrofit2.http.GET
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
+import retrofit2.http.*
 
 interface SendAPI{
-
     @Multipart
-    @POST("uploadFile")
+    @POST("uploadFile/{path}")
     fun uploadXml(
+        @Part("path") path: RequestBody,
         @Part xml: MultipartBody.Part,
         @Part("file") desc: RequestBody
     ): Call<UploadResponse>
