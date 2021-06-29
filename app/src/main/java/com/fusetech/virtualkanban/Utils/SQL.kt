@@ -22,8 +22,6 @@ import com.fusetech.virtualkanban.Activities.MainActivity.Companion.backupURL
 import com.fusetech.virtualkanban.DataItems.*
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.Fragments.PolcraHelyezesFragment.Companion.myItems
-import retrofit2.http.Path
-import retrofit2.http.Url
 import java.io.File
 import java.sql.*
 import java.text.SimpleDateFormat
@@ -32,7 +30,6 @@ import kotlin.collections.ArrayList
 import kotlin.random.Random
 
 private const val TAG = "SQL"
-private val path1: String = """//10.0.0.11/TesztWeb"""
 
 class SQL(val sqlMessage: SQLAlert) {
 
@@ -97,7 +94,7 @@ class SQL(val sqlMessage: SQLAlert) {
             }
             context.removeLocationFragment()
             polcLocation?.clear()
-            connection = DriverManager.getConnection(MainActivity.url)
+            connection = DriverManager.getConnection(url)
             val statement: PreparedStatement =
                 connection.prepareStatement(res.getString(R.string.tranzitCheck))
             statement.setString(1, code)
@@ -617,7 +614,7 @@ class SQL(val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.menuFragment.setMenuProgressOn()
             }
-            connection = DriverManager.getConnection(MainActivity.url)
+            connection = DriverManager.getConnection(url)
             val statement =
                 connection.prepareStatement(res.getString(R.string.igenyKontenerLezarasKontenerBeolvas))
             val resultSet = statement.executeQuery()
@@ -673,7 +670,7 @@ class SQL(val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.igenyLezarasFragment.setProgressBarOn()
             }
-            connection = DriverManager.getConnection(MainActivity.url)
+            connection = DriverManager.getConnection(url)
             val statement =
                 connection.prepareStatement(res.getString(R.string.igenyKontenerLezarasCikkLezarasNULL))
             statement.setInt(1, kontener_id.toInt())
@@ -747,7 +744,7 @@ class SQL(val sqlMessage: SQLAlert) {
         val bundle = Bundle()
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
-            connection = DriverManager.getConnection(MainActivity.url)
+            connection = DriverManager.getConnection(url)
             val preparedStatement: PreparedStatement =
                 connection.prepareStatement(res.getString(R.string.isPolc))
             preparedStatement.setString(1, code)
@@ -834,6 +831,12 @@ class SQL(val sqlMessage: SQLAlert) {
         polchelyre: String,
         context: MainActivity
     ) {
+        val path = context.getExternalFilesDir(null)
+        val name = SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + Random.nextInt(
+            0,
+            10000
+        ) + ".xml"
+        val file = File(path, name)
         try {
             val currentDate = SimpleDateFormat("yyyy-MM-dd").format(Date())
             if (ContextCompat.checkSelfPermission(
@@ -841,12 +844,6 @@ class SQL(val sqlMessage: SQLAlert) {
                     android.Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
-                val path = context.getExternalFilesDir(null)
-                val name = SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + Random.nextInt(
-                    0,
-                    10000
-                ) + ".xml"
-                val file = File(path, name)
                 context.save.saveXml(
                     file,
                     context.xml.createXml(
@@ -861,18 +858,21 @@ class SQL(val sqlMessage: SQLAlert) {
                     )
                 )
                 Log.d("IOTHREAD", "sendXmlData: ${Thread.currentThread().name}")
-                try{
-                    context.retro.retrofitGet(file,"//10.0.0.11/TesztWeb")
-                }catch (e: Exception){
-                    var a = mainUrl
+                try {
+                    context.retro.retrofitGet(file, "//10.0.0.11/TesztWeb")
+                } catch (e: Exception) {
+                    val a = mainUrl
                     mainUrl = backupURL
-                    context.retro.retrofitGet(file,"//10.0.0.11/TesztWeb")
+                    context.retro.retrofitGet(file, "//10.0.0.11/TesztWeb")
                     mainUrl = a
                 }
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Scala send ${e.printStackTrace()}")
+                if(file.exists()){
+                    file.delete()
+                }
             }
         }
     }
@@ -884,7 +884,7 @@ class SQL(val sqlMessage: SQLAlert) {
         }
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
-            connection = DriverManager.getConnection(MainActivity.url)
+            connection = DriverManager.getConnection(url)
             val statement = connection.prepareStatement(res.getString(R.string.cikkSql))
             statement.setString(1, code)
             val resultSet = statement.executeQuery()
@@ -925,7 +925,7 @@ class SQL(val sqlMessage: SQLAlert) {
         }
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
-            connection = DriverManager.getConnection(MainActivity.url)
+            connection = DriverManager.getConnection(url)
             val statement = connection.prepareStatement(res.getString(R.string.cikkSql2))
             statement.setString(1, code)
             statement.setString(2, bin)
@@ -967,7 +967,7 @@ class SQL(val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.menuFragment.setMenuProgressOn()
             }
-            connection = DriverManager.getConnection(MainActivity.url)
+            connection = DriverManager.getConnection(url)
             val statement =
                 connection.prepareStatement(res.getString(R.string.igenyKontenerKiszedese))
             val resultSet = statement.executeQuery()
@@ -1112,7 +1112,7 @@ class SQL(val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.menuFragment.setMenuProgressOn()
             }
-            connection = DriverManager.getConnection(MainActivity.url)
+            connection = DriverManager.getConnection(url)
             val statement =
                 connection.prepareStatement(res.getString(R.string.igenyKontenerKiszedese))
             val resultSet = statement.executeQuery()
@@ -1160,7 +1160,7 @@ class SQL(val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.kiszedesreVaroIgenyFragment.setProgressBarOn()
             }
-            connection = DriverManager.getConnection(MainActivity.url)
+            connection = DriverManager.getConnection(url)
             val statement =
                 connection.prepareStatement(res.getString(R.string.igenyKontenerLezarasCikkLezarasNezegetos))
             statement.setInt(1, kontener_id.toInt())
@@ -1391,7 +1391,7 @@ class SQL(val sqlMessage: SQLAlert) {
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
-            connection = DriverManager.getConnection(MainActivity.url)
+            connection = DriverManager.getConnection(url)
             val statement = connection.prepareStatement(res.getString(R.string.getAtvevo))
             statement.setInt(1, code)
             val resultSet = statement.executeQuery()
@@ -1670,7 +1670,7 @@ class SQL(val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
             }
-            connection = DriverManager.getConnection(MainActivity.url)
+            connection = DriverManager.getConnection(url)
             val statement = connection.prepareStatement(res.getString(R.string.isPolc))
             statement.setString(1, code)
             val resultSet = statement.executeQuery()
@@ -1906,7 +1906,7 @@ class SQL(val sqlMessage: SQLAlert) {
 
     fun updateContainerAndOpenItems(code: String?, context: MainActivity) {
         try {
-            CoroutineScope(Dispatchers.Main).launch{
+            CoroutineScope(Dispatchers.Main).launch {
                 context.tobbletKontenerKihelyzeseFragment.setProgressBar8On()
             }
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -2033,7 +2033,7 @@ class SQL(val sqlMessage: SQLAlert) {
                 bundle.putString("IINT", intrem)
                 bundle.putString("UUNIT", unit)
                 bundle.putString("MMENNY", mennyiseg.toString())
-                bundle.putString("MCIKK",cikkszam)
+                bundle.putString("MCIKK", cikkszam)
                 context.tobbletCikkekPolcra.arguments = bundle
                 CoroutineScope(Dispatchers.Main).launch {
                     context.tobbletCikkek.nyolcaskettesProgressOff()
@@ -2049,29 +2049,30 @@ class SQL(val sqlMessage: SQLAlert) {
             }
         }
     }
-    fun checkBinIn02(code: String, context: MainActivity){
-        try{
+
+    fun checkBinIn02(code: String, context: MainActivity) {
+        try {
             CoroutineScope(Dispatchers.Main).launch {
                 context.tobbletCikkekPolcra.progrssOn()
             }
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection = DriverManager.getConnection(url)
             val statement = connection.prepareStatement(res.getString(R.string.is02Polc))
-            statement.setString(1,code)
+            statement.setString(1, code)
             val resultSet = statement.executeQuery()
-            if(!resultSet.next()){
+            if (!resultSet.next()) {
                 context.tobbletCikkekPolcra.clearPocl()
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nem olyan polc ami a raktárba ")
                     context.tobbletCikkekPolcra.progrssOff()
                 }
-            }else{
+            } else {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.tobbletCikkekPolcra.setPolc()
                     context.tobbletCikkekPolcra.progrssOff()
                 }
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("A polc ellenőrzésénél hiba lépett fel \n$e")
                 context.tobbletCikkekPolcra.clearPocl()
@@ -2079,32 +2080,35 @@ class SQL(val sqlMessage: SQLAlert) {
             }
         }
     }
-    fun closeItemAndCheckContainer(cikk: Int, kontener: Int,context: MainActivity){
-        try{
+
+    fun closeItemAndCheckContainer(cikk: Int, kontener: Int, context: MainActivity) {
+        try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.cikkUpdate))
-            statement.setInt(1,8)//9
-            statement.setString(2,context.dolgKod)
-            statement.setInt(3,cikk)
+            statement.setInt(1, 8)//9
+            statement.setString(2, context.dolgKod)
+            statement.setInt(3, cikk)
             statement.executeUpdate()
-            val statement2 = connection.prepareStatement(res.getString(R.string.tobbletKontnerCikkek))
-            statement2.setInt(1,kontener)
+            val statement2 =
+                connection.prepareStatement(res.getString(R.string.tobbletKontnerCikkek))
+            statement2.setInt(1, kontener)
             val resultSet = statement2.executeQuery()
-            if(!resultSet.next()){
+            if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("A konténer üres")
                 }
-                val statement3 = connection.prepareStatement(res.getString(R.string.updateContainerStatusJust))
-                statement3.setInt(1,8)//
-                statement3.setInt(2,kontener)
+                val statement3 =
+                    connection.prepareStatement(res.getString(R.string.updateContainerStatusJust))
+                statement3.setInt(1, 8)//
+                statement3.setInt(2, kontener)
                 statement3.executeUpdate()
                 tobbletKontenerElemek(context)
-            }else{
+            } else {
                 val tobbletCikkek: ArrayList<KontenerbenLezarasItem> = ArrayList()
                 tobbletItem.clear()
                 do {
-                    val cikk = resultSet.getString("cikkszam")
+                    val cikk1 = resultSet.getString("cikkszam")
                     val megj1 = resultSet.getString("Description1")
                     val megj2 = resultSet.getString("Description2")
                     val intrem = resultSet.getString("InternRem1")
@@ -2116,7 +2120,7 @@ class SQL(val sqlMessage: SQLAlert) {
                     val kontenerId = resultSet.getInt("kontener_id")
                     tobbletCikkek.add(
                         KontenerbenLezarasItem(
-                            cikk,
+                            cikk1,
                             megj1,
                             megj2,
                             intrem,
@@ -2137,7 +2141,7 @@ class SQL(val sqlMessage: SQLAlert) {
                     .replace(R.id.frame_container, context.tobbletCikkek, "TOBBLETKIHELYEZESCIKKEK")
                     .commit()
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Visszaírási hiba \n$e")
             }
