@@ -147,6 +147,8 @@ class MainActivity : AppCompatActivity(),
         var timeOut = 0L
         var szallitoJarmu: ArrayList<String> = ArrayList()
         var ellenorzoKod: ArrayList<String> = ArrayList()
+        var kivalasztottSzallitoJarmu = ""
+        var kivalasztottSzallitoJarmuEllenorzo = ""
 
     }
 
@@ -213,7 +215,7 @@ class MainActivity : AppCompatActivity(),
 
         loadLoginFragment()
 
-        myTimer = object : CountDownTimer(1 * 60 * 1000, 1000) {
+        myTimer = object : CountDownTimer(timeOut * 60 * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 //Some code
                 a++
@@ -395,6 +397,7 @@ class MainActivity : AppCompatActivity(),
                 }
                 getFragment("SZALLITO") -> {
                     szallitoJarmuFragment.setJarmu(barcodeData)
+                    //JSON ból megnézni, hogy van e ilyen szállító és itt átadni az értékét
                     CoroutineScope(IO).launch {
                         updateKontenerKiszedesre(kontener)
                     }
@@ -522,10 +525,16 @@ class MainActivity : AppCompatActivity(),
                     setAlert("Nincs a tranzitraktárban!")
                 }
             } else {
+                kivalasztottSzallitoJarmu = barcodeData
+                for(i in 0 until szallitoJarmu.size){
+                    if(kivalasztottSzallitoJarmu == szallitoJarmu[i]){
+                        kivalasztottSzallitoJarmuEllenorzo = ellenorzoKod[i]
+                    }
+                }
                 val statement =
                     connection.prepareStatement(resources.getString(R.string.updateContainerStatus))
                 statement.setInt(1, 2)
-                statement.setString(2, barcodeData)
+                statement.setString(2, kivalasztottSzallitoJarmu)//JSON ból a szállítójármű
                 statement.setString(3, dolgKod)//ide kell a bejelentkezős kód
                 statement.setString(4, kontener)
                 statement.executeUpdate()

@@ -19,6 +19,7 @@ import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tobbletItem
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.url
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.mainUrl
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.backupURL
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.endPoint
 import com.fusetech.virtualkanban.DataItems.*
 import com.fusetech.virtualkanban.Fragments.*
 import com.fusetech.virtualkanban.Fragments.PolcraHelyezesFragment.Companion.myItems
@@ -859,11 +860,11 @@ class SQL(val sqlMessage: SQLAlert) {
                 )
                 Log.d("IOTHREAD", "sendXmlData: ${Thread.currentThread().name}")
                 try {
-                    context.retro.retrofitGet(file, "//10.0.0.11/TesztWeb")
+                    context.retro.retrofitGet(file,endPoint)
                 } catch (e: Exception) {
                     val a = mainUrl
                     mainUrl = backupURL
-                    context.retro.retrofitGet(file, "//10.0.0.11/TesztWeb")
+                    context.retro.retrofitGet(file,endPoint)
                     mainUrl = a
                 }
             }

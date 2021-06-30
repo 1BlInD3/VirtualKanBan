@@ -8,6 +8,7 @@ import com.fusetech.virtualkanban.R
 import com.fusetech.virtualkanban.Retrofit.RetrofitFunctions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 
@@ -32,6 +33,7 @@ class SplashScreen : AppCompatActivity() {
         CoroutineScope(IO).launch {
             try {
                 retro.getConfigDetails()
+                delay(2000L)
                 intent.putExtra("main", mainUrl)
                 intent.putExtra("backup", backupURL)
                 intent.putExtra("endpoint", endPoint)
