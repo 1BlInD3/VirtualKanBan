@@ -7,13 +7,13 @@ import okhttp3.RequestBody
 import java.io.File
 import com.fusetech.virtualkanban.Fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
 import com.fusetech.virtualkanban.Fragments.PolcraHelyezesFragment.Companion.isSentTranzit
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.mainUrl
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.backupURL
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.endPoint
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.logPath
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.timeOut
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.szallitoJarmu
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.ellenorzoKod
+import com.fusetech.virtualkanban.Activities.SplashScreen.Companion.mainUrl
+import com.fusetech.virtualkanban.Activities.SplashScreen.Companion.backupURL
+import com.fusetech.virtualkanban.Activities.SplashScreen.Companion.endPoint
+import com.fusetech.virtualkanban.Activities.SplashScreen.Companion.logPath
+import com.fusetech.virtualkanban.Activities.SplashScreen.Companion.timeOut
+import com.fusetech.virtualkanban.Activities.SplashScreen.Companion.szallitoJarmu
+import com.fusetech.virtualkanban.Activities.SplashScreen.Companion.ellenorzoKod
 
 private const val TAG = "RetrofitFunctions"
 class RetrofitFunctions{

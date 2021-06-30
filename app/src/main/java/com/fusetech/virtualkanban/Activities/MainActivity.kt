@@ -153,9 +153,24 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        CoroutineScope(IO).launch {
+        /*CoroutineScope(IO).launch {
             retro.getConfigDetails()
-        }
+        }*/
+        val bundle: Bundle = intent.extras!!
+        mainUrl = bundle.getString("main")!!
+        Log.d("MYBUNDLE", "onCreate: $mainUrl")
+        backupURL = bundle.getString("backup")!!
+        Log.d("MYBUNDLE", "onCreate: $backupURL")
+        endPoint = bundle.getString("endpoint")!!
+        Log.d("MYBUNDLE", "onCreate: $endPoint")
+        logPath = bundle.getString("logPath")!!
+        Log.d("MYBUNDLE", "onCreate: $logPath")
+        timeOut = bundle.getLong("timeOut")
+        Log.d("MYBUNDLE", "onCreate: $timeOut")
+        szallitoJarmu = bundle.getStringArrayList("szallitoJarmu")!!
+        Log.d("MYBUNDLE", "onCreate: $szallitoJarmu")
+        ellenorzoKod = bundle.getStringArrayList("ellenorzokod")!!
+        Log.d("MYBUNDLE", "onCreate: $ellenorzoKod")
         res = resources
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
@@ -198,7 +213,7 @@ class MainActivity : AppCompatActivity(),
 
         loadLoginFragment()
 
-        myTimer = object : CountDownTimer(timeOut * 60 * 1000, 1000) {
+        myTimer = object : CountDownTimer(1 * 60 * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 //Some code
                 a++
