@@ -20,6 +20,9 @@ interface SendAPI{
     @GET("test")
     fun getTest():Call<UploadResponse>
 
+    @GET("config")
+    fun loadConfig():Call<UploadConfig>
+
     companion object{
         operator fun invoke(): SendAPI{
             return Retrofit.Builder()

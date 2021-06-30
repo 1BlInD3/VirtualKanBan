@@ -7,8 +7,15 @@ import okhttp3.RequestBody
 import java.io.File
 import com.fusetech.virtualkanban.Fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
 import com.fusetech.virtualkanban.Fragments.PolcraHelyezesFragment.Companion.isSentTranzit
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.mainUrl
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.backupURL
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.endPoint
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.logPath
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.timeOut
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.szallitoJarmu
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.ellenorzoKod
 
-
+private const val TAG = "RetrofitFunctions"
 class RetrofitFunctions{
 
     fun retrofitGet(file: File,path: String) {
@@ -37,5 +44,22 @@ class RetrofitFunctions{
                 Log.d("MainActivity", "onResponse: delete successful")
             }
         }
+    }
+    fun getConfigDetails(){
+        val response = SendAPI().loadConfig().execute()
+        mainUrl = response.body()!!.mainServer.trim()
+        Log.d(TAG, "getConfigDetails: $mainUrl")
+        backupURL = response.body()!!.backupServer
+        Log.d(TAG, "getConfigDetails: $backupURL")
+        endPoint = response.body()!!.endPoint
+        Log.d(TAG, "getConfigDetails: $endPoint")
+        logPath = response.body()!!.logPath.trim()
+        Log.d(TAG, "getConfigDetails: $logPath")
+        timeOut = response.body()!!.timeOut.toLong()
+        Log.d(TAG, "getConfigDetails: $timeOut")
+        szallitoJarmu = response.body()!!.szallitoJarmu
+        Log.d(TAG, "getConfigDetails: $szallitoJarmu")
+        ellenorzoKod = response.body()!!.ellenorzoKod
+        Log.d(TAG, "getConfigDetails: $ellenorzoKod")
     }
 }

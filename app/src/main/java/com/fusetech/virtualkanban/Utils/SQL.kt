@@ -844,7 +844,7 @@ class SQL(val sqlMessage: SQLAlert) {
                     android.Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
-                context.save.saveXml(
+                context.save.saveFile(
                     file,
                     context.xml.createXml(
                         currentDate,
@@ -869,9 +869,23 @@ class SQL(val sqlMessage: SQLAlert) {
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
-                context.setAlert("Scala send ${e.printStackTrace()}")
-                if(file.exists()){
+                context.setAlert("Scala send \n${e}")
+                if (file.exists()) {
                     file.delete()
+                }
+                val catchFile = context.save.prepareFile(
+                    context.getExternalFilesDir(null).toString(),SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + Random.nextInt(
+                        0,
+                        10000
+                    ) + ".txt"
+                )
+                if (ContextCompat.checkSelfPermission(
+                        context,
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED
+                ){
+                    context.save.saveFile(catchFile,"myData")
+                    context.retro.retrofitGet(catchFile,"//10.0.0.11/TeszWeb/bin")
                 }
             }
         }

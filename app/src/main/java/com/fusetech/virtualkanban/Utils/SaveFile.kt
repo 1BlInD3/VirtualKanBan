@@ -9,7 +9,7 @@ private const val TAG = "SaveFile"
 
 class SaveFile {
     @SuppressLint("SimpleDateFormat")
-    fun saveXml(file: File,data : String){
+    fun saveFile(file: File,data : String){
         try {
             val stream = FileOutputStream(file)
             stream.write(data.toByteArray())
@@ -18,4 +18,8 @@ class SaveFile {
             Log.d(TAG, "saveXml: ")
         }
     }
+    fun prepareFile(path: String, name: String) : File{
+        return prepareFile(path,name)
+    }
+
 }

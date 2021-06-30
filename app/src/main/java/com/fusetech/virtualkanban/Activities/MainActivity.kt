@@ -142,12 +142,20 @@ class MainActivity : AppCompatActivity(),
         val tobbletKontener: ArrayList<KontenerItem> = ArrayList()
         var mainUrl = "http://10.0.2.149:8030/"
         var backupURL = "http://10.0.1.199:8030/"
+        var endPoint = """"""
+        var logPath = ""
+        var timeOut = 0L
+        var szallitoJarmu: ArrayList<String> = ArrayList()
+        var ellenorzoKod: ArrayList<String> = ArrayList()
 
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        CoroutineScope(IO).launch {
+            retro.getConfigDetails()
+        }
         res = resources
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
@@ -190,7 +198,7 @@ class MainActivity : AppCompatActivity(),
 
         loadLoginFragment()
 
-        myTimer = object : CountDownTimer(1 * 60 * 1000, 1000) {
+        myTimer = object : CountDownTimer(timeOut * 60 * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 //Some code
                 a++
