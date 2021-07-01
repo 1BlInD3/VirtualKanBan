@@ -131,6 +131,8 @@ class SQL(val sqlMessage: SQLAlert) {
                 statement1.setString(1, code)
                 val resultSet1: ResultSet = statement1.executeQuery()
                 if (!resultSet1.next()) {
+                    myItems.add(PolcLocation("A110","0"))/////////////////////////////////////////////////////////////////////////
+                    context.polcHelyezesFragment.reload()
                     CoroutineScope(Dispatchers.Main).launch {
                         context.polcHelyezesFragment.setProgressBarOff()
                     }
@@ -144,6 +146,7 @@ class SQL(val sqlMessage: SQLAlert) {
                         val balanceQty: Int = resultSet1.getInt("BalanceQty")
                         myItems.add(PolcLocation(binNumber, balanceQty.toString()))
                     } while (resultSet1.next())
+                    myItems.add(PolcLocation("A110","0"))
                     context.polcHelyezesFragment.reload()
                 }
             }

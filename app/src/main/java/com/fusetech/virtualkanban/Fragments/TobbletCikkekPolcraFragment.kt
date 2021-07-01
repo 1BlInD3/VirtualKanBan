@@ -151,7 +151,7 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
                     )
                     mainActivity.sendKihelyezesXmlData(
                         cikkkod,
-                        "SZ01",
+                        "BE",//SZ01
                         mmennyiseg.toString().toDouble(),
                         "21",
                         "02",

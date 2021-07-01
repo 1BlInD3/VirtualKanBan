@@ -24,6 +24,7 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tempLocations
+import com.fusetech.virtualkanban.Activities.MainActivity.Companion.kivalasztottSzallitoJarmu
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -245,7 +246,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                                     tempLocations[i].mennyiseg?.toDouble(),
                                                     "02",
                                                     "21",
-                                                    "SZ01"
+                                                    kivalasztottSzallitoJarmu //SZ01
                                                 )
                                             }
                                         }.await()
