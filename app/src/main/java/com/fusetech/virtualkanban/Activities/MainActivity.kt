@@ -39,7 +39,8 @@ class MainActivity : AppCompatActivity(),
     IgenyKontenerLezarasCikkLezaras.CikkCode,
     IgenyKontenerKiszedesCikkKiszedes.SendXmlData,
     SQL.SQLAlert,
-    TobbletKontenerCikkekFragment.Tobblet {
+    TobbletKontenerCikkekFragment.Tobblet,
+    RetrofitFunctions.Trigger{
     /*
     // 1es opció pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
@@ -116,7 +117,7 @@ class MainActivity : AppCompatActivity(),
     val listIgenyItems: ArrayList<IgenyItem> = ArrayList()
     val xml = XML()
     val save = SaveFile()
-    val retro = RetrofitFunctions()
+    val retro = RetrofitFunctions(this)
     val sql = SQL(this)
     val kihelyezes = IgenyKontenerKiszedese()
     val kihelyezesFragmentLista = KihelyezesListaFragment()
@@ -972,5 +973,9 @@ class MainActivity : AppCompatActivity(),
     }
     fun updateCikkandContainer(cikk: Int, kontener: Int){
         sql.closeItemAndCheckContainer(cikk,kontener,this@MainActivity)
+    }
+
+    override fun triggerError() {
+        TODO("Not yet implemented")
     }
 }
