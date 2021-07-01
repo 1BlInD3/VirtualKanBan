@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="IOTHREAD" />
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="debug" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b26e1320-12f3-4afc-b814-196268ef080d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Activities/SplashScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Activities/SplashScreen.kt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[SerialNumber@20190D802C]" />
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view />
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="resourceFile" />
+        <option value="Kotlin Interface" />
+        <option value="Class" />
+        <option value="Kotlin Data Class" />
+        <option value="layoutResourceFile" />
+        <option value="Kotlin Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="spring" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="MERGE" />
+  </component>
+  <component name="ProjectId" id="1pYNILPsOcc5gnxTOUU3pdAPLok" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="20190D802C" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2021-05-28T05:16:05.264Z" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../HONEYWELL_SDK/sdk/Honeywell_MobilitySDK_Android_v1.00.00.0128/Honeywell_MobilitySDK_Android_v1.00.00.0128/honeywell-android-data-collection-sdk/honeywell-android-data-collection-sdk/libs/DataCollection.aar" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.17" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.fusetech.virtualkanban.old" />
+      <recent name="com.fusetech.virtualkanban" />
+      <recent name="com.fusetech.virtualkanban.Activities" />
+    </key>
+    <key name="android.template.-56948920">
+      <recent name="com.fusetech.virtualkanban.Activities" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="W:\Attila_programok\VirtualKanBan\app\libs" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
+      <module name="VirtualKanBan.app" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Hybrid>
+      <Java />
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Sample Java Methods" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b26e1320-12f3-4afc-b814-196268ef080d" name="Default Changelist" comment="" />
+      <created>1615355982695</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1615355982695</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="2397" y="252" key="#PSD" timestamp="1620298524767">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2397" y="252" key="#PSD/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1620298524767" />
+    <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1622550606404">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1622550606404" />
+    <state x="751" y="236" key="#com.intellij.ide.util.MemberChooser" timestamp="1625132193854">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="534" y="160" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1616584142776" />
+    <state x="751" y="236" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625132193854" />
+    <state x="2671" y="236" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1620303463218" />
+    <state x="640" y="256" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1625128563060">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="640" y="256" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625128563060" />
+    <state x="567" y="444" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1625129162984">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="567" y="444" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625129162984" />
+    <state x="540" y="275" key="AndroidCreateResourceDirectoryDialog" timestamp="1624521882789">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="540" y="275" key="AndroidCreateResourceDirectoryDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1624521882789" />
+    <state x="540" y="275" key="AndroidCreateResourceFileDialog" timestamp="1622637658415">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="384" y="193" key="AndroidCreateResourceFileDialog/0.0.1366.728@0.0.1366.728" timestamp="1616581283443" />
+    <state x="540" y="275" key="AndroidCreateResourceFileDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1622637658415" />
+    <state x="818" y="333" key="AndroidCreateXmlResourceDialog" timestamp="1623995535190">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="818" y="333" key="AndroidCreateXmlResourceDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1623995535190" />
+    <state x="815" y="285" key="AndroidProcessChooserDialog" timestamp="1625031226880">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="815" y="285" key="AndroidProcessChooserDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625031226880" />
+    <state width="454" height="466" key="DebuggerActiveHint" timestamp="1619609681627">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="454" height="466" key="DebuggerActiveHint/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1619609681627" />
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1625139761203">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="275" key="FileChooserDialogImpl/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625139761203" />
+    <state width="1877" height="364" key="GridCell.Tab.0.bottom" timestamp="1625137925110">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1249" height="301" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1623241612335" />
+    <state width="1338" height="231" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1622183074882" />
+    <state width="1877" height="364" key="GridCell.Tab.0.bottom/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625137925110" />
+    <state width="1877" height="364" key="GridCell.Tab.0.bottom/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1625045304339" />
+    <state width="1877" height="364" key="GridCell.Tab.0.center" timestamp="1625137925109">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1249" height="301" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1623241612335" />
+    <state width="1338" height="231" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1622183074882" />
+    <state width="1877" height="364" key="GridCell.Tab.0.center/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625137925109" />
+    <state width="1877" height="364" key="GridCell.Tab.0.center/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1625045304339" />
+    <state width="1877" height="364" key="GridCell.Tab.0.left" timestamp="1625137925109">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1249" height="301" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1623241612335" />
+    <state width="1338" height="231" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1622183074882" />
+    <state width="1877" height="364" key="GridCell.Tab.0.left/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625137925109" />
+    <state width="1877" height="364" key="GridCell.Tab.0.left/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1625045304338" />
+    <state width="1877" height="364" key="GridCell.Tab.0.right" timestamp="1625137925109">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1249" height="301" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1623241612335" />
+    <state width="1338" height="231" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1622183074882" />
+    <state width="1877" height="364" key="GridCell.Tab.0.right/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625137925109" />
+    <state width="1877" height="364" key="GridCell.Tab.0.right/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1625045304339" />
+    <state width="1877" height="280" key="GridCell.Tab.1.bottom" timestamp="1625131267937">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1338" height="231" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1622183074882" />
+    <state width="1877" height="280" key="GridCell.Tab.1.bottom/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625131267937" />
+    <state width="1877" height="280" key="GridCell.Tab.1.bottom/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1625041758600" />
+    <state width="1877" height="280" key="GridCell.Tab.1.center" timestamp="1625131267937">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1338" height="231" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1622183074882" />
+    <state width="1877" height="280" key="GridCell.Tab.1.center/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625131267937" />
+    <state width="1877" height="280" key="GridCell.Tab.1.center/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1625041758600" />
+    <state width="1877" height="280" key="GridCell.Tab.1.left" timestamp="1625131267937">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1338" height="231" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1622183074882" />
+    <state width="1877" height="280" key="GridCell.Tab.1.left/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625131267937" />
+    <state width="1877" height="280" key="GridCell.Tab.1.left/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1625041758600" />
+    <state width="1877" height="280" key="GridCell.Tab.1.right" timestamp="1625131267937">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1338" height="231" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1622183074882" />
+    <state width="1877" height="280" key="GridCell.Tab.1.right/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625131267937" />
+    <state width="1877" height="280" key="GridCell.Tab.1.right/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1625041758600" />
+    <state x="461" y="162" key="SettingsEditor" timestamp="1625129467925">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="461" y="162" key="SettingsEditor/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625129467925" />
+    <state x="2625" y="344" key="com.intellij.ide.util.TipDialog" timestamp="1625127055603">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="502" y="241" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1622007999867" />
+    <state x="2625" y="344" key="com.intellij.ide.util.TipDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625127055603" />
+    <state x="2625" y="344" key="com.intellij.ide.util.TipDialog/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1623645915990" />
+    <state x="769" y="437" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1623741032390">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="769" y="437" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1623741032390" />
+    <state x="536" y="256" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1619437348210">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="536" y="256" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1619437348210" />
+    <state x="2012" y="-8" width="1647" height="1026" maximized="true" key="dock-window-1" timestamp="1625142322112">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2012" y="-8" width="1647" height="1026" maximized="true" key="dock-window-1/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625142322112" />
+    <state x="101" y="-8" width="1640" height="1026" maximized="true" key="dock-window-1/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1624866877560" />
+    <state x="1920" y="0" width="1640" height="1026" maximized="true" key="dock-window-2" timestamp="1624878074078">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1920" y="0" width="1640" height="1026" maximized="true" key="dock-window-2/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1624878074078" />
+    <state x="2241" y="0" width="1615" height="1026" maximized="true" key="dock-window-3" timestamp="1625127004841">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2241" y="0" width="1615" height="1026" maximized="true" key="dock-window-3/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625127004841" />
+    <state x="2129" y="-8" width="1615" height="1026" maximized="true" key="dock-window-4" timestamp="1625127004841">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2129" y="-8" width="1615" height="1026" maximized="true" key="dock-window-4/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625127004841" />
+    <state x="438" y="236" width="1013" height="804" key="find.popup" timestamp="1625058128675">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="438" y="236" width="1013" height="804" key="find.popup/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1625058128675" />
+    <state x="2576" y="118" width="607" height="804" key="find.popup/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1624862975075" />
+    <state x="701" y="163" key="refactoring.ChangeSignatureDialog" timestamp="1624005517673">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="701" y="163" key="refactoring.ChangeSignatureDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1624005517673" />
+    <state x="476" y="231" key="run.anything.popup" timestamp="1623316525900">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="339" y="162" key="run.anything.popup/0.0.1366.728@0.0.1366.728" timestamp="1622116985784" />
+    <state x="476" y="231" key="run.anything.popup/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1623316525900" />
+    <state x="2543" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1624263130219">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1620372485397" />
+    <state x="2543" y="225" width="672" height="678" key="search.everywhere.popup/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1624263130219" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>324</line>
+          <option name="timeStamp" value="159" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>325</line>
+          <option name="timeStamp" value="160" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>326</line>
+          <option name="timeStamp" value="161" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>327</line>
+          <option name="timeStamp" value="162" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>328</line>
+          <option name="timeStamp" value="163" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>329</line>
+          <option name="timeStamp" value="164" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>349</line>
+          <option name="timeStamp" value="165" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>2153</line>
+          <option name="timeStamp" value="217" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>2154</line>
+          <option name="timeStamp" value="218" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>2155</line>
+          <option name="timeStamp" value="219" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>2156</line>
+          <option name="timeStamp" value="220" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>2157</line>
+          <option name="timeStamp" value="221" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>2158</line>
+          <option name="timeStamp" value="222" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>2159</line>
+          <option name="timeStamp" value="223" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Fragments/TobbletCikkekPolcraFragment.kt</url>
+          <line>151</line>
+          <option name="timeStamp" value="257" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Fragments/TobbletCikkekPolcraFragment.kt</url>
+          <line>152</line>
+          <option name="timeStamp" value="258" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Fragments/TobbletCikkekPolcraFragment.kt</url>
+          <line>153</line>
+          <option name="timeStamp" value="259" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Fragments/TobbletCikkekPolcraFragment.kt</url>
+          <line>154</line>
+          <option name="timeStamp" value="260" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Fragments/TobbletCikkekPolcraFragment.kt</url>
+          <line>155</line>
+          <option name="timeStamp" value="261" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Fragments/TobbletCikkekPolcraFragment.kt</url>
+          <line>156</line>
+          <option name="timeStamp" value="262" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Fragments/TobbletCikkekPolcraFragment.kt</url>
+          <line>157</line>
+          <option name="timeStamp" value="263" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Activities/MainActivity.kt</url>
+          <line>837</line>
+          <option name="timeStamp" value="264" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>850</line>
+          <option name="timeStamp" value="267" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>865</line>
+          <option name="timeStamp" value="320" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>550</line>
+          <option name="timeStamp" value="322" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>552</line>
+          <option name="timeStamp" value="323" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>554</line>
+          <option name="timeStamp" value="324" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>556</line>
+          <option name="timeStamp" value="325" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>557</line>
+          <option name="timeStamp" value="326" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>558</line>
+          <option name="timeStamp" value="327" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>559</line>
+          <option name="timeStamp" value="328" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>561</line>
+          <option name="timeStamp" value="329" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>562</line>
+          <option name="timeStamp" value="330" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>564</line>
+          <option name="timeStamp" value="331" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>566</line>
+          <option name="timeStamp" value="332" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>568</line>
+          <option name="timeStamp" value="333" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>571</line>
+          <option name="timeStamp" value="334" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>573</line>
+          <option name="timeStamp" value="335" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1463</line>
+          <option name="timeStamp" value="337" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1464</line>
+          <option name="timeStamp" value="338" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1465</line>
+          <option name="timeStamp" value="339" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1466</line>
+          <option name="timeStamp" value="340" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1467</line>
+          <option name="timeStamp" value="341" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1461</line>
+          <option name="timeStamp" value="342" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1462</line>
+          <option name="timeStamp" value="343" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1459</line>
+          <option name="timeStamp" value="344" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1458</line>
+          <option name="timeStamp" value="345" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1457</line>
+          <option name="timeStamp" value="346" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1456</line>
+          <option name="timeStamp" value="347" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1455</line>
+          <option name="timeStamp" value="348" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1454</line>
+          <option name="timeStamp" value="349" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1453</line>
+          <option name="timeStamp" value="350" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1451</line>
+          <option name="timeStamp" value="351" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1450</line>
+          <option name="timeStamp" value="352" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1449</line>
+          <option name="timeStamp" value="353" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1447</line>
+          <option name="timeStamp" value="354" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1446</line>
+          <option name="timeStamp" value="355" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1445</line>
+          <option name="timeStamp" value="356" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1444</line>
+          <option name="timeStamp" value="357" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1448</line>
+          <option name="timeStamp" value="359" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1452</line>
+          <option name="timeStamp" value="360" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1468</line>
+          <option name="timeStamp" value="361" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1469</line>
+          <option name="timeStamp" value="362" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1470</line>
+          <option name="timeStamp" value="363" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1472</line>
+          <option name="timeStamp" value="364" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1475</line>
+          <option name="timeStamp" value="365" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1476</line>
+          <option name="timeStamp" value="366" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1477</line>
+          <option name="timeStamp" value="367" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Fragments/IgenyKontenerKiszedesCikkKiszedes.kt</url>
+          <line>248</line>
+          <option name="timeStamp" value="368" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Fragments/PolcraHelyezesFragment.kt</url>
+          <line>106</line>
+          <option name="timeStamp" value="375" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Fragments/PolcraHelyezesFragment.kt</url>
+          <line>107</line>
+          <option name="timeStamp" value="376" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Retrofit/RetrofitFunctions.kt</url>
+          <line>58</line>
+          <option name="timeStamp" value="382" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Fragments/IgenyKontenerKiszedesCikkKiszedes.kt</url>
+          <line>111</line>
+          <option name="timeStamp" value="383" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-function">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>549</line>
+          <properties class="com.fusetech.virtualkanban.Utils.SQL" method="closeContainerSql" />
+          <option name="timeStamp" value="321" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="kotlin-function">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/fusetech/virtualkanban/Utils/SQL.kt</url>
+          <line>1443</line>
+          <properties class="com.fusetech.virtualkanban.Utils.SQL" method="checkEllenorzoKodSql" />
+          <option name="timeStamp" value="358" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

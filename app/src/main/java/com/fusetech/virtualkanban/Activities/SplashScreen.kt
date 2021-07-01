@@ -1,14 +1,15 @@
 package com.fusetech.virtualkanban.Activities
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.fusetech.virtualkanban.R
 import com.fusetech.virtualkanban.Retrofit.RetrofitFunctions
+import kotlinx.android.synthetic.main.activity_splash_screen.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
 
     var further = true
+    private lateinit var progress: ProgressBar
 
     companion object {
         var mainUrl = "http://10.0.2.149:8030/"
@@ -35,6 +37,7 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
         setContentView(R.layout.activity_splash_screen)
         supportActionBar?.hide()
         val retro = RetrofitFunctions(this)
+        progress = progressBar3
 
         try {
             val intent = Intent(this, MainActivity::class.java)
@@ -42,7 +45,7 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
                 retro.getConfigDetails()
                 Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + " splash"}")
                 if(further) {
-                    delay(2000L)
+                    //delay(2000L)
                     intent.putExtra("main", mainUrl)
                     intent.putExtra("backup", backupURL)
                     intent.putExtra("endpoint", endPoint)
@@ -62,9 +65,9 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
     fun setSplashAlert() {
         val builder = AlertDialog.Builder(this@SplashScreen)
         builder.setTitle("Figyelem")
-            .setMessage("Nem tudott a szerverhez csatlakozni!")
+            .setMessage("A szerver nem elérhető!")
             .setPositiveButton("OK"){dialog, which ->
-
+                finishAndRemoveTask()
             }
         builder.create()
         builder.show()
@@ -75,8 +78,9 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
         further = false
         CoroutineScope(Main).launch {
             setSplashAlert()
-            delay(5000L)
-            Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + " main"}")
+            //delay(5000L)
+            Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name +"tr2"}")
+            progress.visibility = View.GONE
         }
     }
 }
