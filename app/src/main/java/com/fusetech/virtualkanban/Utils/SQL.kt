@@ -131,7 +131,19 @@ class SQL(val sqlMessage: SQLAlert) {
                 statement1.setString(1, code)
                 val resultSet1: ResultSet = statement1.executeQuery()
                 if (!resultSet1.next()) {
-                    myItems.add(PolcLocation("A110","0"))/////////////////////////////////////////////////////////////////////////
+                    val statement2 = connection.prepareStatement(res.getString(R.string.emptyBins))
+                    val resultSet2 = statement2.executeQuery()
+                    if(!resultSet2.next()){
+                        CoroutineScope(Dispatchers.Main).launch {
+                            context.setAlert("Nincs a polcon és be sem jönnek az üres polcok")
+                        }
+                    }else{
+                        do{
+                            val polc = resultSet2.getString("BinNumber")
+                            myItems.add(PolcLocation(polc,"0"))
+                        }while (resultSet2.next())
+                        context.polcHelyezesFragment.reload()
+                    }
                     context.polcHelyezesFragment.reload()
                     CoroutineScope(Dispatchers.Main).launch {
                         context.polcHelyezesFragment.setProgressBarOff()
@@ -146,7 +158,19 @@ class SQL(val sqlMessage: SQLAlert) {
                         val balanceQty: Int = resultSet1.getInt("BalanceQty")
                         myItems.add(PolcLocation(binNumber, balanceQty.toString()))
                     } while (resultSet1.next())
-                    myItems.add(PolcLocation("A110","0"))
+                    val statement3 = connection.prepareStatement(res.getString(R.string.emptyBins))
+                    val resultSet3 = statement3.executeQuery()
+                    if(!resultSet3.next()){
+                        CoroutineScope(Dispatchers.Main).launch {
+                            context.setAlert("Nincs a polcon és be sem jönnek az üres polcok")
+                        }
+                    }else{
+                        do{
+                            val polc = resultSet3.getString("BinNumber")
+                            myItems.add(PolcLocation(polc,"0"))
+                        }while (resultSet3.next())
+                        context.polcHelyezesFragment.reload()
+                    }
                     context.polcHelyezesFragment.reload()
                 }
             }

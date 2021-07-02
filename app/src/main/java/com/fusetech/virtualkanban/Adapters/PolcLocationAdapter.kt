@@ -1,6 +1,8 @@
 package com.fusetech.virtualkanban.Adapters
 
+import android.annotation.SuppressLint
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +10,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.DataItems.PolcLocation
 import com.fusetech.virtualkanban.R
+import com.fusetech.virtualkanban.R.color
+import com.fusetech.virtualkanban.R.color.darkZold
+import com.fusetech.virtualkanban.R.drawable
 import kotlinx.android.synthetic.main.polc_location_view.view.*
 
 class PolcLocationAdapter(private var locationItems: ArrayList<PolcLocation>, private val listener: PolcItemClickListener): RecyclerView.Adapter<PolcLocationAdapter.PolcLocationHolder>() {
@@ -35,14 +40,13 @@ class PolcLocationAdapter(private var locationItems: ArrayList<PolcLocation>, pr
         return PolcLocationHolder(itemView)
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: PolcLocationHolder, position: Int) {
         val currentItem = locationItems[position]
         if (locationItems[position].mennyiseg.equals("0")) {
-            holder.polcHely.setBackgroundColor(Color.GREEN)
-            holder.darabszam.setBackgroundColor(Color.GREEN)
+            holder.itemView.setBackgroundResource(R.drawable.color_green)
         } else {
-            holder.polcHely.setBackgroundColor(Color.WHITE)
-            holder.darabszam.setBackgroundColor(Color.WHITE)
+            holder.itemView.setBackgroundResource(R.drawable.highlight_selected2)
         }
         holder.polcHely.text = currentItem.polc
         holder.darabszam.text = currentItem.mennyiseg
@@ -55,3 +59,4 @@ class PolcLocationAdapter(private var locationItems: ArrayList<PolcLocation>, pr
         fun polcItemClick(position: Int)
     }
 }
+
