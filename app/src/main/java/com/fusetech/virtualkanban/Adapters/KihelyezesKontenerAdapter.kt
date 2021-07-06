@@ -1,6 +1,5 @@
 package com.fusetech.virtualkanban.Adapters
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,28 +10,38 @@ import kotlinx.android.synthetic.main.kihelyezes_item.view.*
 
 class KihelyezesKontenerAdapter(val lista: ArrayList<KihelyezesKontenerElemek>):
     RecyclerView.Adapter<KihelyezesKontenerAdapter.KihelyezesViewHolder>() {
-    class KihelyezesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-     val cikkszam = itemView.textView33
-     val megj1 = itemView.textView34
-     val megj2 = itemView.textView38
-     val intrem = itemView.textView36
-     val igeny = itemView.textView37
-     val kiadva = itemView.textView35
+    class KihelyezesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val cikkszam = itemView.textView33
+        val megj1 = itemView.textView34
+        val megj2 = itemView.textView38
+        val intrem = itemView.textView36
+        val igeny = itemView.textView37
+        val kiadva = itemView.textView35
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KihelyezesViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.kihelyezes_item,parent,false)
+        val itemView =
+            LayoutInflater.from(parent.context).inflate(R.layout.kihelyezes_item, parent, false)
         return KihelyezesViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: KihelyezesViewHolder, position: Int) {
         val currentItem = lista[position]
-        if(lista[position].kiadva == 0){
-            holder.cikkszam.setBackgroundColor(Color.RED)
-            holder.megj1.setBackgroundColor(Color.RED)
-            holder.megj2.setBackgroundColor(Color.RED)
-            holder.intrem.setBackgroundColor(Color.RED)
-            holder.igeny.setBackgroundColor(Color.RED)
-            holder.kiadva.setBackgroundColor(Color.RED)
+        if (lista[position].kiadva == 0) {
+            //holder.itemView.setBackgroundResource(R.drawable.red_select)
+            holder.cikkszam.setBackgroundResource(R.drawable.red_select)
+            holder.megj1.setBackgroundResource(R.drawable.red_select)
+            holder.megj2.setBackgroundResource(R.drawable.red_select)
+            holder.intrem.setBackgroundResource(R.drawable.red_select)
+            holder.igeny.setBackgroundResource(R.drawable.red_select)
+            holder.kiadva.setBackgroundResource(R.drawable.red_select)
+        } else {
+            holder.cikkszam.setBackgroundResource(R.drawable.highlight_selected2)
+            holder.megj1.setBackgroundResource(R.drawable.highlight_selected2)
+            holder.megj2.setBackgroundResource(R.drawable.highlight_selected2)
+            holder.intrem.setBackgroundResource(R.drawable.highlight_selected2)
+            holder.igeny.setBackgroundResource(R.drawable.highlight_selected2)
+            holder.kiadva.setBackgroundResource(R.drawable.highlight_selected2)
         }
         holder.cikkszam.text = currentItem.vonalkod
         holder.megj1.text = currentItem.megjegyzes1
