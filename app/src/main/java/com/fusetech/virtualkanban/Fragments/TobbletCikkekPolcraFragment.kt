@@ -38,7 +38,6 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
     private lateinit var polc : EditText
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar : ProgressBar
-    private lateinit var lezarasBtn : Button
     private lateinit var visszaBtn : Button
     private lateinit var mainActivity : MainActivity
     private var cikkid = 0
@@ -50,6 +49,7 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
     private var munit = ""
     private var mcikkszam = ""
     private var mmennyiseg : String? = ""
+    private lateinit var tsideContainer: FrameLayout
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,6 +57,8 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         val view = inflater.inflate(R.layout.fragment_tobblet_cikkek_polcra, container, false)
         mainActivity = activity as MainActivity
         kontenerID = view.tkontenerIDKiszedes
+        tsideContainer = view.tside_container2
+        tsideContainer.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
         cikkID = view.tcikkIDKiszedes
         cikkNumber = view.tkiszedesCikkEdit
         cikkNumber.isFocusable = false

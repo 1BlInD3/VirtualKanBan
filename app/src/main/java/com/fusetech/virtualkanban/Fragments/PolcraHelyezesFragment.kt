@@ -131,7 +131,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                         mennyisegText.selectAll()
                     } else {
                         mennyisegText.isEnabled = false
-                        sideContainer.descendantFocusability = ViewGroup.FOCUSABLE
+                        sideContainer.descendantFocusability = ViewGroup.FOCUS_AFTER_DESCENDANTS
                         sideContainer.requestFocus()
                         polcText.isEnabled = true
                         recycler.isEnabled = true
@@ -201,6 +201,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                                 cikkText.requestFocus()
                                 myItems.clear()
                                 recycler.adapter?.notifyDataSetChanged()
+                                sideContainer.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
                             }
                         }
                         CoroutineScope(Main).launch {
@@ -398,11 +399,13 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
     }
 
     override fun polcItemClick(position: Int) {
-        val value: String? = myItems[position].polc?.trim()
-        val isSelected = true
-        setBinNumber(value)
-        getAll(isSelected, position, value)
-        focusToBin()
+        if(mennyisegText.text.isNotBlank()){
+            val value: String? = myItems[position].polc?.trim()
+            val isSelected = true
+            setBinNumber(value)
+            getAll(isSelected, position, value)
+            focusToBin()
+        }
     }
 
     private fun getDataFromList(position: Int, value: Double) {
