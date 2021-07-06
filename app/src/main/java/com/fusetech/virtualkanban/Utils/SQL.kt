@@ -2056,9 +2056,35 @@ class SQL(val sqlMessage: SQLAlert) {
             statement.setString(1, cikkszam)
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    context.setAlert("Nincs a raktárban!")
-                    context.tobbletCikkek.nyolcaskettesProgressOff()
+                val statement1 = connection.prepareStatement(res.getString(R.string.emptyBins))
+                val resultSet1 = statement1.executeQuery()
+                if(!resultSet1.next()){
+                    CoroutineScope(Dispatchers.Main).launch {
+                       context.setAlert("Nincs a raktárban!")
+                       context.tobbletCikkek.nyolcaskettesProgressOff()
+                   }
+                }else{
+                    do {
+                        val binNumber = resultSet1.getString("BinNumber")
+                        raktarBin.add(PolcLocation(binNumber,"0"))
+                    }while (resultSet.next())
+                    val bundle = Bundle()
+                    bundle.putSerializable("LOCATIONBIN", raktarBin)
+                    bundle.putInt("IID", id)
+                    bundle.putInt("KID", kontenerID)
+                    bundle.putString("MMEGJ1", megjegyzes)
+                    bundle.putString("MMEGJ2", megjegyzes2)
+                    bundle.putString("IINT", intrem)
+                    bundle.putString("UUNIT", unit)
+                    bundle.putString("MMENNY", mennyiseg.toString())
+                    bundle.putString("MCIKK", cikkszam)
+                    context.tobbletCikkekPolcra.arguments = bundle
+                    CoroutineScope(Dispatchers.Main).launch {
+                        context.tobbletCikkek.nyolcaskettesProgressOff()
+                    }
+                    context.supportFragmentManager.beginTransaction()
+                        .replace(R.id.frame_container, context.tobbletCikkekPolcra, "CIKKEKPOLCRA")
+                        .commit()
                 }
             } else {
                 do {
@@ -2066,6 +2092,19 @@ class SQL(val sqlMessage: SQLAlert) {
                     val mennyiseg2 = resultSet.getString("BalanceQty")
                     raktarBin.add(PolcLocation(binNumber, mennyiseg2))
                 } while (resultSet.next())
+                val statement3 = connection.prepareStatement(res.getString(R.string.emptyBins))
+                val resultSet3 = statement3.executeQuery()
+                if(!resultSet3.next()){
+                    CoroutineScope(Dispatchers.Main).launch {
+                        context.setAlert("Nincs a raktárban!")
+                        context.tobbletCikkek.nyolcaskettesProgressOff()
+                    }
+                }else{
+                    do {
+                        val binNumber = resultSet3.getString("BinNumber")
+                        raktarBin.add(PolcLocation(binNumber, "0"))
+                    } while (resultSet3.next())
+                }
                 val bundle = Bundle()
                 bundle.putSerializable("LOCATIONBIN", raktarBin)
                 bundle.putInt("IID", id)

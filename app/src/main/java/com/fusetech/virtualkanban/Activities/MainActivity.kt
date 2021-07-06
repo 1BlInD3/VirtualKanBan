@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.Activities
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.res.Resources
 import android.os.Bundle
@@ -134,6 +135,7 @@ class MainActivity : AppCompatActivity(),
         val connectionString =
             "jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
         lateinit var res: Resources
+        @SuppressLint("StaticFieldLeak")
         lateinit var progress: ProgressBar
         val kihelyezesItems: ArrayList<SzerelohelyItem> = ArrayList()
         val cikkItem4: ArrayList<KontenerbenLezarasItem> = ArrayList()

@@ -27,7 +27,7 @@
             android:text="Polchely"
             android:textAlignment="textStart"
             android:textColor="@android:color/white"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -50,7 +50,7 @@
             android:text="Menny."
             android:textAlignment="textStart"
             android:textColor="@android:color/white"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

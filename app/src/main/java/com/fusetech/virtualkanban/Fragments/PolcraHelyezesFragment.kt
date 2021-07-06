@@ -80,6 +80,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         tranzitQtyText = myView.tranzitQtyTxt
         sideContainer = myView.side_container
         recycler = myView.locationRecyclerOne
+        recycler.isEnabled = false
         progressBar = myView.polcProgressBar
         ujCikk = myView.ujCikkPolcHelyezes
         setProgressBarOff()
@@ -132,6 +133,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                         mennyisegText.isEnabled = false
                         sideContainer.requestFocus()
                         polcText.isEnabled = true
+                        recycler.isEnabled = true
                     }
                 }
             } else {

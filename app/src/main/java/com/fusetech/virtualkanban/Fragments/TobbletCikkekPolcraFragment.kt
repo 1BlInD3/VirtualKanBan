@@ -74,8 +74,12 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         recyclerView.adapter = PolcLocationAdapter(tempLocations,this)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
         recyclerView.setHasFixedSize(true)
+        igeny.isFocusable = false
+        igeny.isFocusableInTouchMode = false
         polc.isFocusable = false
         polc.isFocusableInTouchMode = false
+        recyclerView.isFocusable = false
+        recyclerView.isFocusableInTouchMode = false
         loadData()
         progrssOff()
 
