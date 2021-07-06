@@ -46,7 +46,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
     private var megjegyzes2Text: TextView? = null
     private var intremText: TextView? = null
     private var unitText: TextView? = null
-    private lateinit var myView : View
+    private lateinit var myView: View
 
     companion object {
         val myItems: ArrayList<PolcLocation> = ArrayList()
@@ -79,8 +79,11 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         polcText = myView.polcTxt
         tranzitQtyText = myView.tranzitQtyTxt
         sideContainer = myView.side_container
+        sideContainer.isFocusable = false
+        sideContainer.isFocusableInTouchMode = false
         recycler = myView.locationRecyclerOne
-        recycler.isEnabled = false
+        recycler.isFocusable = false
+        recycler.isFocusableInTouchMode = false
         progressBar = myView.polcProgressBar
         ujCikk = myView.ujCikkPolcHelyezes
         setProgressBarOff()
@@ -162,50 +165,50 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                     }
                     async {
                         Log.d("IOTHREAD", "${Thread.currentThread().name} 1es opcio")
-                            if(mainActivity.check02Polc(bin)) {
-                                sendCode.sendTranzitData(cikk, "STD03", qty, "03", "02", bin)
-                            }else{
-                                CoroutineScope(Main).launch {
-                                    mainActivity.setAlert("Nincs ilyen polc a 02 raktárban")
-                                }
+                        if (mainActivity.check02Polc(bin)) {
+                            sendCode.sendTranzitData(cikk, "STD03", qty, "03", "02", bin)
+                        } else {
+                            CoroutineScope(Main).launch {
+                                mainActivity.setAlert("Nincs ilyen polc a 02 raktárban")
                             }
+                        }
                     }.await()
                     if (isSentTranzit) {
-                            if (trQty > qty) {
-                                CoroutineScope(Main).launch {
-                                    tranzitQtyTxt.setText((trQty - qty).toString())
-                                    polcText.setText("")
-                                    polcText.isEnabled = false
-                                    mennyisegText.isEnabled = true
-                                    mennyisegText.selectAll()
-                                    mennyisegText.requestFocus()
-                                    checkBinIsInTheList(bin, qty)
-                                }
-                            } else if (trQty == qty) {
-                                CoroutineScope(Main).launch {
-                                    checkBinIsInTheList(bin, qty)
-                                    tranzitQtyTxt.setText("0")
-                                    getDataFromList(binPos, qty)
-                                    mennyisegText.setText("")
-                                    tranzitQtyText.text = ""
-                                    polcText.setText("")
-                                    megjegyzes1Text?.text = ""
-                                    megjegyzes2Text?.text = ""
-                                    intremText?.text = ""
-                                    unitText?.text = ""
-                                    mennyisegText.isEnabled = false
-                                    polcText.isEnabled = false
-                                    cikkText.isEnabled = true
-                                    cikkText.setText("")
-                                    cikkText.requestFocus()
-                                    myItems.clear()
-                                    recycler.adapter?.notifyDataSetChanged()
-                                }
+                        if (trQty > qty) {
+                            CoroutineScope(Main).launch {
+                                tranzitQtyTxt.setText((trQty - qty).toString())
+                                polcText.setText("")
+                                polcText.isEnabled = false
+                                mennyisegText.isEnabled = true
+                                mennyisegText.selectAll()
+                                mennyisegText.requestFocus()
+                                checkBinIsInTheList(bin, qty)
                             }
+                        } else if (trQty == qty) {
+                            CoroutineScope(Main).launch {
+                                checkBinIsInTheList(bin, qty)
+                                tranzitQtyTxt.setText("0")
+                                getDataFromList(binPos, qty)
+                                mennyisegText.setText("")
+                                tranzitQtyText.text = ""
+                                polcText.setText("")
+                                megjegyzes1Text?.text = ""
+                                megjegyzes2Text?.text = ""
+                                intremText?.text = ""
+                                unitText?.text = ""
+                                mennyisegText.isEnabled = false
+                                polcText.isEnabled = false
+                                cikkText.isEnabled = true
+                                cikkText.setText("")
+                                cikkText.requestFocus()
+                                myItems.clear()
+                                recycler.adapter?.notifyDataSetChanged()
+                            }
+                        }
                         CoroutineScope(Main).launch {
                             setProgressBarOff()
                         }
-                    }else{
+                    } else {
                         CoroutineScope(Main).launch {
                             setProgressBarOff()
                         }
@@ -230,7 +233,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             mennyisegText.isEnabled = false
             mennyisegText.isFocusable = false
             mennyisegText.isFocusableInTouchMode = false
-           // polcText.requestFocus()
+            // polcText.requestFocus()
             TextKeyListener.clear(polcText.text)
             polcText.isEnabled = false
             polcText.isFocusable = false
@@ -314,6 +317,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         binPos = pos
         binValue = value
     }
+
     class DecimalDigitsInputFilter(digitsBeforeZero: Int, digitsAfterZero: Int) :
         InputFilter {
         var mPattern: Pattern =
@@ -336,7 +340,8 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
     fun onKilepPressed() {
         kilepButton.performClick()
     }
-    fun onTimeout(){
+
+    fun onTimeout() {
         /*if (view != null) {
             val ihm =
                 activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -379,6 +384,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         }*/
         mainActivity.loadLoginFragment()
     }
+
     fun setCode(code: String) {
         if (cikkText.text.isEmpty()) {
             cikkText.setText(code)
@@ -423,12 +429,14 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             }
         }
     }
+
     fun reload() {
         CoroutineScope(Main).launch {
             recycler.adapter?.notifyDataSetChanged()
         }
     }
-    fun setCikkNumberBack(){
+
+    fun setCikkNumberBack() {
         cikkText.setText("")
         cikkText.requestFocus()
     }

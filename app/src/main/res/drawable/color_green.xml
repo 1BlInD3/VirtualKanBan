@@ -3,6 +3,6 @@
     <item android:state_pressed="true"
         android:drawable="@color/pocakszin3"/>
     <item android:state_focused="true"
-        android:drawable="@color/darkZold" /> <!-- focused -->
+        android:drawable="@android:color/holo_green_dark" /> <!-- focused -->
     <item android:drawable="@android:color/holo_green_light" /> <!-- default -->
 </selector>
