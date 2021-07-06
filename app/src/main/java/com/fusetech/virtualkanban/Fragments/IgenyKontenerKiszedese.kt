@@ -46,7 +46,8 @@ class IgenyKontenerKiszedese : Fragment() {
         kilep = view.exit5Btn
         szallitoText = view.szallitoJarmuText
         szerelohely = view.szereloText
-        szerelohely.isEnabled = false
+        szerelohely.isFocusable = false
+        szerelohely.isFocusableInTouchMode = false
         szallitoText.requestFocus()
         kilep.setOnClickListener {
             when{
@@ -70,14 +71,17 @@ class IgenyKontenerKiszedese : Fragment() {
     fun setCode(code: String){
         if(szallitoText.text.isEmpty()){
             szallitoText.setText(code)
-            szallitoText.isEnabled = false
-            szerelohely.isEnabled = true
+            szallitoText.isFocusable = false
+            szallitoText.isFocusableInTouchMode = false
+            szerelohely.isFocusable = true
+            szerelohely.isFocusableInTouchMode = true
             szerelohely.requestFocus()
             mainActivity.getContainerList(code)
         }else{
             if(isCodeInList(code)){
                 szerelohely.setText(code)
-                szerelohely.isEnabled = false
+                szerelohely.isFocusable = false
+                szerelohely.isFocusableInTouchMode = false
                 mainActivity.loadKihelyezesItems(code)
             }else{
                 mainActivity.setAlert("Nincs a vonalkód a listában!")
@@ -86,9 +90,11 @@ class IgenyKontenerKiszedese : Fragment() {
     }
     fun mindentVissza(){
         szallitoText.setText("")
-        szallitoText.isEnabled = true
+        szallitoText.isFocusable = true
+        szallitoText.isFocusableInTouchMode = true
         szallitoText.requestFocus()
-        szerelohely.isEnabled = false
+        szerelohely.isFocusable = false
+        szerelohely.isFocusableInTouchMode = false
     }
     fun isCodeInList(code: String): Boolean{
         val bool = kihelyezesItems.contains(SzerelohelyItem(code))
@@ -96,13 +102,16 @@ class IgenyKontenerKiszedese : Fragment() {
     }
     fun exit(){
         kilep.requestFocus()
-        szallitoText.isEnabled = false
-        szerelohely.isEnabled = false
+        szallitoText.isFocusable = false
+        szallitoText.isFocusableInTouchMode = false
+        szerelohely.isFocusable = false
+        szerelohely.isFocusableInTouchMode = false
         szallitoText.setText("")
         szerelohely.setText("")
     }
     fun onBack(){
-        szerelohely.isEnabled = true
+        szerelohely.isFocusable = true
+        szerelohely.isFocusableInTouchMode = true
         szerelohely.requestFocus()
         szerelohely.setText("")
     }
