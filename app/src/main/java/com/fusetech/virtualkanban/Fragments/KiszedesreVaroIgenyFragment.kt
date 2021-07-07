@@ -63,6 +63,8 @@ class KiszedesreVaroIgenyFragment : Fragment(),KontenerAdapter.onKontenerClickLi
         val horizontalScrollView: HorizontalScrollView = child.horizontalScrollView3
         horizontalScrollView.isFocusable = false
         horizontalScrollView.isFocusableInTouchMode = false
+        exit3Btn.isFocusable = true
+        exit3Btn.isFocusableInTouchMode = true
         setProgressBarOff()
         childRecycler = child.child_recycler
         childRecycler.adapter = KontenerAdapter(kontenerList,this)
@@ -147,9 +149,5 @@ class KiszedesreVaroIgenyFragment : Fragment(),KontenerAdapter.onKontenerClickLi
         }else{
             throw RuntimeException(context.toString() + "must implement")
         }
-    }
-    fun setExitBackToFocus(){
-        exit3Btn.isFocusable = true
-        exit3Btn.isFocusableInTouchMode = true
     }
 }

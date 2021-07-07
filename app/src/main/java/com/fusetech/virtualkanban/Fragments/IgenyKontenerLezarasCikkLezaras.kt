@@ -30,21 +30,22 @@ private lateinit var mainActivity: MainActivity
 private lateinit var kontenerNev: TextView
 private const val TAG = "IgenyKontenerLezarasCik"
 private lateinit var progress: ProgressBar
-private lateinit var sendItemCode : IgenyKontenerLezarasCikkLezaras.CikkCode
+private lateinit var sendItemCode: IgenyKontenerLezarasCikkLezaras.CikkCode
 
 @Suppress("UNCHECKED_CAST")
 class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.onItemClickListener {
     private var param1: String? = null
     private var param2: String? = null
-    interface CikkCode{
+
+    interface CikkCode {
         fun cikkCode(code: Int)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        sendItemCode = if(context is CikkCode){
+        sendItemCode = if (context is CikkCode) {
             context
-        }else{
+        } else {
             throw RuntimeException(context.toString() + "must implement")
         }
     }
@@ -61,7 +62,7 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.kontenerben_lezaras_view,container,false)
+        val view = inflater.inflate(R.layout.kontenerben_lezaras_view, container, false)
         mainActivity = activity as MainActivity
         recycler = view.child_recycler2
         exitBtn = view.exit3CikkButton
@@ -72,7 +73,7 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
         horizontalScrollView.isFocusableInTouchMode = false
         progress = view.cikkLezarasProgress
         setProgressBarOff()
-        recycler.adapter = KontenerbenLezarasAdapter(kontItem,this)
+        recycler.adapter = KontenerbenLezarasAdapter(kontItem, this)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
         kontItem.clear()
@@ -86,9 +87,9 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
             exitBtn.isFocusableInTouchMode = true
             kontItem.clear()
             mainActivity.loadMenuFragment(true)
-            if(mainActivity.getFragment("CIKKLEZARASFRAGMENTHATOS")){
+            if (mainActivity.getFragment("CIKKLEZARASFRAGMENTHATOS")) {
                 mainActivity.kiszedesreVaro()
-            }else{
+            } else {
                 mainActivity.igenyKontenerCheck()
             }
         }
@@ -98,9 +99,9 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
             kontItem.clear()
             mainActivity.loadMenuFragment(true)
         }
-        if(arguments?.getBoolean("LEZARBUTN")!!){
+        if (arguments?.getBoolean("LEZARBUTN")!!) {
             lezarBtn.visibility = View.VISIBLE
-        }else{
+        } else {
             lezarBtn.visibility = View.GONE
         }
 
@@ -127,7 +128,8 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
 
         return view
     }
-    fun onTimeout(){
+
+    fun onTimeout() {
         kontItem.clear()
     }
 
@@ -141,26 +143,45 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
                 }
             }
     }
-    private fun loadData(){
+
+    private fun loadData() {
         try {
-            val myList: ArrayList<KontenerbenLezarasItem> = arguments?.getSerializable("CIKKLEZAR") as ArrayList<KontenerbenLezarasItem>
-            for(i in 0 until myList.size){
-                kontItem.add(KontenerbenLezarasItem(myList[i].cikkszam,myList[i].megjegyzes1,myList[i].megjegyzes2,myList[i].intrem,myList[i].igeny,myList[i].kiadva,myList[i].statusz,myList[i].unit,myList[i].id,myList[i].kontener_id))
+            val myList: ArrayList<KontenerbenLezarasItem> =
+                arguments?.getSerializable("CIKKLEZAR") as ArrayList<KontenerbenLezarasItem>
+            for (i in 0 until myList.size) {
+                kontItem.add(
+                    KontenerbenLezarasItem(
+                        myList[i].cikkszam,
+                        myList[i].megjegyzes1,
+                        myList[i].megjegyzes2,
+                        myList[i].intrem,
+                        myList[i].igeny,
+                        myList[i].kiadva,
+                        myList[i].statusz,
+                        myList[i].unit,
+                        myList[i].id,
+                        myList[i].kontener_id
+                    )
+                )
             }
             kontenerNev.text = arguments?.getString("KONTENER_ID")
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Log.d(TAG, "loadData: $e")
         }
     }
-    fun setProgressBarOff(){
+
+    fun setProgressBarOff() {
         progress.visibility = View.GONE
     }
-    fun setProgressBarOn(){
+
+    fun setProgressBarOn() {
         progress.visibility = View.VISIBLE
     }
-    fun buttonPerform(){
+
+    fun buttonPerform() {
         exitBtn.performClick()
     }
+
     override fun onItemClick(position: Int) {
         sendItemCode.cikkCode(kontItem[position].id)
     }

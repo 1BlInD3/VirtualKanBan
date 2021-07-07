@@ -873,9 +873,6 @@ class MainActivity : AppCompatActivity(),
             //loadTobbletKontenerKihelyezes()
         }
     }
-    fun setFocusBackToExitButton(){
-        kiszedesreVaroIgenyFragment.setExitBackToFocus()
-    }
     override fun onBackPressed() {
         try {
             when {
