@@ -1,6 +1,7 @@
 package com.fusetech.virtualkanban.Adapters
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,11 +37,17 @@ class KontenerAdapter(var kontenerItem: ArrayList<KontenerItem>, val listener: o
     override fun onBindViewHolder(holder: KontenerHolder, position: Int) {
         val currentItem = kontenerItem[position]
         if(kontenerItem[position].status == 2 || kontenerItem[position].status == 8){
-            holder.kontenerText.setBackgroundColor(R.color.vikings)
-            holder.polcText.setBackgroundColor(R.color.vikings)
-            holder.idoText.setBackgroundColor(R.color.vikings)
-            holder.tetelText.setBackgroundColor(R.color.vikings)
-            // holder.polcText.setBackgroundColor(Color.parseColor("#A5D4DC"))
+            holder.itemView.setBackgroundResource(R.drawable.blue_select)
+            holder.kontenerText.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.polcText.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.idoText.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.tetelText.setTextColor(Color.parseColor("#FFFFFF"))
+        }else{
+            holder.itemView.setBackgroundResource(R.drawable.highlight_selected2)
+            holder.kontenerText.setTextColor(Color.parseColor("#000000"))
+            holder.polcText.setTextColor(Color.parseColor("#000000"))
+            holder.idoText.setTextColor(Color.parseColor("#000000"))
+            holder.tetelText.setTextColor(Color.parseColor("#000000"))
         }
         holder.kontenerText.text = currentItem.kontener
         holder.polcText.text = currentItem.polc

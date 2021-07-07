@@ -1181,7 +1181,7 @@ class SQL(val sqlMessage: SQLAlert) {
                 context.kiszedesreVaroIgenyFragment.arguments = bundle
                 context.supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_container, context.kiszedesreVaroIgenyFragment, "VARAS")
-                    .addToBackStack(null).commit()
+                    /*.addToBackStack(null)*/.commit()
                 CoroutineScope(Dispatchers.Main).launch {
                     context.menuFragment.setMenuProgressOff()
                 }

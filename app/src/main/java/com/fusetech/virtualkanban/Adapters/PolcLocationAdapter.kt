@@ -40,7 +40,6 @@ class PolcLocationAdapter(private var locationItems: ArrayList<PolcLocation>, pr
         return PolcLocationHolder(itemView)
     }
 
-    @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: PolcLocationHolder, position: Int) {
         val currentItem = locationItems[position]
         if (locationItems[position].mennyiseg.equals("0")) {
@@ -50,7 +49,6 @@ class PolcLocationAdapter(private var locationItems: ArrayList<PolcLocation>, pr
         }
         holder.polcHely.text = currentItem.polc
         holder.darabszam.text = currentItem.mennyiseg
-        //holder.itemView.setSelected(selectedPos == position);
     }
 
     override fun getItemCount() = locationItems.size

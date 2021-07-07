@@ -1,6 +1,7 @@
 package com.fusetech.virtualkanban.Fragments
 
 import android.content.Context
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.HorizontalScrollView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -65,6 +67,9 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
         exitBtn = view.exit3CikkButton
         lezarBtn = view.lezar3Button
         kontenerNev = view.kontenerNameLezaras
+        val horizontalScrollView: HorizontalScrollView = view.horizontalScrollView3
+        horizontalScrollView.isFocusable = false
+        horizontalScrollView.isFocusableInTouchMode = false
         progress = view.cikkLezarasProgress
         setProgressBarOff()
         recycler.adapter = KontenerbenLezarasAdapter(kontItem,this)
@@ -77,6 +82,8 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
         recycler.requestFocus()
 
         exitBtn.setOnClickListener {
+            exitBtn.isFocusable = true
+            exitBtn.isFocusableInTouchMode = true
             kontItem.clear()
             mainActivity.loadMenuFragment(true)
             if(mainActivity.getFragment("CIKKLEZARASFRAGMENTHATOS")){
@@ -96,6 +103,28 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
         }else{
             lezarBtn.visibility = View.GONE
         }
+
+        /*Thread(Runnable {
+            var oldId = -1
+            while (true) {
+                val newView: View? = getView()?.findFocus()
+                if (newView != null && newView.id != oldId) {
+                    oldId = newView.id
+                    var idName: String = try {
+                        resources.getResourceEntryName(newView.id)
+                    } catch (e: Resources.NotFoundException) {
+                        newView.id.toString()
+                    }
+                    Log.i(TAG, "Focused Id: \t" + idName + "\tClass: \t" + newView.javaClass)
+                }
+                try {
+                    Thread.sleep(100)
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+            }
+        }).start()*/
+
         return view
     }
     fun onTimeout(){

@@ -1,6 +1,7 @@
 package com.fusetech.virtualkanban.Adapters
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,29 +42,29 @@ class KontenerbenLezarasAdapter(var kontenerCikkLezaras: ArrayList<KontenerbenLe
     override fun onBindViewHolder(holder: KontenerbenLezarasHolder, position: Int) {
         val currentPosition = kontenerCikkLezaras[position]
         if (kontenerCikkLezaras[position].statusz == 2) {
-            /*holder.cikkszam.setBackgroundResource(R.drawable.blue_select)
-            holder.megj1.setBackgroundResource(R.drawable.blue_select)
-            holder.megj2.setBackgroundResource(R.drawable.blue_select)
-            holder.intRem.setBackgroundResource(R.drawable.blue_select)
-            holder.igeny.setBackgroundResource(R.drawable.blue_select)
-            holder.mozgas.setBackgroundResource(R.drawable.blue_select)*/
             holder.itemView.setBackgroundResource(R.drawable.blue_select)
+            holder.cikkszam.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.megj1.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.megj2.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.intRem.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.igeny.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.mozgas.setTextColor(Color.parseColor("#FFFFFF"))
         } else if (kontenerCikkLezaras[position].statusz == 3) {
-            /*holder.cikkszam.setBackgroundResource(R.drawable.color_green)
-            holder.megj1.setBackgroundResource(R.drawable.color_green)
-            holder.megj2.setBackgroundResource(R.drawable.color_green)
-            holder.intRem.setBackgroundResource(R.drawable.color_green)
-            holder.igeny.setBackgroundResource(R.drawable.color_green)
-            holder.mozgas.setBackgroundResource(R.drawable.color_green)*/
             holder.itemView.setBackgroundResource(R.drawable.color_green)
+            holder.cikkszam.setTextColor(Color.parseColor("#000000"))
+            holder.megj1.setTextColor(Color.parseColor("#000000"))
+            holder.megj2.setTextColor(Color.parseColor("#000000"))
+            holder.intRem.setTextColor(Color.parseColor("#000000"))
+            holder.igeny.setTextColor(Color.parseColor("#000000"))
+            holder.mozgas.setTextColor(Color.parseColor("#000000"))
         } else {
             holder.itemView.setBackgroundResource(R.drawable.highlight_selected2)
-            /*holder.cikkszam.setBackgroundResource(R.drawable.highlight_selected2)
-            holder.megj1.setBackgroundResource(R.drawable.highlight_selected2)
-            holder.megj2.setBackgroundResource(R.drawable.highlight_selected2)
-            holder.intRem.setBackgroundResource(R.drawable.highlight_selected2)
-            holder.igeny.setBackgroundResource(R.drawable.highlight_selected2)
-            holder.mozgas.setBackgroundResource(R.drawable.highlight_selected2)*/
+            holder.cikkszam.setTextColor(Color.parseColor("#000000"))
+            holder.megj1.setTextColor(Color.parseColor("#000000"))
+            holder.megj2.setTextColor(Color.parseColor("#000000"))
+            holder.intRem.setTextColor(Color.parseColor("#000000"))
+            holder.igeny.setTextColor(Color.parseColor("#000000"))
+            holder.mozgas.setTextColor(Color.parseColor("#000000"))
         }
         holder.cikkszam.text = currentPosition.cikkszam
         holder.megj1.text = currentPosition.megjegyzes1
