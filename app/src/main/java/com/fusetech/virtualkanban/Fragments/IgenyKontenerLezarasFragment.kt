@@ -1,6 +1,7 @@
 package com.fusetech.virtualkanban.Fragments
 
 import android.content.Context
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -57,6 +58,8 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         val child = layoutInflater.inflate(R.layout.konteneres_view,null)
         dataFrame.addView(child)
         exitBtn = child.exit3Button
+        exitBtn.isFocusable = true
+        exitBtn.isFocusableInTouchMode = true
         progress = child.konteneresProgress
         setProgressBarOff()
         childRecycler = child.child_recycler
@@ -71,6 +74,29 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
             kontenerList.clear()
             mainActivity.loadMenuFragment(true)
         }
+
+
+        Thread(Runnable {
+            var oldId = -1
+            while (true) {
+                val newView: View? = getView()?.findFocus()
+                if (newView != null && newView.id != oldId) {
+                    oldId = newView.id
+                    var idName: String = try {
+                        resources.getResourceEntryName(newView.id)
+                    } catch (e: Resources.NotFoundException) {
+                        newView.id.toString()
+                    }
+                    Log.i(TAG, "Focused Id: \t" + idName + "\tClass: \t" + newView.javaClass)
+                }
+                try {
+                    Thread.sleep(100)
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+            }
+        }).start()
+
 
         return view
     }
@@ -89,6 +115,9 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
     override fun onKontenerClick(position: Int) {
         Log.d(TAG, "onKontenerClick: ${kontenerList[position].kontner_id}")
         igenyKontener.sendContainer(kontenerList[position].kontner_id.toString())
+        kontenerList.clear()
+        exitBtn.isFocusable = false
+        exitBtn.isFocusableInTouchMode = false
     }
     private fun loadData(){
         val myList: ArrayList<KontenerItem> = arguments?.getSerializable("KONTENERLISTA") as ArrayList<KontenerItem>

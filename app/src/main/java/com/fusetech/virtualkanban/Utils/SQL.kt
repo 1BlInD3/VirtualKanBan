@@ -749,11 +749,11 @@ class SQL(val sqlMessage: SQLAlert) {
                 igenyKiszedesCikkLezaras.arguments = bundle
                 context.supportFragmentManager.beginTransaction()
                     .replace(R.id.data_frame1, igenyKiszedesCikkLezaras, "CIKKLEZARASFRAGMENT")
-                    .addToBackStack(null).commit()
+                    /*.addToBackStack(null)*/.commit()
                 CoroutineScope(Dispatchers.Main).launch {
                     context.igenyLezarasFragment.setProgressBarOff()
                 }
-                kontenerCikkLezar.clear()
+                //kontenerCikkLezar.clear()
             }
         } catch (e: Exception) {
             Log.d(TAG, "loadKontenerCikkek: $e")
