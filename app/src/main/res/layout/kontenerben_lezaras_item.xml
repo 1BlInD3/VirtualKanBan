@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/kontenerbenCikkText"
@@ -12,11 +12,11 @@
         android:layout_marginStart="1dp"
         android:layout_marginTop="1dp"
         android:layout_marginBottom="1dp"
-        android:text="Cikk"
+        android:maxLines="1"
         android:paddingStart="5dp"
+        android:text="Cikk"
         android:textColor="@android:color/black"
         android:textSize="16sp"
-        android:maxLines="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,11 +26,11 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
-        android:text="Megj1"
+        android:maxLines="1"
         android:paddingStart="5dp"
+        android:text="Megj1"
         android:textColor="@android:color/black"
         android:textSize="16sp"
-        android:maxLines="1"
         app:layout_constraintStart_toEndOf="@+id/kontenerbenCikkText"
         app:layout_constraintTop_toTopOf="@+id/kontenerbenCikkText" />
 
@@ -39,11 +39,11 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
-        android:text="Megj2"
+        android:maxLines="1"
         android:paddingStart="5dp"
+        android:text="Megj2"
         android:textColor="@android:color/black"
         android:textSize="16sp"
-        android:maxLines="1"
         app:layout_constraintStart_toEndOf="@+id/kontenerbenMegj1Text"
         app:layout_constraintTop_toTopOf="@+id/kontenerbenCikkText" />
 
@@ -52,11 +52,11 @@
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
-        android:text="Intrem"
+        android:maxLines="1"
         android:paddingStart="5dp"
+        android:text="Intrem"
         android:textColor="@android:color/black"
         android:textSize="16sp"
-        android:maxLines="1"
         app:layout_constraintStart_toEndOf="@+id/kontenerbenMegj2Text"
         app:layout_constraintTop_toTopOf="@+id/kontenerbenCikkText" />
 
@@ -65,11 +65,11 @@
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
-        android:text="Igeny"
+        android:maxLines="1"
         android:paddingStart="5dp"
+        android:text="Igeny"
         android:textColor="@android:color/black"
         android:textSize="16sp"
-        android:maxLines="1"
         app:layout_constraintStart_toEndOf="@+id/kontenerbenIntRemText"
         app:layout_constraintTop_toTopOf="@+id/kontenerbenCikkText" />
 
@@ -79,11 +79,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
         android:layout_marginEnd="1dp"
-        android:text="Mozg"
+        android:maxLines="1"
         android:paddingStart="5dp"
+        android:text="Mozg"
         android:textColor="@android:color/black"
         android:textSize="16sp"
-        android:maxLines="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/kontenerbenIgenyeltText"
         app:layout_constraintTop_toTopOf="@+id/kontenerbenCikkText" />
@@ -99,12 +99,21 @@
         app:layout_constraintTop_toTopOf="@+id/kontenerbenCikkText" />
 
     <TextView
-        android:id="@+id/textView45"
+        android:id="@+id/textView46"
         android:layout_width="0dp"
         android:layout_height="2dp"
         android:background="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/kontenerbenCikkText"
         app:layout_constraintEnd_toEndOf="@id/konterbenMozgasText"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/kontenerbenCikkText" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView47"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:background="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/konterbenMozgasText"
+        app:layout_constraintStart_toEndOf="@+id/konterbenMozgasText"
+        app:layout_constraintTop_toTopOf="@+id/konterbenMozgasText" />
 </androidx.constraintlayout.widget.ConstraintLayout>
