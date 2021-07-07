@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.Adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,30 +37,33 @@ class KontenerbenLezarasAdapter(var kontenerCikkLezaras: ArrayList<KontenerbenLe
             .inflate(R.layout.kontenerben_lezaras_item, parent, false)
         return KontenerbenLezarasHolder(itemView)
     }
-
+    @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: KontenerbenLezarasHolder, position: Int) {
         val currentPosition = kontenerCikkLezaras[position]
         if (kontenerCikkLezaras[position].statusz == 2) {
-            holder.cikkszam.setBackgroundResource(R.drawable.blue_select)
+            /*holder.cikkszam.setBackgroundResource(R.drawable.blue_select)
             holder.megj1.setBackgroundResource(R.drawable.blue_select)
             holder.megj2.setBackgroundResource(R.drawable.blue_select)
             holder.intRem.setBackgroundResource(R.drawable.blue_select)
             holder.igeny.setBackgroundResource(R.drawable.blue_select)
-            holder.mozgas.setBackgroundResource(R.drawable.blue_select)
+            holder.mozgas.setBackgroundResource(R.drawable.blue_select)*/
+            holder.itemView.setBackgroundResource(R.drawable.blue_select)
         } else if (kontenerCikkLezaras[position].statusz == 3) {
-            holder.cikkszam.setBackgroundResource(R.drawable.color_green)
+            /*holder.cikkszam.setBackgroundResource(R.drawable.color_green)
             holder.megj1.setBackgroundResource(R.drawable.color_green)
             holder.megj2.setBackgroundResource(R.drawable.color_green)
             holder.intRem.setBackgroundResource(R.drawable.color_green)
             holder.igeny.setBackgroundResource(R.drawable.color_green)
-            holder.mozgas.setBackgroundResource(R.drawable.color_green)
+            holder.mozgas.setBackgroundResource(R.drawable.color_green)*/
+            holder.itemView.setBackgroundResource(R.drawable.color_green)
         } else {
-            holder.cikkszam.setBackgroundResource(R.drawable.highlight_selected)
-            holder.megj1.setBackgroundResource(R.drawable.highlight_selected)
-            holder.megj2.setBackgroundResource(R.drawable.highlight_selected)
-            holder.intRem.setBackgroundResource(R.drawable.highlight_selected)
-            holder.igeny.setBackgroundResource(R.drawable.highlight_selected)
-            holder.mozgas.setBackgroundResource(R.drawable.highlight_selected)
+            holder.itemView.setBackgroundResource(R.drawable.highlight_selected2)
+            /*holder.cikkszam.setBackgroundResource(R.drawable.highlight_selected2)
+            holder.megj1.setBackgroundResource(R.drawable.highlight_selected2)
+            holder.megj2.setBackgroundResource(R.drawable.highlight_selected2)
+            holder.intRem.setBackgroundResource(R.drawable.highlight_selected2)
+            holder.igeny.setBackgroundResource(R.drawable.highlight_selected2)
+            holder.mozgas.setBackgroundResource(R.drawable.highlight_selected2)*/
         }
         holder.cikkszam.text = currentPosition.cikkszam
         holder.megj1.text = currentPosition.megjegyzes1
