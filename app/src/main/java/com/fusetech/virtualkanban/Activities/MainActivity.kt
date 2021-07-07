@@ -130,9 +130,9 @@ class MainActivity : AppCompatActivity(),
     var a = 0
 
     companion object {
-        val url =
+        const val url =
             "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10"
-        val connectionString =
+        const val connectionString =
             "jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
         lateinit var res: Resources
         @SuppressLint("StaticFieldLeak")
@@ -873,7 +873,9 @@ class MainActivity : AppCompatActivity(),
             //loadTobbletKontenerKihelyezes()
         }
     }
-
+    fun setFocusBackToExitButton(){
+        kiszedesreVaroIgenyFragment.setExitBackToFocus()
+    }
     override fun onBackPressed() {
         try {
             when {

@@ -77,7 +77,7 @@ class KiszedesreVaroIgenyFragment : Fragment(),KontenerAdapter.onKontenerClickLi
             mainActivity.loadMenuFragment(true)
         }
 
-        Thread(Runnable {
+        /*Thread(Runnable {
             var oldId = -1
             while (true) {
                 val newView: View? = getView()?.findFocus()
@@ -96,7 +96,7 @@ class KiszedesreVaroIgenyFragment : Fragment(),KontenerAdapter.onKontenerClickLi
                     e.printStackTrace()
                 }
             }
-        }).start()
+        }).start()*/
 
 
 
@@ -147,5 +147,9 @@ class KiszedesreVaroIgenyFragment : Fragment(),KontenerAdapter.onKontenerClickLi
         }else{
             throw RuntimeException(context.toString() + "must implement")
         }
+    }
+    fun setExitBackToFocus(){
+        exit3Btn.isFocusable = true
+        exit3Btn.isFocusableInTouchMode = true
     }
 }
