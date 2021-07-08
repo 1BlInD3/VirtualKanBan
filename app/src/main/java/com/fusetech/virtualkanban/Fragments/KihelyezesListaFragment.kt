@@ -26,7 +26,7 @@ private const val ARG_PARAM2 = "param2"
 private const val TAG = "KihelyezesListaFragment"
 
 @Suppress("UNCHECKED_CAST")
-class KihelyezesListaFragment : Fragment() {
+class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.KihelyezesListener {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var recycler: RecyclerView
@@ -51,7 +51,7 @@ class KihelyezesListaFragment : Fragment() {
         mainActivity = activity as MainActivity
         kihelyezes = view.kihelyezesBtn
         recycler = view.recKihelyezesLista
-        recycler.adapter = KihelyezesKontenerAdapter(myList)
+        recycler.adapter = KihelyezesKontenerAdapter(myList,this)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
         myList.clear()
@@ -118,6 +118,10 @@ class KihelyezesListaFragment : Fragment() {
             recycler.adapter?.notifyDataSetChanged()
         }
         szerelohely = arguments?.getString("KIHELYEZESHELY") as String
+    }
+
+    override fun kihelyezesClick(pos: Int) {
+        Log.d(TAG, "kihelyezesClick: ${myList[pos]}")
     }
 
 }

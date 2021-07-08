@@ -76,32 +76,10 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         childRecycler.adapter?.notifyDataSetChanged()
 
         exitBtn.setOnClickListener{
+            Log.d(TAG, "onButtonPressed")
             kontenerList.clear()
             mainActivity.loadMenuFragment(true)
         }
-
-
-        Thread(Runnable {
-            var oldId = -1
-            while (true) {
-                val newView: View? = getView()?.findFocus()
-                if (newView != null && newView.id != oldId) {
-                    oldId = newView.id
-                    var idName: String = try {
-                        resources.getResourceEntryName(newView.id)
-                    } catch (e: Resources.NotFoundException) {
-                        newView.id.toString()
-                    }
-                    Log.i(TAG, "Focused Id: \t" + idName + "\tClass: \t" + newView.javaClass)
-                }
-                try {
-                    Thread.sleep(100)
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
-                }
-            }
-        }).start()
-
 
         return view
     }
@@ -145,18 +123,5 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
     }
     fun setProgressBarOn(){
         progress.visibility = View.VISIBLE
-    }
-
-
-    override fun onPause() {
-        exitBtn.isFocusable = false
-        exitBtn.isFocusableInTouchMode = false
-        super.onPause()
-    }
-
-    override fun onResume() {
-        exitBtn.isFocusable = true
-        exitBtn.isFocusableInTouchMode = true
-        super.onResume()
     }
 }

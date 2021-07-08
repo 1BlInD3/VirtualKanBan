@@ -1,8 +1,5 @@
 package com.fusetech.virtualkanban.Adapters
 
-import android.annotation.SuppressLint
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +7,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.DataItems.PolcLocation
 import com.fusetech.virtualkanban.R
-import com.fusetech.virtualkanban.R.color
-import com.fusetech.virtualkanban.R.color.darkZold
-import com.fusetech.virtualkanban.R.drawable
 import kotlinx.android.synthetic.main.polc_location_view.view.*
 
 class PolcLocationAdapter(private var locationItems: ArrayList<PolcLocation>, private val listener: PolcItemClickListener): RecyclerView.Adapter<PolcLocationAdapter.PolcLocationHolder>() {
