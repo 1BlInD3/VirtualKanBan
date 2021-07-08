@@ -450,7 +450,7 @@ class MainActivity : AppCompatActivity(),
                 13 -> kiszedesreVaro()  //6
                 14 -> containerCheck7(dolgKod)  //7
                 15 -> loadTobbletKontenerKihelyezes()  //8
-                16 -> loadCikklekerdezesFragment()  //9
+                16 -> loadCikklekerdezesFragment()  //91
             }
         }
         myTimer.start()
@@ -938,6 +938,9 @@ class MainActivity : AppCompatActivity(),
                 }
                 getFragment("CIKKEKPOLCRA") -> {
                     tobbletCikkekPolcra.onButtonPressed()
+                }
+                getFragment("LOGIN") -> {
+                    Log.d(TAG, "onBackPressed: LOGIN")
                 }
                 //getFragment()
                 else -> {

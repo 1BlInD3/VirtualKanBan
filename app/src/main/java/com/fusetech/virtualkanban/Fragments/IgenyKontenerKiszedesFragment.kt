@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.HorizontalScrollView
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,7 @@ import com.fusetech.virtualkanban.Adapters.KontenerAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes.view.*
+import kotlinx.android.synthetic.main.fragment_polc_result.*
 import kotlinx.android.synthetic.main.konteneres_view.view.*
 
 private const val ARG_PARAM1 = "param1"
@@ -53,8 +55,13 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
         childFrame = view.data_frame2
         val child = layoutInflater.inflate(R.layout.konteneres_view,null)
         childFrame.addView(child)
+        val horizontalScrollView: HorizontalScrollView = child.horizontalScrollView3
+        horizontalScrollView.isFocusable = false
+        horizontalScrollView.isFocusableInTouchMode = false
         progress = child.konteneresProgress
         exit3Btn = child.exit3Button
+        exit3Btn.isFocusable = true
+        exit3Btn.isFocusableInTouchMode = true
         setProgressBarOff()
         childRecycler = child.child_recycler
         childRecycler.adapter = KontenerAdapter(kontenerList,this)
@@ -85,6 +92,10 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
 
     override fun onKontenerClick(position: Int) {
         mainActivity.checkIfContainerStatus(kontenerList[position].kontner_id.toString())
+        exit3Btn.isFocusable = false
+        exit3Btn.isFocusableInTouchMode = false
+        kontenerList.clear()
+        childRecycler.adapter?.notifyDataSetChanged()
     }
     private fun loadData(){
         try {
