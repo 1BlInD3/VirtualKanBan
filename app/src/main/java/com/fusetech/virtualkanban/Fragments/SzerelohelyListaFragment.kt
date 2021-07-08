@@ -40,7 +40,8 @@ class SzerelohelyListaFragment : Fragment() {
         recycler.adapter = SzerelohelyItemAdapter(kihelyezesItems)
         recycler.layoutManager = GridLayoutManager(view.context,3)
         recycler.setHasFixedSize(true)
-
+        recycler.isFocusable = false
+        recycler.isFocusableInTouchMode = false
         getData()
 
         return view

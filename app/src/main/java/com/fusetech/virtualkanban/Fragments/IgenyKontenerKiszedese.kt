@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ProgressBar
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.kihelyezesItems
@@ -41,6 +42,10 @@ class IgenyKontenerKiszedese : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_igeny_kontener_kiszedese, container, false)
         mainActivity = activity as MainActivity
+        val frame : FrameLayout = view.kihelyezesFrame
+        frame.isFocusable = false
+        frame.isFocusableInTouchMode = false
+        //frame.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
         progress = view.kihelyezesProgressBar
         progressBarOff()
         kilep = view.exit5Btn

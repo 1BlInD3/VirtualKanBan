@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.HorizontalScrollView
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,7 @@ import com.fusetech.virtualkanban.Adapters.KontenerAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_lezaras.view.*
+import kotlinx.android.synthetic.main.konteneres_view.*
 import kotlinx.android.synthetic.main.konteneres_view.view.*
 
 private const val ARG_PARAM1 = "param1"
@@ -57,6 +59,9 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         dataFrame = view.data_frame1
         val child = layoutInflater.inflate(R.layout.konteneres_view,null)
         dataFrame.addView(child)
+        val horizontalScrollView: HorizontalScrollView = child.horizontalScrollView3
+        horizontalScrollView.isFocusable = false
+        horizontalScrollView.isFocusableInTouchMode = false
         exitBtn = child.exit3Button
         exitBtn.isFocusable = true
         exitBtn.isFocusableInTouchMode = true
@@ -116,6 +121,7 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         Log.d(TAG, "onKontenerClick: ${kontenerList[position].kontner_id}")
         igenyKontener.sendContainer(kontenerList[position].kontner_id.toString())
         kontenerList.clear()
+        childRecycler.adapter?.notifyDataSetChanged()
         exitBtn.isFocusable = false
         exitBtn.isFocusableInTouchMode = false
     }
