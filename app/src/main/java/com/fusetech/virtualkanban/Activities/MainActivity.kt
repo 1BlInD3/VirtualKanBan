@@ -126,6 +126,7 @@ class MainActivity : AppCompatActivity(),
     val tobbletKontenerKihelyzeseFragment = TobbletKontenerKihelyzeseFragment()
     val tobbletCikkek = TobbletKontenerCikkekFragment()
     val tobbletCikkekPolcra = TobbletCikkekPolcraFragment()
+    val koztesFragment = KoztesFragment()
     private lateinit var myTimer: CountDownTimer
     var a = 0
 
@@ -311,6 +312,9 @@ class MainActivity : AppCompatActivity(),
     fun loadLoginFragment() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_container, loginFragment, "LOGIN").commit()
+    }
+    fun loadKoztes(){
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container,koztesFragment,"KOZTES").commit()
     }
 
     private fun getMenuFragment(): Boolean {

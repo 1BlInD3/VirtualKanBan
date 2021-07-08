@@ -2,6 +2,7 @@ package com.fusetech.virtualkanban.Fragments
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -89,6 +90,8 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         locationRecycler.layoutManager = LinearLayoutManager(view.context)
         locationRecycler.setHasFixedSize(true)
         cikkEdit = view.kiszedesCikkEdit
+        val childFrame: FrameLayout = view.side_container2
+        childFrame.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
         meg1 = view.kiszedesMegj1
         meg2 = view.kiszedesMegj2
         intrem = view.intrem
@@ -110,10 +113,8 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         mennyiseg.isFocusable = false
         mennyiseg.isFocusableInTouchMode = false
         polc.keyListener = null
-        polc.isFocusable = true
-        polc.isFocusableInTouchMode = true
-        polc.isCursorVisible = true
-        polc.requestFocus()
+        polc.isFocusable = false
+        polc.isFocusableInTouchMode = false
         //mennyiseg.requestFocus()
         loadData()
         locationRecycler.adapter?.notifyDataSetChanged()
@@ -162,9 +163,11 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             builder.show()
         }
         vissza.setOnClickListener {
+
             mainActivity.cikkUpdate(cikkIDKiszedes.text.trim().toString().toInt())
-            mainActivity.loadMenuFragment(true)
-            mainActivity.loadKiszedesFragment()
+            //mainActivity.loadMenuFragment(true)
+            mainActivity.loadKoztes()
+            //mainActivity.loadKiszedesFragment()
             mainActivity.checkIfContainerStatus(kontenerIDKiszedes.text.trim().toString())
         }
         mennyiseg.setOnClickListener {
@@ -316,6 +319,28 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             polc.setText("")
             polc.requestFocus()
         }
+
+        Thread(Runnable {
+            var oldId = -1
+            while (true) {
+                val newView: View? = getView()?.findFocus()
+                if (newView != null && newView.id != oldId) {
+                    oldId = newView.id
+                    var idName: String = try {
+                        resources.getResourceEntryName(newView.id)
+                    } catch (e: Resources.NotFoundException) {
+                        newView.id.toString()
+                    }
+                    Log.i(TAG, "Focused Id: \t" + idName + "\tClass: \t" + newView.javaClass)
+                }
+                try {
+                    Thread.sleep(100)
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+            }
+        }).start()
+
         return view
     }
 

@@ -140,4 +140,17 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
     fun setProgressBarOn(){
         progress.visibility = View.VISIBLE
     }
+
+
+    override fun onPause() {
+        exitBtn.isFocusable = false
+        exitBtn.isFocusableInTouchMode = false
+        super.onPause()
+    }
+
+    override fun onResume() {
+        exitBtn.isFocusable = true
+        exitBtn.isFocusableInTouchMode = true
+        super.onResume()
+    }
 }

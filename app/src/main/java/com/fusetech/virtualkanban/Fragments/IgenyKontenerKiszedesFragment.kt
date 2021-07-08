@@ -1,6 +1,7 @@
 package com.fusetech.virtualkanban.Fragments
 
 import android.annotation.SuppressLint
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -76,6 +77,27 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
             mainActivity.loadMenuFragment(true)
         }
 
+        Thread(Runnable {
+            var oldId = -1
+            while (true) {
+                val newView: View? = getView()?.findFocus()
+                if (newView != null && newView.id != oldId) {
+                    oldId = newView.id
+                    var idName: String = try {
+                        resources.getResourceEntryName(newView.id)
+                    } catch (e: Resources.NotFoundException) {
+                        newView.id.toString()
+                    }
+                    Log.i(TAG, "Focused Id: \t" + idName + "\tClass: \t" + newView.javaClass)
+                }
+                try {
+                    Thread.sleep(100)
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+            }
+        }).start()
+
        return view
     }
 
@@ -118,6 +140,13 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
     override fun onResume() {
         super.onResume()
         childRecycler.requestFocus()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        exit3Btn.isFocusable = false
+        exit3Btn.isFocusableInTouchMode = false
+
     }
 
     override fun onDestroy() {
