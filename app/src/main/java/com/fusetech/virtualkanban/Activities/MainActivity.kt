@@ -152,15 +152,11 @@ class MainActivity : AppCompatActivity(),
         var ellenorzoKod: ArrayList<String> = ArrayList()
         var kivalasztottSzallitoJarmu = ""
         var kivalasztottSzallitoJarmuEllenorzo = ""
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        /*CoroutineScope(IO).launch {
-            retro.getConfigDetails()
-        }*/
         val bundle: Bundle = intent.extras!!
         mainUrl = bundle.getString("main")!!
         Log.d("MYBUNDLE", "onCreate: $mainUrl")
@@ -445,16 +441,16 @@ class MainActivity : AppCompatActivity(),
         cancelTimer()
         if (getMenuFragment()) {
             when (keyCode) {
-                7 -> finishAndRemoveTask()
-                8 -> loadPolcHelyezesFragment()
-                9 -> containerCheck(dolgKod)
-                10 -> igenyKontenerCheck()
-                11 -> igenyKontenerKiszedes()//Log.d(TAG, "onKeyDown: $keyCode")
-                12 -> loadKihelyezesFragment()//Log.d(TAG, "onKeyDown: $keyCode")
-                13 -> kiszedesreVaro()//Log.d(TAG, "onKeyDown: $keyCode")
-                14 -> containerCheck7(dolgKod)//Log.d(TAG, "onKeyDown: $keyCode")
-                15 -> loadTobbletKontenerKihelyezes()//Log.d(TAG, "onKeyDown: $keyCode")
-                16 -> loadCikklekerdezesFragment()
+                7 -> finishAndRemoveTask() //0
+                8 -> loadPolcHelyezesFragment() //1
+                9 -> containerCheck(dolgKod)  //2
+                10 -> igenyKontenerCheck()  //3
+                11 -> igenyKontenerKiszedes()  //4
+                12 -> loadKihelyezesFragment()  //5
+                13 -> kiszedesreVaro()  //6
+                14 -> containerCheck7(dolgKod)  //7
+                15 -> loadTobbletKontenerKihelyezes()  //8
+                16 -> loadCikklekerdezesFragment()  //9
             }
         }
         myTimer.start()

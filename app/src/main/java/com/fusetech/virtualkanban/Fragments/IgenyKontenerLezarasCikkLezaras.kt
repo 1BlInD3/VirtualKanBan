@@ -105,7 +105,7 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
             lezarBtn.visibility = View.GONE
         }
 
-        /*Thread(Runnable {
+        Thread(Runnable {
             var oldId = -1
             while (true) {
                 val newView: View? = getView()?.findFocus()
@@ -124,7 +124,7 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
                     e.printStackTrace()
                 }
             }
-        }).start()*/
+        }).start()
 
         return view
     }
