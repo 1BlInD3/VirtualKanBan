@@ -34,6 +34,7 @@ class IgenyItemAdapter(private var myItemIgeny: ArrayList<IgenyItem>, private va
     }
     override fun onBindViewHolder(holder: IgenyItemAdapterHolder, position: Int) {
        val currentPosition = myItemIgeny[position]
+        holder.itemView.setBackgroundResource(R.drawable.text_white_selector)
         holder.cikkszam.text = currentPosition.cikkszam
         holder.megjegyzes.text = currentPosition.megnevezes
         holder.mertegys.text = currentPosition.mennyiseg

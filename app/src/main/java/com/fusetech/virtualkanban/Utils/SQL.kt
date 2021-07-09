@@ -293,6 +293,7 @@ class SQL(val sqlMessage: SQLAlert) {
                         context.menuFragment.setMenuProgressOff()
                     }
                 }
+                //context.listIgenyItems.clear()
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {

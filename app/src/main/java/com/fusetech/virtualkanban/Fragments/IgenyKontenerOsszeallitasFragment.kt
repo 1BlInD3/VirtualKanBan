@@ -177,6 +177,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         }
 
         kilepButton.setOnClickListener {
+            mainActivity.listIgenyItems.clear()
             clearAll()
             mainActivity.loadMenuFragment(true)
         }
@@ -202,7 +203,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
     }
 
     fun clearAll() {
-
+        mainActivity.listIgenyItems.clear()
         kontenerText.text = ""
         igenyList.clear()
         igenyReveresed.clear()

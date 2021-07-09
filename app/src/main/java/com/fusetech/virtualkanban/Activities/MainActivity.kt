@@ -882,6 +882,10 @@ class MainActivity : AppCompatActivity(),
                 getFragment("CIKKLEZARASFRAGMENT") -> {
                     igenyKiszedesCikkLezaras.buttonPerform()
                 }
+                getFragment("IGENY") -> { //2
+                    igenyFragment.clearAll()
+                    loadMenuFragment(true)
+                }
                 getFragment("CIKKLEZARASFRAGMENTHATOS") -> {
                     igenyKiszedesCikkLezaras.buttonPerform()
                 }

@@ -6,74 +6,46 @@
     android:layout_height="wrap_content"
     android:background="@drawable/highlight_selected">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/polcName"
+    <TextView
+        android:id="@+id/cikkszam_igeny"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:maxLines="1"
+        android:layout_marginStart="2dp"
+        android:paddingStart="4dp"
+        android:text="cikkszam"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/megjegyzes_igeny_view"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:paddingStart="4dp"
         android:layout_marginStart="2dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="1dp"
-        app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:text="megjegyzes"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/cikkszam_igeny"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/cikkszam_igeny"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:maxLines="1"
-            android:paddingStart="4dp"
-            android:text="cikkszam"
-            android:textAlignment="textStart"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+    <TextView
+        android:id="@+id/mert_igeny"
         android:layout_width="100dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:maxLength="9"
+        android:paddingStart="4dp"
         android:layout_marginStart="2dp"
-        android:layout_marginEnd="2dp"
-        app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="1dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/polcName"
-        app:layout_constraintTop_toTopOf="@+id/polcName">
-
-        <TextView
-            android:id="@+id/megjegyzes_igeny_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:paddingStart="4dp"
-            android:text="megjegyzes"
-            android:textAlignment="textStart"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="80dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginEnd="2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cardView"
-        app:layout_constraintTop_toTopOf="@+id/cardView">
-
-        <TextView
-            android:id="@+id/mert_igeny"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="4dp"
-            android:text="mért.egys"
-            android:textColor="@android:color/black"
-            android:maxLength = "9"
-            android:textSize="16sp" />
-    </androidx.cardview.widget.CardView>
+        android:text="mért.egys"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/megjegyzes_igeny_view"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
