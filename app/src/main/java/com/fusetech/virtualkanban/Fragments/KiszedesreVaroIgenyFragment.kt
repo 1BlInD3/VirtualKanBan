@@ -64,7 +64,6 @@ class KiszedesreVaroIgenyFragment : Fragment(),KontenerAdapter.onKontenerClickLi
         horizontalScrollView.isFocusable = false
         horizontalScrollView.isFocusableInTouchMode = false
         exit3Btn.isFocusable = true
-        exit3Btn.isFocusableInTouchMode = true
         setProgressBarOff()
         childRecycler = child.child_recycler
         childRecycler.adapter = KontenerAdapter(kontenerList,this)
@@ -119,7 +118,6 @@ class KiszedesreVaroIgenyFragment : Fragment(),KontenerAdapter.onKontenerClickLi
         childRecycler.isFocusable = false
         childRecycler.isFocusableInTouchMode = false
         exit3Btn.isFocusable = false
-        exit3Btn.isFocusableInTouchMode = false
         sendContainerCode.containerCode(kontenerList[position].kontner_id.toString())
         kontenerList.clear()
         childRecycler.adapter?.notifyDataSetChanged()

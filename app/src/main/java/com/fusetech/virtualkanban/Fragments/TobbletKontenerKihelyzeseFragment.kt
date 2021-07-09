@@ -52,6 +52,7 @@ class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontener
         //kontenerItem.add(KontenerItem("256137","P20","2020",5,"000256",1))
         setProgressBar8Off()
         loadData()
+        recycler.requestFocus()
         button.setOnClickListener {
             mainActivity.loadMenuFragment(true)
         }

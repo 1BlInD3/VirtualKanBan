@@ -64,7 +64,6 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         horizontalScrollView.isFocusableInTouchMode = false
         exitBtn = child.exit3Button
         exitBtn.isFocusable = true
-        exitBtn.isFocusableInTouchMode = true
         progress = child.konteneresProgress
         setProgressBarOff()
         childRecycler = child.child_recycler

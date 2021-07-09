@@ -42,7 +42,7 @@ class KontenerbenLezarasAdapter(var kontenerCikkLezaras: ArrayList<KontenerbenLe
     override fun onBindViewHolder(holder: KontenerbenLezarasHolder, position: Int) {
         val currentPosition = kontenerCikkLezaras[position]
         if (kontenerCikkLezaras[position].statusz == 2) {
-            holder.itemView.setBackgroundResource(R.drawable.blue_select)
+            holder.itemView.setBackgroundResource(R.drawable.text_blue_selector)
             holder.cikkszam.setTextColor(Color.parseColor("#FFFFFF"))
             holder.megj1.setTextColor(Color.parseColor("#FFFFFF"))
             holder.megj2.setTextColor(Color.parseColor("#FFFFFF"))
@@ -50,7 +50,7 @@ class KontenerbenLezarasAdapter(var kontenerCikkLezaras: ArrayList<KontenerbenLe
             holder.igeny.setTextColor(Color.parseColor("#FFFFFF"))
             holder.mozgas.setTextColor(Color.parseColor("#FFFFFF"))
         } else if (kontenerCikkLezaras[position].statusz == 3) {
-            holder.itemView.setBackgroundResource(R.drawable.color_green)
+            holder.itemView.setBackgroundResource(R.drawable.text_green_selector)
             holder.cikkszam.setTextColor(Color.parseColor("#000000"))
             holder.megj1.setTextColor(Color.parseColor("#000000"))
             holder.megj2.setTextColor(Color.parseColor("#000000"))
@@ -58,7 +58,7 @@ class KontenerbenLezarasAdapter(var kontenerCikkLezaras: ArrayList<KontenerbenLe
             holder.igeny.setTextColor(Color.parseColor("#000000"))
             holder.mozgas.setTextColor(Color.parseColor("#000000"))
         } else {
-            holder.itemView.setBackgroundResource(R.drawable.highlight_selected2)
+            holder.itemView.setBackgroundResource(R.drawable.text_white_selector)
             holder.cikkszam.setTextColor(Color.parseColor("#000000"))
             holder.megj1.setTextColor(Color.parseColor("#000000"))
             holder.megj2.setTextColor(Color.parseColor("#000000"))

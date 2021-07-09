@@ -37,13 +37,13 @@ class KontenerAdapter(var kontenerItem: ArrayList<KontenerItem>, val listener: o
     override fun onBindViewHolder(holder: KontenerHolder, position: Int) {
         val currentItem = kontenerItem[position]
         if(kontenerItem[position].status == 2 || kontenerItem[position].status == 8){
-            holder.itemView.setBackgroundResource(R.drawable.blue_select)
+            holder.itemView.setBackgroundResource(R.drawable.text_blue_selector)
             holder.kontenerText.setTextColor(Color.parseColor("#FFFFFF"))
             holder.polcText.setTextColor(Color.parseColor("#FFFFFF"))
             holder.idoText.setTextColor(Color.parseColor("#FFFFFF"))
             holder.tetelText.setTextColor(Color.parseColor("#FFFFFF"))
         }else{
-            holder.itemView.setBackgroundResource(R.drawable.highlight_selected2)
+            holder.itemView.setBackgroundResource(R.drawable.text_white_selector)
             holder.kontenerText.setTextColor(Color.parseColor("#000000"))
             holder.polcText.setTextColor(Color.parseColor("#000000"))
             holder.idoText.setTextColor(Color.parseColor("#000000"))

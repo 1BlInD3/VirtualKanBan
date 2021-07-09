@@ -62,7 +62,7 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
         progress = child.konteneresProgress
         exit3Btn = child.exit3Button
         exit3Btn.isFocusable = true
-        exit3Btn.isFocusableInTouchMode = true
+        //exit3Btn.isFocusableInTouchMode = true
         setProgressBarOff()
         childRecycler = child.child_recycler
         childRecycler.adapter = KontenerAdapter(kontenerList,this)
@@ -141,13 +141,11 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
         super.onResume()
         childRecycler.requestFocus()
     }
-
-    override fun onPause() {
+   /* override fun onPause() {
         super.onPause()
         exit3Btn.isFocusable = false
         exit3Btn.isFocusableInTouchMode = false
-
-    }
+    }*/
 
     override fun onDestroy() {
         kontenerList.clear()

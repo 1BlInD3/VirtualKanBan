@@ -37,9 +37,9 @@ class PolcLocationAdapter(private var locationItems: ArrayList<PolcLocation>, pr
     override fun onBindViewHolder(holder: PolcLocationHolder, position: Int) {
         val currentItem = locationItems[position]
         if (locationItems[position].mennyiseg.equals("0")) {
-            holder.itemView.setBackgroundResource(R.drawable.color_green)
+            holder.itemView.setBackgroundResource(R.drawable.text_green_selector)
         } else {
-            holder.itemView.setBackgroundResource(R.drawable.highlight_selected2)
+            holder.itemView.setBackgroundResource(R.drawable.text_white_selector)
         }
         holder.polcHely.text = currentItem.polc
         holder.darabszam.text = currentItem.mennyiseg
