@@ -1,7 +1,6 @@
 package com.fusetech.virtualkanban.Fragments
 
 import android.content.Context
-import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -24,11 +23,6 @@ import kotlinx.android.synthetic.main.kontenerben_lezaras_view.view.*
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private lateinit var recycler: RecyclerView
-private lateinit var exitBtn: Button
-private lateinit var lezarBtn: Button
-private lateinit var mainActivity: MainActivity
-private lateinit var kontenerNev: TextView
-private lateinit var progress: ProgressBar
 private const val TAG = "IgenyKontenerLezarasCik"
 private lateinit var sendItemCode: IgenyKontenerLezarasCikkLezaras.CikkCode
 
@@ -36,6 +30,12 @@ private lateinit var sendItemCode: IgenyKontenerLezarasCikkLezaras.CikkCode
 class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.onItemClickListener {
     private var param1: String? = null
     private var param2: String? = null
+
+    private lateinit var exitBtn: Button
+    private lateinit var lezarBtn: Button
+    private lateinit var mainActivity: MainActivity
+    private lateinit var kontenerNev: TextView
+    private lateinit var progress: ProgressBar
 
     interface CikkCode {
         fun cikkCode(code: Int)
@@ -92,6 +92,7 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
             } else {
                 mainActivity.igenyKontenerCheck()
             }
+            mainActivity.removeFragment("CIKKLEZARASFRAGMENTHATOS")
         }
         lezarBtn.setOnClickListener {
             setProgressBarOn()
@@ -105,32 +106,12 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
             lezarBtn.visibility = View.GONE
         }
 
-        /*Thread(Runnable {
-            var oldId = -1
-            while (true) {
-                val newView: View? = getView()?.findFocus()
-                if (newView != null && newView.id != oldId) {
-                    oldId = newView.id
-                    var idName: String = try {
-                        resources.getResourceEntryName(newView.id)
-                    } catch (e: Resources.NotFoundException) {
-                        newView.id.toString()
-                    }
-                    Log.i(TAG, "Focused Id: \t" + idName + "\tClass: \t" + newView.javaClass)
-                }
-                try {
-                    Thread.sleep(100)
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
-                }
-            }
-        }).start() */
-
         return view
     }
 
     fun onTimeout() {
         kontItem.clear()
+        mainActivity.removeFragment("CIKKLEZARASFRAGMENTHATOS")
     }
 
     companion object {

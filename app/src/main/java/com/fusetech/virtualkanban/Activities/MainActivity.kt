@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity(),
     var igenyLezarasFragment = IgenyKontenerLezarasFragment()
     var igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
     private lateinit var igenyKiszedesCikk: IgenyKontnerKiszedesCikk
-    private lateinit var igenyKiszedesCikkLezaras: IgenyKontenerLezarasCikkLezaras
+    var igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
     var kiszedesreVaroIgenyFragment = KiszedesreVaroIgenyFragment()
     private lateinit var szallitoJarmuFragment: SzallitoJartmuFragment
     var igenyKontenerKiszedesCikkKiszedes = IgenyKontenerKiszedesCikkKiszedes()
@@ -888,6 +888,7 @@ class MainActivity : AppCompatActivity(),
                 }
                 getFragment("CIKKLEZARASFRAGMENTHATOS") -> {
                     igenyKiszedesCikkLezaras.buttonPerform()
+                    removeFragment("CIKKLEZARASFRAGMENTHATOS")
                 }
                 getFragment("SZALLITO") -> {
                     loadMenuFragment(true)
@@ -985,5 +986,10 @@ class MainActivity : AppCompatActivity(),
 
     override fun triggerError() {
         TODO("Not yet implemented")
+    }
+    fun removeFragment(fragment: String){
+        val fragment = supportFragmentManager.findFragmentByTag(fragment)
+        if (fragment != null) supportFragmentManager.beginTransaction().remove(fragment)
+            .commit()
     }
 }

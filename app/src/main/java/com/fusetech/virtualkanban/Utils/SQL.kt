@@ -1238,7 +1238,7 @@ class SQL(val sqlMessage: SQLAlert) {
                     context.kiszedesreVaroIgenyFragment.setProgressBarOff()
                 }
             } else {
-                val igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
+                //val igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
                 context.igenyLezarCikkVisible = true
                 val kontenerCikkLezar: ArrayList<KontenerbenLezarasItem> = ArrayList()
                 do {
@@ -1273,11 +1273,11 @@ class SQL(val sqlMessage: SQLAlert) {
                 bundle.putSerializable("CIKKLEZAR", kontenerCikkLezar)
                 bundle.putString("KONTENER_ID", kontener_id)
                 bundle.putBoolean("LEZARBUTN", false)
-                igenyKiszedesCikkLezaras.arguments = bundle
+                context.igenyKiszedesCikkLezaras.arguments = bundle
                 context.supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.data_frame3,
-                        igenyKiszedesCikkLezaras,
+                        context.igenyKiszedesCikkLezaras,
                         "CIKKLEZARASFRAGMENTHATOS"
                     )
                     .addToBackStack(null).commit()
