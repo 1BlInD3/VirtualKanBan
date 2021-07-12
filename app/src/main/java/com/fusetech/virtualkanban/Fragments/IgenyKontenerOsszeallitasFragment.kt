@@ -182,21 +182,25 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
             mainActivity.loadMenuFragment(true)
         }
         lezarButton.setOnClickListener {
-            setProgressBarOn()
-            val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
-            Log.d(TAG, "onCreateView: $currentDateAndTime")
-            if (polcTextIgeny.text.isEmpty() && igenyReveresed.size == 0) {
-                sendBinCode.closeContainer(5, currentDateAndTime)
-                setProgressBarOff()
-                clearAll()
-                mainActivity.loadMenuFragment(true)
-                Log.d(TAG, "onCreateView: lezártam az üreset")
+            if (igenyReveresed.size > 0) {
+                setProgressBarOn()
+                val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+                Log.d(TAG, "onCreateView: $currentDateAndTime")
+                if (polcTextIgeny.text.isEmpty() && igenyReveresed.size == 0) {
+                    sendBinCode.closeContainer(5, currentDateAndTime)
+                    setProgressBarOff()
+                    clearAll()
+                    mainActivity.loadMenuFragment(true)
+                    Log.d(TAG, "onCreateView: lezártam az üreset")
+                } else {
+                    sendBinCode.closeContainer(1, currentDateAndTime) // ezt 1esre kéne átírni
+                    setProgressBarOff()
+                    clearAll()
+                    mainActivity.loadMenuFragment(true)
+                    Log.d(TAG, "onCreateView: lezártam amibe volt adat")
+                }
             } else {
-                sendBinCode.closeContainer(1, currentDateAndTime) // ezt 1esre kéne átírni
-                setProgressBarOff()
-                clearAll()
-                mainActivity.loadMenuFragment(true)
-                Log.d(TAG, "onCreateView: lezártam amibe volt adat")
+                mainActivity.setAlert("Nincsenek tételek a konténerben")
             }
         }
         return view
@@ -321,7 +325,9 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
 
     class DecimalDigitsInputFilter(digitsBeforeZero: Int, digitsAfterZero: Int) :
         InputFilter {
-        private var mPattern: Pattern = Pattern.compile("[0-9]{0," + (digitsBeforeZero - 1) + "}+((\\.[0-9]{0," + (digitsAfterZero - 1) + "})?)||(\\.)?")
+        private var mPattern: Pattern =
+            Pattern.compile("[0-9]{0," + (digitsBeforeZero - 1) + "}+((\\.[0-9]{0," + (digitsAfterZero - 1) + "})?)||(\\.)?")
+
         override fun filter(
             source: CharSequence,
             start: Int,

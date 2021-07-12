@@ -72,7 +72,6 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         childRecycler.setHasFixedSize(true)
         kontenerList.clear()
         loadData()
-        childRecycler.adapter?.notifyDataSetChanged()
 
         exitBtn.setOnClickListener{
             Log.d(TAG, "onButtonPressed")
@@ -106,6 +105,10 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         val myList: ArrayList<KontenerItem> = arguments?.getSerializable("KONTENERLISTA") as ArrayList<KontenerItem>
         for(i in 0 until myList.size){
             kontenerList.add(KontenerItem(myList[i].kontener,myList[i].polc,myList[i].datum,myList[i].tetelszam,myList[i].kontner_id,myList[i].status))
+        }
+        childRecycler.adapter?.notifyDataSetChanged()
+        if(kontenerList.size > 0){
+            childRecycler.requestFocus()
         }
     }
 

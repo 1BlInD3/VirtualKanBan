@@ -58,7 +58,14 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
 
     interface SendBinCode2 {
         fun sendBinCode2(code: String)
-        fun sendDetails2(cikkszam: String, mennyiseg: Double, term_rakhely: String, unit: String, kontener: String)
+        fun sendDetails2(
+            cikkszam: String,
+            mennyiseg: Double,
+            term_rakhely: String,
+            unit: String,
+            kontener: String
+        )
+
         fun closeContainer2(statusz: Int, datum: String)
     }
 
@@ -93,6 +100,8 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         unit_igeny2 = view.tunit_igeny
         cikkItem_igeny = view.tcikk_igeny
         mennyiseg_igeny2 = view.tmennyiseg_igeny
+        mennyiseg_igeny2.isFocusable = false
+        cikkItem_igeny.isFocusable = false
         kilepButton = view.tkilep_igeny_button
         mennyiseg_igeny2.filters = arrayOf<InputFilter>(
             DecimalDigitsInputFilter(
@@ -133,7 +142,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             )
         }
         mennyiseg_igeny2.setOnClickListener {
-            val konti = kontenerText.text.trim().substring(4,kontenerText.text.trim().length)
+            val konti = kontenerText.text.trim().substring(4, kontenerText.text.trim().length)
             igenyList.add(
                 IgenyItem(
                     cikkItem_igeny.text.toString().trim(), megjegyzes1_igeny.text.toString().trim(),
@@ -197,52 +206,56 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             }
         }
         lezarButton.setOnClickListener {
-            val polc = polcTextIgeny.text.trim().toString()
-            setProgressBarOn()
-            val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
-            var a = 0
-            CoroutineScope(IO).launch {
-                for (i in 0 until igenyReveresed.size){
-                    isSent = false
-                    if (igenyReveresed[i].mennyiseg.toDouble() != 0.0){
-                        async {
-                            mainActivity.sendKihelyezesXmlData(
-                                igenyReveresed[i].cikkszam, polc,
-                                igenyReveresed[i].mennyiseg.toDouble(),
-                                "01",
-                                "21",
-                                "SZ01"
-                            )
-                        }.await()
-                        if(isSent){
-                            a++
+            if (igenyReveresed.size > 0) {
+                val polc = polcTextIgeny.text.trim().toString()
+                setProgressBarOn()
+                val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+                var a = 0
+                CoroutineScope(IO).launch {
+                    for (i in 0 until igenyReveresed.size) {
+                        isSent = false
+                        if (igenyReveresed[i].mennyiseg.toDouble() != 0.0) {
+                            async {
+                                mainActivity.sendKihelyezesXmlData(
+                                    igenyReveresed[i].cikkszam, polc,
+                                    igenyReveresed[i].mennyiseg.toDouble(),
+                                    "01",
+                                    "21",
+                                    "SZ01"
+                                )
+                            }.await()
+                            if (isSent) {
+                                a++
+                            }
                         }
                     }
-                }
-                if(a == igenyReveresed.size){
-                    Log.d(TAG, "onCreateView: $currentDateAndTime")
-                    if (polcTextIgeny.text.isEmpty() && igenyReveresed.size == 0) {
-                        sendBinCode2.closeContainer2(7, currentDateAndTime)
-                        CoroutineScope(Main).launch {
-                            setProgressBarOff()
-                            clearAll()
-                            Log.d(TAG, "onCreateView: lezártam az üreset")
+                    if (a == igenyReveresed.size) {
+                        Log.d(TAG, "onCreateView: $currentDateAndTime")
+                        if (polcTextIgeny.text.isEmpty() && igenyReveresed.size == 0) {
+                            sendBinCode2.closeContainer2(7, currentDateAndTime)
+                            CoroutineScope(Main).launch {
+                                setProgressBarOff()
+                                clearAll()
+                                Log.d(TAG, "onCreateView: lezártam az üreset")
+                            }
+                            mainActivity.loadMenuFragment(true)
+                        } else {
+                            sendBinCode2.closeContainer2(7, currentDateAndTime)
+                            CoroutineScope(Main).launch {
+                                setProgressBarOff()
+                                clearAll()
+                                Log.d(TAG, "onCreateView: lezártam amibe volt adat")
+                            }
+                            mainActivity.loadMenuFragment(true)
                         }
-                        mainActivity.loadMenuFragment(true)
                     } else {
-                        sendBinCode2.closeContainer2(7, currentDateAndTime)
                         CoroutineScope(Main).launch {
-                            setProgressBarOff()
-                            clearAll()
-                            Log.d(TAG, "onCreateView: lezártam amibe volt adat")
+                            mainActivity.setAlert("Nem teljes a siker")
                         }
-                        mainActivity.loadMenuFragment(true)
-                    }
-                }else{
-                    CoroutineScope(Main).launch {
-                        mainActivity.setAlert("Nem teljes a siker")
                     }
                 }
+            } else {
+                mainActivity.setAlert("Nincs semmilyen cikk felvéve igénynek")
             }
         }
 
@@ -269,7 +282,6 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         intrem_igeny2.text = ""
         cikkItem_igeny.setText("")
         TextKeyListener.clear(cikkItem_igeny.text)
-        cikkItem_igeny.isEnabled = false
         cikkItem_igeny.isFocusable = false
         cikkItem_igeny.isFocusableInTouchMode = false
         igenyReveresed.clear()
@@ -291,6 +303,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
 
     fun setFocusToItem(code: String) {
         polcTextIgeny.setText(code)
+        cikkItem_igeny.isFocusable = true
         cikkItem_igeny.requestFocus()
         cikkItem_igeny.selectAll()
         polcTextIgeny.isFocusable = false
@@ -301,7 +314,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         mennyiseg_igeny2.isEnabled = true
         mennyiseg_igeny2.selectAll()
         mennyiseg_igeny2.requestFocus()
-        cikkItem_igeny.isEnabled = false
+        cikkItem_igeny.isFocusable = false
     }
 
     override fun onAttach(context: Context) {
@@ -355,6 +368,10 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         super.onResume()
         kontenerText.text = arguments?.getString("KONTENER")
         polcTextIgeny.setText(arguments?.getString("TERMRAKH"))
+        if(polcTextIgeny.text.isNotEmpty()){
+            cikkItem_igeny.isFocusable = true
+            cikkItem_igeny.requestFocus()
+        }
     }
 
     class DecimalDigitsInputFilter(digitsBeforeZero: Int, digitsAfterZero: Int) :

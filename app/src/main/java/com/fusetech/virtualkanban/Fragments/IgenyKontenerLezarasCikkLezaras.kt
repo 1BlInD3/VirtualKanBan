@@ -28,8 +28,8 @@ private lateinit var exitBtn: Button
 private lateinit var lezarBtn: Button
 private lateinit var mainActivity: MainActivity
 private lateinit var kontenerNev: TextView
-private const val TAG = "IgenyKontenerLezarasCik"
 private lateinit var progress: ProgressBar
+private const val TAG = "IgenyKontenerLezarasCik"
 private lateinit var sendItemCode: IgenyKontenerLezarasCikkLezaras.CikkCode
 
 @Suppress("UNCHECKED_CAST")
@@ -105,7 +105,7 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
             lezarBtn.visibility = View.GONE
         }
 
-        Thread(Runnable {
+        /*Thread(Runnable {
             var oldId = -1
             while (true) {
                 val newView: View? = getView()?.findFocus()
@@ -124,7 +124,7 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
                     e.printStackTrace()
                 }
             }
-        }).start()
+        }).start() */
 
         return view
     }

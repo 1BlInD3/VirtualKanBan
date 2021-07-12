@@ -133,15 +133,15 @@ class SQL(val sqlMessage: SQLAlert) {
                 if (!resultSet1.next()) {
                     val statement2 = connection.prepareStatement(res.getString(R.string.emptyBins))
                     val resultSet2 = statement2.executeQuery()
-                    if(!resultSet2.next()){
+                    if (!resultSet2.next()) {
                         CoroutineScope(Dispatchers.Main).launch {
                             context.setAlert("Nincs a polcon és be sem jönnek az üres polcok")
                         }
-                    }else{
-                        do{
+                    } else {
+                        do {
                             val polc = resultSet2.getString("BinNumber")
-                            myItems.add(PolcLocation(polc,"0"))
-                        }while (resultSet2.next())
+                            myItems.add(PolcLocation(polc, "0"))
+                        } while (resultSet2.next())
                         context.polcHelyezesFragment.reload()
                     }
                     context.polcHelyezesFragment.reload()
@@ -160,15 +160,15 @@ class SQL(val sqlMessage: SQLAlert) {
                     } while (resultSet1.next())
                     val statement3 = connection.prepareStatement(res.getString(R.string.emptyBins))
                     val resultSet3 = statement3.executeQuery()
-                    if(!resultSet3.next()){
+                    if (!resultSet3.next()) {
                         CoroutineScope(Dispatchers.Main).launch {
                             context.setAlert("Nincs a polcon és be sem jönnek az üres polcok")
                         }
-                    }else{
-                        do{
+                    } else {
+                        do {
                             val polc = resultSet3.getString("BinNumber")
-                            myItems.add(PolcLocation(polc,"0"))
-                        }while (resultSet3.next())
+                            myItems.add(PolcLocation(polc, "0"))
+                        } while (resultSet3.next())
                         context.polcHelyezesFragment.reload()
                     }
                     context.polcHelyezesFragment.reload()
@@ -888,11 +888,11 @@ class SQL(val sqlMessage: SQLAlert) {
                 )
                 Log.d("IOTHREAD", "sendXmlData: ${Thread.currentThread().name}")
                 try {
-                    context.retro.retrofitGet(file,endPoint)
+                    context.retro.retrofitGet(file, endPoint)
                 } catch (e: Exception) {
                     val a = mainUrl
                     mainUrl = backupURL
-                    context.retro.retrofitGet(file,endPoint)
+                    context.retro.retrofitGet(file, endPoint)
                     mainUrl = a
                 }
             }
@@ -903,7 +903,8 @@ class SQL(val sqlMessage: SQLAlert) {
                     file.delete()
                 }
                 val catchFile = context.save.prepareFile(
-                    context.getExternalFilesDir(null).toString(),SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + Random.nextInt(
+                    context.getExternalFilesDir(null).toString(),
+                    SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + Random.nextInt(
                         0,
                         10000
                     ) + ".txt"
@@ -912,9 +913,9 @@ class SQL(val sqlMessage: SQLAlert) {
                         context,
                         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
                     ) == PackageManager.PERMISSION_GRANTED
-                ){
-                    context.save.saveFile(catchFile,"myData")
-                    context.retro.retrofitGet(catchFile,"//10.0.0.11/TeszWeb/bin")
+                ) {
+                    context.save.saveFile(catchFile, "myData")
+                    context.retro.retrofitGet(catchFile, "//10.0.0.11/TeszWeb/bin")
                 }
             }
         }
@@ -974,10 +975,31 @@ class SQL(val sqlMessage: SQLAlert) {
             statement.setString(2, bin)
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    context.setAlert("Nincs ilyen cikk a polcon")
-                    context.tobbletOsszeallitasFragment.setProgressBarOff()
-                    context.tobbletOsszeallitasFragment.setFocusToItem(code)
+                val statement1 =
+                    connection.prepareStatement(res.getString(R.string.cikkSql3ProdOnly))
+                statement1.setString(1, code)
+                val resultSet1 = statement1.executeQuery()
+                if (!resultSet1.next()) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        context.setAlert("Nincs ilyen cikk a sem a polcon sem a termelésben")
+                        context.tobbletOsszeallitasFragment.setProgressBarOff()
+                        context.tobbletOsszeallitasFragment.setFocusToItem(bin)
+                    }
+                }else{
+                    var message = ""
+                    //val igenyTermeles: ArrayList<IgenyItem> = ArrayList()
+                    do {
+                        val balance: Double = resultSet1.getString("BalanceQty").toDouble()
+                        message += resultSet1.getString("BinNumber") +"\t" + balance.toString()+"\n"
+                        /*val mennyiseg = resultSet1.getString("BalanceQty")
+                        val polc = resultSet1.getString("BinNumber")*/
+                        //igenyTermeles.add(IgenyItem(polc,mennyiseg,"Termelés"))
+                    }while (resultSet1.next())
+                    CoroutineScope(Dispatchers.Main).launch {
+                        context.setAlert("A cikk ezeken a polcokon található a termelésben: \n\n$message")
+                        context.tobbletOsszeallitasFragment.setProgressBarOff()
+                        context.tobbletOsszeallitasFragment.setFocusToItem(bin)
+                    }
                 }
             } else {
                 val megjegyzesIgeny: String = resultSet.getString("Description1")
@@ -2059,16 +2081,16 @@ class SQL(val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 val statement1 = connection.prepareStatement(res.getString(R.string.emptyBins))
                 val resultSet1 = statement1.executeQuery()
-                if(!resultSet1.next()){
+                if (!resultSet1.next()) {
                     CoroutineScope(Dispatchers.Main).launch {
-                       context.setAlert("Nincs a raktárban!")
-                       context.tobbletCikkek.nyolcaskettesProgressOff()
-                   }
-                }else{
+                        context.setAlert("Nincs a raktárban!")
+                        context.tobbletCikkek.nyolcaskettesProgressOff()
+                    }
+                } else {
                     do {
                         val binNumber = resultSet1.getString("BinNumber")
-                        raktarBin.add(PolcLocation(binNumber,"0"))
-                    }while (resultSet.next())
+                        raktarBin.add(PolcLocation(binNumber, "0"))
+                    } while (resultSet.next())
                     val bundle = Bundle()
                     bundle.putSerializable("LOCATIONBIN", raktarBin)
                     bundle.putInt("IID", id)
@@ -2095,12 +2117,12 @@ class SQL(val sqlMessage: SQLAlert) {
                 } while (resultSet.next())
                 val statement3 = connection.prepareStatement(res.getString(R.string.emptyBins))
                 val resultSet3 = statement3.executeQuery()
-                if(!resultSet3.next()){
+                if (!resultSet3.next()) {
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("Nincs a raktárban!")
                         context.tobbletCikkek.nyolcaskettesProgressOff()
                     }
-                }else{
+                } else {
                     do {
                         val binNumber = resultSet3.getString("BinNumber")
                         raktarBin.add(PolcLocation(binNumber, "0"))

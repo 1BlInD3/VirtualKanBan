@@ -320,27 +320,6 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             polc.requestFocus()
         }
 
-        Thread(Runnable {
-            var oldId = -1
-            while (true) {
-                val newView: View? = getView()?.findFocus()
-                if (newView != null && newView.id != oldId) {
-                    oldId = newView.id
-                    var idName: String = try {
-                        resources.getResourceEntryName(newView.id)
-                    } catch (e: Resources.NotFoundException) {
-                        newView.id.toString()
-                    }
-                    Log.i(TAG, "Focused Id: \t" + idName + "\tClass: \t" + newView.javaClass)
-                }
-                try {
-                    Thread.sleep(100)
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
-                }
-            }
-        }).start()
-
         return view
     }
 
