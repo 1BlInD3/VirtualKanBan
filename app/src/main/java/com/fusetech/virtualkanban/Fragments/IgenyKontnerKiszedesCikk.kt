@@ -16,7 +16,6 @@ import com.fusetech.virtualkanban.Adapters.KontenerbenLezarasAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerbenLezarasItem
 import com.fusetech.virtualkanban.R
 import com.fusetech.virtualkanban.Activities.MainActivity.Companion.cikkItem4
-import com.fusetech.virtualkanban.Utils.SQL
 import kotlinx.android.synthetic.main.kontenerben_lezaras_view.view.*
 
 private const val ARG_PARAM1 = "param1"

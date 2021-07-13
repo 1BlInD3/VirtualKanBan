@@ -1,6 +1,5 @@
 package com.fusetech.virtualkanban.Fragments
 
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -177,7 +176,7 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
                     CoroutineScope(Main).launch {
                         progress.visibility = View.GONE
                     }
-                    mainActivity.updateCikkandContainer(cikkid.toInt(),kontid)
+                    mainActivity.updateCikkandContainer(cikkid,kontid)
                 }else{
                     CoroutineScope(Main).launch {
                         mainActivity.setAlert("A picsába")

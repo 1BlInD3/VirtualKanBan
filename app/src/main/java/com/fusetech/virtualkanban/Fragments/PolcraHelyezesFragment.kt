@@ -216,23 +216,15 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             }
         }
         kilepButton.setOnClickListener {
-            /*if (view != null) {
-                val ihm =
-                    activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                ihm.hideSoftInputFromWindow(myView.windowToken, 0)
-            }*/
             ujCikk.requestFocus()
-            //cikkText.requestFocus()
             TextKeyListener.clear(cikkText.text)
             cikkText.isEnabled = false
             cikkText.isFocusable = false
             cikkText.isFocusableInTouchMode = false
-            //mennyisegText.requestFocus()
             TextKeyListener.clear(mennyisegText.text)
             mennyisegText.isEnabled = false
             mennyisegText.isFocusable = false
             mennyisegText.isFocusableInTouchMode = false
-            // polcText.requestFocus()
             TextKeyListener.clear(polcText.text)
             polcText.isEnabled = false
             polcText.isFocusable = false
@@ -247,15 +239,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             tranzitQtyText.text = ""
             myItems.clear()
             recycler.adapter?.notifyDataSetChanged()
-            /*if (view != null) {
-                val ihm =
-                    activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                ihm.toggleSoftInputFromWindow(
-                    myView.applicationWindowToken,
-                    InputMethodManager.SHOW_FORCED,
-                    0
-                )
-            }*/
+
             mainActivity.loadMenuFragment(true)
         }
         return myView
@@ -279,7 +263,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
     override fun onAttach(context: Context) {
         super.onAttach(context)
         sendCode = if (context is SendCode) {
-            context //as SendCode
+            context
         } else {
             throw RuntimeException(context.toString() + "must implement")
         }

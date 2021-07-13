@@ -1046,7 +1046,7 @@ class SQL(val sqlMessage: SQLAlert) {
                 }
                 context.supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_container, context.igenyKiszedesFragment, "KISZEDES")
-                    .addToBackStack(null).commit()
+                    .commit()
             } else {
                 context.kontenerList.clear()
                 do {
@@ -1072,7 +1072,7 @@ class SQL(val sqlMessage: SQLAlert) {
                 context.igenyKiszedesFragment.arguments = bundle
                 context.supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_container, context.igenyKiszedesFragment, "KISZEDES")
-                    .addToBackStack(null).commit()
+                    .commit()
                 CoroutineScope(Dispatchers.Main).launch {
                     context.menuFragment.setMenuProgressOff()
                 }

@@ -1,7 +1,6 @@
 package com.fusetech.virtualkanban.Fragments
 
 import android.content.Context
-import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -19,33 +18,20 @@ import com.fusetech.virtualkanban.Adapters.KontenerAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_kiszedesre_varo_igeny.view.*
-import kotlinx.android.synthetic.main.kontenerben_lezaras_view.view.*
 import kotlinx.android.synthetic.main.konteneres_view.view.*
 import kotlinx.android.synthetic.main.konteneres_view.view.horizontalScrollView3
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 private lateinit var childRecycler: RecyclerView
 private var kontenerList: ArrayList<KontenerItem> = ArrayList()
 private const val TAG = "KiszedesreVaroIgenyFrag"
 private lateinit var sendContainerCode: KiszedesreVaroIgenyFragment.SendCode6
 class KiszedesreVaroIgenyFragment : Fragment(),KontenerAdapter.onKontenerClickListener {
-    private var param1: String? = null
-    private var param2: String? = null
     private lateinit var progress: ProgressBar
     private lateinit var exit3Btn: Button
     private lateinit var mainActivity: MainActivity
     private lateinit var childFrame: FrameLayout
     interface SendCode6{
         fun containerCode(kontener: String)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -100,16 +86,6 @@ class KiszedesreVaroIgenyFragment : Fragment(),KontenerAdapter.onKontenerClickLi
 
 
         return view
-    }
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            IgenyKontenerKiszedesFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
     override fun onKontenerClick(position: Int) {
         Log.d(TAG, "onKontenerClick: MEGNYOMTAM")

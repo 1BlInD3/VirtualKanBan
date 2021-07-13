@@ -123,7 +123,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             builder.setTitle("Figyelem")
                 .setMessage("Biztos le akarod így zárni?")
             builder.setPositiveButton("Igen") { dialog, which ->
-                if (!polc.text.trim().toString().isEmpty() && (mennyiseg.text.trim().toString()
+                if (polc.text.trim().toString().isNotEmpty() && (mennyiseg.text.trim().toString()
                         .isEmpty() || mennyiseg.text.trim()
                         .toString() == "0" || mennyiseg.text.trim().toString() == "0.0")
                 ) {
@@ -383,7 +383,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         }
     }
 
-    fun szazalek(x: Int): Double {
+    private fun szazalek(x: Int): Double {
         val ceiling: Int
         ceiling =
             ((igenyeltMennyisegAmiNemValtozik / mennyiseg.text.toString().toDouble()) * x).toInt()

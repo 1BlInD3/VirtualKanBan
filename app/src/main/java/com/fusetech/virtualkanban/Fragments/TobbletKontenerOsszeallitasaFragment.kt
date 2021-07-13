@@ -31,30 +31,27 @@ import java.util.*
 import java.util.regex.Pattern
 import kotlin.collections.ArrayList
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-private lateinit var kontenerText: TextView
-private lateinit var progressBar: ProgressBar
-private lateinit var polcTextIgeny: EditText
-private lateinit var megjegyzes1_igeny: TextView
-private lateinit var megjegyzes2_igeny2: TextView
-private lateinit var intrem_igeny2: TextView
-private lateinit var unit_igeny2: TextView
-private lateinit var mainActivity: MainActivity
-private lateinit var cikkItem_igeny: EditText
-private lateinit var mennyiseg_igeny2: EditText
 private lateinit var recyclerView: RecyclerView
-private lateinit var lezarButton: Button
 private var igenyList: ArrayList<IgenyItem> = ArrayList()
 private var igenyReveresed: ArrayList<IgenyItem> = ArrayList()
-private lateinit var kilepButton: Button
 private const val TAG = "TobbletKontenerOsszeall"
 private lateinit var sendBinCode2: TobbletKontenerOsszeallitasaFragment.SendBinCode2
 
 @Suppress("UNCHECKED_CAST")
 class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyItemClick {
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private lateinit var kontenerText: TextView
+    private lateinit var progressBar: ProgressBar
+    private lateinit var polcTextIgeny: EditText
+    private lateinit var megjegyzes1_igeny: TextView
+    private lateinit var megjegyzes2_igeny2: TextView
+    private lateinit var intrem_igeny2: TextView
+    private lateinit var unit_igeny2: TextView
+    private lateinit var mainActivity: MainActivity
+    private lateinit var cikkItem_igeny: EditText
+    private lateinit var mennyiseg_igeny2: EditText
+    private lateinit var lezarButton: Button
+    private lateinit var kilepButton: Button
 
     interface SendBinCode2 {
         fun sendBinCode2(code: String)
@@ -67,14 +64,6 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         )
 
         fun closeContainer2(statusz: Int, datum: String)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -368,7 +357,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         super.onResume()
         kontenerText.text = arguments?.getString("KONTENER")
         polcTextIgeny.setText(arguments?.getString("TERMRAKH"))
-        if(polcTextIgeny.text.isNotEmpty()){
+        if (polcTextIgeny.text.isNotEmpty()) {
             cikkItem_igeny.isFocusable = true
             cikkItem_igeny.requestFocus()
         }

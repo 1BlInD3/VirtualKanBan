@@ -1,7 +1,6 @@
 package com.fusetech.virtualkanban.Fragments
 
 import android.content.Context
-import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -19,7 +18,6 @@ import com.fusetech.virtualkanban.Adapters.KontenerAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_lezaras.view.*
-import kotlinx.android.synthetic.main.konteneres_view.*
 import kotlinx.android.synthetic.main.konteneres_view.view.*
 
 private const val ARG_PARAM1 = "param1"

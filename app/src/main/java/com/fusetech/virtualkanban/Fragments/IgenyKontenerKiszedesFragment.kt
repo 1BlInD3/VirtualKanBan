@@ -1,7 +1,6 @@
 package com.fusetech.virtualkanban.Fragments
 
 import android.annotation.SuppressLint
-import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -19,7 +18,6 @@ import com.fusetech.virtualkanban.Adapters.KontenerAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes.view.*
-import kotlinx.android.synthetic.main.fragment_polc_result.*
 import kotlinx.android.synthetic.main.konteneres_view.view.*
 
 private const val ARG_PARAM1 = "param1"
@@ -27,10 +25,6 @@ private const val ARG_PARAM2 = "param2"
 
 private lateinit var childRecycler: RecyclerView
 private var kontenerList: ArrayList<KontenerItem> = ArrayList()
-private lateinit var progress: ProgressBar
-private lateinit var exit3Btn: Button
-private lateinit var mainActivity: MainActivity
-private lateinit var childFrame: FrameLayout
 private const val TAG = "IgenyKontenerKiszedesFr"
 
 @Suppress("UNCHECKED_CAST")
@@ -38,6 +32,10 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
 
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var progress: ProgressBar
+    private lateinit var exit3Btn: Button
+    private lateinit var mainActivity: MainActivity
+    private lateinit var childFrame: FrameLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
