@@ -25,18 +25,17 @@ import kotlinx.android.synthetic.main.konteneres_view.view.horizontalScrollView3
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-private lateinit var childFrame: FrameLayout
 private lateinit var childRecycler: RecyclerView
 private var kontenerList: ArrayList<KontenerItem> = ArrayList()
-private lateinit var progress: ProgressBar
-private lateinit var exit3Btn: Button
-private lateinit var mainActivity: MainActivity
 private const val TAG = "KiszedesreVaroIgenyFrag"
 private lateinit var sendContainerCode: KiszedesreVaroIgenyFragment.SendCode6
 class KiszedesreVaroIgenyFragment : Fragment(),KontenerAdapter.onKontenerClickListener {
     private var param1: String? = null
     private var param2: String? = null
-
+    private lateinit var progress: ProgressBar
+    private lateinit var exit3Btn: Button
+    private lateinit var mainActivity: MainActivity
+    private lateinit var childFrame: FrameLayout
     interface SendCode6{
         fun containerCode(kontener: String)
     }

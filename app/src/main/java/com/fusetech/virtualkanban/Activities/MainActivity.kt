@@ -128,6 +128,7 @@ class MainActivity : AppCompatActivity(),
     val tobbletCikkekPolcra = TobbletCikkekPolcraFragment()
     val koztesFragment = KoztesFragment()
     private lateinit var myTimer: CountDownTimer
+    val hatosFragment = HatosCikkekFragment()
     var a = 0
 
     companion object {
@@ -178,7 +179,6 @@ class MainActivity : AppCompatActivity(),
         supportActionBar?.hide()
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance("", "")
         polcHelyezesFragment = PolcraHelyezesFragment()
-        igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
         szallitoJarmuFragment = SzallitoJartmuFragment()
         ellenorzoKodFragment = EllenorzoKodFragment()
         igenyKiszedesCikk = IgenyKontnerKiszedesCikk()
@@ -237,22 +237,23 @@ class MainActivity : AppCompatActivity(),
                         igenyFragment.clearAll()
                         loadLoginFragment()
                     }
+                    getFragment("CIKKLEZARASFRAGMENT") -> { //3-2
+                        igenyKiszedesCikkLezaras.onTimeout()
+                        removeFragment("CIKKLEZARASFRAGMENT")
+                        loadLoginFragment()
+                    }
                     getFragment("IGENYLEZARAS") -> { //3-1
                         loadLoginFragment()
                     }
-                    getFragment("CIKKLEZARASFRAGMENT") -> { //3-2
-                        igenyKiszedesCikkLezaras.onTimeout()
+                    getFragment("KISZEDESCIKK") -> { //4-3
+                        igenyKontenerKiszedesCikkKiszedes.onTimeout()
+                    }
+                    getFragment("NEGYESCIKKEK") -> { //4-2
+                        removeFragment("NEGYESCIKKEK")
                         loadLoginFragment()
                     }
                     getFragment("KISZEDES") -> { //4-1
                         loadLoginFragment()
-                    }
-                    getFragment("NEGYESCIKKEK") -> { //4-2
-                        loadLoginFragment()
-                        removeFragment("NEGYESCIKKEK")
-                    }
-                    getFragment("KISZEDESCIKK") -> { //4-3
-                        igenyKontenerKiszedesCikkKiszedes.onTimeout()
                     }
                     getFragment("KIHELYEZES") -> { //5-1
                         kihelyezes.exit()
@@ -266,13 +267,13 @@ class MainActivity : AppCompatActivity(),
                         kihelyezes.exit()
                         loadLoginFragment()
                     }
-                    getFragment("VARAS") -> { //6-1
+                    getFragment("CIKKLEZARASFRAGMENTHATOS") -> { //6-2
+                        hatosFragment.onTimeout()
+                        removeFragment("CIKKLEZARASFRAGMENTHATOS")
                         loadLoginFragment()
                     }
-                    getFragment("CIKKLEZARASFRAGMENTHATOS") -> { //6-2
-                        igenyKiszedesCikkLezaras.onTimeout()
+                    getFragment("VARAS") -> { //6-1
                         loadLoginFragment()
-                        removeFragment("CIKKLEZARASFRAGMENTHATOS")
                     }
                     getFragment("TOBBLET") -> { //7
                         tobbletOsszeallitasFragment.onKilepPressed()
@@ -889,7 +890,7 @@ class MainActivity : AppCompatActivity(),
                     loadMenuFragment(true)
                 }
                 getFragment("CIKKLEZARASFRAGMENTHATOS") -> {
-                    igenyKiszedesCikkLezaras.buttonPerform()
+                    hatosFragment.buttonPerform()
                     removeFragment("CIKKLEZARASFRAGMENTHATOS")
                 }
                 getFragment("SZALLITO") -> {
@@ -989,8 +990,8 @@ class MainActivity : AppCompatActivity(),
     override fun triggerError() {
         TODO("Not yet implemented")
     }
-    fun removeFragment(fragment: String){
-        val fragment = supportFragmentManager.findFragmentByTag(fragment)
+    fun removeFragment(fragment1: String){
+        val fragment = supportFragmentManager.findFragmentByTag(fragment1)
         if (fragment != null) supportFragmentManager.beginTransaction().remove(fragment)
             .commit()
     }

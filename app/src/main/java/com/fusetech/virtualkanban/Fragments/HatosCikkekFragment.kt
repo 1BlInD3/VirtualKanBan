@@ -1,6 +1,5 @@
 package com.fusetech.virtualkanban.Fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,56 +12,27 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.kontItem
 import com.fusetech.virtualkanban.Activities.MainActivity
 import com.fusetech.virtualkanban.Adapters.KontenerbenLezarasAdapter
 import com.fusetech.virtualkanban.DataItems.KontenerbenLezarasItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.kontenerben_lezaras_view.view.*
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 private lateinit var recycler: RecyclerView
-private const val TAG = "IgenyKontenerLezarasCik"
-private lateinit var sendItemCode: IgenyKontenerLezarasCikkLezaras.CikkCode
+private const val TAG = "HatosCikkekFragment"
 
-@Suppress("UNCHECKED_CAST")
-class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.onItemClickListener {
-    private var param1: String? = null
-    private var param2: String? = null
-
+class HatosCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onItemClickListener {
     private lateinit var exitBtn: Button
     private lateinit var lezarBtn: Button
     private lateinit var mainActivity: MainActivity
     private lateinit var kontenerNev: TextView
     private lateinit var progress: ProgressBar
-
-    interface CikkCode {
-        fun cikkCode(code: Int)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        sendItemCode = if (context is CikkCode) {
-            context
-        } else {
-            throw RuntimeException(context.toString() + "must implement")
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.kontenerben_lezaras_view, container, false)
+
         mainActivity = activity as MainActivity
         recycler = view.child_recycler2
         exitBtn = view.exit3CikkButton
@@ -73,10 +43,10 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
         horizontalScrollView.isFocusableInTouchMode = false
         progress = view.cikkLezarasProgress
         setProgressBarOff()
-        recycler.adapter = KontenerbenLezarasAdapter(kontItem, this)
+        recycler.adapter = KontenerbenLezarasAdapter(MainActivity.kontItem, this)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.setHasFixedSize(true)
-        kontItem.clear()
+        MainActivity.kontItem.clear()
         kontenerNev.text = ""
         loadData()
         recycler.adapter?.notifyDataSetChanged()
@@ -85,20 +55,15 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
         exitBtn.setOnClickListener {
             exitBtn.isFocusable = true
             exitBtn.isFocusableInTouchMode = true
-            kontItem.clear()
+            MainActivity.kontItem.clear()
             mainActivity.loadMenuFragment(true)
-            if (mainActivity.getFragment("CIKKLEZARASFRAGMENTHATOS")) {
-                mainActivity.removeFragment("CIKKLEZARASFRAGMENTHATOS")
-                mainActivity.kiszedesreVaro()
-            } else {
-                mainActivity.removeFragment("CIKKLEZARASFRAGMENT")
-                mainActivity.igenyKontenerCheck()
-            }
+            mainActivity.kiszedesreVaro()
+            mainActivity.removeFragment("CIKKLEZARASFRAGMENTHATOS")
         }
         lezarBtn.setOnClickListener {
             setProgressBarOn()
             mainActivity.closeContainerAndItem()
-            kontItem.clear()
+            MainActivity.kontItem.clear()
             mainActivity.loadMenuFragment(true)
         }
         if (arguments?.getBoolean("LEZARBUTN")!!) {
@@ -111,19 +76,7 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
     }
 
     fun onTimeout() {
-        kontItem.clear()
-        mainActivity.removeFragment("CIKKLEZARASFRAGMENTHATOS")
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            IgenyKontenerLezarasCikkLezaras().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        MainActivity.kontItem.clear()
     }
 
     private fun loadData() {
@@ -131,7 +84,7 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
             val myList: ArrayList<KontenerbenLezarasItem> =
                 arguments?.getSerializable("CIKKLEZAR") as ArrayList<KontenerbenLezarasItem>
             for (i in 0 until myList.size) {
-                kontItem.add(
+                MainActivity.kontItem.add(
                     KontenerbenLezarasItem(
                         myList[i].cikkszam,
                         myList[i].megjegyzes1,
@@ -165,6 +118,6 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
     }
 
     override fun onItemClick(position: Int) {
-        sendItemCode.cikkCode(kontItem[position].id)
+        Log.d(TAG, "onItemClick: megy")
     }
 }

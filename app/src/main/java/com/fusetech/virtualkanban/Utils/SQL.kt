@@ -712,7 +712,7 @@ class SQL(val sqlMessage: SQLAlert) {
                     context.igenyLezarasFragment.setProgressBarOff()
                 }
             } else {
-                val igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
+                //val igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
                 context.igenyLezarCikkVisible = true
                 val kontenerCikkLezar: ArrayList<KontenerbenLezarasItem> = ArrayList()
                 do {
@@ -747,9 +747,13 @@ class SQL(val sqlMessage: SQLAlert) {
                 bundle.putSerializable("CIKKLEZAR", kontenerCikkLezar)
                 bundle.putString("KONTENER_ID", kontener_id)
                 bundle.putBoolean("LEZARBUTN", true)
-                igenyKiszedesCikkLezaras.arguments = bundle
+                context.igenyKiszedesCikkLezaras.arguments = bundle
                 context.supportFragmentManager.beginTransaction()
-                    .replace(R.id.data_frame1, igenyKiszedesCikkLezaras, "CIKKLEZARASFRAGMENT")
+                    .replace(
+                        R.id.data_frame1,
+                        context.igenyKiszedesCikkLezaras,
+                        "CIKKLEZARASFRAGMENT"
+                    )
                     /*.addToBackStack(null)*/.commit()
                 CoroutineScope(Dispatchers.Main).launch {
                     context.igenyLezarasFragment.setProgressBarOff()
@@ -985,16 +989,16 @@ class SQL(val sqlMessage: SQLAlert) {
                         context.tobbletOsszeallitasFragment.setProgressBarOff()
                         context.tobbletOsszeallitasFragment.setFocusToItem(bin)
                     }
-                }else{
+                } else {
                     var message = ""
                     //val igenyTermeles: ArrayList<IgenyItem> = ArrayList()
                     do {
                         val balance: Double = resultSet1.getString("BalanceQty").toDouble()
-                        message += resultSet1.getString("BinNumber") +"\t" + balance.toString()+"\n"
+                        message += resultSet1.getString("BinNumber") + "\t" + balance.toString() + "\n"
                         /*val mennyiseg = resultSet1.getString("BalanceQty")
                         val polc = resultSet1.getString("BinNumber")*/
                         //igenyTermeles.add(IgenyItem(polc,mennyiseg,"Termelés"))
-                    }while (resultSet1.next())
+                    } while (resultSet1.next())
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("A cikk ezeken a polcokon található a termelésben: \n\n$message")
                         context.tobbletOsszeallitasFragment.setProgressBarOff()
@@ -1273,14 +1277,14 @@ class SQL(val sqlMessage: SQLAlert) {
                 bundle.putSerializable("CIKKLEZAR", kontenerCikkLezar)
                 bundle.putString("KONTENER_ID", kontener_id)
                 bundle.putBoolean("LEZARBUTN", false)
-                context.igenyKiszedesCikkLezaras.arguments = bundle
+                context.hatosFragment.arguments = bundle
                 context.supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.data_frame3,
-                        context.igenyKiszedesCikkLezaras,
+                        context.hatosFragment,
                         "CIKKLEZARASFRAGMENTHATOS"
                     )
-                    .addToBackStack(null).commit()
+                    .commit()
                 CoroutineScope(Dispatchers.Main).launch {
                     context.kiszedesreVaroIgenyFragment.setProgressBarOff()
                 }
