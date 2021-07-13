@@ -2,6 +2,10 @@ package com.fusetech.virtualkanban.activities
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -12,6 +16,7 @@ import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.fusetech.virtualkanban.dataItems.*
 import com.fusetech.virtualkanban.fragments.*
 import com.fusetech.virtualkanban.R
@@ -131,6 +136,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var myTimer: CountDownTimer
     private lateinit var exitTimer: CountDownTimer
     val hatosFragment = HatosCikkekFragment()
+    private lateinit var logoutWhenCharging: BroadcastReceiver
     var a = 0
 
     companion object {
@@ -318,6 +324,26 @@ class MainActivity : AppCompatActivity(),
             }
         }
         myTimer.start()
+        val mIntent = IntentFilter()
+        mIntent.addAction(Intent.ACTION_POWER_CONNECTED)
+        mIntent.addAction(Intent.ACTION_POWER_DISCONNECTED)
+        logoutWhenCharging = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                when (intent?.action) {
+                    Intent.ACTION_POWER_CONNECTED -> {
+                        Log.d(TAG, "onReceive: Rajta vagyok a recieveren")
+                        setAlert("Elindult a connect")
+                        finishAndRemoveTask()
+                    }
+                    /*Intent.ACTION_POWER_DISCONNECTED -> {
+                        setAlert("Elindult a dis")
+                    }*/
+                }
+            }
+
+        }
+        this.registerReceiver(logoutWhenCharging, IntentFilter(mIntent))
+
     }
 
     private fun cancelTimer() {
@@ -325,12 +351,12 @@ class MainActivity : AppCompatActivity(),
         myTimer.cancel()
     }
 
-    fun startExitTimer(){
+    fun startExitTimer() {
         exitTimer.start()
         Log.d(TAG, "startExitTimer: elindult")
     }
 
-    fun cancelExitTimer(){
+    fun cancelExitTimer() {
         exitTimer.cancel()
         Log.d(TAG, "cancelExitTimer: megállt")
     }
@@ -522,6 +548,7 @@ class MainActivity : AppCompatActivity(),
             barcodeReader?.removeBarcodeListener(this)
             barcodeReader?.close()
         }
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(logoutWhenCharging)
     }
 
     private fun chechPolcAndSetBin(code: String) {

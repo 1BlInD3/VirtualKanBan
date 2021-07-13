@@ -1,12 +1,16 @@
 package com.fusetech.virtualkanban.activities
 
 import android.app.AlertDialog
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.fusetech.virtualkanban.R
 import com.fusetech.virtualkanban.retrofit.RetrofitFunctions
 import kotlinx.android.synthetic.main.activity_splash_screen.*
@@ -38,6 +42,7 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
         val retro = RetrofitFunctions(this)
         progress = progressBar3
 
+
         try {
             val intent = Intent(this, MainActivity::class.java)
             CoroutineScope(IO).launch {
@@ -58,6 +63,17 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
             }
         } catch (e: Exception) {
             setSplashAlert()
+            /*val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("main", "mainUrl")
+            intent.putExtra("backup", "backupURL")
+            intent.putExtra("endpoint", "endPoint")
+            intent.putExtra("logPath", "logPath")
+            intent.putExtra("timeOut", 1.0)
+            intent.putExtra("szallitoJarmu", "szallitoJarmu")
+            intent.putExtra("ellenorzokod", "ellenorzoKod")
+            startActivity(intent)
+            finish()*/
+
         }
     }
 
