@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Fragments
+package com.fusetech.virtualkanban.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -9,14 +9,14 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.fusetech.virtualkanban.Activities.MainActivity
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tempLocations
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.progress
-import com.fusetech.virtualkanban.Fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
+import com.fusetech.virtualkanban.activities.MainActivity
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.tempLocations
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.progress
+import com.fusetech.virtualkanban.fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_tobblet_cikkek_polcra.view.*
-import com.fusetech.virtualkanban.Adapters.PolcLocationAdapter
-import com.fusetech.virtualkanban.DataItems.PolcLocation
+import com.fusetech.virtualkanban.adapters.PolcLocationAdapter
+import com.fusetech.virtualkanban.dataItems.PolcLocation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main

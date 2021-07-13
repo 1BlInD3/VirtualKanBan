@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Fragments
+package com.fusetech.virtualkanban.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
-import com.fusetech.virtualkanban.Activities.MainActivity
+import com.fusetech.virtualkanban.activities.MainActivity
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_menu.view.*
 

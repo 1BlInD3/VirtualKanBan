@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Utils
+package com.fusetech.virtualkanban.utils
 
 import java.util.*
 

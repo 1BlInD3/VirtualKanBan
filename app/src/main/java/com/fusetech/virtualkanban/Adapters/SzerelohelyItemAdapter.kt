@@ -1,10 +1,10 @@
-package com.fusetech.virtualkanban.Adapters
+package com.fusetech.virtualkanban.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.fusetech.virtualkanban.DataItems.SzerelohelyItem
+import com.fusetech.virtualkanban.dataItems.SzerelohelyItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.igeny_kihelyezes_item.view.*
 

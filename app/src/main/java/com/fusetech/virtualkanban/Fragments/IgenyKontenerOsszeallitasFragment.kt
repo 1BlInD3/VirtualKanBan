@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Fragments
+package com.fusetech.virtualkanban.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -13,9 +13,9 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.fusetech.virtualkanban.Activities.MainActivity
-import com.fusetech.virtualkanban.Adapters.IgenyItemAdapter
-import com.fusetech.virtualkanban.DataItems.IgenyItem
+import com.fusetech.virtualkanban.activities.MainActivity
+import com.fusetech.virtualkanban.adapters.IgenyItemAdapter
+import com.fusetech.virtualkanban.dataItems.IgenyItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_osszeallitas.*
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_osszeallitas.view.*

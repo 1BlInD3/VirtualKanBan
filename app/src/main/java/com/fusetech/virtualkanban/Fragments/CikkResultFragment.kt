@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Fragments
+package com.fusetech.virtualkanban.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.fusetech.virtualkanban.Adapters.CikkItemAdapter
-import com.fusetech.virtualkanban.DataItems.CikkItems
+import com.fusetech.virtualkanban.adapters.CikkItemAdapter
+import com.fusetech.virtualkanban.dataItems.CikkItems
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_cikk_result.view.*
 

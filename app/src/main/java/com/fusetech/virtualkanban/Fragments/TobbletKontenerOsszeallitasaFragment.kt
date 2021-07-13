@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Fragments
+package com.fusetech.virtualkanban.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,14 +11,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.fusetech.virtualkanban.Fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
+import com.fusetech.virtualkanban.fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.fusetech.virtualkanban.Activities.MainActivity
-import com.fusetech.virtualkanban.Adapters.IgenyItemAdapter
-import com.fusetech.virtualkanban.DataItems.IgenyItem
+import com.fusetech.virtualkanban.activities.MainActivity
+import com.fusetech.virtualkanban.adapters.IgenyItemAdapter
+import com.fusetech.virtualkanban.dataItems.IgenyItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_tobblet_kontener_osszeallitasa.view.*
 import kotlinx.coroutines.CoroutineScope

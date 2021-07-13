@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Fragments
+package com.fusetech.virtualkanban.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,11 +9,11 @@ import android.widget.Button
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.fusetech.virtualkanban.Activities.MainActivity
-import com.fusetech.virtualkanban.Adapters.KontenerAdapter
-import com.fusetech.virtualkanban.DataItems.KontenerItem
+import com.fusetech.virtualkanban.activities.MainActivity
+import com.fusetech.virtualkanban.adapters.KontenerAdapter
+import com.fusetech.virtualkanban.dataItems.KontenerItem
 import com.fusetech.virtualkanban.R
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tobbletKontener
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.tobbletKontener
 import kotlinx.android.synthetic.main.fragment_tobblet_kontener_kihelyzese.view.*
 
 

@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Utils
+package com.fusetech.virtualkanban.utils
 
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
@@ -6,23 +6,23 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
-import com.fusetech.virtualkanban.Activities.MainActivity
+import com.fusetech.virtualkanban.activities.MainActivity
 import com.fusetech.virtualkanban.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.connectionString
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.res
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.progress
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tobbletKontener
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tobbletItem
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.url
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.mainUrl
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.backupURL
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.endPoint
-import com.fusetech.virtualkanban.DataItems.*
-import com.fusetech.virtualkanban.Fragments.*
-import com.fusetech.virtualkanban.Fragments.PolcraHelyezesFragment.Companion.myItems
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.connectionString
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.res
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.progress
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.tobbletKontener
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.tobbletItem
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.url
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.mainUrl
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.backupURL
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.endPoint
+import com.fusetech.virtualkanban.dataItems.*
+import com.fusetech.virtualkanban.fragments.*
+import com.fusetech.virtualkanban.fragments.PolcraHelyezesFragment.Companion.myItems
 import java.io.File
 import java.sql.*
 import java.text.SimpleDateFormat
@@ -32,7 +32,7 @@ import kotlin.random.Random
 
 private const val TAG = "SQL"
 
-class SQL(val sqlMessage: SQLAlert) {
+class SQL(private val sqlMessage: SQLAlert) {
 
     interface SQLAlert {
         fun sendMessage(message: String)
@@ -1480,7 +1480,7 @@ class SQL(val sqlMessage: SQLAlert) {
                 } else {
                     val nev = resultSet1.getString("TextDescription")
                     CoroutineScope(Dispatchers.Main).launch {
-                        context.setAlert(nev + " fogja a cikket")
+                        context.setAlert("$nev fogja a cikket")
                     }
                 }
             }
@@ -1511,7 +1511,7 @@ class SQL(val sqlMessage: SQLAlert) {
                 }
             } else {
                 val ellKod = resultSet.getString("BinDescript2")
-                if (code.trim().equals(ellKod)) {
+                if (code.trim() == ellKod) {
                     val state =
                         connection.prepareStatement(res.getString(R.string.kontenerKiszedve))
                     val myDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
@@ -1764,13 +1764,12 @@ class SQL(val sqlMessage: SQLAlert) {
 
     fun getContainersFromVehicle(code: String, context: MainActivity) {
         try {
-            val connection: Connection
             val fragment = SzerelohelyListaFragment()
             CoroutineScope(Dispatchers.Main).launch {
                 context.kihelyezes.progressBarOn()
             }
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
-            connection = DriverManager.getConnection(connectionString)
+            val connection: Connection = DriverManager.getConnection(connectionString)
             val statement =
                 connection.prepareStatement(res.getString(R.string.igenyKontenerKihelyezesLista))
             statement.setString(1, code)
@@ -1810,9 +1809,8 @@ class SQL(val sqlMessage: SQLAlert) {
                 context.kihelyezes.progressBarOn()
             }
             val myList: ArrayList<KihelyezesKontenerElemek> = ArrayList()
-            val connection: Connection
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
-            connection = DriverManager.getConnection(connectionString)
+            val connection: Connection = DriverManager.getConnection(connectionString)
             val statement =
                 connection.prepareStatement(res.getString(R.string.igenyKontenerKihelyezesElemekLista))
             statement.setString(1, code)
@@ -1872,9 +1870,8 @@ class SQL(val sqlMessage: SQLAlert) {
             /*CoroutineScope(Dispatchers.Main).launch {
                 context.kihelyezes.progressBarOn()
             }*/
-            val connection: Connection
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
-            connection = DriverManager.getConnection(connectionString)
+            val connection: Connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.cikkLezarva))
             statement.setInt(1, code)
             statement.executeUpdate()
@@ -1895,9 +1892,8 @@ class SQL(val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.kihelyezes.progressBarOn()
             }
-            val connection: Connection
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
-            connection = DriverManager.getConnection(connectionString)
+            val connection: Connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.kontenerKiszedve))
             val datum = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
             statement.setString(1, datum)
@@ -1922,9 +1918,8 @@ class SQL(val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.menuFragment.setMenuProgressOn()
             }
-            val connection: Connection
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
-            connection = DriverManager.getConnection(connectionString)
+            val connection: Connection = DriverManager.getConnection(connectionString)
             val statement =
                 connection.prepareStatement(res.getString(R.string.tobbletKontenerLista))
             val resultSet = statement.executeQuery()

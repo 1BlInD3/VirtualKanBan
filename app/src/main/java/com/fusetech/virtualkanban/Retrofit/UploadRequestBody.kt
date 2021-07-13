@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Retrofit
+package com.fusetech.virtualkanban.retrofit
 
 import okhttp3.MediaType
 import okhttp3.RequestBody

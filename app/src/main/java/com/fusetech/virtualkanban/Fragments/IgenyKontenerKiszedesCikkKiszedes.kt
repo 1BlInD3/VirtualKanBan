@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Fragments
+package com.fusetech.virtualkanban.fragments
 
 import android.app.AlertDialog
 import android.content.Context
@@ -11,11 +11,11 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.fusetech.virtualkanban.Activities.MainActivity
-import com.fusetech.virtualkanban.Adapters.PolcLocationAdapter
-import com.fusetech.virtualkanban.DataItems.PolcLocation
+import com.fusetech.virtualkanban.activities.MainActivity
+import com.fusetech.virtualkanban.adapters.PolcLocationAdapter
+import com.fusetech.virtualkanban.dataItems.PolcLocation
 import com.fusetech.virtualkanban.R
-import com.fusetech.virtualkanban.Utils.SQL
+import com.fusetech.virtualkanban.utils.SQL
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes_cikk_kiszedes.*
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes_cikk_kiszedes.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -23,8 +23,8 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.tempLocations
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.kivalasztottSzallitoJarmu
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.tempLocations
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.kivalasztottSzallitoJarmu
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"

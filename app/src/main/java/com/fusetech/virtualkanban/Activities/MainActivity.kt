@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Activities
+package com.fusetech.virtualkanban.activities
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -12,13 +12,13 @@ import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.fusetech.virtualkanban.DataItems.*
-import com.fusetech.virtualkanban.Fragments.*
+import com.fusetech.virtualkanban.dataItems.*
+import com.fusetech.virtualkanban.fragments.*
 import com.fusetech.virtualkanban.R
-import com.fusetech.virtualkanban.Retrofit.RetrofitFunctions
-import com.fusetech.virtualkanban.Utils.SQL
-import com.fusetech.virtualkanban.Utils.SaveFile
-import com.fusetech.virtualkanban.Utils.XML
+import com.fusetech.virtualkanban.retrofit.RetrofitFunctions
+import com.fusetech.virtualkanban.utils.SQL
+import com.fusetech.virtualkanban.utils.SaveFile
+import com.fusetech.virtualkanban.utils.XML
 import com.honeywell.aidc.*
 import com.honeywell.aidc.BarcodeReader.BarcodeListener
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,6 +27,8 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import java.sql.*
+
+private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity(),
     BarcodeListener,
@@ -104,7 +106,6 @@ class MainActivity : AppCompatActivity(),
     private lateinit var szallitoJarmuFragment: SzallitoJartmuFragment
     var igenyKontenerKiszedesCikkKiszedes = IgenyKontenerKiszedesCikkKiszedes()
     var ellenorzoKodFragment = EllenorzoKodFragment()
-    private val TAG = "MainActivity"
     private val cikklekerdezesFragment = CikklekerdezesFragment()
     private var polcLocation: ArrayList<PolcLocation>? = ArrayList()
     var kontener = ""
@@ -119,14 +120,14 @@ class MainActivity : AppCompatActivity(),
     val xml = XML()
     val save = SaveFile()
     val retro = RetrofitFunctions(this)
-    val sql = SQL(this)
+    private val sql = SQL(this)
     val kihelyezes = IgenyKontenerKiszedese()
     val kihelyezesFragmentLista = KihelyezesListaFragment()
     val tobbletOsszeallitasFragment = TobbletKontenerOsszeallitasaFragment()
     val tobbletKontenerKihelyzeseFragment = TobbletKontenerKihelyzeseFragment()
     val tobbletCikkek = TobbletKontenerCikkekFragment()
     val tobbletCikkekPolcra = TobbletCikkekPolcraFragment()
-    val koztesFragment = KoztesFragment()
+    private val koztesFragment = KoztesFragment()
     private lateinit var myTimer: CountDownTimer
     val hatosFragment = HatosCikkekFragment()
     var a = 0
@@ -815,7 +816,7 @@ class MainActivity : AppCompatActivity(),
         sql.checkIfContainerIsDoneSql(container, itemId, raktar, polc, this@MainActivity)
     }
 
-    fun checkEllenorzoKod(code: String) {
+    private fun checkEllenorzoKod(code: String) {
         CoroutineScope(IO).launch {
             sql.checkEllenorzoKodSql(code, this@MainActivity)
         }
@@ -870,7 +871,7 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    fun setContainerBackToOpen(kontener: String) {
+    private fun setContainerBackToOpen(kontener: String) {
         CoroutineScope(IO).launch {
             sql.statuszVisszairas(kontener, this@MainActivity)
             //loadTobbletKontenerKihelyezes()
@@ -963,7 +964,7 @@ class MainActivity : AppCompatActivity(),
 
         }
     }
-
+    
     override fun sendTobblet(
         id: Int,
         kontenerID: Int,
@@ -988,7 +989,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun triggerError() {
-        TODO("Not yet implemented")
+        Log.d(TAG, "triggerError: ")
     }
     fun removeFragment(fragment1: String){
         val fragment = supportFragmentManager.findFragmentByTag(fragment1)

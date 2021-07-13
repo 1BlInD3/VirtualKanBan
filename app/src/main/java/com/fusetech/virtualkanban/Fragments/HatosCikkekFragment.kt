@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Fragments
+package com.fusetech.virtualkanban.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -12,9 +12,9 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.fusetech.virtualkanban.Activities.MainActivity
-import com.fusetech.virtualkanban.Adapters.KontenerbenLezarasAdapter
-import com.fusetech.virtualkanban.DataItems.KontenerbenLezarasItem
+import com.fusetech.virtualkanban.activities.MainActivity
+import com.fusetech.virtualkanban.adapters.KontenerbenLezarasAdapter
+import com.fusetech.virtualkanban.dataItems.KontenerbenLezarasItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.kontenerben_lezaras_view.view.*
 

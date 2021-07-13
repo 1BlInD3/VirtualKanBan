@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Fragments
+package com.fusetech.virtualkanban.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,11 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.fusetech.virtualkanban.Adapters.SzerelohelyItemAdapter
-import com.fusetech.virtualkanban.DataItems.SzerelohelyItem
+import com.fusetech.virtualkanban.adapters.SzerelohelyItemAdapter
+import com.fusetech.virtualkanban.dataItems.SzerelohelyItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_szerelohely_lista.view.*
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.kihelyezesItems
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.kihelyezesItems
 
 
 @Suppress("UNCHECKED_CAST")

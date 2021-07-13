@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Fragments
+package com.fusetech.virtualkanban.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,9 +9,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ProgressBar
-import com.fusetech.virtualkanban.Activities.MainActivity
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.kihelyezesItems
-import com.fusetech.virtualkanban.DataItems.SzerelohelyItem
+import com.fusetech.virtualkanban.activities.MainActivity
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.kihelyezesItems
+import com.fusetech.virtualkanban.dataItems.SzerelohelyItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedese.view.*
 

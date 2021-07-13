@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Fragments
+package com.fusetech.virtualkanban.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.fusetech.virtualkanban.Adapters.PolcItemAdapter
-import com.fusetech.virtualkanban.DataItems.PolcItems
+import com.fusetech.virtualkanban.adapters.PolcItemAdapter
+import com.fusetech.virtualkanban.dataItems.PolcItems
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_polc_result.view.*
 

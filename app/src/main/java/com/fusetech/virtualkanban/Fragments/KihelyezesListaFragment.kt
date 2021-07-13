@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Fragments
+package com.fusetech.virtualkanban.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -9,16 +9,16 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.fusetech.virtualkanban.Activities.MainActivity
-import com.fusetech.virtualkanban.Adapters.KihelyezesKontenerAdapter
-import com.fusetech.virtualkanban.DataItems.KihelyezesKontenerElemek
+import com.fusetech.virtualkanban.activities.MainActivity
+import com.fusetech.virtualkanban.adapters.KihelyezesKontenerAdapter
+import com.fusetech.virtualkanban.dataItems.KihelyezesKontenerElemek
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.kihelyezes_header.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import com.fusetech.virtualkanban.Fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
+import com.fusetech.virtualkanban.fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
 import java.lang.Exception
 
 private const val ARG_PARAM1 = "param1"

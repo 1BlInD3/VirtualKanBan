@@ -1,3 +1,3 @@
-package com.fusetech.virtualkanban.DataItems
+package com.fusetech.virtualkanban.dataItems
 
 data class SzerelohelyItem(val szerelohely: String)

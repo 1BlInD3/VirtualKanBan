@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Fragments
+package com.fusetech.virtualkanban.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -13,9 +13,9 @@ import android.widget.HorizontalScrollView
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.fusetech.virtualkanban.Activities.MainActivity
-import com.fusetech.virtualkanban.Adapters.KontenerAdapter
-import com.fusetech.virtualkanban.DataItems.KontenerItem
+import com.fusetech.virtualkanban.activities.MainActivity
+import com.fusetech.virtualkanban.adapters.KontenerAdapter
+import com.fusetech.virtualkanban.dataItems.KontenerItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedes.view.*
 import kotlinx.android.synthetic.main.konteneres_view.view.*

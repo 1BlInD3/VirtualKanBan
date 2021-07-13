@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.DataItems
+package com.fusetech.virtualkanban.dataItems
 
 data class KihelyezesKontenerElemek(
     val id: Int,

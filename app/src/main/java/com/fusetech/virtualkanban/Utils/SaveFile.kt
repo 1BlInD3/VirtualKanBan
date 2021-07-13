@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Utils
+package com.fusetech.virtualkanban.utils
 
 import android.annotation.SuppressLint
 import android.util.Log

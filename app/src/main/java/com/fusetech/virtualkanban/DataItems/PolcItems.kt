@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.DataItems
+package com.fusetech.virtualkanban.dataItems
 
 data class PolcItems(val mMennyiseg: Double,
                      val mEgyseg: String,

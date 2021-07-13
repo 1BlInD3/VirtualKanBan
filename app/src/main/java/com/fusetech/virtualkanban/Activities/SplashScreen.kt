@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Activities
+package com.fusetech.virtualkanban.activities
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -8,12 +8,11 @@ import android.view.View
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.fusetech.virtualkanban.R
-import com.fusetech.virtualkanban.Retrofit.RetrofitFunctions
+import com.fusetech.virtualkanban.retrofit.RetrofitFunctions
 import kotlinx.android.synthetic.main.activity_splash_screen.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 

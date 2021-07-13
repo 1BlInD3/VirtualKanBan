@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Adapters
+package com.fusetech.virtualkanban.adapters
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.fusetech.virtualkanban.DataItems.KontenerbenLezarasItem
+import com.fusetech.virtualkanban.dataItems.KontenerbenLezarasItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.kontenerben_lezaras_item.view.*
 

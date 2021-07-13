@@ -1,21 +1,19 @@
-package com.fusetech.virtualkanban.Retrofit
+package com.fusetech.virtualkanban.retrofit
 
-import android.app.AlertDialog
 import android.util.Log
-import com.fusetech.virtualkanban.Activities.SplashScreen
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
-import com.fusetech.virtualkanban.Fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
-import com.fusetech.virtualkanban.Fragments.PolcraHelyezesFragment.Companion.isSentTranzit
-import com.fusetech.virtualkanban.Activities.SplashScreen.Companion.mainUrl
-import com.fusetech.virtualkanban.Activities.SplashScreen.Companion.backupURL
-import com.fusetech.virtualkanban.Activities.SplashScreen.Companion.endPoint
-import com.fusetech.virtualkanban.Activities.SplashScreen.Companion.logPath
-import com.fusetech.virtualkanban.Activities.SplashScreen.Companion.timeOut
-import com.fusetech.virtualkanban.Activities.SplashScreen.Companion.szallitoJarmu
-import com.fusetech.virtualkanban.Activities.SplashScreen.Companion.ellenorzoKod
+import com.fusetech.virtualkanban.fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
+import com.fusetech.virtualkanban.fragments.PolcraHelyezesFragment.Companion.isSentTranzit
+import com.fusetech.virtualkanban.activities.SplashScreen.Companion.mainUrl
+import com.fusetech.virtualkanban.activities.SplashScreen.Companion.backupURL
+import com.fusetech.virtualkanban.activities.SplashScreen.Companion.endPoint
+import com.fusetech.virtualkanban.activities.SplashScreen.Companion.logPath
+import com.fusetech.virtualkanban.activities.SplashScreen.Companion.timeOut
+import com.fusetech.virtualkanban.activities.SplashScreen.Companion.szallitoJarmu
+import com.fusetech.virtualkanban.activities.SplashScreen.Companion.ellenorzoKod
 import kotlin.Exception
 
 private const val TAG = "RetrofitFunctions"

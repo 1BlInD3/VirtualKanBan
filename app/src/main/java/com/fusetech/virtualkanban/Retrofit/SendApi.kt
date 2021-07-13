@@ -1,11 +1,11 @@
-package com.fusetech.virtualkanban.Retrofit
+package com.fusetech.virtualkanban.retrofit
 
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.mainUrl
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.mainUrl
 import retrofit2.http.*
 
 interface SendAPI{

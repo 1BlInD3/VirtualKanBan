@@ -1,4 +1,4 @@
-package com.fusetech.virtualkanban.Fragments
+package com.fusetech.virtualkanban.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -11,11 +11,11 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.fusetech.virtualkanban.Activities.MainActivity
-import com.fusetech.virtualkanban.Adapters.KontenerbenLezarasAdapter
-import com.fusetech.virtualkanban.DataItems.KontenerbenLezarasItem
+import com.fusetech.virtualkanban.activities.MainActivity
+import com.fusetech.virtualkanban.adapters.KontenerbenLezarasAdapter
+import com.fusetech.virtualkanban.dataItems.KontenerbenLezarasItem
 import com.fusetech.virtualkanban.R
-import com.fusetech.virtualkanban.Activities.MainActivity.Companion.cikkItem4
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.cikkItem4
 import kotlinx.android.synthetic.main.kontenerben_lezaras_view.view.*
 
 private const val ARG_PARAM1 = "param1"
