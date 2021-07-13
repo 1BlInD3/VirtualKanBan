@@ -29,7 +29,7 @@ class LoginFragment : Fragment() {
         idTxt = view.idText
         cancelBtn = view.cancelButton
         val mainActivity : MainActivity = activity as MainActivity
-
+        mainActivity.startExitTimer()
         cancelBtn.setOnClickListener{
             mainActivity.loadMenuFragment(false)
         }

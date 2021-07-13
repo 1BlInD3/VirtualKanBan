@@ -53,6 +53,7 @@ class MenuFragment : Fragment() {
         cikkLekerdezes = view.cikkLekerdezes
         menuProgress = view.menu_progress
         kilepes = view.kilepesMenuButton
+        mainActivity.cancelExitTimer()
         setMenuProgressOff()
         if (!param1!!) {
             polcHelyezes.isEnabled = false

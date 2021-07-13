@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(),
     IgenyKontenerKiszedesCikkKiszedes.SendXmlData,
     SQL.SQLAlert,
     TobbletKontenerCikkekFragment.Tobblet,
-    RetrofitFunctions.Trigger{
+    RetrofitFunctions.Trigger {
     /*
     // 1es opció pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
@@ -129,6 +129,7 @@ class MainActivity : AppCompatActivity(),
     val tobbletCikkekPolcra = TobbletCikkekPolcraFragment()
     private val koztesFragment = KoztesFragment()
     private lateinit var myTimer: CountDownTimer
+    private lateinit var exitTimer: CountDownTimer
     val hatosFragment = HatosCikkekFragment()
     var a = 0
 
@@ -138,6 +139,7 @@ class MainActivity : AppCompatActivity(),
         const val connectionString =
             "jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
         lateinit var res: Resources
+
         @SuppressLint("StaticFieldLeak")
         lateinit var progress: ProgressBar
         val kihelyezesItems: ArrayList<SzerelohelyItem> = ArrayList()
@@ -215,6 +217,16 @@ class MainActivity : AppCompatActivity(),
         }
 
         loadLoginFragment()
+
+        exitTimer = object : CountDownTimer(1 * 60 * 1000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                Log.d(TAG, "onTick: ")
+            }
+
+            override fun onFinish() {
+                finishAndRemoveTask()
+            }
+        }
 
         myTimer = object : CountDownTimer(timeOut * 60 * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -313,12 +325,24 @@ class MainActivity : AppCompatActivity(),
         myTimer.cancel()
     }
 
+    fun startExitTimer(){
+        exitTimer.start()
+        Log.d(TAG, "startExitTimer: elindult")
+    }
+
+    fun cancelExitTimer(){
+        exitTimer.cancel()
+        Log.d(TAG, "cancelExitTimer: megállt")
+    }
+
     fun loadLoginFragment() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_container, loginFragment, "LOGIN").commit()
     }
-    fun loadKoztes(){
-        supportFragmentManager.beginTransaction().replace(R.id.frame_container,koztesFragment,"KOZTES").commit()
+
+    fun loadKoztes() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.frame_container, koztesFragment, "KOZTES").commit()
     }
 
     private fun getMenuFragment(): Boolean {
@@ -533,8 +557,8 @@ class MainActivity : AppCompatActivity(),
                 }
             } else {
                 kivalasztottSzallitoJarmu = barcodeData
-                for(i in 0 until szallitoJarmu.size){
-                    if(kivalasztottSzallitoJarmu == szallitoJarmu[i]){
+                for (i in 0 until szallitoJarmu.size) {
+                    if (kivalasztottSzallitoJarmu == szallitoJarmu[i]) {
                         kivalasztottSzallitoJarmuEllenorzo = ellenorzoKod[i]
                     }
                 }
@@ -877,6 +901,7 @@ class MainActivity : AppCompatActivity(),
             //loadTobbletKontenerKihelyezes()
         }
     }
+
     override fun onBackPressed() {
         try {
             when {
@@ -964,7 +989,7 @@ class MainActivity : AppCompatActivity(),
 
         }
     }
-    
+
     override fun sendTobblet(
         id: Int,
         kontenerID: Int,
@@ -976,22 +1001,35 @@ class MainActivity : AppCompatActivity(),
         cikkszam: String
     ) {
         CoroutineScope(IO).launch {
-           sql.openNyolcHarmas(id,kontenerID,megjegyzes,megjegyzes2,intrem,unit,mennyiseg,cikkszam,this@MainActivity)
+            sql.openNyolcHarmas(
+                id,
+                kontenerID,
+                megjegyzes,
+                megjegyzes2,
+                intrem,
+                unit,
+                mennyiseg,
+                cikkszam,
+                this@MainActivity
+            )
         }
     }
-    fun raktarcheck(code: String){
+
+    fun raktarcheck(code: String) {
         CoroutineScope(IO).launch {
-            sql.checkBinIn02(code,this@MainActivity)
+            sql.checkBinIn02(code, this@MainActivity)
         }
     }
-    fun updateCikkandContainer(cikk: Int, kontener: Int){
-        sql.closeItemAndCheckContainer(cikk,kontener,this@MainActivity)
+
+    fun updateCikkandContainer(cikk: Int, kontener: Int) {
+        sql.closeItemAndCheckContainer(cikk, kontener, this@MainActivity)
     }
 
     override fun triggerError() {
         Log.d(TAG, "triggerError: ")
     }
-    fun removeFragment(fragment1: String){
+
+    fun removeFragment(fragment1: String) {
         val fragment = supportFragmentManager.findFragmentByTag(fragment1)
         if (fragment != null) supportFragmentManager.beginTransaction().remove(fragment)
             .commit()
