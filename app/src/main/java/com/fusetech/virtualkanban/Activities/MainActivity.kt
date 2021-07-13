@@ -249,6 +249,7 @@ class MainActivity : AppCompatActivity(),
                     }
                     getFragment("NEGYESCIKKEK") -> { //4-2
                         loadLoginFragment()
+                        removeFragment("NEGYESCIKKEK")
                     }
                     getFragment("KISZEDESCIKK") -> { //4-3
                         igenyKontenerKiszedesCikkKiszedes.onTimeout()
@@ -271,6 +272,7 @@ class MainActivity : AppCompatActivity(),
                     getFragment("CIKKLEZARASFRAGMENTHATOS") -> { //6-2
                         igenyKiszedesCikkLezaras.onTimeout()
                         loadLoginFragment()
+                        removeFragment("CIKKLEZARASFRAGMENTHATOS")
                     }
                     getFragment("TOBBLET") -> { //7
                         tobbletOsszeallitasFragment.onKilepPressed()

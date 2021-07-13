@@ -92,7 +92,7 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
             } else {
                 mainActivity.igenyKontenerCheck()
             }
-            mainActivity.removeFragment("CIKKLEZARASFRAGMENTHATOS")
+            mainActivity.removeFragment("CIKKLEZARASFRAGMENT")
         }
         lezarBtn.setOnClickListener {
             setProgressBarOn()

@@ -44,7 +44,7 @@ class CikklekerdezesFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         setItemOrBinManually = if (context is SetItemOrBinManually) {
-            context as SetItemOrBinManually
+            context
         } else {
             throw RuntimeException(context.toString() + "must implement")
         }
