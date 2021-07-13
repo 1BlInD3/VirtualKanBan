@@ -24,12 +24,13 @@ import kotlinx.android.synthetic.main.konteneres_view.view.*
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-private lateinit var childFrame: FrameLayout
+
 private lateinit var childRecycler: RecyclerView
 private var kontenerList: ArrayList<KontenerItem> = ArrayList()
 private lateinit var progress: ProgressBar
 private lateinit var exit3Btn: Button
 private lateinit var mainActivity: MainActivity
+private lateinit var childFrame: FrameLayout
 private const val TAG = "IgenyKontenerKiszedesFr"
 
 @Suppress("UNCHECKED_CAST")
