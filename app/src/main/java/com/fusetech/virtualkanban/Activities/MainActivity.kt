@@ -326,13 +326,13 @@ class MainActivity : AppCompatActivity(),
         myTimer.start()
         val mIntent = IntentFilter()
         mIntent.addAction(Intent.ACTION_POWER_CONNECTED)
-        mIntent.addAction(Intent.ACTION_POWER_DISCONNECTED)
+        //mIntent.addAction(Intent.ACTION_POWER_DISCONNECTED)
         logoutWhenCharging = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 when (intent?.action) {
                     Intent.ACTION_POWER_CONNECTED -> {
                         Log.d(TAG, "onReceive: Rajta vagyok a recieveren")
-                        setAlert("Elindult a connect")
+                        //setAlert("Elindult a connect")
                         finishAndRemoveTask()
                     }
                     /*Intent.ACTION_POWER_DISCONNECTED -> {
