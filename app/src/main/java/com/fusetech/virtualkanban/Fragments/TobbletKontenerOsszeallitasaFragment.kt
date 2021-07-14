@@ -210,7 +210,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                                     igenyReveresed[i].mennyiseg.toDouble(),
                                     "01",
                                     "21",
-                                    "SZ01"
+                                    "BE"
                                 )
                             }.await()
                             if (isSent) {
