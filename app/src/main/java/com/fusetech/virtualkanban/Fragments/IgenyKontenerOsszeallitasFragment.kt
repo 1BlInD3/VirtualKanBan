@@ -59,7 +59,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
             kontener: String
         )
 
-        fun closeContainer(statusz: Int, datum: String)
+        fun closeContainer(statusz: Int, datum: String, kontener: String)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,6 +99,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         cikkItem_igeny.isFocusable = false
         cikkItem_igeny.isFocusableInTouchMode = false
         kontenerText.text = arguments?.getString("KONTENER")
+        val konti = kontenerText.text.trim().substring(4, kontenerText.text.trim().length)
         polcTextIgeny.setText(arguments?.getString("TERMRAKH"))
         Log.d(TAG, "onCreateView: ${arguments?.getString("KONTENER")}")
         Log.d(TAG, "onCreateView: ${arguments?.getString("TERMRAKH")}")
@@ -129,7 +130,6 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
             mainActivity.isItem(cikkItem_igeny.text.toString())
         }
         mennyiseg_igeny2.setOnClickListener {
-            val konti = kontenerText.text.trim().substring(4, kontenerText.text.trim().length)
             igenyList.add(
                 IgenyItem(
                     cikkItem_igeny.text.toString().trim(), megjegyzes1_igeny.text.toString().trim(),
@@ -188,16 +188,16 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
                 val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
                 Log.d(TAG, "onCreateView: $currentDateAndTime")
                 if (polcTextIgeny.text.isEmpty() && igenyReveresed.size == 0) {
-                    sendBinCode.closeContainer(5, currentDateAndTime)
+                    sendBinCode.closeContainer(5, currentDateAndTime,konti)
                     setProgressBarOff()
                     clearAll()
                     mainActivity.loadMenuFragment(true)
                     Log.d(TAG, "onCreateView: lezártam az üreset")
                 } else {
-                    sendBinCode.closeContainer(1, currentDateAndTime) // ezt 1esre kéne átírni
-                    setProgressBarOff()
-                    clearAll()
-                    mainActivity.loadMenuFragment(true)
+                    sendBinCode.closeContainer(1, currentDateAndTime,konti) // ezt 1esre kéne átírni
+                    //setProgressBarOff()
+                    //clearAll()
+                    //mainActivity.loadMenuFragment(true)
                     Log.d(TAG, "onCreateView: lezártam amibe volt adat")
                 }
             } else {

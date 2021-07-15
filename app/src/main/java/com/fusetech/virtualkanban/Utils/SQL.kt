@@ -572,7 +572,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         }
     }
 
-    fun closeContainerSql(statusz: Int, datum: String, context: MainActivity) {
+    fun closeContainerSql(statusz: Int, datum: String, context: MainActivity,kontener: String) {
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -581,18 +581,21 @@ class SQL(private val sqlMessage: SQLAlert) {
                 connection.prepareStatement(res.getString(R.string.closeContainer))
             statement.setInt(1, statusz)
             statement.setString(2, datum)
-            statement.setString(3, context.kontener)
+            statement.setString(3, kontener)
             statement.executeUpdate()
             Log.d(TAG, "closeContainerSql: sikeres lezárás")
-            CoroutineScope(Dispatchers.Main).launch {
-                context.setAlert("Sikeres konténer lezárás!")
-            }
             val statement1 =
                 connection.prepareStatement(res.getString(R.string.updateItemStatus))
             statement1.setInt(1, statusz)
-            statement1.setString(2, context.kontener)
+            statement1.setString(2, kontener)
             try {
                 statement1.executeUpdate()
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.setAlert("Sikeres konténer lezárás!")
+                    context.igenyFragment.setProgressBarOff()
+                    context.igenyFragment.clearAll()
+                }
+                context.loadMenuFragment(true)
             } catch (e: Exception) {
                 Log.d(TAG, "closeContainerSql: $e")
                 CoroutineScope(Dispatchers.Main).launch {
@@ -601,6 +604,9 @@ class SQL(private val sqlMessage: SQLAlert) {
             }
         } catch (e: Exception) {
             Log.d(TAG, "closeContainerSql: $e")
+            CoroutineScope(Dispatchers.Main).launch {
+                context.setAlert("Nem sikerült")
+            }
         }
     }
 

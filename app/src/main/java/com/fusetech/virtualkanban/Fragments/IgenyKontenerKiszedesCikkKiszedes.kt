@@ -147,11 +147,12 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                         }
                     }
                 } else {
-                    Toast.makeText(
+                    mainActivity.setAlert("Nincs polchely, vagy van mennyiség beírva, így nem zárhatod le!")
+                    /*Toast.makeText(
                         view.context,
                         "Nincs polchely, vagy van mennyiség beírva, így nem zárhatod le!",
                         Toast.LENGTH_LONG
-                    ).show()
+                    ).show()*/
                 }
                 Log.d(TAG, "onCreateView: Megnyomtam az IGEN gombot")
             }

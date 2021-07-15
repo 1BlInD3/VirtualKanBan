@@ -697,9 +697,9 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    override fun closeContainer(statusz: Int, datum: String) {
+    override fun closeContainer(statusz: Int, datum: String, konti: String) {
         CoroutineScope(IO).launch {
-            sql.closeContainerSql(statusz, datum, this@MainActivity)
+            sql.closeContainerSql(statusz, datum, this@MainActivity,konti)
         }
     }
 
