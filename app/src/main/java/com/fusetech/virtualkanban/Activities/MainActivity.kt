@@ -48,7 +48,8 @@ class MainActivity : AppCompatActivity(),
     IgenyKontenerKiszedesCikkKiszedes.SendXmlData,
     SQL.SQLAlert,
     TobbletKontenerCikkekFragment.Tobblet,
-    RetrofitFunctions.Trigger {
+    RetrofitFunctions.Trigger,
+    HatosCikkekFragment.Hatos{
     /*
     // 1es opció pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
@@ -92,6 +93,8 @@ class MainActivity : AppCompatActivity(),
     * nyit egy konténert beírja az id-t, atado, kontener, statusz= 6, kontener_tipus = 2
     * a 2-es opció layoutját használhatom plusz xml küldésnél fordítva történik. 01 ből 21 be, a mozgatott mennyiségbe kell beírni a mennyiséget
     *
+    * 8-as opció
+    * a 4-es opcióhoz hasonló, csak a 02-es raktár polcaira helyezi vissza a cikkeket
     */
     private var manager: AidcManager? = null
     private var barcodeReader: BarcodeReader? = null
@@ -508,7 +511,7 @@ class MainActivity : AppCompatActivity(),
                 13 -> kiszedesreVaro()  //6
                 14 -> containerCheck7(dolgKod)  //7
                 15 -> loadTobbletKontenerKihelyezes()  //8
-                16 -> loadCikklekerdezesFragment()  //91
+                16 -> loadCikklekerdezesFragment()  //9
             }
         }
         myTimer.start()
@@ -697,9 +700,9 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    override fun closeContainer(statusz: Int, datum: String, konti: String) {
+    override fun closeContainer(statusz: Int, datum: String, kontener: String) {
         CoroutineScope(IO).launch {
-            sql.closeContainerSql(statusz, datum, this@MainActivity,konti)
+            sql.closeContainerSql(statusz, datum, this@MainActivity,kontener)
         }
     }
 
@@ -1060,5 +1063,11 @@ class MainActivity : AppCompatActivity(),
         val fragment = supportFragmentManager.findFragmentByTag(fragment1)
         if (fragment != null) supportFragmentManager.beginTransaction().remove(fragment)
             .commit()
+    }
+
+    override fun hatosInfo(id: Int) {
+        CoroutineScope(IO).launch {
+            sql.cikkCodeSql(id, this@MainActivity)
+        }
     }
 }

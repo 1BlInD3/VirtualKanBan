@@ -126,4 +126,8 @@ class IgenyKontenerKiszedese : Fragment() {
     fun progressBarOff(){
         progress.visibility = View.INVISIBLE
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+    }
 }

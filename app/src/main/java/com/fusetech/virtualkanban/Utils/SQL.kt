@@ -1246,6 +1246,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("A konténerben nincs 1 státuszú cikk")
                     context.kiszedesreVaroIgenyFragment.setProgressBarOff()
+                    context.kiszedesreVaro()
                 }
             } else {
                 //val igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()

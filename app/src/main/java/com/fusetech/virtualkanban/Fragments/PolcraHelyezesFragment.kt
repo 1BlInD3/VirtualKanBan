@@ -48,6 +48,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
     private var unitText: TextView? = null
     private lateinit var myView: View
 
+
     companion object {
         val myItems: ArrayList<PolcLocation> = ArrayList()
         var isSentTranzit = false
@@ -424,5 +425,10 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
     fun setCikkNumberBack() {
         cikkText.setText("")
         cikkText.requestFocus()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        //myView = null
     }
 }
