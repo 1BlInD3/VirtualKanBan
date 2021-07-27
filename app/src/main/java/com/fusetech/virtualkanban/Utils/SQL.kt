@@ -1078,12 +1078,12 @@ class SQL(private val sqlMessage: SQLAlert) {
                     )
                 } while (resultSet.next())
                 val bundle = Bundle()
+                context.menuFragment = null
                 bundle.putSerializable("KISZEDESLISTA", context.kontenerList)
                 context.igenyKiszedesFragment?.arguments = bundle
                 context.supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_container, context.igenyKiszedesFragment!!, "KISZEDES")
                     .commit()
-                context.menuFragment = null
                 CoroutineScope(Dispatchers.Main).launch {
                     context.menuFragment?.setMenuProgressOff()
                 }
@@ -1137,6 +1137,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         .commit()
                 } else {
                     val fragment = IgenyKontnerKiszedesCikk()
+                    context.igenyKiszedesFragment?.destroy()
                     val konteneresCikkek: ArrayList<KontenerbenLezarasItem> = ArrayList()
                     do {
                         val cikk = resultSet1.getString("cikkszam")
@@ -1171,6 +1172,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     // igenyKiszedesCikk.arguments = bundle
                     context.supportFragmentManager.beginTransaction()
                         .replace(R.id.data_frame2, fragment, "NEGYESCIKKEK").commit()
+                    context.igenyKiszedesFragment = null
                     CoroutineScope(Dispatchers.Main).launch {
                         context.igenyKiszedesFragment?.setProgressBarOff()
                     }

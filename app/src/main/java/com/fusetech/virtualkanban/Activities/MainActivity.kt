@@ -191,7 +191,7 @@ class MainActivity : AppCompatActivity(),
         supportActionBar?.hide()
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance("", "")
         loginFragment = LoginFragment()
-       // igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
+        //igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
         polcHelyezesFragment = PolcraHelyezesFragment()
         szallitoJarmuFragment = SzallitoJartmuFragment()
         ellenorzoKodFragment = EllenorzoKodFragment()

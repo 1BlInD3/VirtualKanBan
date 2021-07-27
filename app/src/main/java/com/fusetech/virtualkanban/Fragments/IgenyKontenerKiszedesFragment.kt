@@ -48,6 +48,7 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
         }
     }
 
+
     @SuppressLint("InflateParams")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -98,7 +99,6 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
         exit3Btn?.isFocusableInTouchMode = false
         kontenerList.clear()
         childRecycler?.adapter?.notifyDataSetChanged()
-        mainActivity?.igenyKiszedesFragment = null
     }
 
     private fun loadData() {
@@ -140,14 +140,10 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
          exit3Btn.isFocusable = false
          exit3Btn.isFocusableInTouchMode = false
      }*/
-
-    override fun onDestroy() {
-        kontenerList.clear()
-        super.onDestroy()
-    }
-
     override fun onDestroyView() {
+        Log.d(TAG, "onDestroyView: KISZEDES")
         super.onDestroyView()
+        kontenerList.clear()
         myView = null
         child = null
         childRecycler = null
@@ -155,6 +151,15 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
         progress = null
         exit3Btn = null
         mainActivity = null
+        horizontalScrollView = null
+    }
+    fun destroy(){
+        myView = null
+        child = null
+        childRecycler = null
+        childRecycler?.adapter = null
+        progress = null
+        exit3Btn = null
         horizontalScrollView = null
     }
 }

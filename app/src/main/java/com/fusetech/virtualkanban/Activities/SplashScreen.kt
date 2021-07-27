@@ -30,7 +30,7 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
         var backupURL = "http://10.0.1.199:8030/"
         var endPoint = """"""
         var logPath = ""
-        var timeOut = 0L
+        var timeOut = 5L
         var szallitoJarmu: ArrayList<String> = ArrayList()
         var ellenorzoKod: ArrayList<String> = ArrayList()
     }

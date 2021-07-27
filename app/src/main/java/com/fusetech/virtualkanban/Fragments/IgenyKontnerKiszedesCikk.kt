@@ -2,6 +2,7 @@ package com.fusetech.virtualkanban.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,17 +21,19 @@ import kotlinx.android.synthetic.main.kontenerben_lezaras_view.view.*
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+private const val TAG = "IgenyKontnerKiszedesCik"
 
 class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClickListener{
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var recycler : RecyclerView
-    private lateinit var tovabbBtn: Button
-    private lateinit var visszaBtn: Button
-    private lateinit var kontenerNev: TextView
-    private lateinit var progress: ProgressBar
-    private lateinit var cikkAdatok: KiszedesAdatok
-    private lateinit var mainAcitivity: MainActivity
+    private var recycler : RecyclerView? = null
+    private  var tovabbBtn: Button?= null
+    private  var visszaBtn: Button?= null
+    private  var kontenerNev: TextView?= null
+    private  var progress: ProgressBar?= null
+    private  var cikkAdatok: KiszedesAdatok?= null
+    private  var mainAcitivity: MainActivity?= null
+    private var myView: View? = null
 
     interface KiszedesAdatok{
         fun cikkAdatok(cikk: String?, megj1: String?, megj2: String?, intrem: String?, igeny: Double, unit: String?, id: Int, kontnerNumber: Int)
@@ -48,30 +51,39 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.kontenerben_lezaras_view, container, false)
+        myView = inflater.inflate(R.layout.kontenerben_lezaras_view, container, false)
         mainAcitivity = activity as MainActivity
-        kontenerNev = view.kontenerNameLezaras
-        recycler = view.child_recycler2
-        tovabbBtn = view.lezar3Button
-        visszaBtn = view.exit3CikkButton
-        progress = view.cikkLezarasProgress
-        progress.visibility = View.GONE
-        kontenerNev.text = arguments?.getString("NEGYESNEV")
-        tovabbBtn.text = "Tovább"
-        tovabbBtn.visibility = View.GONE
-        recycler.adapter = KontenerbenLezarasAdapter(cikkItem4,this)
-        recycler.layoutManager = LinearLayoutManager(view.context)
-        recycler.setHasFixedSize(true)
+        kontenerNev = myView?.kontenerNameLezaras
+        recycler = myView?.child_recycler2
+        tovabbBtn = myView?.lezar3Button
+        visszaBtn = myView?.exit3CikkButton
+        progress = myView?.cikkLezarasProgress
+        progress?.visibility = View.GONE
+        kontenerNev?.text = arguments?.getString("NEGYESNEV")
+        tovabbBtn?.text = "Tovább"
+        tovabbBtn?.visibility = View.GONE
+        recycler?.adapter = KontenerbenLezarasAdapter(cikkItem4,this)
+        recycler?.layoutManager = LinearLayoutManager(myView?.context)
+        recycler?.setHasFixedSize(true)
         loadData()
-        recycler.adapter?.notifyDataSetChanged()
-        recycler.requestFocus()
-        visszaBtn.setOnClickListener{
-            mainAcitivity.loadMenuFragment(true)
-            mainAcitivity.menuFragment = null
-            mainAcitivity.igenyKontenerKiszedes()
+        recycler?.adapter?.notifyDataSetChanged()
+        recycler?.requestFocus()
+        visszaBtn?.setOnClickListener{
+            myView = null
+            recycler = null
+            recycler?.adapter = null
+            tovabbBtn = null
+            visszaBtn = null
+            kontenerNev = null
+            progress = null
+            cikkAdatok = null
+            mainAcitivity?.loadMenuFragment(true)
+            mainAcitivity?.menuFragment = null
+            mainAcitivity?.igenyKontenerKiszedes()
+            mainAcitivity = null
         }
 
-        return view
+        return myView
     }
 
     companion object {
@@ -86,7 +98,7 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
     }
 
     override fun onItemClick(position: Int) {
-        cikkAdatok.cikkAdatok(cikkItem4[position].cikkszam,cikkItem4[position].megjegyzes1,cikkItem4[position].megjegyzes2,
+        cikkAdatok?.cikkAdatok(cikkItem4[position].cikkszam,cikkItem4[position].megjegyzes1,cikkItem4[position].megjegyzes2,
         cikkItem4[position].intrem,cikkItem4[position].igeny.toString().toDouble(),cikkItem4[position].unit,cikkItem4[position].id,cikkItem4[position].kontener_id)
 
     }
@@ -108,12 +120,26 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
 
     override fun onResume() {
         super.onResume()
-        recycler.requestFocus()
+        recycler?.requestFocus()
     }
     fun setProgressBarOff(){
-        progress.visibility = View.GONE
+        progress?.visibility = View.GONE
     }
     fun setProgressBarOn(){
-        progress.visibility = View.VISIBLE
+        progress?.visibility = View.VISIBLE
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d(TAG, "onDestroyView: ")
+        myView = null
+        recycler = null
+        recycler?.adapter = null
+        tovabbBtn = null
+        visszaBtn = null
+        kontenerNev = null
+        progress = null
+        cikkAdatok = null
+        mainAcitivity = null
     }
 }
