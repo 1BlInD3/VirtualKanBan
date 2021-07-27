@@ -23,19 +23,22 @@ import kotlinx.android.synthetic.main.konteneres_view.view.*
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-private lateinit var childRecycler: RecyclerView
 private var kontenerList: ArrayList<KontenerItem> = ArrayList()
 private const val TAG = "IgenyKontenerKiszedesFr"
 
 @Suppress("UNCHECKED_CAST")
-class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClickListener{
+class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClickListener {
 
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var progress: ProgressBar
-    private lateinit var exit3Btn: Button
-    private lateinit var mainActivity: MainActivity
-    private lateinit var childFrame: FrameLayout
+    private var progress: ProgressBar? = null
+    private var exit3Btn: Button? = null
+    private var mainActivity: MainActivity? = null
+    private var childFrame: FrameLayout? = null
+    private var childRecycler: RecyclerView? = null
+    private var myView : View? = null
+    private var child: View? = null
+    private var horizontalScrollView: HorizontalScrollView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,33 +53,32 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-       val view = inflater.inflate(R.layout.fragment_igeny_kontener_kiszedes, container, false)
+        myView = inflater.inflate(R.layout.fragment_igeny_kontener_kiszedes, container, false)
         mainActivity = activity as MainActivity
-        childFrame = view.data_frame2
-        val child = layoutInflater.inflate(R.layout.konteneres_view,null)
-        childFrame.addView(child)
-        val horizontalScrollView: HorizontalScrollView = child.horizontalScrollView3
-        horizontalScrollView.isFocusable = false
-        horizontalScrollView.isFocusableInTouchMode = false
-        progress = child.konteneresProgress
-        exit3Btn = child.exit3Button
-        exit3Btn.isFocusable = true
-        //exit3Btn.isFocusableInTouchMode = true
+        childFrame = myView?.data_frame2
+        child = layoutInflater.inflate(R.layout.konteneres_view, null)
+        childFrame?.addView(child)
+        horizontalScrollView = child?.horizontalScrollView3!!
+        horizontalScrollView?.isFocusable = false
+        horizontalScrollView?.isFocusableInTouchMode = false
+        progress = child?.konteneresProgress
+        exit3Btn = child?.exit3Button
+        exit3Btn?.isFocusable = true
         setProgressBarOff()
-        childRecycler = child.child_recycler
-        childRecycler.adapter = KontenerAdapter(kontenerList,this)
-        childRecycler.layoutManager = LinearLayoutManager(child.context)
-        childRecycler.setHasFixedSize(true)
+        childRecycler = child?.child_recycler
+        childRecycler?.adapter = KontenerAdapter(kontenerList, this)
+        childRecycler?.layoutManager = LinearLayoutManager(child?.context)
+        childRecycler?.setHasFixedSize(true)
         kontenerList.clear()
         loadData()
-        childRecycler.adapter?.notifyDataSetChanged()
+        childRecycler?.adapter?.notifyDataSetChanged()
 
-        exit3Btn.setOnClickListener {
+        exit3Btn?.setOnClickListener {
             kontenerList.clear()
-            mainActivity.loadMenuFragment(true)
+            mainActivity?.loadMenuFragment(true)
         }
 
-       return view
+        return myView
     }
 
     companion object {
@@ -91,42 +93,60 @@ class IgenyKontenerKiszedesFragment : Fragment(),KontenerAdapter.onKontenerClick
     }
 
     override fun onKontenerClick(position: Int) {
-        mainActivity.checkIfContainerStatus(kontenerList[position].kontner_id.toString())
-        exit3Btn.isFocusable = false
-        exit3Btn.isFocusableInTouchMode = false
+        mainActivity?.checkIfContainerStatus(kontenerList[position].kontner_id.toString())
+        exit3Btn?.isFocusable = false
+        exit3Btn?.isFocusableInTouchMode = false
         kontenerList.clear()
-        childRecycler.adapter?.notifyDataSetChanged()
+        childRecycler?.adapter?.notifyDataSetChanged()
     }
-    private fun loadData(){
+
+    private fun loadData() {
         try {
             kontenerList.clear()
-            val myList: ArrayList<KontenerItem> = arguments?.getSerializable("KISZEDESLISTA") as ArrayList<KontenerItem>
-            for(i in 0 until myList.size){
-                kontenerList.add(KontenerItem(myList[i].kontener,myList[i].polc,myList[i].datum,myList[i].tetelszam,myList[i].kontner_id,myList[i].status))
+            val myList: ArrayList<KontenerItem> =
+                arguments?.getSerializable("KISZEDESLISTA") as ArrayList<KontenerItem>
+            for (i in 0 until myList.size) {
+                kontenerList.add(
+                    KontenerItem(
+                        myList[i].kontener,
+                        myList[i].polc,
+                        myList[i].datum,
+                        myList[i].tetelszam,
+                        myList[i].kontner_id,
+                        myList[i].status
+                    )
+                )
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Log.d(TAG, "loadData: ")
         }
     }
-    fun setProgressBarOff(){
-        progress.visibility = View.GONE
+
+    fun setProgressBarOff() {
+        progress?.visibility = View.GONE
     }
-    fun setProgressBarOn(){
-        progress.visibility = View.VISIBLE
+
+    fun setProgressBarOn() {
+        progress?.visibility = View.VISIBLE
     }
 
     override fun onResume() {
         super.onResume()
-        childRecycler.requestFocus()
+        childRecycler?.requestFocus()
     }
-   /* override fun onPause() {
-        super.onPause()
-        exit3Btn.isFocusable = false
-        exit3Btn.isFocusableInTouchMode = false
-    }*/
+    /* override fun onPause() {
+         super.onPause()
+         exit3Btn.isFocusable = false
+         exit3Btn.isFocusableInTouchMode = false
+     }*/
 
     override fun onDestroy() {
         kontenerList.clear()
         super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        
     }
 }

@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.kontenerben_lezaras_view.view.*
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-private lateinit var recycler: RecyclerView
 private const val TAG = "IgenyKontenerLezarasCik"
 private lateinit var sendItemCode: IgenyKontenerLezarasCikkLezaras.CikkCode
 
@@ -31,11 +30,13 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
     private var param1: String? = null
     private var param2: String? = null
 
-    private lateinit var exitBtn: Button
-    private lateinit var lezarBtn: Button
-    private lateinit var mainActivity: MainActivity
-    private lateinit var kontenerNev: TextView
-    private lateinit var progress: ProgressBar
+    private var exitBtn: Button? = null
+    private var lezarBtn: Button? = null
+    private var mainActivity: MainActivity? = null
+    private var kontenerNev: TextView? = null
+    private var progress: ProgressBar? = null
+    private var myView: View? = null
+    private var recycler: RecyclerView? = null
 
     interface CikkCode {
         fun cikkCode(code: Int)
@@ -62,57 +63,57 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.kontenerben_lezaras_view, container, false)
+        myView = inflater.inflate(R.layout.kontenerben_lezaras_view, container, false)
         mainActivity = activity as MainActivity
-        recycler = view.child_recycler2
-        exitBtn = view.exit3CikkButton
-        lezarBtn = view.lezar3Button
-        kontenerNev = view.kontenerNameLezaras
-        val horizontalScrollView: HorizontalScrollView = view.horizontalScrollView3
+        recycler = myView?.child_recycler2!!
+        exitBtn = myView?.exit3CikkButton
+        lezarBtn = myView?.lezar3Button
+        kontenerNev = myView?.kontenerNameLezaras
+        val horizontalScrollView: HorizontalScrollView = myView?.horizontalScrollView3!!
         horizontalScrollView.isFocusable = false
         horizontalScrollView.isFocusableInTouchMode = false
-        progress = view.cikkLezarasProgress
+        progress = myView?.cikkLezarasProgress
         setProgressBarOff()
-        recycler.adapter = KontenerbenLezarasAdapter(kontItem, this)
-        recycler.layoutManager = LinearLayoutManager(view.context)
-        recycler.setHasFixedSize(true)
+        recycler?.adapter = KontenerbenLezarasAdapter(kontItem, this)
+        recycler?.layoutManager = LinearLayoutManager(myView?.context)
+        recycler?.setHasFixedSize(true)
         kontItem.clear()
-        kontenerNev.text = ""
+        kontenerNev?.text = ""
         loadData()
-        recycler.adapter?.notifyDataSetChanged()
-        recycler.requestFocus()
+        recycler?.adapter?.notifyDataSetChanged()
+        recycler?.requestFocus()
 
-        exitBtn.setOnClickListener {
-            exitBtn.isFocusable = true
-            exitBtn.isFocusableInTouchMode = true
+        exitBtn?.setOnClickListener {
+            exitBtn?.isFocusable = true
+            exitBtn?.isFocusableInTouchMode = true
             kontItem.clear()
-            mainActivity.loadMenuFragment(true)
-            if (mainActivity.getFragment("CIKKLEZARASFRAGMENTHATOS")) {
-                mainActivity.removeFragment("CIKKLEZARASFRAGMENTHATOS")
-                mainActivity.kiszedesreVaro()
+            mainActivity?.loadMenuFragment(true)
+            if (mainActivity?.getFragment("CIKKLEZARASFRAGMENTHATOS")!!) {
+                mainActivity?.removeFragment("CIKKLEZARASFRAGMENTHATOS")
+                mainActivity?.kiszedesreVaro()
             } else {
-                mainActivity.removeFragment("CIKKLEZARASFRAGMENT")
-                mainActivity.igenyKontenerCheck()
+                mainActivity?.removeFragment("CIKKLEZARASFRAGMENT")
+                mainActivity?.igenyKontenerCheck()
             }
         }
-        lezarBtn.setOnClickListener {
+        lezarBtn?.setOnClickListener {
             setProgressBarOn()
-            mainActivity.closeContainerAndItem()
+            mainActivity?.closeContainerAndItem()
             kontItem.clear()
-            mainActivity.loadMenuFragment(true)
+            mainActivity?.loadMenuFragment(true)
         }
         if (arguments?.getBoolean("LEZARBUTN")!!) {
-            lezarBtn.visibility = View.VISIBLE
+            lezarBtn?.visibility = View.VISIBLE
         } else {
-            lezarBtn.visibility = View.GONE
+            lezarBtn?.visibility = View.GONE
         }
 
-        return view
+        return myView
     }
 
     fun onTimeout() {
         kontItem.clear()
-        mainActivity.removeFragment("CIKKLEZARASFRAGMENTHATOS")
+        mainActivity?.removeFragment("CIKKLEZARASFRAGMENTHATOS")
     }
 
     companion object {
@@ -146,25 +147,38 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
                     )
                 )
             }
-            kontenerNev.text = arguments?.getString("KONTENER_ID")
+            kontenerNev?.text = arguments?.getString("KONTENER_ID")
         } catch (e: Exception) {
             Log.d(TAG, "loadData: $e")
         }
     }
 
     fun setProgressBarOff() {
-        progress.visibility = View.GONE
+        progress?.visibility = View.GONE
     }
 
     fun setProgressBarOn() {
-        progress.visibility = View.VISIBLE
+        progress?.visibility = View.VISIBLE
     }
 
     fun buttonPerform() {
-        exitBtn.performClick()
+        exitBtn?.performClick()
     }
 
     override fun onItemClick(position: Int) {
         sendItemCode.cikkCode(kontItem[position].id)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        myView = null
+        exitBtn = null
+        lezarBtn = null
+        mainActivity = null
+        recycler = null
+        recycler?.adapter = null
+        kontenerNev = null
+        progress = null
+
     }
 }

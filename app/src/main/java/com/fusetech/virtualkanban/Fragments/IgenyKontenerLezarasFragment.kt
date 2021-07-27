@@ -25,18 +25,20 @@ private const val ARG_PARAM2 = "param2"
 
 @Suppress("UNCHECKED_CAST")
 class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClickListener {
-    private lateinit var dataFrame: FrameLayout
-    private lateinit var childRecycler: RecyclerView
+    private var dataFrame: FrameLayout? = null
+    private var childRecycler: RecyclerView? = null
     private var kontenerList: ArrayList<KontenerItem> = ArrayList()
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var mainActivity: MainActivity
-    private lateinit var igenyKontener: IgenyKontnerLezaras
+    private var mainActivity: MainActivity? = null
+    private var igenyKontener: IgenyKontnerLezaras? = null
     private val TAG = "IgenyKontenerLezarasFra"
-    private lateinit var exitBtn : Button
-    private lateinit var progress: ProgressBar
+    private var exitBtn: Button? = null
+    private var progress: ProgressBar? = null
+    private var myView : View? = null
+    private var child : View? = null
 
-    interface IgenyKontnerLezaras{
+    interface IgenyKontnerLezaras {
         fun sendContainer(container: String)
     }
 
@@ -52,32 +54,32 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_igeny_kontener_lezaras, container, false)
+        myView = inflater.inflate(R.layout.fragment_igeny_kontener_lezaras, container, false)
         mainActivity = activity as MainActivity
-        dataFrame = view.data_frame1
-        val child = layoutInflater.inflate(R.layout.konteneres_view,null)
-        dataFrame.addView(child)
-        val horizontalScrollView: HorizontalScrollView = child.horizontalScrollView3
+        dataFrame = myView?.data_frame1
+        child = layoutInflater.inflate(R.layout.konteneres_view, null)
+        dataFrame?.addView(child)
+        val horizontalScrollView: HorizontalScrollView = child?.horizontalScrollView3!!
         horizontalScrollView.isFocusable = false
         horizontalScrollView.isFocusableInTouchMode = false
-        exitBtn = child.exit3Button
-        exitBtn.isFocusable = true
-        progress = child.konteneresProgress
+        exitBtn = child?.exit3Button
+        exitBtn?.isFocusable = true
+        progress = child?.konteneresProgress
         setProgressBarOff()
-        childRecycler = child.child_recycler
-        childRecycler.adapter = KontenerAdapter(kontenerList,this)
-        childRecycler.layoutManager = LinearLayoutManager(child.context)
-        childRecycler.setHasFixedSize(true)
+        childRecycler = child?.child_recycler
+        childRecycler?.adapter = KontenerAdapter(kontenerList, this)
+        childRecycler?.layoutManager = LinearLayoutManager(child?.context)
+        childRecycler?.setHasFixedSize(true)
         kontenerList.clear()
         loadData()
 
-        exitBtn.setOnClickListener{
+        exitBtn?.setOnClickListener {
             Log.d(TAG, "onButtonPressed")
             kontenerList.clear()
-            mainActivity.loadMenuFragment(true)
+            mainActivity?.loadMenuFragment(true)
         }
 
-        return view
+        return myView
     }
 
     companion object {
@@ -93,35 +95,62 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
 
     override fun onKontenerClick(position: Int) {
         Log.d(TAG, "onKontenerClick: ${kontenerList[position].kontner_id}")
-        igenyKontener.sendContainer(kontenerList[position].kontner_id.toString())
+        igenyKontener?.sendContainer(kontenerList[position].kontner_id.toString())
         kontenerList.clear()
-        childRecycler.adapter?.notifyDataSetChanged()
-        exitBtn.isFocusable = false
-        exitBtn.isFocusableInTouchMode = false
+        childRecycler?.adapter?.notifyDataSetChanged()
+        exitBtn?.isFocusable = false
+        exitBtn?.isFocusableInTouchMode = false
     }
-    private fun loadData(){
-        val myList: ArrayList<KontenerItem> = arguments?.getSerializable("KONTENERLISTA") as ArrayList<KontenerItem>
-        for(i in 0 until myList.size){
-            kontenerList.add(KontenerItem(myList[i].kontener,myList[i].polc,myList[i].datum,myList[i].tetelszam,myList[i].kontner_id,myList[i].status))
+
+    private fun loadData() {
+        val myList: ArrayList<KontenerItem> =
+            arguments?.getSerializable("KONTENERLISTA") as ArrayList<KontenerItem>
+        for (i in 0 until myList.size) {
+            kontenerList.add(
+                KontenerItem(
+                    myList[i].kontener,
+                    myList[i].polc,
+                    myList[i].datum,
+                    myList[i].tetelszam,
+                    myList[i].kontner_id,
+                    myList[i].status
+                )
+            )
         }
-        childRecycler.adapter?.notifyDataSetChanged()
-        if(kontenerList.size > 0){
-            childRecycler.requestFocus()
+        childRecycler?.adapter?.notifyDataSetChanged()
+        if (kontenerList.size > 0) {
+            childRecycler?.requestFocus()
         }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        igenyKontener = if(context is IgenyKontnerLezaras){
+        igenyKontener = if (context is IgenyKontnerLezaras) {
             context
-        }else{
+        } else {
             throw RuntimeException(context.toString() + "must implement")
         }
     }
-    fun setProgressBarOff(){
-        progress.visibility = View.GONE
+
+    fun setProgressBarOff() {
+        progress?.visibility = View.GONE
     }
-    fun setProgressBarOn(){
-        progress.visibility = View.VISIBLE
+
+    fun setProgressBarOn() {
+        progress?.visibility = View.VISIBLE
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d(TAG, "onDestroyView: KonténerLezárás")
+        myView = null
+        child = null
+        dataFrame = null
+        childRecycler = null
+        childRecycler?.adapter = null
+        mainActivity = null
+        igenyKontener = null
+        exitBtn = null
+        progress = null
     }
 }
