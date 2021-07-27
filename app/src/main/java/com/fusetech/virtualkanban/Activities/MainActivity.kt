@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity(),
     private var manager: AidcManager? = null
     private var barcodeReader: BarcodeReader? = null
     private lateinit var barcodeData: String
-    var loginFragment: LoginFragment? = LoginFragment()
+    var loginFragment: LoginFragment? = null
     var dolgKod: String = ""// vissza ide
     private lateinit var connection: Connection
     var cikkItems: ArrayList<CikkItems> = ArrayList()
@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity(),
     var polcHelyezesFragment = PolcraHelyezesFragment()
     var igenyFragment = IgenyKontenerOsszeallitasFragment()
     var igenyLezarasFragment = IgenyKontenerLezarasFragment()
-    var igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
+    var igenyKiszedesFragment : IgenyKontenerKiszedesFragment? = null
     private lateinit var igenyKiszedesCikk: IgenyKontnerKiszedesCikk
     var igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
     var kiszedesreVaroIgenyFragment = KiszedesreVaroIgenyFragment()
@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity(),
     private val cikklekerdezesFragment = CikklekerdezesFragment()
     private var polcLocation: ArrayList<PolcLocation>? = ArrayList()
     var kontener = ""
-    var menuFragment = MenuFragment()
+    var menuFragment : MenuFragment? = null
     var lezarandoKontener = ""
     var igenyLezarCikkVisible: Boolean = false
     var selectedContainer = ""
@@ -190,11 +190,12 @@ class MainActivity : AppCompatActivity(),
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance("", "")
+        loginFragment = LoginFragment()
+       // igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
         polcHelyezesFragment = PolcraHelyezesFragment()
         szallitoJarmuFragment = SzallitoJartmuFragment()
         ellenorzoKodFragment = EllenorzoKodFragment()
         igenyKiszedesCikk = IgenyKontnerKiszedesCikk()
-        loginFragment = LoginFragment()
         progress = progressBar2
         progress.visibility = View.GONE
         AidcManager.create(this) { aidcManager ->
@@ -394,7 +395,7 @@ class MainActivity : AppCompatActivity(),
     fun loadMenuFragment(hasRight: Boolean?) {
         menuFragment = MenuFragment.newInstance(hasRight)
         supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_container, menuFragment, "MENU").commit()
+            .replace(R.id.frame_container, menuFragment!!, "MENU").commit()
     }
 
     fun loadCikklekerdezesFragment() {

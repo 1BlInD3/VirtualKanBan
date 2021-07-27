@@ -67,6 +67,7 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         recycler.requestFocus()
         visszaBtn.setOnClickListener{
             mainAcitivity.loadMenuFragment(true)
+            mainAcitivity.menuFragment = null
             mainAcitivity.igenyKontenerKiszedes()
         }
 

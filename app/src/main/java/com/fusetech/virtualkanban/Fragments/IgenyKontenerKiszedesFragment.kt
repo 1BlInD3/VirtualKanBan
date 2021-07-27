@@ -98,6 +98,7 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
         exit3Btn?.isFocusableInTouchMode = false
         kontenerList.clear()
         childRecycler?.adapter?.notifyDataSetChanged()
+        mainActivity?.igenyKiszedesFragment = null
     }
 
     private fun loadData() {
@@ -147,6 +148,13 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
 
     override fun onDestroyView() {
         super.onDestroyView()
-        
+        myView = null
+        child = null
+        childRecycler = null
+        childRecycler?.adapter = null
+        progress = null
+        exit3Btn = null
+        mainActivity = null
+        horizontalScrollView = null
     }
 }
