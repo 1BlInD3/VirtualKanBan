@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity(),
     private var manager: AidcManager? = null
     private var barcodeReader: BarcodeReader? = null
     private lateinit var barcodeData: String
-    var loginFragment = LoginFragment()
+    var loginFragment: LoginFragment? = LoginFragment()
     var dolgKod: String = ""// vissza ide
     private lateinit var connection: Connection
     var cikkItems: ArrayList<CikkItems> = ArrayList()
@@ -366,7 +366,7 @@ class MainActivity : AppCompatActivity(),
 
     fun loadLoginFragment() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_container, loginFragment, "LOGIN").commit()
+            .replace(R.id.frame_container, loginFragment!!, "LOGIN").commit()
     }
 
     fun loadKoztes() {
@@ -438,10 +438,10 @@ class MainActivity : AppCompatActivity(),
             cancelTimer()
             barcodeData = p0?.barcodeData!!
             when {
-                loginFragment.isVisible -> {
-                    loginFragment.setId(barcodeData)
+                loginFragment?.isVisible!! -> {
+                    loginFragment?.setId(barcodeData)
                     dolgKod = barcodeData
-                    loginFragment.startSpinning()
+                    loginFragment?.startSpinning()
                     CoroutineScope(IO).launch {
                         sql.checkRightSql(dolgKod, this@MainActivity)
                     }

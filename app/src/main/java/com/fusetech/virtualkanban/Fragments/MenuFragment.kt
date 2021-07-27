@@ -16,18 +16,21 @@ private const val ARG_PARAM1 = "param1"
 
 class MenuFragment : Fragment() {
     private var param1: Boolean? = null
-    private lateinit var polcHelyezes: Button
-    private lateinit var igenyOssze: Button
-    private lateinit var igenyLezar: Button
-    private lateinit var igenyKiszed: Button
-    private lateinit var igenyKihelyez: Button
-    private lateinit var kiszedesreVar: Button
-    private lateinit var tobbletOssze: Button
-    private lateinit var tobbletKihelyez: Button
-    private lateinit var cikkLekerdezes: Button
-    private lateinit var mainActivity: MainActivity
-    private lateinit var menuProgress: ProgressBar
-    private lateinit var kilepes: Button
+    private  var polcHelyezes: Button? = null
+    private  var igenyOssze: Button?= null
+    private  var igenyLezar: Button?= null
+    private  var igenyKiszed: Button?= null
+    private  var igenyKihelyez: Button?= null
+    private  var kiszedesreVar: Button?= null
+    private  var tobbletOssze: Button?= null
+    private  var tobbletKihelyez: Button?= null
+    private  var cikkLekerdezes: Button?= null
+    private  var mainActivity: MainActivity?= null
+    private  var menuProgress: ProgressBar?= null
+    private  var kilepes: Button?= null
+
+
+    private var myView: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,88 +43,88 @@ class MenuFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_menu, container, false)
+        myView = inflater.inflate(R.layout.fragment_menu, container, false)
         mainActivity = activity as MainActivity
-        polcHelyezes = view.polcraHelyezes
-        igenyOssze = view.kontenerOsszelaalitas
-        igenyLezar = view.kontenerLezaras
-        igenyKiszed = view.konetnerKiszedes
-        igenyKihelyez = view.kontenerKihelyezes
-        kiszedesreVar = view.kontenerVar
-        tobbletOssze = view.tobbletOsszeallitas
-        tobbletKihelyez = view.tobbletKihelyezes
-        cikkLekerdezes = view.cikkLekerdezes
-        menuProgress = view.menu_progress
-        kilepes = view.kilepesMenuButton
-        mainActivity.cancelExitTimer()
+        polcHelyezes = myView?.polcraHelyezes!!
+        igenyOssze = myView?.kontenerOsszelaalitas!!
+        igenyLezar = myView?.kontenerLezaras!!
+        igenyKiszed = myView?.konetnerKiszedes!!
+        igenyKihelyez = myView?.kontenerKihelyezes!!
+        kiszedesreVar = myView?.kontenerVar!!
+        tobbletOssze = myView?.tobbletOsszeallitas!!
+        tobbletKihelyez = myView?.tobbletKihelyezes!!
+        cikkLekerdezes = myView?.cikkLekerdezes!!
+        menuProgress = myView?.menu_progress!!
+        kilepes = myView?.kilepesMenuButton!!
+        mainActivity?.cancelExitTimer()
         setMenuProgressOff()
         if (!param1!!) {
-            polcHelyezes.isEnabled = false
-            polcHelyezes.setBackgroundResource(R.drawable.disabled)
-            igenyOssze.isEnabled = false
-            igenyOssze.setBackgroundResource(R.drawable.disabled)
-            igenyLezar.isEnabled = false
-            igenyLezar.setBackgroundResource(R.drawable.disabled)
-            igenyKiszed.isEnabled = false
-            igenyKiszed.setBackgroundResource(R.drawable.disabled)
-            igenyKihelyez.isEnabled = false
-            igenyKihelyez.setBackgroundResource(R.drawable.disabled)
-            kiszedesreVar.isEnabled = false
-            kiszedesreVar.setBackgroundResource(R.drawable.disabled)
-            tobbletOssze.isEnabled = false
-            tobbletOssze.setBackgroundResource(R.drawable.disabled)
-            tobbletKihelyez.isEnabled = false
-            tobbletKihelyez.setBackgroundResource(R.drawable.disabled)
+            polcHelyezes?.isEnabled = false
+            polcHelyezes?.setBackgroundResource(R.drawable.disabled)
+            igenyOssze?.isEnabled = false
+            igenyOssze?.setBackgroundResource(R.drawable.disabled)
+            igenyLezar?.isEnabled = false
+            igenyLezar?.setBackgroundResource(R.drawable.disabled)
+            igenyKiszed?.isEnabled = false
+            igenyKiszed?.setBackgroundResource(R.drawable.disabled)
+            igenyKihelyez?.isEnabled = false
+            igenyKihelyez?.setBackgroundResource(R.drawable.disabled)
+            kiszedesreVar?.isEnabled = false
+            kiszedesreVar?.setBackgroundResource(R.drawable.disabled)
+            tobbletOssze?.isEnabled = false
+            tobbletOssze?.setBackgroundResource(R.drawable.disabled)
+            tobbletKihelyez?.isEnabled = false
+            tobbletKihelyez?.setBackgroundResource(R.drawable.disabled)
         }
 
-        polcHelyezes.setOnClickListener {
-            if (polcHelyezes.isEnabled) {
-                mainActivity.loadPolcHelyezesFragment()
+        polcHelyezes?.setOnClickListener {
+            if (polcHelyezes?.isEnabled!!) {
+                mainActivity?.loadPolcHelyezesFragment()
             }
         }
-        igenyOssze.setOnClickListener {
-            if (igenyOssze.isEnabled) {
+        igenyOssze?.setOnClickListener {
+            if (igenyOssze?.isEnabled!!) {
                 //mainActivity.loadIgenyOsszeallitasFragment("","")// ez csak megjelenítés semmi sql nem fut alatta
-                mainActivity.containerCheck(mainActivity.dolgKod)
+                mainActivity?.containerCheck(mainActivity?.dolgKod!!)
             }
         }
-        igenyLezar.setOnClickListener {
-            if (igenyLezar.isEnabled) {
-                mainActivity.igenyKontenerCheck()
+        igenyLezar?.setOnClickListener {
+            if (igenyLezar?.isEnabled!!) {
+                mainActivity?.igenyKontenerCheck()
             }
         }
-        igenyKiszed.setOnClickListener {
-            if (igenyKiszed.isEnabled) {
-                mainActivity.igenyKontenerKiszedes()
+        igenyKiszed?.setOnClickListener {
+            if (igenyKiszed?.isEnabled!!) {
+                mainActivity?.igenyKontenerKiszedes()
             }
         }
-        igenyKihelyez.setOnClickListener {
-            if (igenyKihelyez.isEnabled) {
-                mainActivity.loadKihelyezesFragment()
+        igenyKihelyez?.setOnClickListener {
+            if (igenyKihelyez?.isEnabled!!) {
+                mainActivity?.loadKihelyezesFragment()
             }
         }
-        kiszedesreVar.setOnClickListener {
-            if (kiszedesreVar.isEnabled) {
-                mainActivity.kiszedesreVaro()
+        kiszedesreVar?.setOnClickListener {
+            if (kiszedesreVar!!.isEnabled) {
+                mainActivity?.kiszedesreVaro()
             }
         }
-        tobbletOssze.setOnClickListener {
-            if (tobbletOssze.isEnabled) {
-                mainActivity.containerCheck7(mainActivity.dolgKod)
+        tobbletOssze?.setOnClickListener {
+            if (tobbletOssze?.isEnabled!!) {
+                mainActivity?.containerCheck7(mainActivity?.dolgKod!!)
             }
         }
-        tobbletKihelyez.setOnClickListener {
-            if (tobbletKihelyez.isEnabled) {
-                mainActivity.loadTobbletKontenerKihelyezes()
+        tobbletKihelyez?.setOnClickListener {
+            if (tobbletKihelyez?.isEnabled!!) {
+                mainActivity?.loadTobbletKontenerKihelyezes()
             }
         }
-        cikkLekerdezes.setOnClickListener {
-            mainActivity.loadCikklekerdezesFragment()
+        cikkLekerdezes?.setOnClickListener {
+            mainActivity?.loadCikklekerdezesFragment()
         }
-        kilepes.setOnClickListener {
-            mainActivity.finishAndRemoveTask()
+        kilepes?.setOnClickListener {
+            mainActivity?.finishAndRemoveTask()
         }
-        return view
+        return myView
     }
 
     companion object {
@@ -137,7 +140,7 @@ class MenuFragment : Fragment() {
 
     fun setMenuProgressOn() {
         try {
-            menuProgress.visibility = View.VISIBLE
+            menuProgress?.visibility = View.VISIBLE
         } catch (e: Exception) {
             Log.d("MenuFrag", "setMenuProgressOn: ")
         }
@@ -146,9 +149,26 @@ class MenuFragment : Fragment() {
 
     fun setMenuProgressOff() {
         try {
-            menuProgress.visibility = View.GONE
+            menuProgress?.visibility = View.GONE
         } catch (e: Exception) {
             Log.d("MenuFrag", "setMenuProgressOn: ")
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        myView = null
+        mainActivity = null
+        polcHelyezes = null
+        igenyOssze = null
+        igenyLezar = null
+        igenyKiszed = null
+        igenyKihelyez = null
+        kiszedesreVar = null
+        tobbletOssze = null
+        tobbletKihelyez = null
+        cikkLekerdezes = null
+        menuProgress = null
+        kilepes = null
     }
 }

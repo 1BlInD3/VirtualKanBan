@@ -14,34 +14,46 @@ import kotlinx.android.synthetic.main.fragment_login.view.*
 
 class LoginFragment : Fragment() {
 
-    private lateinit var cancelBtn : Button
-    private lateinit var idTxt : TextView
-    private lateinit var progressBar : ProgressBar
+    private var cancelBtn : Button? = null
+    private var idTxt : TextView? = null
+    private var progressBar : ProgressBar? = null
+    private var myView: View? = null
+    private var mainActivity: MainActivity? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_login, container, false)
+        myView = inflater.inflate(R.layout.fragment_login, container, false)
 
-        progressBar = view.loginProgress
-        progressBar.visibility = View.GONE
-        idTxt = view.idText
-        cancelBtn = view.cancelButton
-        val mainActivity : MainActivity = activity as MainActivity
-        mainActivity.startExitTimer()
-        cancelBtn.setOnClickListener{
-            mainActivity.loadMenuFragment(false)
+        progressBar = myView?.loginProgress!!
+        progressBar?.visibility = View.GONE
+        idTxt = myView?.idText!!
+        cancelBtn = myView?.cancelButton!!
+        mainActivity  = activity as MainActivity
+        mainActivity?.startExitTimer()
+        cancelBtn?.setOnClickListener{
+            mainActivity?.loadMenuFragment(false)
         }
-        return view
+        return myView
     }
     fun startSpinning(){
-        progressBar.visibility = View.VISIBLE
+        progressBar?.visibility = View.VISIBLE
     }
     fun stopSpinning(){
-        progressBar.visibility = View.GONE
+        progressBar?.visibility = View.GONE
     }
     fun setId(employeeCode: String){
-        idTxt.text = employeeCode
+        idTxt?.text = employeeCode
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mainActivity = null
+        myView = null
+        cancelBtn = null
+        idTxt = null
+        progressBar = null
+        mainActivity?.loginFragment = null
     }
 }

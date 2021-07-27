@@ -76,8 +76,8 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             Log.d(TAG, "Nincs kapcsolat")
             CoroutineScope(Dispatchers.Main).launch {
-                context.loginFragment.stopSpinning()
-                context.loginFragment.setId("Hiaba lépett fel a feldolgozás során")
+                context.loginFragment?.stopSpinning()
+                context.loginFragment?.setId("Hiaba lépett fel a feldolgozás során")
             }
         }
     }
