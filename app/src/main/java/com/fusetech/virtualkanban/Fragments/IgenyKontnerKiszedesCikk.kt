@@ -78,8 +78,9 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
             kontenerNev = null
             progress = null
             cikkAdatok = null
-            mainAcitivity?.loadMenuFragment(true)
-            mainAcitivity?.menuFragment = null
+            //mainAcitivity?.loadMenuFragment(true)
+            //mainAcitivity?.menuFragment = null
+            mainAcitivity?.removeFragment("NEGYESCIKKEK")
             mainAcitivity?.igenyKontenerKiszedes()
             mainAcitivity = null
         }
@@ -132,7 +133,7 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d(TAG, "onDestroyView: ")
+        Log.d(TAG, "onDestroyView: Cikkek megnyitása")
         myView = null
         recycler = null
         recycler?.adapter = null

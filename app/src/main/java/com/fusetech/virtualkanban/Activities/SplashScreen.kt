@@ -46,7 +46,7 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
         try {
             val intent = Intent(this, MainActivity::class.java)
             CoroutineScope(IO).launch {
-                retro.getConfigDetails()
+                //retro.getConfigDetails()
                 Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + " splash"}")
                 if(further) {
                     //delay(2000L)

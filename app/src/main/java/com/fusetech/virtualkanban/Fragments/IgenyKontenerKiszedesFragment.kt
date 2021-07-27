@@ -154,13 +154,4 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
         mainActivity = null
         horizontalScrollView = null
     }
-    fun destroy(){
-        myView = null
-        child = null
-        childRecycler = null
-        childRecycler?.adapter = null
-        progress = null
-        exit3Btn = null
-        horizontalScrollView = null
-    }
 }
