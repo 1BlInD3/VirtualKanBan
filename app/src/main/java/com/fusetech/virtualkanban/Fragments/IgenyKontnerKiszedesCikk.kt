@@ -53,6 +53,7 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
     ): View? {
         myView = inflater.inflate(R.layout.kontenerben_lezaras_view, container, false)
         mainAcitivity = activity as MainActivity
+        //mainAcitivity!!.igenyKiszedesFragment = null
         kontenerNev = myView?.kontenerNameLezaras
         recycler = myView?.child_recycler2
         tovabbBtn = myView?.lezar3Button

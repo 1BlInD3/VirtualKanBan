@@ -108,6 +108,7 @@ class MainActivity : AppCompatActivity(),
     var igenyFragment = IgenyKontenerOsszeallitasFragment()
     var igenyLezarasFragment = IgenyKontenerLezarasFragment()
     var igenyKiszedesFragment : IgenyKontenerKiszedesFragment? = null
+    //var igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
     private lateinit var igenyKiszedesCikk: IgenyKontnerKiszedesCikk
     var igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
     var kiszedesreVaroIgenyFragment = KiszedesreVaroIgenyFragment()

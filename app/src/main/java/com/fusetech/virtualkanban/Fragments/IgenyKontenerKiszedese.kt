@@ -21,11 +21,13 @@ private const val ARG_PARAM2 = "param2"
 class IgenyKontenerKiszedese : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var kilep : Button
-    private lateinit var szallitoText: EditText
-    private lateinit var mainActivity: MainActivity
-    private lateinit var szerelohely: EditText
-    private lateinit var progress : ProgressBar
+    private  var kilep : Button? = null
+    private  var szallitoText: EditText? = null
+    private  var mainActivity: MainActivity? = null
+    private  var szerelohely: EditText? = null
+    private  var progress : ProgressBar? = null
+    private var myView : View? = null
+    var frame: FrameLayout? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,94 +42,101 @@ class IgenyKontenerKiszedese : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_igeny_kontener_kiszedese, container, false)
+        myView = inflater.inflate(R.layout.fragment_igeny_kontener_kiszedese, container, false)
         mainActivity = activity as MainActivity
-        val frame : FrameLayout = view.kihelyezesFrame
-        frame.isFocusable = false
-        frame.isFocusableInTouchMode = false
+        frame = myView!!.kihelyezesFrame
+        frame?.isFocusable = false
+        frame?.isFocusableInTouchMode = false
         //frame.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
-        progress = view.kihelyezesProgressBar
+        progress = myView!!.kihelyezesProgressBar
         progressBarOff()
-        kilep = view.exit5Btn
-        szallitoText = view.szallitoJarmuText
-        szerelohely = view.szereloText
-        szerelohely.isFocusable = false
-        szerelohely.isFocusableInTouchMode = false
-        szallitoText.requestFocus()
-        kilep.setOnClickListener {
+        kilep = myView!!.exit5Btn
+        szallitoText = myView!!.szallitoJarmuText
+        szerelohely = myView!!.szereloText
+        szerelohely?.isFocusable = false
+        szerelohely?.isFocusableInTouchMode = false
+        szallitoText?.requestFocus()
+        kilep?.setOnClickListener {
             when{
-                mainActivity.getFragment("KIHELYEZESLISTA") -> {
+                mainActivity!!.getFragment("KIHELYEZESLISTA") -> {
                     exit()
-                    mainActivity.loadMenuFragment(true)
+                    mainActivity!!.loadMenuFragment(true)
                 }
-                mainActivity.getFragment("KIHELYEZESITEMS") -> {
+                mainActivity!!.getFragment("KIHELYEZESITEMS") -> {
                     onBack()
-                    mainActivity.getContainerList("SZ01")
+                    mainActivity!!.getContainerList("SZ01")
                 }
                 else -> {
                     exit()
-                    mainActivity.loadMenuFragment(true)
+                    mainActivity!!.loadMenuFragment(true)
                 }
             }
         }
-        return view
+        return myView
     }
 
     fun setCode(code: String){
-        if(szallitoText.text.isEmpty()){
-            szallitoText.setText(code)
-            szallitoText.isFocusable = false
-            szallitoText.isFocusableInTouchMode = false
-            szerelohely.isFocusable = true
-            szerelohely.isFocusableInTouchMode = true
-            szerelohely.requestFocus()
-            mainActivity.getContainerList(code)
+        if(szallitoText!!.text.isEmpty()){
+            szallitoText?.setText(code)
+            szallitoText?.isFocusable = false
+            szallitoText?.isFocusableInTouchMode = false
+            szerelohely?.isFocusable = true
+            szerelohely?.isFocusableInTouchMode = true
+            szerelohely?.requestFocus()
+            mainActivity?.getContainerList(code)
         }else{
             if(isCodeInList(code)){
-                szerelohely.setText(code)
-                szerelohely.isFocusable = false
-                szerelohely.isFocusableInTouchMode = false
-                mainActivity.loadKihelyezesItems(code)
+                szerelohely?.setText(code)
+                szerelohely?.isFocusable = false
+                szerelohely?.isFocusableInTouchMode = false
+                mainActivity?.loadKihelyezesItems(code)
             }else{
-                mainActivity.setAlert("Nincs a vonalkód a listában!")
+                mainActivity?.setAlert("Nincs a vonalkód a listában!")
             }
         }
     }
     fun mindentVissza(){
-        szallitoText.setText("")
-        szallitoText.isFocusable = true
-        szallitoText.isFocusableInTouchMode = true
-        szallitoText.requestFocus()
-        szerelohely.isFocusable = false
-        szerelohely.isFocusableInTouchMode = false
+        szallitoText?.setText("")
+        szallitoText?.isFocusable = true
+        szallitoText?.isFocusableInTouchMode = true
+        szallitoText?.requestFocus()
+        szerelohely?.isFocusable = false
+        szerelohely?.isFocusableInTouchMode = false
     }
     fun isCodeInList(code: String): Boolean{
         val bool = kihelyezesItems.contains(SzerelohelyItem(code))
         return bool
     }
     fun exit(){
-        kilep.requestFocus()
-        szallitoText.isFocusable = false
-        szallitoText.isFocusableInTouchMode = false
-        szerelohely.isFocusable = false
-        szerelohely.isFocusableInTouchMode = false
-        szallitoText.setText("")
-        szerelohely.setText("")
+        kilep?.requestFocus()
+        szallitoText?.isFocusable = false
+        szallitoText?.isFocusableInTouchMode = false
+        szerelohely?.isFocusable = false
+        szerelohely?.isFocusableInTouchMode = false
+        szallitoText?.setText("")
+        szerelohely?.setText("")
     }
     fun onBack(){
-        szerelohely.isFocusable = true
-        szerelohely.isFocusableInTouchMode = true
-        szerelohely.requestFocus()
-        szerelohely.setText("")
+        szerelohely?.isFocusable = true
+        szerelohely?.isFocusableInTouchMode = true
+        szerelohely?.requestFocus()
+        szerelohely?.setText("")
     }
     fun progressBarOn(){
-        progress.visibility = View.VISIBLE
+        progress?.visibility = View.VISIBLE
     }
     fun progressBarOff(){
-        progress.visibility = View.INVISIBLE
+        progress?.visibility = View.INVISIBLE
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        myView = null
+        frame = null
+        kilep = null
+        szallitoText = null
+        mainActivity = null
+        szerelohely = null
+        progress = null
     }
 }

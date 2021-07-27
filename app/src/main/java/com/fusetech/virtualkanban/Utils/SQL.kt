@@ -1137,7 +1137,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         .commit()
                 } else {
                     val fragment = IgenyKontnerKiszedesCikk()
-                    context.igenyKiszedesFragment?.destroy()
+                    //context.igenyKiszedesFragment?.destroy()
                     val konteneresCikkek: ArrayList<KontenerbenLezarasItem> = ArrayList()
                     do {
                         val cikk = resultSet1.getString("cikkszam")
@@ -1172,7 +1172,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     // igenyKiszedesCikk.arguments = bundle
                     context.supportFragmentManager.beginTransaction()
                         .replace(R.id.data_frame2, fragment, "NEGYESCIKKEK").commit()
-                    context.igenyKiszedesFragment = null
+                    //context.igenyKiszedesFragment = null
                     CoroutineScope(Dispatchers.Main).launch {
                         context.igenyKiszedesFragment?.setProgressBarOff()
                     }
