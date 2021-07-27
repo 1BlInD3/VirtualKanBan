@@ -26,28 +26,28 @@ import kotlin.collections.ArrayList
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-private lateinit var recyclerView: RecyclerView
 private var igenyList: ArrayList<IgenyItem> = ArrayList()
 private var igenyReveresed: ArrayList<IgenyItem> = ArrayList()
 private const val TAG = "IgenyKontenerOsszeallit"
 private lateinit var sendBinCode: IgenyKontenerOsszeallitasFragment.SendBinCode
 
 class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItemClick {
+    private var recyclerView: RecyclerView? = null
     private var param1: String? = null
     private var param2: String? = null
-
-    private lateinit var kontenerText: TextView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var polcTextIgeny: EditText
-    private lateinit var megjegyzes1_igeny: TextView
-    private lateinit var megjegyzes2_igeny2: TextView
-    private lateinit var intrem_igeny2: TextView
-    private lateinit var unit_igeny2: TextView
-    private lateinit var mainActivity: MainActivity
-    private lateinit var cikkItem_igeny: EditText
-    private lateinit var mennyiseg_igeny2: EditText
-    private lateinit var lezarButton: Button
-    private lateinit var kilepButton: Button
+    private var myView : View? = null
+    private var kontenerText: TextView? = null
+    private var progressBar: ProgressBar? = null
+    private var polcTextIgeny: EditText? = null
+    private var megjegyzes1_igeny: TextView? = null
+    private var megjegyzes2_igeny2: TextView? = null
+    private var intrem_igeny2: TextView? = null
+    private var unit_igeny2: TextView? = null
+    private var mainActivity: MainActivity? = null
+    private var cikkItem_igeny: EditText? = null
+    private var mennyiseg_igeny2: EditText? = null
+    private var lezarButton: Button? = null
+    private var kilepButton: Button? = null
 
     interface SendBinCode {
         fun sendBinCode(code: String)
@@ -75,65 +75,65 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_igeny_kontener_osszeallitas, container, false)
+        myView = inflater.inflate(R.layout.fragment_igeny_kontener_osszeallitas, container, false)
         mainActivity = activity as MainActivity
-        recyclerView = view.recycler_igeny
-        recyclerView.isEnabled = false
-        recyclerView.adapter = IgenyItemAdapter(igenyReveresed, this)
-        recyclerView.layoutManager = LinearLayoutManager(view.context)
-        recyclerView.setHasFixedSize(true)
-        lezarButton = view.lezar_igeny
-        kontenerText = view.container_igeny
-        progressBar = view.progressBar_igeny
-        polcTextIgeny = view.bin_igeny
-        megjegyzes1_igeny = view.megjegyzes_igeny
-        megjegyzes2_igeny2 = view.megjegyzes2_igeny
-        intrem_igeny2 = view.intrem_igeny
-        unit_igeny2 = view.unit_igeny
-        cikkItem_igeny = view.cikk_igeny
-        mennyiseg_igeny2 = view.mennyiseg_igeny
-        mennyiseg_igeny2.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(9, 2))
-        mennyiseg_igeny2.isFocusable = false
-        mennyiseg_igeny2.isFocusableInTouchMode = false
-        kilepButton = view.kilep_igeny_button
-        cikkItem_igeny.isFocusable = false
-        cikkItem_igeny.isFocusableInTouchMode = false
-        kontenerText.text = arguments?.getString("KONTENER")
-        val konti = kontenerText.text.trim().substring(4, kontenerText.text.trim().length)
-        polcTextIgeny.setText(arguments?.getString("TERMRAKH"))
+        recyclerView = myView?.recycler_igeny!!
+        recyclerView?.isEnabled = false
+        recyclerView?.adapter = IgenyItemAdapter(igenyReveresed, this)
+        recyclerView?.layoutManager = LinearLayoutManager(myView?.context)
+        recyclerView?.setHasFixedSize(true)
+        lezarButton = myView?.lezar_igeny
+        kontenerText = myView?.container_igeny
+        progressBar = myView?.progressBar_igeny
+        polcTextIgeny = myView?.bin_igeny
+        megjegyzes1_igeny = myView?.megjegyzes_igeny
+        megjegyzes2_igeny2 = myView?.megjegyzes2_igeny
+        intrem_igeny2 = myView?.intrem_igeny
+        unit_igeny2 = myView?.unit_igeny
+        cikkItem_igeny = myView?.cikk_igeny
+        mennyiseg_igeny2 = myView?.mennyiseg_igeny
+        mennyiseg_igeny2?.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(9, 2))
+        mennyiseg_igeny2?.isFocusable = false
+        mennyiseg_igeny2?.isFocusableInTouchMode = false
+        kilepButton = myView?.kilep_igeny_button
+        cikkItem_igeny?.isFocusable = false
+        cikkItem_igeny?.isFocusableInTouchMode = false
+        kontenerText?.text = arguments?.getString("KONTENER")
+        val konti = kontenerText?.text?.trim()?.substring(4, kontenerText?.text?.trim()?.length!!)
+        polcTextIgeny?.setText(arguments?.getString("TERMRAKH"))
         Log.d(TAG, "onCreateView: ${arguments?.getString("KONTENER")}")
         Log.d(TAG, "onCreateView: ${arguments?.getString("TERMRAKH")}")
         setBinFocusOn()
-        if (polcTextIgeny.text.isNotEmpty()) {
-            polcTextIgeny.isFocusable = false
-            polcTextIgeny.isFocusableInTouchMode = false
-            cikkItem_igeny.isFocusable = true
-            cikkItem_igeny.isFocusableInTouchMode = true
-            cikkItem_igeny.requestFocus()
+        if (polcTextIgeny?.text?.isNotEmpty()!!) {
+            polcTextIgeny?.isFocusable = false
+            polcTextIgeny?.isFocusableInTouchMode = false
+            cikkItem_igeny?.isFocusable = true
+            cikkItem_igeny?.isFocusableInTouchMode = true
+            cikkItem_igeny?.requestFocus()
             try {
                 igenyReveresed.clear()
                 getDataFromList()
             } catch (e: Exception) {
-                Toast.makeText(view.context, "Nincs felvett tétel", Toast.LENGTH_SHORT).show()
+                Toast.makeText(myView?.context, "Nincs felvett tétel", Toast.LENGTH_SHORT).show()
             }
         }
-        megjegyzes1_igeny.text = ""
-        megjegyzes2_igeny2.text = ""
-        intrem_igeny2.text = ""
-        unit_igeny2.text = ""
-        polcTextIgeny.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
+        megjegyzes1_igeny?.text = ""
+        megjegyzes2_igeny2?.text = ""
+        intrem_igeny2?.text = ""
+        unit_igeny2?.text = ""
+        polcTextIgeny?.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
         setProgressBarOff()
-        polcTextIgeny.setOnClickListener {
-            sendBinCode.sendBinCode(polcTextIgeny.text.toString())
+        polcTextIgeny?.setOnClickListener {
+            sendBinCode.sendBinCode(polcTextIgeny?.text.toString())
         }
-        cikkItem_igeny.setOnClickListener {
-            mainActivity.isItem(cikkItem_igeny.text.toString())
+        cikkItem_igeny?.setOnClickListener {
+            mainActivity?.isItem(cikkItem_igeny?.text.toString())
         }
-        mennyiseg_igeny2.setOnClickListener {
+        mennyiseg_igeny2?.setOnClickListener {
             igenyList.add(
                 IgenyItem(
-                    cikkItem_igeny.text.toString().trim(), megjegyzes1_igeny.text.toString().trim(),
-                    mennyiseg_igeny2.text.toString().trim()
+                    cikkItem_igeny?.text.toString().trim(), megjegyzes1_igeny?.text.toString().trim(),
+                    mennyiseg_igeny2?.text.toString().trim()
                 )
             )
             if (igenyList.size == 1) {
@@ -145,7 +145,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
                         igenyList[0].mennyiseg
                     )
                 )
-                recyclerView.adapter?.notifyDataSetChanged()
+                recyclerView?.adapter?.notifyDataSetChanged()
             } else if (igenyList.size > 1) {
                 igenyReveresed.clear()
                 for (i in igenyList.size downTo 1) {
@@ -157,107 +157,111 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
                         )
                     )
                 }
-                recyclerView.adapter?.notifyDataSetChanged()
+                recyclerView?.adapter?.notifyDataSetChanged()
             }
             sendBinCode.sendDetails(
-                cikkItem_igeny.text.toString().trim(), mennyiseg_igeny2.text.toString().toDouble(),
-                polcTextIgeny.text.toString().trim(), unit_igeny2.text.toString(),
-                konti
+                cikkItem_igeny?.text.toString().trim(), mennyiseg_igeny2?.text.toString().toDouble(),
+                polcTextIgeny?.text.toString().trim(), unit_igeny2?.text.toString(),
+                konti!!
             )
-            cikkItem_igeny.isFocusable = true
-            cikkItem_igeny.isFocusableInTouchMode = true
-            cikkItem_igeny.selectAll()
-            cikkItem_igeny.requestFocus()
-            mennyiseg_igeny2.setText("")
-            mennyiseg_igeny2.isFocusable = false
-            mennyiseg_igeny2.isFocusableInTouchMode = false
-            megjegyzes2_igeny2.text = ""
-            intrem_igeny2.text = ""
-            unit_igeny2.text = ""
-            megjegyzes1_igeny.text = ""
+            cikkItem_igeny?.isFocusable = true
+            cikkItem_igeny?.isFocusableInTouchMode = true
+            cikkItem_igeny?.selectAll()
+            cikkItem_igeny?.requestFocus()
+            mennyiseg_igeny2?.setText("")
+            mennyiseg_igeny2?.isFocusable = false
+            mennyiseg_igeny2?.isFocusableInTouchMode = false
+            megjegyzes2_igeny2?.text = ""
+            intrem_igeny2?.text = ""
+            unit_igeny2?.text = ""
+            megjegyzes1_igeny?.text = ""
         }
 
-        kilepButton.setOnClickListener {
-            mainActivity.listIgenyItems.clear()
+        kilepButton?.setOnClickListener {
+            mainActivity?.listIgenyItems?.clear()
             clearAll()
-            mainActivity.loadMenuFragment(true)
+            mainActivity?.loadMenuFragment(true)
         }
-        lezarButton.setOnClickListener {
+        lezarButton?.setOnClickListener {
             if (igenyReveresed.size > 0) {
                 setProgressBarOn()
                 val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
                 Log.d(TAG, "onCreateView: $currentDateAndTime")
-                if (polcTextIgeny.text.isEmpty() && igenyReveresed.size == 0) {
-                    sendBinCode.closeContainer(5, currentDateAndTime,konti)
+                if (polcTextIgeny?.text?.isEmpty()!! && igenyReveresed.size == 0) {
+                    sendBinCode.closeContainer(5, currentDateAndTime, konti!!)
                     setProgressBarOff()
                     clearAll()
-                    mainActivity.loadMenuFragment(true)
+                    mainActivity?.loadMenuFragment(true)
                     Log.d(TAG, "onCreateView: lezártam az üreset")
                 } else {
-                    sendBinCode.closeContainer(1, currentDateAndTime,konti) // ezt 1esre kéne átírni
+                    sendBinCode.closeContainer(
+                        1,
+                        currentDateAndTime,
+                        konti!!
+                    ) // ezt 1esre kéne átírni
                     //setProgressBarOff()
                     //clearAll()
                     //mainActivity.loadMenuFragment(true)
                     Log.d(TAG, "onCreateView: lezártam amibe volt adat")
                 }
             } else {
-                mainActivity.setAlert("Nincsenek tételek a konténerben")
+                mainActivity?.setAlert("Nincsenek tételek a konténerben")
             }
         }
-        return view
+        return myView
     }
 
     fun clearAll() {
-        mainActivity.listIgenyItems.clear()
-        kontenerText.text = ""
+        mainActivity?.listIgenyItems?.clear()
+        kontenerText?.text = ""
         igenyList.clear()
         igenyReveresed.clear()
-        recyclerView.adapter?.notifyDataSetChanged()
-        megjegyzes1_igeny.text = ""
-        megjegyzes2_igeny2.text = ""
-        unit_igeny2.text = ""
-        intrem_igeny2.text = ""
-        mennyiseg_igeny2.setText("")
-        mennyiseg_igeny2.isFocusable = false
-        mennyiseg_igeny2.isFocusableInTouchMode = false
-        cikkItem_igeny.setText("")
-        cikkItem_igeny.isFocusable = false
-        cikkItem_igeny.isFocusableInTouchMode = false
-        polcTextIgeny.setText("")
-        polcTextIgeny.isFocusable = false
-        polcTextIgeny.isFocusableInTouchMode = false
-        lezarButton.requestFocus()
+        recyclerView?.adapter?.notifyDataSetChanged()
+        megjegyzes1_igeny?.text = ""
+        megjegyzes2_igeny2?.text = ""
+        unit_igeny2?.text = ""
+        intrem_igeny2?.text = ""
+        mennyiseg_igeny2?.setText("")
+        mennyiseg_igeny2?.isFocusable = false
+        mennyiseg_igeny2?.isFocusableInTouchMode = false
+        cikkItem_igeny?.setText("")
+        cikkItem_igeny?.isFocusable = false
+        cikkItem_igeny?.isFocusableInTouchMode = false
+        polcTextIgeny?.setText("")
+        polcTextIgeny?.isFocusable = false
+        polcTextIgeny?.isFocusableInTouchMode = false
+        lezarButton?.requestFocus()
     }
 
     fun setProgressBarOff() {
-        progressBar.visibility = View.GONE
+        progressBar?.visibility = View.GONE
     }
 
     fun setProgressBarOn() {
-        progressBar.visibility = View.VISIBLE
+        progressBar?.visibility = View.VISIBLE
     }
 
     fun setBinFocusOn() {
-        polcTextIgeny.selectAll()
-        polcTextIgeny.requestFocus()
+        polcTextIgeny?.selectAll()
+        polcTextIgeny?.requestFocus()
     }
 
     fun setFocusToItem() {
-        cikkItem_igeny.isFocusable = true
-        cikkItem_igeny.isFocusableInTouchMode = true
-        cikkItem_igeny.requestFocus()
-        cikkItem_igeny.selectAll()
-        polcTextIgeny.isFocusable = false
-        polcTextIgeny.isFocusableInTouchMode = false
+        cikkItem_igeny?.isFocusable = true
+        cikkItem_igeny?.isFocusableInTouchMode = true
+        cikkItem_igeny?.requestFocus()
+        cikkItem_igeny?.selectAll()
+        polcTextIgeny?.isFocusable = false
+        polcTextIgeny?.isFocusableInTouchMode = false
     }
 
     fun setFocusToQuantity() {
-        mennyiseg_igeny2.isFocusable = true
-        mennyiseg_igeny2.isFocusableInTouchMode = true
-        mennyiseg_igeny2.selectAll()
-        mennyiseg_igeny2.requestFocus()
-        cikkItem_igeny.isFocusable = false
-        cikkItem_igeny.isFocusableInTouchMode = false
+        mennyiseg_igeny2?.isFocusable = true
+        mennyiseg_igeny2?.isFocusableInTouchMode = true
+        mennyiseg_igeny2?.selectAll()
+        mennyiseg_igeny2?.requestFocus()
+        cikkItem_igeny?.isFocusable = false
+        cikkItem_igeny?.isFocusableInTouchMode = false
     }
 
     companion object {
@@ -282,9 +286,9 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
 
     fun setInfo(megj: String, megj2: String, intRem: String, unit: String) {
         megjegyzes_igeny.text = megj
-        megjegyzes2_igeny2.text = megj2
-        intrem_igeny2.text = intRem
-        unit_igeny2.text = unit
+        megjegyzes2_igeny2?.text = megj2
+        intrem_igeny2?.text = intRem
+        unit_igeny2?.text = unit
     }
 
     override fun igenyClick(position: Int) {
@@ -314,14 +318,14 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
                     )
                 )
             }
-            recyclerView.adapter?.notifyDataSetChanged()
+            recyclerView?.adapter?.notifyDataSetChanged()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        kontenerText.text = arguments?.getString("KONTENER")
-        polcTextIgeny.setText(arguments?.getString("TERMRAKH"))
+        kontenerText?.text = arguments?.getString("KONTENER")
+        polcTextIgeny?.setText(arguments?.getString("TERMRAKH"))
     }
 
     class DecimalDigitsInputFilter(digitsBeforeZero: Int, digitsAfterZero: Int) :
@@ -344,12 +348,32 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
     }
 
     fun setCode(code: String) {
-        if (polcTextIgeny.text.isEmpty()) {
-            polcTextIgeny.setText(code)
+        if (polcTextIgeny?.text?.isEmpty()!!) {
+            polcTextIgeny?.setText(code)
             sendBinCode.sendBinCode(code)
         } else {
-            cikkItem_igeny.setText(code)
-            mainActivity.isItem(code)
+            cikkItem_igeny?.setText(code)
+            mainActivity?.isItem(code)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        myView = null
+        mainActivity = null
+        recyclerView = null
+        recyclerView?.adapter = null
+        lezarButton = null
+        kontenerText = null
+        progressBar = null
+        polcTextIgeny = null
+        megjegyzes1_igeny = null
+        megjegyzes2_igeny2 = null
+        intrem_igeny2 = null
+        unit_igeny2 = null
+        cikkItem_igeny = null
+        mennyiseg_igeny2 = null
+        mennyiseg_igeny2?.filters = null
+        kilepButton = null
     }
 }
