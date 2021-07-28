@@ -1099,6 +1099,7 @@ class SQL(private val sqlMessage: SQLAlert) {
 
     fun checkIfContainerIsOpen(kontener: String, context: MainActivity) {////////////////////////////////////////////////////////////////////////////////////////////////////
         val connection: Connection
+        context.koztesFragment = null
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
@@ -1399,10 +1400,10 @@ class SQL(private val sqlMessage: SQLAlert) {
                         bundle.putSerializable("K_LIST", myList)
                         bundle.putSerializable("K_POLC", listOfBin)
                         bundle.putSerializable("K_TOMB", tempPolcLocations)
-                        context.igenyKontenerKiszedesCikkKiszedes.arguments = bundle
+                        context.igenyKontenerKiszedesCikkKiszedes?.arguments = bundle
                         context.supportFragmentManager.beginTransaction().replace(
                             R.id.frame_container,
-                            context.igenyKontenerKiszedesCikkKiszedes,
+                            context.igenyKontenerKiszedesCikkKiszedes!!,
                             "KISZEDESCIKK"
                         ).commit()
                     }
@@ -1450,10 +1451,10 @@ class SQL(private val sqlMessage: SQLAlert) {
                         bundle.putSerializable("K_LIST", myList)
                         bundle.putSerializable("K_POLC", listOfBin)
                         bundle.putSerializable("K_TOMB", tempPolcLocations)
-                        context.igenyKontenerKiszedesCikkKiszedes.arguments = bundle
+                        context.igenyKontenerKiszedesCikkKiszedes?.arguments = bundle
                         context.supportFragmentManager.beginTransaction().replace(
                             R.id.frame_container,
-                            context.igenyKontenerKiszedesCikkKiszedes,
+                            context.igenyKontenerKiszedesCikkKiszedes!!,
                             "KISZEDESCIKK"
                         ).commit()
                     }
@@ -1565,7 +1566,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         val szallito: String
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
+                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOn()
             }
             connection = DriverManager.getConnection(connectionString)
             val statement1 =
@@ -1575,7 +1576,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             if (!resultSet1.next()) {
                 Log.d(TAG, "checkIfContainerIsDone: nincs mozgatott mennyiség (hazugság)")
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                    context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
                 }
             } else {
                 mozgatott = resultSet1.getDouble("mozgatott_mennyiseg")
@@ -1598,13 +1599,13 @@ class SQL(private val sqlMessage: SQLAlert) {
                     Log.d(TAG, "checkIfContainerIsDone: Sikeres update")
                 }
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                    context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
                 }
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Probléma a konténer ellenőrzésével $e")
-                context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
             }
         }
     }
@@ -1614,7 +1615,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
+                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOn()
             }
             connection = DriverManager.getConnection(connectionString)
             val statement =
@@ -1623,12 +1624,12 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.setString(2, itemId)
             statement.executeUpdate()
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Nem tudom az átvevőt kinullázni $e")
-                context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
             }
         }
     }
@@ -1638,7 +1639,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
+                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOn()
             }
             connection = DriverManager.getConnection(connectionString)
             val statement =
@@ -1646,14 +1647,14 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.setInt(1, 3)
             statement.setString(2, itemId)
             statement.executeUpdate()
-            context.igenyKontenerKiszedesCikkKiszedes.isUpdated = true
+            context.igenyKontenerKiszedesCikkKiszedes?.isUpdated = true
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Probléma a tétel 3-ra írásával $e")
-                context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
             }
         }
     }
@@ -1676,7 +1677,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.setString(3, raktarKod)
             statement.setString(4, polc)
             statement.executeUpdate()
-            context.igenyKontenerKiszedesCikkKiszedes.isSaved = true
+            context.igenyKontenerKiszedesCikkKiszedes?.isSaved = true
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Probléma a ratar_tetel feltöltésnél $e")
@@ -1689,7 +1690,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
+                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOn()
             }
             connection = DriverManager.getConnection(connectionString)
             val statement =
@@ -1700,12 +1701,12 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.executeUpdate()
             Log.d(TAG, "cikkUpdate: sikeres")
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("CikkUpdateHiba $e")
-                context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
             }
         }
     }
@@ -1751,7 +1752,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOn()
+                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOn()
             }
             connection = DriverManager.getConnection(url)
             val statement = connection.prepareStatement(res.getString(R.string.isPolc))
@@ -1760,18 +1761,18 @@ class SQL(private val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nincs ilyen polc")
-                    context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                    context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
                 }
             } else {
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.igenyKontenerKiszedesCikkKiszedes.setBin(code)
-                    context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                    context.igenyKontenerKiszedesCikkKiszedes?.setBin(code)
+                    context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
                 }
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Probléma $e")
-                context.igenyKontenerKiszedesCikkKiszedes.setProgressBarOff()
+                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
             }
         }
     }

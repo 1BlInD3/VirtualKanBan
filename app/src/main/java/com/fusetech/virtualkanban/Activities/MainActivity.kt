@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity(),
     var igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
     var kiszedesreVaroIgenyFragment = KiszedesreVaroIgenyFragment()
     private lateinit var szallitoJarmuFragment: SzallitoJartmuFragment
-    var igenyKontenerKiszedesCikkKiszedes = IgenyKontenerKiszedesCikkKiszedes()
+    var igenyKontenerKiszedesCikkKiszedes : IgenyKontenerKiszedesCikkKiszedes? = null
     var ellenorzoKodFragment = EllenorzoKodFragment()
     private val cikklekerdezesFragment = CikklekerdezesFragment()
     private var polcLocation: ArrayList<PolcLocation>? = ArrayList()
@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity(),
     val tobbletKontenerKihelyzeseFragment = TobbletKontenerKihelyzeseFragment()
     val tobbletCikkek = TobbletKontenerCikkekFragment()
     val tobbletCikkekPolcra = TobbletCikkekPolcraFragment()
-    private val koztesFragment = KoztesFragment()
+    var koztesFragment : KoztesFragment? = null
     private lateinit var myTimer: CountDownTimer
     private lateinit var exitTimer: CountDownTimer
     val hatosFragment = HatosCikkekFragment()
@@ -270,7 +270,7 @@ class MainActivity : AppCompatActivity(),
                         loadLoginFragment()
                     }
                     getFragment("KISZEDESCIKK") -> { //4-3
-                        igenyKontenerKiszedesCikkKiszedes.onTimeout()
+                        igenyKontenerKiszedesCikkKiszedes?.onTimeout()
                     }
                     getFragment("NEGYESCIKKEK") -> { //4-2
                         removeFragment("NEGYESCIKKEK")
@@ -372,8 +372,9 @@ class MainActivity : AppCompatActivity(),
     }
 
     fun loadKoztes() {
+        koztesFragment = KoztesFragment()
         supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_container, koztesFragment, "KOZTES").commit()
+            .replace(R.id.frame_container, koztesFragment!!, "KOZTES").commit()
     }
 
     private fun getMenuFragment(): Boolean {
@@ -958,7 +959,7 @@ class MainActivity : AppCompatActivity(),
                 getFragment("KISZEDESCIKK") -> {
                     /* loadMenuFragment(true)
                      igenyKontenerKiszedes()*/
-                    igenyKontenerKiszedesCikkKiszedes.performButton()
+                    igenyKontenerKiszedesCikkKiszedes?.performButton()
                 }
                 getFragment("NEGYESCIKKEK") -> {
                     loadMenuFragment(true)

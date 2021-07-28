@@ -61,7 +61,7 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         progress = myView?.cikkLezarasProgress
         progress?.visibility = View.GONE
         kontenerNev?.text = arguments?.getString("NEGYESNEV")
-        tovabbBtn?.text = "Tovább"
+        tovabbBtn?.text = getString(R.string.tovabb)
         tovabbBtn?.visibility = View.GONE
         recycler?.adapter = KontenerbenLezarasAdapter(cikkItem4,this)
         recycler?.layoutManager = LinearLayoutManager(myView?.context)
@@ -100,6 +100,7 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
     }
 
     override fun onItemClick(position: Int) {
+        mainAcitivity?.igenyKontenerKiszedesCikkKiszedes = IgenyKontenerKiszedesCikkKiszedes()
         cikkAdatok?.cikkAdatok(cikkItem4[position].cikkszam,cikkItem4[position].megjegyzes1,cikkItem4[position].megjegyzes2,
         cikkItem4[position].intrem,cikkItem4[position].igeny.toString().toDouble(),cikkItem4[position].unit,cikkItem4[position].id,cikkItem4[position].kontener_id)
         myView = null
