@@ -683,9 +683,9 @@ class SQL(private val sqlMessage: SQLAlert) {
                 } while (resultSet.next())
                 val bundle = Bundle()
                 bundle.putSerializable("KONTENERLISTA", context.kontener1List)
-                context.igenyLezarasFragment.arguments = bundle
+                context.igenyLezarasFragment?.arguments = bundle
                 context.supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, context.igenyLezarasFragment, "IGENYLEZARAS")
+                    .replace(R.id.frame_container, context.igenyLezarasFragment!!, "IGENYLEZARAS")
                     .addToBackStack(null).commit()
                 CoroutineScope(Dispatchers.Main).launch {
                     context.menuFragment?.setMenuProgressOff()
@@ -701,11 +701,12 @@ class SQL(private val sqlMessage: SQLAlert) {
     }
 
     fun loadKontenerCikkek(kontener_id: String, context: MainActivity) {
+        context.igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyLezarasFragment.setProgressBarOn()
+                context.igenyLezarasFragment?.setProgressBarOn()
             }
             connection = DriverManager.getConnection(url)
             val statement =
@@ -717,7 +718,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 Log.d(TAG, "loadKontenerCikkek: HIBA VAN")
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("A konténerben nincs 0 státuszú cikk")
-                    context.igenyLezarasFragment.setProgressBarOff()
+                    context.igenyLezarasFragment?.setProgressBarOff()
                 }
             } else {
                 //val igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
@@ -755,16 +756,16 @@ class SQL(private val sqlMessage: SQLAlert) {
                 bundle.putSerializable("CIKKLEZAR", kontenerCikkLezar)
                 bundle.putString("KONTENER_ID", kontener_id)
                 bundle.putBoolean("LEZARBUTN", true)
-                context.igenyKiszedesCikkLezaras.arguments = bundle
+                context.igenyKiszedesCikkLezaras!!.arguments = bundle
                 context.supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.data_frame1,
-                        context.igenyKiszedesCikkLezaras,
+                        context.igenyKiszedesCikkLezaras!!,
                         "CIKKLEZARASFRAGMENT"
                     )
                     /*.addToBackStack(null)*/.commit()
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.igenyLezarasFragment.setProgressBarOff()
+                    context.igenyLezarasFragment?.setProgressBarOff()
                 }
                 //kontenerCikkLezar.clear()
             }
@@ -773,7 +774,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 Log.d(TAG, "loadKontenerCikkek: $e")
                 context.setAlert("$e")
-                context.igenyLezarasFragment.setProgressBarOff()
+                context.igenyLezarasFragment?.setProgressBarOff()
             }
         }
     }

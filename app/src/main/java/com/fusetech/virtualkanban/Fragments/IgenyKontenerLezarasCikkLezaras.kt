@@ -174,11 +174,12 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
         myView = null
         exitBtn = null
         lezarBtn = null
-        mainActivity = null
         recycler = null
         recycler?.adapter = null
         kontenerNev = null
         progress = null
+        mainActivity?.igenyKiszedesCikkLezaras = null
+        mainActivity = null
 
     }
 }

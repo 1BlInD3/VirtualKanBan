@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity(),
     SQL.SQLAlert,
     TobbletKontenerCikkekFragment.Tobblet,
     RetrofitFunctions.Trigger,
-    HatosCikkekFragment.Hatos{
+    HatosCikkekFragment.Hatos {
     /*
     // 1es opció pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
@@ -106,19 +106,20 @@ class MainActivity : AppCompatActivity(),
     var polcItems: ArrayList<PolcItems> = ArrayList()
     var polcHelyezesFragment = PolcraHelyezesFragment()
     var igenyFragment = IgenyKontenerOsszeallitasFragment()
-    var igenyLezarasFragment = IgenyKontenerLezarasFragment()
-    var igenyKiszedesFragment : IgenyKontenerKiszedesFragment? = null
+    var igenyLezarasFragment : IgenyKontenerLezarasFragment? = null
+    var igenyKiszedesFragment: IgenyKontenerKiszedesFragment? = null
+
     //var igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
     private lateinit var igenyKiszedesCikk: IgenyKontnerKiszedesCikk
-    var igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
+    var igenyKiszedesCikkLezaras: IgenyKontenerLezarasCikkLezaras? = null
     var kiszedesreVaroIgenyFragment = KiszedesreVaroIgenyFragment()
     var szallitoJarmuFragment: SzallitoJartmuFragment? = null
-    var igenyKontenerKiszedesCikkKiszedes : IgenyKontenerKiszedesCikkKiszedes? = null
-    var ellenorzoKodFragment : EllenorzoKodFragment? = null
+    var igenyKontenerKiszedesCikkKiszedes: IgenyKontenerKiszedesCikkKiszedes? = null
+    var ellenorzoKodFragment: EllenorzoKodFragment? = null
     private val cikklekerdezesFragment = CikklekerdezesFragment()
     private var polcLocation: ArrayList<PolcLocation>? = ArrayList()
     var kontener = ""
-    var menuFragment : MenuFragment? = null
+    var menuFragment: MenuFragment? = null
     var lezarandoKontener = ""
     var igenyLezarCikkVisible: Boolean = false
     var selectedContainer = ""
@@ -136,7 +137,7 @@ class MainActivity : AppCompatActivity(),
     val tobbletKontenerKihelyzeseFragment = TobbletKontenerKihelyzeseFragment()
     val tobbletCikkek = TobbletKontenerCikkekFragment()
     val tobbletCikkekPolcra = TobbletCikkekPolcraFragment()
-    var koztesFragment : KoztesFragment? = null
+    var koztesFragment: KoztesFragment? = null
     private lateinit var myTimer: CountDownTimer
     private lateinit var exitTimer: CountDownTimer
     val hatosFragment = HatosCikkekFragment()
@@ -191,7 +192,6 @@ class MainActivity : AppCompatActivity(),
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance("", "")
-        loginFragment = LoginFragment()
         //igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
         polcHelyezesFragment = PolcraHelyezesFragment()
         szallitoJarmuFragment = SzallitoJartmuFragment()
@@ -262,7 +262,7 @@ class MainActivity : AppCompatActivity(),
                         loadLoginFragment()
                     }
                     getFragment("CIKKLEZARASFRAGMENT") -> { //3-2
-                        igenyKiszedesCikkLezaras.onTimeout()
+                        igenyKiszedesCikkLezaras?.onTimeout()
                         removeFragment("CIKKLEZARASFRAGMENT")
                         loadLoginFragment()
                     }
@@ -367,6 +367,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     fun loadLoginFragment() {
+        loginFragment = LoginFragment()
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_container, loginFragment!!, "LOGIN").commit()
     }
@@ -706,7 +707,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun closeContainer(statusz: Int, datum: String, kontener: String) {
         CoroutineScope(IO).launch {
-            sql.closeContainerSql(statusz, datum, this@MainActivity,kontener)
+            sql.closeContainerSql(statusz, datum, this@MainActivity, kontener)
         }
     }
 
@@ -758,6 +759,7 @@ class MainActivity : AppCompatActivity(),
 
     fun igenyKontenerCheck() {
         CoroutineScope(IO).launch {
+            igenyLezarasFragment = IgenyKontenerLezarasFragment()
             sql.loadIgenyLezaras(this@MainActivity)
             Log.d(TAG, "igenyKontenerCheck: Lefutott")
         }
@@ -943,7 +945,7 @@ class MainActivity : AppCompatActivity(),
                     loadLoginFragment()
                 }
                 getFragment("CIKKLEZARASFRAGMENT") -> {
-                    igenyKiszedesCikkLezaras.buttonPerform()
+                    igenyKiszedesCikkLezaras?.buttonPerform()
                 }
                 getFragment("IGENY") -> { //2
                     igenyFragment.clearAll()
@@ -970,7 +972,8 @@ class MainActivity : AppCompatActivity(),
                 getFragment("ELLENOR") -> {
                     //loadMenuFragment(true)
                     //igenyKontenerKiszedes()
-                    Toast.makeText(applicationContext, "Ellenőrizd le!!!!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, "Ellenőrizd le!!!!", Toast.LENGTH_LONG)
+                        .show()
                 }
                 getFragment("DUMMY") -> {
                     loadMenuFragment(true)

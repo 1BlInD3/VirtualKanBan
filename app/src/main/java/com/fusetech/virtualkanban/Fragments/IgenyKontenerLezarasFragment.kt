@@ -148,9 +148,10 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         dataFrame = null
         childRecycler = null
         childRecycler?.adapter = null
-        mainActivity = null
         igenyKontener = null
         exitBtn = null
         progress = null
+        mainActivity?.igenyKiszedesFragment = null
+        mainActivity = null
     }
 }
