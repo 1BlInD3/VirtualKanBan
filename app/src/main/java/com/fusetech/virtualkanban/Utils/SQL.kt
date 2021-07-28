@@ -1135,8 +1135,9 @@ class SQL(private val sqlMessage: SQLAlert) {
                         context.igenyKiszedesFragment?.setProgressBarOff()
                     }
                     //context.igenyKiszedesFragment?.destroy()
+                    context.ellenorzoKodFragment = EllenorzoKodFragment()
                     context.supportFragmentManager.beginTransaction()
-                        .replace(R.id.frame_container, context.ellenorzoKodFragment, "ELLENOR")
+                        .replace(R.id.frame_container, context.ellenorzoKodFragment!!, "ELLENOR")
                         .commit()
                 } else {
                     val fragment = IgenyKontnerKiszedesCikk()
@@ -1514,7 +1515,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.ellenorzoKodFragment.setProgressBarOn()
+                context.ellenorzoKodFragment?.setProgressBarOn()
             }
             connection = DriverManager.getConnection(connectionString)
             val statement =
@@ -1524,7 +1525,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Gáz van")
-                    context.ellenorzoKodFragment.setProgressBarOff()
+                    context.ellenorzoKodFragment?.setProgressBarOff()
                 }
             } else {
                 val ellKod = resultSet.getString("BinDescript2")
@@ -1538,19 +1539,19 @@ class SQL(private val sqlMessage: SQLAlert) {
                     context.igenyKontenerKiszedes()
                     CoroutineScope(Dispatchers.Main).launch {
                         //context.setAlert("ITT kell lezárni a konténert")
-                        context.ellenorzoKodFragment.setProgressBarOff()
+                        context.ellenorzoKodFragment?.setProgressBarOff()
                     }
                 } else {
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("Nem egyezik a kód a szállító járművel")
-                        context.ellenorzoKodFragment.setProgressBarOff()
+                        context.ellenorzoKodFragment?.setProgressBarOff()
                     }
                 }
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Ellenorzo\n $e")
-                context.ellenorzoKodFragment.setProgressBarOff()
+                context.ellenorzoKodFragment?.setProgressBarOff()
             }
         }
     }

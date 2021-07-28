@@ -58,6 +58,7 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
     ): View? {
         myView = inflater.inflate(R.layout.fragment_igeny_kontener_kiszedes, container, false)
         mainActivity = activity as MainActivity
+        mainActivity!!.ellenorzoKodFragment = null
         childFrame = myView?.data_frame2
         child = layoutInflater.inflate(R.layout.konteneres_view, null)
         childFrame?.addView(child)

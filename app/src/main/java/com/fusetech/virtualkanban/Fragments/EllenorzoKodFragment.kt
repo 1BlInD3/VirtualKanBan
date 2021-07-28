@@ -1,6 +1,7 @@
 package com.fusetech.virtualkanban.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +13,15 @@ import kotlinx.android.synthetic.main.fragment_ellenorzo_kod.view.*
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+private const val TAG = "EllenorzoKodFragment"
 
 
 class EllenorzoKodFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var ellenorzoKod: EditText
-    private lateinit var ellenorzoProgress: ProgressBar
+    private var ellenorzoKod: EditText? = null
+    private var ellenorzoProgress: ProgressBar? = null
+    private var myView: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,14 +35,14 @@ class EllenorzoKodFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view  = inflater.inflate(R.layout.fragment_ellenorzo_kod, container, false)
+        myView  = inflater.inflate(R.layout.fragment_ellenorzo_kod, container, false)
 
-        ellenorzoKod = view.ellenorzoEdit
-        ellenorzoProgress = view.ellenorzoProgress
+        ellenorzoKod = myView?.ellenorzoEdit
+        ellenorzoProgress = myView?.ellenorzoProgress
         setProgressBarOff()
-        ellenorzoKod.requestFocus()
+        ellenorzoKod?.requestFocus()
 
-        return view
+        return myView
     }
 
     companion object {
@@ -53,13 +56,21 @@ class EllenorzoKodFragment : Fragment() {
             }
     }
     fun setProgressBarOff(){
-        ellenorzoProgress.visibility = View.GONE
+        ellenorzoProgress?.visibility = View.GONE
     }
     fun setProgressBarOn(){
-        ellenorzoProgress.visibility = View.VISIBLE
+        ellenorzoProgress?.visibility = View.VISIBLE
     }
     fun setCode(code: String){
-        ellenorzoKod.selectAll()
-        ellenorzoKod.setText(code)
+        ellenorzoKod?.selectAll()
+        ellenorzoKod?.setText(code)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d(TAG, "onDestroyView: ")
+        ellenorzoKod = null
+        ellenorzoProgress = null
+        myView = null
     }
 }

@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity(),
     var kiszedesreVaroIgenyFragment = KiszedesreVaroIgenyFragment()
     var szallitoJarmuFragment: SzallitoJartmuFragment? = null
     var igenyKontenerKiszedesCikkKiszedes : IgenyKontenerKiszedesCikkKiszedes? = null
-    var ellenorzoKodFragment = EllenorzoKodFragment()
+    var ellenorzoKodFragment : EllenorzoKodFragment? = null
     private val cikklekerdezesFragment = CikklekerdezesFragment()
     private var polcLocation: ArrayList<PolcLocation>? = ArrayList()
     var kontener = ""
@@ -473,7 +473,7 @@ class MainActivity : AppCompatActivity(),
                     //igenyKontenerKiszedesCikkKiszedes.setBin(barcodeData)
                 }
                 getFragment("ELLENOR") -> {
-                    ellenorzoKodFragment.setCode(barcodeData)
+                    ellenorzoKodFragment?.setCode(barcodeData)
                     checkEllenorzoKod(barcodeData)
                 }
                 getFragment("POLC") -> {
@@ -968,8 +968,9 @@ class MainActivity : AppCompatActivity(),
                     igenyKontenerKiszedes()
                 }
                 getFragment("ELLENOR") -> {
-                    loadMenuFragment(true)
-                    igenyKontenerKiszedes()
+                    //loadMenuFragment(true)
+                    //igenyKontenerKiszedes()
+                    Toast.makeText(applicationContext, "Ellenőrizd le!!!!", Toast.LENGTH_LONG).show()
                 }
                 getFragment("DUMMY") -> {
                     loadMenuFragment(true)
