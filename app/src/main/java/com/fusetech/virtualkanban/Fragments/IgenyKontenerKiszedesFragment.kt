@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.ProgressBar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.activities.MainActivity
@@ -38,6 +39,7 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
     private var childRecycler: RecyclerView? = null
     private var myView : View? = null
     private var child: View? = null
+    private var constraint: ConstraintLayout? = null
     private var horizontalScrollView: HorizontalScrollView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +66,7 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
         horizontalScrollView?.isFocusableInTouchMode = false
         progress = child?.konteneresProgress
         exit3Btn = child?.exit3Button
+        constraint = child?.constant
         exit3Btn?.isFocusable = true
         setProgressBarOff()
         childRecycler = child?.child_recycler
@@ -144,6 +147,19 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
         Log.d(TAG, "onDestroyView: KISZEDES")
         super.onDestroyView()
         kontenerList.clear()
+        constraint = null
+        myView = null
+        child = null
+        childFrame = null
+        childRecycler = null
+        childRecycler?.adapter = null
+        progress = null
+        exit3Btn = null
+        mainActivity!!.igenyKiszedesFragment = null
+        mainActivity = null
+        horizontalScrollView = null
+    }
+    fun destroy(){
         myView = null
         child = null
         childRecycler = null

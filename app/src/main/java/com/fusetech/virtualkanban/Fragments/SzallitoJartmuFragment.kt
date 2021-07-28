@@ -14,29 +14,40 @@ import kotlinx.android.synthetic.main.fragment_szallito_jartmu.view.*
 
 class SzallitoJartmuFragment : Fragment() {
 
-    private lateinit var szallitoEdit: EditText
-    private lateinit var exitSzallito: Button
-    private lateinit var mainActivity: MainActivity
+    private var szallitoEdit: EditText? = null
+    private var exitSzallito: Button? = null
+    private var mainActivity: MainActivity? = null
+    private var myView: View? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_szallito_jartmu, container, false)
+        myView = inflater.inflate(R.layout.fragment_szallito_jartmu, container, false)
         mainActivity = activity as MainActivity
-        szallitoEdit = view.szallitoEdit
-        exitSzallito = view.exitSzallitoButton
-        szallitoEdit.requestFocus()
-        exitSzallito.setOnClickListener {
-            mainActivity.loadMenuFragment(true)
-            mainActivity.igenyKontenerKiszedes()
+        //mainActivity?.igenyKiszedesFragment = null
+        szallitoEdit = myView?.szallitoEdit
+        exitSzallito = myView?.exitSzallitoButton
+        szallitoEdit?.requestFocus()
+        exitSzallito?.setOnClickListener {
+            //mainActivity?.loadMenuFragment(true)
+            mainActivity?.szallitoJarmuFragment = null
+            mainActivity?.igenyKontenerKiszedes()
         }
 
-        return view
+        return myView
     }
 
-    fun setJarmu(jarmu: String){
-        szallitoEdit.setText(jarmu)
-        szallitoEdit.isEnabled = false
+    fun setJarmu(jarmu: String) {
+        szallitoEdit?.setText(jarmu)
+        szallitoEdit?.isEnabled = false
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        myView = null
+        exitSzallito = null
+        mainActivity = null
+        szallitoEdit = null
     }
 }

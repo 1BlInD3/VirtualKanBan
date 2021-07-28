@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var igenyKiszedesCikk: IgenyKontnerKiszedesCikk
     var igenyKiszedesCikkLezaras = IgenyKontenerLezarasCikkLezaras()
     var kiszedesreVaroIgenyFragment = KiszedesreVaroIgenyFragment()
-    private lateinit var szallitoJarmuFragment: SzallitoJartmuFragment
+    var szallitoJarmuFragment: SzallitoJartmuFragment? = null
     var igenyKontenerKiszedesCikkKiszedes : IgenyKontenerKiszedesCikkKiszedes? = null
     var ellenorzoKodFragment = EllenorzoKodFragment()
     private val cikklekerdezesFragment = CikklekerdezesFragment()
@@ -420,8 +420,9 @@ class MainActivity : AppCompatActivity(),
 
     fun loadSzallitoJarmu(kontener_id: String) {
         kontener = kontener_id
+        szallitoJarmuFragment = SzallitoJartmuFragment()
         supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_container, szallitoJarmuFragment, "SZALLITO").addToBackStack(null)
+            .replace(R.id.frame_container, szallitoJarmuFragment!!, "SZALLITO").addToBackStack(null)
             .commit()
     }
 
@@ -459,7 +460,7 @@ class MainActivity : AppCompatActivity(),
                     }
                 }
                 getFragment("SZALLITO") -> {
-                    szallitoJarmuFragment.setJarmu(barcodeData)
+                    szallitoJarmuFragment?.setJarmu(barcodeData)
                     //JSON ból megnézni, hogy van e ilyen szállító és itt átadni az értékét
                     CoroutineScope(IO).launch {
                         updateKontenerKiszedesre(kontener)

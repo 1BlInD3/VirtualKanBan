@@ -1115,6 +1115,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 context.loadSzallitoJarmu(kontener)
                 CoroutineScope(Dispatchers.Main).launch {
                     context.igenyKiszedesFragment?.setProgressBarOff()
+                    context.igenyKiszedesFragment?.destroy()
                 }
             } else {
                 val statement2 =
@@ -1133,6 +1134,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         //setAlert("A konténer üres")
                         context.igenyKiszedesFragment?.setProgressBarOff()
                     }
+                    //context.igenyKiszedesFragment?.destroy()
                     context.supportFragmentManager.beginTransaction()
                         .replace(R.id.frame_container, context.ellenorzoKodFragment, "ELLENOR")
                         .commit()
