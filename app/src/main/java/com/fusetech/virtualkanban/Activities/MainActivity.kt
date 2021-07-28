@@ -441,7 +441,7 @@ class MainActivity : AppCompatActivity(),
             cancelTimer()
             barcodeData = p0?.barcodeData!!
             when {
-                loginFragment?.isVisible!! -> {
+                getFragment("LOGIN") -> {
                     loginFragment?.setId(barcodeData)
                     dolgKod = barcodeData
                     loginFragment?.startSpinning()

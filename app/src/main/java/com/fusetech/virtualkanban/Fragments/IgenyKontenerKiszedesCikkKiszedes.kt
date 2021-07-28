@@ -149,8 +149,8 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                 "02",
                                 polc!!.text.trim().toString()
                             )
-                            //mainActivity!!.loadMenuFragment(true)
-                            mainActivity!!.loadKiszedesFragment()
+                            mainActivity?.igenyKontenerKiszedesCikkKiszedes = null
+                            mainActivity!!.loadKoztes()
                             mainActivity!!.checkIfContainerStatus(
                                 kontenerIDKiszedes.text.trim().toString()
                             )
@@ -279,10 +279,16 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                                 "onCreateView: ${Thread.currentThread().name}"
                                             )
                                             //mainActivity!!.loadMenuFragment(true)
-                                            mainActivity!!.loadKiszedesFragment()
-                                            mainActivity!!.checkIfContainerStatus(
-                                                k
-                                            )
+                                            try{
+                                                mainActivity?.igenyKontenerKiszedesCikkKiszedes = null
+                                                mainActivity!!.loadKoztes()
+                                                mainActivity!!.checkIfContainerStatus(
+                                                    k
+                                                )
+                                            }catch (e: Exception){
+                                                Log.d(TAG, "onCreateView: $e")
+                                            }
+
                                         } else {
                                             //kitörölni az utolsó tranzakciót
                                             sql.deleteKontenerRaktarTetel(c)
@@ -290,8 +296,8 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                                 setProgressBarOff()
                                                 mainActivity!!.setAlert("Hiba volt az XML feltöltésnél")
                                             }
-                                            //mainActivity!!.loadMenuFragment(true)
-                                            mainActivity!!.loadKiszedesFragment()
+                                            mainActivity?.igenyKontenerKiszedesCikkKiszedes = null
+                                            mainActivity!!.loadKoztes()
                                             mainActivity!!.checkIfContainerStatus(
                                                 k
                                             )

@@ -1,16 +1,12 @@
 package com.fusetech.virtualkanban.activities
 
 import android.app.AlertDialog
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.fusetech.virtualkanban.R
 import com.fusetech.virtualkanban.retrofit.RetrofitFunctions
 import kotlinx.android.synthetic.main.activity_splash_screen.*
@@ -46,7 +42,7 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
         try {
             val intent = Intent(this, MainActivity::class.java)
             CoroutineScope(IO).launch {
-                //retro.getConfigDetails()
+                retro.getConfigDetails()
                 Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + " splash"}")
                 if(further) {
                     //delay(2000L)
