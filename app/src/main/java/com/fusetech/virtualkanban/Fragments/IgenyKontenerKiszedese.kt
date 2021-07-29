@@ -60,10 +60,13 @@ class IgenyKontenerKiszedese : Fragment() {
             when{
                 mainActivity!!.getFragment("KIHELYEZESLISTA") -> {
                     exit()
+                    mainActivity?.removeFragment("KIHELYEZESLISTA")
                     mainActivity!!.loadMenuFragment(true)
                 }
                 mainActivity!!.getFragment("KIHELYEZESITEMS") -> {
                     onBack()
+                    mainActivity?.kihelyezesFragmentLista = null
+                    mainActivity?.removeFragment("KIHELYEZESITEMS")
                     mainActivity!!.getContainerList("SZ01")
                 }
                 else -> {
@@ -138,5 +141,13 @@ class IgenyKontenerKiszedese : Fragment() {
         mainActivity = null
         szerelohely = null
         progress = null
+    }
+    fun setFocusToBin(){
+        //szerelohely.requestFocus()
+        szerelohely?.isFocusable = true
+        szerelohely?.isFocusableInTouchMode = true
+        szerelohely?.requestFocus()
+        szerelohely?.selectAll()
+
     }
 }

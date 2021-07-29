@@ -29,11 +29,13 @@ private const val TAG = "KihelyezesListaFragment"
 class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.KihelyezesListener {
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var recycler: RecyclerView
     val myList: ArrayList<KihelyezesKontenerElemek> = ArrayList()
-    private lateinit var kihelyezes: Button
-    private lateinit var mainActivity: MainActivity
-    private lateinit var szerelohely: String
+
+    private var recycler: RecyclerView? = null
+    private var kihelyezes: Button? = null
+    private var mainActivity: MainActivity? = null
+    private var szerelohely: String? = null
+    private var myView: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,56 +49,56 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.kihelyezes_header, container, false)
+        myView = inflater.inflate(R.layout.kihelyezes_header, container, false)
         mainActivity = activity as MainActivity
-        kihelyezes = view.kihelyezesBtn
-        recycler = view.recKihelyezesLista
-        recycler.adapter = KihelyezesKontenerAdapter(myList,this)
-        recycler.layoutManager = LinearLayoutManager(view.context)
-        recycler.setHasFixedSize(true)
+        kihelyezes = myView?.kihelyezesBtn
+        recycler = myView?.recKihelyezesLista
+        recycler?.adapter = KihelyezesKontenerAdapter(myList, this)
+        recycler?.layoutManager = LinearLayoutManager(myView?.context)
+        recycler?.setHasFixedSize(true)
         myList.clear()
         getData()
-        kihelyezes.setOnClickListener {
-            kihelyezes.setBackgroundResource(R.drawable.disabled)
-            kihelyezes.isEnabled = false
-            mainActivity.kihelyezes?.progressBarOn()
-            try{
+        kihelyezes?.setOnClickListener {
+            kihelyezes?.setBackgroundResource(R.drawable.disabled)
+            kihelyezes?.isEnabled = false
+            mainActivity?.kihelyezes?.progressBarOn()
+            try {
                 var a = 0
                 CoroutineScope(IO).launch {
                     for (i in 0 until myList.size) {
                         isSent = false
                         if (myList[i].kiadva != 0) {
                             async {
-                                mainActivity.sendKihelyezesXmlData(
+                                mainActivity?.sendKihelyezesXmlData(
                                     myList[i].vonalkod,
                                     "SZ01",
                                     myList[i].kiadva.toDouble(),
                                     "21",
                                     "01",
-                                    szerelohely
+                                    szerelohely!!
                                 )
                             }.await()
                             if (isSent) {
-                                mainActivity.updateCikkAfterSend(myList[i].id)
+                                mainActivity?.updateCikkAfterSend(myList[i].id)
                                 a++
                             }
                         }
                     }
-                    if(a == myList.size){
-                        mainActivity.closeItem(myList[0].kontenerID)
+                    if (a == myList.size) {
+                        mainActivity?.closeItem(myList[0].kontenerID)
                         Log.d(TAG, "Minden cikk lefutott")
                     }
                 }
-            }catch (e: Exception){
-                mainActivity.setAlert("$e")
-                mainActivity.kihelyezes?.progressBarOff()
-                kihelyezes.isEnabled = true
+            } catch (e: Exception) {
+                mainActivity?.setAlert("$e")
+                mainActivity?.kihelyezes?.progressBarOff()
+                kihelyezes?.isEnabled = true
             }
-            mainActivity.kihelyezes?.progressBarOff()
-            kihelyezes.isEnabled = true
+            mainActivity?.kihelyezes?.progressBarOff()
+            kihelyezes?.isEnabled = true
         }
 
-        return view
+        return myView
     }
 
     fun getData() {
@@ -115,7 +117,7 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
                     myItems[i].kontenerID
                 )
             )
-            recycler.adapter?.notifyDataSetChanged()
+            recycler?.adapter?.notifyDataSetChanged()
         }
         szerelohely = arguments?.getString("KIHELYEZESHELY") as String
     }
@@ -124,4 +126,14 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
         Log.d(TAG, "kihelyezesClick: ${myList[pos]}")
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d(TAG, "onDestroyView: ")
+        myView = null
+        recycler = null
+        recycler?.adapter = null
+        kihelyezes = null
+        szerelohely = null
+        mainActivity = null
+    }
 }

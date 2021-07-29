@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity(),
     val retro = RetrofitFunctions(this)
     private val sql = SQL(this)
     var kihelyezes : IgenyKontenerKiszedese? = null
-    val kihelyezesFragmentLista = KihelyezesListaFragment()
+    var kihelyezesFragmentLista : KihelyezesListaFragment? = null
     val tobbletOsszeallitasFragment = TobbletKontenerOsszeallitasaFragment()
     val tobbletKontenerKihelyzeseFragment = TobbletKontenerKihelyzeseFragment()
     val tobbletCikkek = TobbletKontenerCikkekFragment()

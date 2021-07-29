@@ -1803,7 +1803,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 val myList: ArrayList<SzerelohelyItem> = ArrayList()
                 do {
                     val szerelohely = resultSet.getString("termeles_rakhely")
-                    myList.add(SzerelohelyItem(szerelohely))
+                    myList.add(SzerelohelyItem(szerelohely.toUpperCase()))
                 } while (resultSet.next())
                 CoroutineScope(Dispatchers.Main).launch {
                     context.kihelyezes?.progressBarOff()
@@ -1824,6 +1824,7 @@ class SQL(private val sqlMessage: SQLAlert) {
 
     fun loadKihelyezesItemsSql(code: String, context: MainActivity) {
         try {
+            context.kihelyezesFragmentLista = KihelyezesListaFragment()
             CoroutineScope(Dispatchers.Main).launch {
                 context.kihelyezes?.progressBarOn()
             }
@@ -1837,6 +1838,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Üres a konténer")
+                    context.kihelyezes?.setFocusToBin()
                     context.kihelyezes?.progressBarOff()
                 }
             } else {
@@ -1869,10 +1871,10 @@ class SQL(private val sqlMessage: SQLAlert) {
                 val bundle = Bundle()
                 bundle.putSerializable("KIHELYEZESLISTA", myList)
                 bundle.putString("KIHELYEZESHELY", code)
-                context.kihelyezesFragmentLista.arguments = bundle
+                context.kihelyezesFragmentLista?.arguments = bundle
                 context.supportFragmentManager.beginTransaction().replace(
                     R.id.kihelyezesFrame,
-                    context.kihelyezesFragmentLista,
+                    context.kihelyezesFragmentLista!!,
                     "KIHELYEZESITEMS"
                 ).commit()
             }
@@ -1921,6 +1923,8 @@ class SQL(private val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.kihelyezes?.progressBarOff()
                 context.kihelyezes?.onBack()
+                context.kihelyezesFragmentLista = null
+                context.removeFragment("KIHELYEZESITEMS")
                 context.getContainerList("SZ01")
             }
         } catch (e: Exception) {

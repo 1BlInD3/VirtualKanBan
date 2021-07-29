@@ -1,6 +1,7 @@
 package com.fusetech.virtualkanban.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,27 +14,29 @@ import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_szerelohely_lista.view.*
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.kihelyezesItems
 
+private const val TAG = "SzerelohelyListaFragmen"
 
 @Suppress("UNCHECKED_CAST")
 class SzerelohelyListaFragment : Fragment() {
 
-    private lateinit var recycler : RecyclerView
+    private var recycler : RecyclerView? = null
+    private var myView: View? = null
     //private val myList: ArrayList<SzerelohelyItem> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_szerelohely_lista, container, false)
-        recycler = view.recyclerHely
-        recycler.adapter = SzerelohelyItemAdapter(kihelyezesItems)
-        recycler.layoutManager = GridLayoutManager(view.context,3)
-        recycler.setHasFixedSize(true)
-        recycler.isFocusable = false
-        recycler.isFocusableInTouchMode = false
+        myView = inflater.inflate(R.layout.fragment_szerelohely_lista, container, false)
+        recycler = myView?.recyclerHely
+        recycler?.adapter = SzerelohelyItemAdapter(kihelyezesItems)
+        recycler?.layoutManager = GridLayoutManager(myView?.context,3)
+        recycler?.setHasFixedSize(true)
+        recycler?.isFocusable = false
+        recycler?.isFocusableInTouchMode = false
         getData()
 
-        return view
+        return myView
     }
 
     fun getData(){
@@ -42,6 +45,14 @@ class SzerelohelyListaFragment : Fragment() {
         for (i in 0 until lista.size){
             kihelyezesItems.add(SzerelohelyItem(lista[i].szerelohely))
         }
-       recycler.adapter?.notifyDataSetChanged()
+       recycler?.adapter?.notifyDataSetChanged()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d(TAG, "onDestroyView: ")
+        myView = null
+        recycler = null
+        recycler?.adapter = null
     }
 }
