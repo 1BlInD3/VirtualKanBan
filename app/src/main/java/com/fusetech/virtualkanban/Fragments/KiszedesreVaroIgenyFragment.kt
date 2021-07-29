@@ -21,16 +21,20 @@ import kotlinx.android.synthetic.main.fragment_kiszedesre_varo_igeny.view.*
 import kotlinx.android.synthetic.main.konteneres_view.view.*
 import kotlinx.android.synthetic.main.konteneres_view.view.horizontalScrollView3
 
-private lateinit var childRecycler: RecyclerView
 private var kontenerList: ArrayList<KontenerItem> = ArrayList()
 private const val TAG = "KiszedesreVaroIgenyFrag"
 private lateinit var sendContainerCode: KiszedesreVaroIgenyFragment.SendCode6
-class KiszedesreVaroIgenyFragment : Fragment(),KontenerAdapter.onKontenerClickListener {
-    private lateinit var progress: ProgressBar
-    private lateinit var exit3Btn: Button
-    private lateinit var mainActivity: MainActivity
-    private lateinit var childFrame: FrameLayout
-    interface SendCode6{
+
+class KiszedesreVaroIgenyFragment : Fragment(), KontenerAdapter.onKontenerClickListener {
+    private var progress: ProgressBar? = null
+    private var exit3Btn: Button? = null
+    private var mainActivity: MainActivity? = null
+    private var childFrame: FrameLayout? = null
+    private var childRecycler: RecyclerView? = null
+    private var myView: View? = null
+    private var child: View? = null
+
+    interface SendCode6 {
         fun containerCode(kontener: String)
     }
 
@@ -38,28 +42,28 @@ class KiszedesreVaroIgenyFragment : Fragment(),KontenerAdapter.onKontenerClickLi
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_kiszedesre_varo_igeny, container, false)
+        myView = inflater.inflate(R.layout.fragment_kiszedesre_varo_igeny, container, false)
         mainActivity = activity as MainActivity
-        childFrame = view.data_frame3
-        val child = layoutInflater.inflate(R.layout.konteneres_view,null)
-        childFrame.addView(child)
-        progress = child.konteneresProgress
-        exit3Btn = child.exit3Button
-        val horizontalScrollView: HorizontalScrollView = child.horizontalScrollView3
+        childFrame = myView?.data_frame3
+        child = layoutInflater.inflate(R.layout.konteneres_view, null)
+        childFrame?.addView(child)
+        progress = child?.konteneresProgress
+        exit3Btn = child?.exit3Button
+        val horizontalScrollView: HorizontalScrollView = child?.horizontalScrollView3!!
         horizontalScrollView.isFocusable = false
         horizontalScrollView.isFocusableInTouchMode = false
-        exit3Btn.isFocusable = true
+        exit3Btn?.isFocusable = true
         setProgressBarOff()
-        childRecycler = child.child_recycler
-        childRecycler.adapter = KontenerAdapter(kontenerList,this)
-        childRecycler.layoutManager = LinearLayoutManager(child.context)
-        childRecycler.setHasFixedSize(true)
+        childRecycler = child?.child_recycler
+        childRecycler?.adapter = KontenerAdapter(kontenerList, this)
+        childRecycler?.layoutManager = LinearLayoutManager(child?.context)
+        childRecycler?.setHasFixedSize(true)
         kontenerList.clear()
         loadData()
 
-        exit3Btn.setOnClickListener {
+        exit3Btn?.setOnClickListener {
             kontenerList.clear()
-            mainActivity.loadMenuFragment(true)
+            mainActivity?.loadMenuFragment(true)
         }
 
         /*Thread(Runnable {
@@ -82,48 +86,71 @@ class KiszedesreVaroIgenyFragment : Fragment(),KontenerAdapter.onKontenerClickLi
                 }
             }
         }).start()*/
-
-
-
-        return view
+        return myView
     }
+
     override fun onKontenerClick(position: Int) {
         Log.d(TAG, "onKontenerClick: MEGNYOMTAM")
-        childRecycler.isFocusable = false
-        childRecycler.isFocusableInTouchMode = false
-        exit3Btn.isFocusable = false
+        childRecycler?.isFocusable = false
+        childRecycler?.isFocusableInTouchMode = false
+        exit3Btn?.isFocusable = false
         sendContainerCode.containerCode(kontenerList[position].kontner_id.toString())
         kontenerList.clear()
-        childRecycler.adapter?.notifyDataSetChanged()
+        childRecycler?.adapter?.notifyDataSetChanged()
     }
-    private fun loadData(){
+
+    private fun loadData() {
         try {
             kontenerList.clear()
-            val myList: ArrayList<KontenerItem> = arguments?.getSerializable("VAROLISTA") as ArrayList<KontenerItem>
-            for(i in 0 until myList.size){
-                kontenerList.add(KontenerItem(myList[i].kontener,myList[i].polc,myList[i].datum,myList[i].tetelszam,myList[i].kontner_id,myList[i].status))
+            val myList: ArrayList<KontenerItem> =
+                arguments?.getSerializable("VAROLISTA") as ArrayList<KontenerItem>
+            for (i in 0 until myList.size) {
+                kontenerList.add(
+                    KontenerItem(
+                        myList[i].kontener,
+                        myList[i].polc,
+                        myList[i].datum,
+                        myList[i].tetelszam,
+                        myList[i].kontner_id,
+                        myList[i].status
+                    )
+                )
             }
-            childRecycler.adapter?.notifyDataSetChanged()
-            if(kontenerList.size > 0){
-                childRecycler.requestFocus()
+            childRecycler?.adapter?.notifyDataSetChanged()
+            if (kontenerList.size > 0) {
+                childRecycler?.requestFocus()
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Log.d(TAG, "loadData: $e")
         }
     }
-    fun setProgressBarOff(){
-        progress.visibility = View.GONE
+
+    fun setProgressBarOff() {
+        progress?.visibility = View.GONE
     }
-    fun setProgressBarOn(){
-        progress.visibility = View.VISIBLE
+
+    fun setProgressBarOn() {
+        progress?.visibility = View.VISIBLE
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        sendContainerCode = if(context is SendCode6){
+        sendContainerCode = if (context is SendCode6) {
             context
-        }else{
+        } else {
             throw RuntimeException(context.toString() + "must implement")
         }
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        myView = null
+        child = null
+        progress = null
+        exit3Btn = null
+        childFrame = null
+        childRecycler = null
+        childRecycler?.adapter = null
+        mainActivity?.kiszedesreVaroIgenyFragment = null
+        mainActivity = null
     }
 }

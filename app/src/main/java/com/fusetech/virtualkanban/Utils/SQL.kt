@@ -26,6 +26,7 @@ import com.fusetech.virtualkanban.fragments.PolcraHelyezesFragment.Companion.myI
 import java.io.File
 import java.sql.*
 import java.text.SimpleDateFormat
+import java.util.*
 import java.util.Date
 import kotlin.collections.ArrayList
 import kotlin.random.Random
@@ -1193,6 +1194,7 @@ class SQL(private val sqlMessage: SQLAlert) {
     }
 
     fun loadKiszedesreVaro(context: MainActivity) {
+        context.kiszedesreVaroIgenyFragment = KiszedesreVaroIgenyFragment()
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -1208,7 +1210,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     context.menuFragment?.setMenuProgressOff()
                 }
                 context.supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, context.kiszedesreVaroIgenyFragment, "VARAS")
+                    .replace(R.id.frame_container, context.kiszedesreVaroIgenyFragment!!, "VARAS")
                     .addToBackStack(null).commit()
             } else {
                 context.myList.clear()
@@ -1223,12 +1225,13 @@ class SQL(private val sqlMessage: SQLAlert) {
                 } while (resultSet.next())
                 val bundle = Bundle()
                 bundle.putSerializable("VAROLISTA", context.myList)
-                context.kiszedesreVaroIgenyFragment.arguments = bundle
+                context.kiszedesreVaroIgenyFragment!!.arguments = bundle
                 context.supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, context.kiszedesreVaroIgenyFragment, "VARAS")
+                    .replace(R.id.frame_container, context.kiszedesreVaroIgenyFragment!!, "VARAS")
                     /*.addToBackStack(null)*/.commit()
                 CoroutineScope(Dispatchers.Main).launch {
                     context.menuFragment?.setMenuProgressOff()
+                    context.menuFragment = null
                 }
             }
         } catch (e: Exception) {
@@ -1242,10 +1245,11 @@ class SQL(private val sqlMessage: SQLAlert) {
 
     fun loadKontenerCikkekHatos(kontener_id: String, context: MainActivity) {
         val connection: Connection
+        context.hatosFragment = HatosCikkekFragment()
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.kiszedesreVaroIgenyFragment.setProgressBarOn()
+                context.kiszedesreVaroIgenyFragment?.setProgressBarOn()
             }
             connection = DriverManager.getConnection(url)
             val statement =
@@ -1257,7 +1261,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 Log.d(TAG, "loadKontenerCikkek: HIBA VAN")
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("A konténerben nincs 1 státuszú cikk")
-                    context.kiszedesreVaroIgenyFragment.setProgressBarOff()
+                    context.kiszedesreVaroIgenyFragment?.setProgressBarOff()
                     context.kiszedesreVaro()
                 }
             } else {
@@ -1296,22 +1300,22 @@ class SQL(private val sqlMessage: SQLAlert) {
                 bundle.putSerializable("CIKKLEZAR", kontenerCikkLezar)
                 bundle.putString("KONTENER_ID", kontener_id)
                 bundle.putBoolean("LEZARBUTN", false)
-                context.hatosFragment.arguments = bundle
+                context.hatosFragment?.arguments = bundle
                 context.supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.data_frame3,
-                        context.hatosFragment,
+                        context.hatosFragment!!,
                         "CIKKLEZARASFRAGMENTHATOS"
                     )
                     .commit()
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.kiszedesreVaroIgenyFragment.setProgressBarOff()
+                    context.kiszedesreVaroIgenyFragment?.setProgressBarOff()
                 }
             }
         } catch (e: Exception) {
             Log.d(TAG, "loadKontenerCikkek: $e")
             CoroutineScope(Dispatchers.Main).launch {
-                context.kiszedesreVaroIgenyFragment.setProgressBarOff()
+                context.kiszedesreVaroIgenyFragment?.setProgressBarOff()
             }
         }
     }
@@ -1803,7 +1807,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 val myList: ArrayList<SzerelohelyItem> = ArrayList()
                 do {
                     val szerelohely = resultSet.getString("termeles_rakhely")
-                    myList.add(SzerelohelyItem(szerelohely.toUpperCase()))
+                    myList.add(SzerelohelyItem(szerelohely.toUpperCase(Locale.ROOT)))
                 } while (resultSet.next())
                 CoroutineScope(Dispatchers.Main).launch {
                     context.kihelyezes?.progressBarOff()

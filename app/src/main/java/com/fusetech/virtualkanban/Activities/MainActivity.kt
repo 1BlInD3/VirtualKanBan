@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity(),
     //var igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
     private lateinit var igenyKiszedesCikk: IgenyKontnerKiszedesCikk
     var igenyKiszedesCikkLezaras: IgenyKontenerLezarasCikkLezaras? = null
-    var kiszedesreVaroIgenyFragment = KiszedesreVaroIgenyFragment()
+    var kiszedesreVaroIgenyFragment: KiszedesreVaroIgenyFragment? = null
     var szallitoJarmuFragment: SzallitoJartmuFragment? = null
     var igenyKontenerKiszedesCikkKiszedes: IgenyKontenerKiszedesCikkKiszedes? = null
     var ellenorzoKodFragment: EllenorzoKodFragment? = null
@@ -140,7 +140,7 @@ class MainActivity : AppCompatActivity(),
     var koztesFragment: KoztesFragment? = null
     private lateinit var myTimer: CountDownTimer
     private lateinit var exitTimer: CountDownTimer
-    val hatosFragment = HatosCikkekFragment()
+    var hatosFragment : HatosCikkekFragment? = null
     private lateinit var logoutWhenCharging: BroadcastReceiver
     var a = 0
 
@@ -292,7 +292,7 @@ class MainActivity : AppCompatActivity(),
                         loadLoginFragment()
                     }
                     getFragment("CIKKLEZARASFRAGMENTHATOS") -> { //6-2
-                        hatosFragment.onTimeout()
+                        hatosFragment?.onTimeout()
                         removeFragment("CIKKLEZARASFRAGMENTHATOS")
                         loadLoginFragment()
                     }
@@ -381,7 +381,7 @@ class MainActivity : AppCompatActivity(),
     private fun getMenuFragment(): Boolean {
         val fragmentManager = supportFragmentManager
         val menuFragment = fragmentManager.findFragmentByTag("MENU")
-        if (menuFragment != null && menuFragment.isVisible) {
+        if ((menuFragment != null && menuFragment.isVisible)) {
             return true
         }
         return false
@@ -506,7 +506,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         cancelTimer()
-        if (getMenuFragment()) {
+        if (getMenuFragment()&&menuFragment?.hasRightToOpen()!!) {
             when (keyCode) {
                 7 -> finishAndRemoveTask() //0
                 8 -> loadPolcHelyezesFragment() //1
@@ -517,6 +517,12 @@ class MainActivity : AppCompatActivity(),
                 13 -> kiszedesreVaro()  //6
                 14 -> containerCheck7(dolgKod)  //7
                 15 -> loadTobbletKontenerKihelyezes()  //8
+                16 -> loadCikklekerdezesFragment()  //9
+            }
+        }else
+        {
+            when(keyCode){
+                7 -> finishAndRemoveTask() //0
                 16 -> loadCikklekerdezesFragment()  //9
             }
         }
@@ -953,7 +959,7 @@ class MainActivity : AppCompatActivity(),
                     loadMenuFragment(true)
                 }
                 getFragment("CIKKLEZARASFRAGMENTHATOS") -> {
-                    hatosFragment.buttonPerform()
+                    hatosFragment?.buttonPerform()
                     removeFragment("CIKKLEZARASFRAGMENTHATOS")
                 }
                 getFragment("SZALLITO") -> {

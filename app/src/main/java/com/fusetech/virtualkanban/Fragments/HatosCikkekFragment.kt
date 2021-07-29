@@ -19,25 +19,28 @@ import com.fusetech.virtualkanban.dataItems.KontenerbenLezarasItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.kontenerben_lezaras_view.view.*
 
-private lateinit var recycler: RecyclerView
 private const val TAG = "HatosCikkekFragment"
 
 class HatosCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onItemClickListener {
-    private lateinit var exitBtn: Button
-    private lateinit var lezarBtn: Button
-    private lateinit var mainActivity: MainActivity
-    private lateinit var kontenerNev: TextView
-    private lateinit var progress: ProgressBar
-    private lateinit var hatos: Hatos
-    interface Hatos{
+    private var recycler: RecyclerView? = null
+    private var exitBtn: Button? = null
+    private var lezarBtn: Button? = null
+    private var mainActivity: MainActivity? = null
+    private var kontenerNev: TextView? = null
+    private var progress: ProgressBar? = null
+    private var hatos: Hatos? = null
+    private var myView: View? = null
+    private var horizontalScrollView: HorizontalScrollView? = null
+
+    interface Hatos {
         fun hatosInfo(id: Int)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        hatos = if (context is Hatos){
+        hatos = if (context is Hatos) {
             context
-        }else{
+        } else {
             throw RuntimeException(context.toString() + "must implement")
         }
     }
@@ -46,48 +49,48 @@ class HatosCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onItemClickLis
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.kontenerben_lezaras_view, container, false)
-
+        myView = inflater.inflate(R.layout.kontenerben_lezaras_view, container, false)
         mainActivity = activity as MainActivity
-        recycler = view.child_recycler2
-        exitBtn = view.exit3CikkButton
-        lezarBtn = view.lezar3Button
-        kontenerNev = view.kontenerNameLezaras
-        val horizontalScrollView: HorizontalScrollView = view.horizontalScrollView3
-        horizontalScrollView.isFocusable = false
-        horizontalScrollView.isFocusableInTouchMode = false
-        progress = view.cikkLezarasProgress
+        recycler = myView?.child_recycler2
+        exitBtn = myView?.exit3CikkButton
+        lezarBtn = myView?.lezar3Button
+        kontenerNev = myView?.kontenerNameLezaras
+        horizontalScrollView = myView?.horizontalScrollView3!!
+        horizontalScrollView?.isFocusable = false
+        horizontalScrollView?.isFocusableInTouchMode = false
+        progress = myView?.cikkLezarasProgress
         setProgressBarOff()
-        recycler.adapter = KontenerbenLezarasAdapter(MainActivity.kontItem, this)
-        recycler.layoutManager = LinearLayoutManager(view.context)
-        recycler.setHasFixedSize(true)
+        recycler?.adapter = KontenerbenLezarasAdapter(MainActivity.kontItem, this)
+        recycler?.layoutManager = LinearLayoutManager(myView?.context)
+        recycler?.setHasFixedSize(true)
         MainActivity.kontItem.clear()
-        kontenerNev.text = ""
+        kontenerNev?.text = ""
         loadData()
-        recycler.adapter?.notifyDataSetChanged()
-        recycler.requestFocus()
+        recycler?.adapter?.notifyDataSetChanged()
+        recycler?.requestFocus()
 
-        exitBtn.setOnClickListener {
-            exitBtn.isFocusable = true
-            exitBtn.isFocusableInTouchMode = true
+        exitBtn?.setOnClickListener {
+            exitBtn?.isFocusable = true
+            exitBtn?.isFocusableInTouchMode = true
             MainActivity.kontItem.clear()
-            mainActivity.loadMenuFragment(true)
-            mainActivity.kiszedesreVaro()
-            mainActivity.removeFragment("CIKKLEZARASFRAGMENTHATOS")
+           // mainActivity?.loadMenuFragment(true)
+            mainActivity?.kiszedesreVaro()
+            mainActivity?.removeFragment("CIKKLEZARASFRAGMENTHATOS")
+            mainActivity?.hatosFragment = null
         }
-        lezarBtn.setOnClickListener {
+        lezarBtn?.setOnClickListener {
             setProgressBarOn()
-            mainActivity.closeContainerAndItem()
+            mainActivity?.closeContainerAndItem()
             MainActivity.kontItem.clear()
-            mainActivity.loadMenuFragment(true)
+            mainActivity?.loadMenuFragment(true)
         }
         if (arguments?.getBoolean("LEZARBUTN")!!) {
-            lezarBtn.visibility = View.VISIBLE
+            lezarBtn?.visibility = View.VISIBLE
         } else {
-            lezarBtn.visibility = View.GONE
+            lezarBtn?.visibility = View.GONE
         }
 
-        return view
+        return myView
     }
 
     fun onTimeout() {
@@ -114,25 +117,39 @@ class HatosCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onItemClickLis
                     )
                 )
             }
-            kontenerNev.text = arguments?.getString("KONTENER_ID")
+            kontenerNev?.text = arguments?.getString("KONTENER_ID")
         } catch (e: Exception) {
             Log.d(TAG, "loadData: $e")
         }
     }
 
     fun setProgressBarOff() {
-        progress.visibility = View.GONE
+        progress?.visibility = View.GONE
     }
 
     fun setProgressBarOn() {
-        progress.visibility = View.VISIBLE
+        progress?.visibility = View.VISIBLE
     }
 
     fun buttonPerform() {
-        exitBtn.performClick()
+        exitBtn?.performClick()
     }
 
     override fun onItemClick(position: Int) {
-       hatos.hatosInfo(MainActivity.kontItem[position].id)
+        hatos?.hatosInfo(MainActivity.kontItem[position].id)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        myView = null
+        recycler = null
+        recycler?.adapter = null
+        exitBtn = null
+        lezarBtn = null
+        mainActivity = null
+        kontenerNev = null
+        progress = null
+        hatos = null
+        horizontalScrollView = null
     }
 }

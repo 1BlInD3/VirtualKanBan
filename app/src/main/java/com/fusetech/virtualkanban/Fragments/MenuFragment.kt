@@ -171,4 +171,10 @@ class MenuFragment : Fragment() {
         menuProgress = null
         kilepes = null
     }
+    fun hasRightToOpen(): Boolean{
+        if(polcHelyezes?.isEnabled!!){
+            return true
+        }
+        return false
+    }
 }
