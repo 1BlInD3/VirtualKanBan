@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity(),
     val save = SaveFile()
     val retro = RetrofitFunctions(this)
     private val sql = SQL(this)
-    val kihelyezes = IgenyKontenerKiszedese()
+    var kihelyezes : IgenyKontenerKiszedese? = null
     val kihelyezesFragmentLista = KihelyezesListaFragment()
     val tobbletOsszeallitasFragment = TobbletKontenerOsszeallitasaFragment()
     val tobbletKontenerKihelyzeseFragment = TobbletKontenerKihelyzeseFragment()
@@ -280,15 +280,15 @@ class MainActivity : AppCompatActivity(),
                         loadLoginFragment()
                     }
                     getFragment("KIHELYEZES") -> { //5-1
-                        kihelyezes.exit()
+                        kihelyezes?.exit()
                         loadLoginFragment()
                     }
                     getFragment("KIHELYEZESLISTA") -> { //5-2
-                        kihelyezes.exit()
+                        kihelyezes?.exit()
                         loadLoginFragment()
                     }
                     getFragment("KIHELYEZESITEMS") -> { //5-3
-                        kihelyezes.exit()
+                        kihelyezes?.exit()
                         loadLoginFragment()
                     }
                     getFragment("CIKKLEZARASFRAGMENTHATOS") -> { //6-2
@@ -434,8 +434,9 @@ class MainActivity : AppCompatActivity(),
     }
 
     fun loadKihelyezesFragment() {
+        kihelyezes = IgenyKontenerKiszedese()
         supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_container, kihelyezes, "KIHELYEZES").addToBackStack(null).commit()
+            .replace(R.id.frame_container, kihelyezes!!, "KIHELYEZES").addToBackStack(null).commit()
     }
 
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
@@ -484,7 +485,7 @@ class MainActivity : AppCompatActivity(),
                     igenyFragment.setCode(barcodeData)
                 }
                 getFragment("KIHELYEZES") -> {
-                    kihelyezes.setCode(barcodeData)
+                    kihelyezes?.setCode(barcodeData)
                 }
                 getFragment("TOBBLET") -> {
                     tobbletOsszeallitasFragment.setCode(barcodeData)
@@ -985,15 +986,15 @@ class MainActivity : AppCompatActivity(),
                     loadMenuFragment(true)
                 }
                 getFragment("KIHELYEZESLISTA") -> {
-                    kihelyezes.exit()
+                    kihelyezes?.exit()
                     loadMenuFragment(true)
                 }
                 getFragment("KIHELYEZESITEMS") -> {
-                    kihelyezes.onBack()
+                    kihelyezes?.onBack()
                     getContainerList("SZ01")
                 }
                 getFragment("KIHELYEZES") -> {
-                    kihelyezes.exit()
+                    kihelyezes?.exit()
                     loadMenuFragment(true)
                 }
                 getFragment("TOBBLETOSSZE") -> {

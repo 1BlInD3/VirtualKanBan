@@ -1785,7 +1785,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         try {
             val fragment = SzerelohelyListaFragment()
             CoroutineScope(Dispatchers.Main).launch {
-                context.kihelyezes.progressBarOn()
+                context.kihelyezes?.progressBarOn()
             }
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection: Connection = DriverManager.getConnection(connectionString)
@@ -1796,8 +1796,8 @@ class SQL(private val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nem jó szállítójármű")
-                    context.kihelyezes.mindentVissza()
-                    context.kihelyezes.progressBarOff()
+                    context.kihelyezes?.mindentVissza()
+                    context.kihelyezes?.progressBarOff()
                 }
             } else {
                 val myList: ArrayList<SzerelohelyItem> = ArrayList()
@@ -1806,7 +1806,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     myList.add(SzerelohelyItem(szerelohely))
                 } while (resultSet.next())
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.kihelyezes.progressBarOff()
+                    context.kihelyezes?.progressBarOff()
                 }
                 val bundle = Bundle()
                 bundle.putSerializable("KILISTA", myList)
@@ -1817,7 +1817,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("$e")
-                context.kihelyezes.progressBarOff()
+                context.kihelyezes?.progressBarOff()
             }
         }
     }
@@ -1825,7 +1825,7 @@ class SQL(private val sqlMessage: SQLAlert) {
     fun loadKihelyezesItemsSql(code: String, context: MainActivity) {
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.kihelyezes.progressBarOn()
+                context.kihelyezes?.progressBarOn()
             }
             val myList: ArrayList<KihelyezesKontenerElemek> = ArrayList()
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -1837,7 +1837,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Üres a konténer")
-                    context.kihelyezes.progressBarOff()
+                    context.kihelyezes?.progressBarOff()
                 }
             } else {
                 do {
@@ -1864,7 +1864,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     )
                 } while (resultSet.next())
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.kihelyezes.progressBarOff()
+                    context.kihelyezes?.progressBarOff()
                 }
                 val bundle = Bundle()
                 bundle.putSerializable("KIHELYEZESLISTA", myList)
@@ -1879,7 +1879,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("$e")
-                context.kihelyezes.progressBarOff()
+                context.kihelyezes?.progressBarOff()
             }
         }
     }
@@ -1909,7 +1909,7 @@ class SQL(private val sqlMessage: SQLAlert) {
     fun closeContainer(code: Int, context: MainActivity) {
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.kihelyezes.progressBarOn()
+                context.kihelyezes?.progressBarOn()
             }
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection: Connection = DriverManager.getConnection(connectionString)
@@ -1919,14 +1919,14 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.setInt(2, code)
             statement.executeUpdate()
             CoroutineScope(Dispatchers.Main).launch {
-                context.kihelyezes.progressBarOff()
-                context.kihelyezes.onBack()
+                context.kihelyezes?.progressBarOff()
+                context.kihelyezes?.onBack()
                 context.getContainerList("SZ01")
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("$e")
-                context.kihelyezes.progressBarOff()
+                context.kihelyezes?.progressBarOff()
             }
         }
     }

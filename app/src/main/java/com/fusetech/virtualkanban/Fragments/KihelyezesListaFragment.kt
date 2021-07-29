@@ -59,7 +59,7 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
         kihelyezes.setOnClickListener {
             kihelyezes.setBackgroundResource(R.drawable.disabled)
             kihelyezes.isEnabled = false
-            mainActivity.kihelyezes.progressBarOn()
+            mainActivity.kihelyezes?.progressBarOn()
             try{
                 var a = 0
                 CoroutineScope(IO).launch {
@@ -89,10 +89,10 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
                 }
             }catch (e: Exception){
                 mainActivity.setAlert("$e")
-                mainActivity.kihelyezes.progressBarOff()
+                mainActivity.kihelyezes?.progressBarOff()
                 kihelyezes.isEnabled = true
             }
-            mainActivity.kihelyezes.progressBarOff()
+            mainActivity.kihelyezes?.progressBarOff()
             kihelyezes.isEnabled = true
         }
 
