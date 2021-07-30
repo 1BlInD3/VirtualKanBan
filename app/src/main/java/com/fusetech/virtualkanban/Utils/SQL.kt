@@ -2098,6 +2098,7 @@ class SQL(private val sqlMessage: SQLAlert) {
     ) {
         try {
             context.tobbletCikkek = TobbletKontenerCikkekFragment()
+            context.tobbletCikkekPolcra = TobbletCikkekPolcraFragment()
             CoroutineScope(Dispatchers.Main).launch {
                 context.tobbletCikkek?.nyolcaskettesProgressOn()
             }
@@ -2130,12 +2131,12 @@ class SQL(private val sqlMessage: SQLAlert) {
                     bundle.putString("UUNIT", unit)
                     bundle.putString("MMENNY", mennyiseg.toString())
                     bundle.putString("MCIKK", cikkszam)
-                    context.tobbletCikkekPolcra.arguments = bundle
+                    context.tobbletCikkekPolcra?.arguments = bundle
                     CoroutineScope(Dispatchers.Main).launch {
                         context.tobbletCikkek?.nyolcaskettesProgressOff()
                     }
                     context.supportFragmentManager.beginTransaction()
-                        .replace(R.id.frame_container, context.tobbletCikkekPolcra, "CIKKEKPOLCRA")
+                        .replace(R.id.frame_container, context.tobbletCikkekPolcra!!, "CIKKEKPOLCRA")
                         .commit()
                 }
             } else {
@@ -2167,12 +2168,12 @@ class SQL(private val sqlMessage: SQLAlert) {
                 bundle.putString("UUNIT", unit)
                 bundle.putString("MMENNY", mennyiseg.toString())
                 bundle.putString("MCIKK", cikkszam)
-                context.tobbletCikkekPolcra.arguments = bundle
+                context.tobbletCikkekPolcra?.arguments = bundle
                 CoroutineScope(Dispatchers.Main).launch {
                     context.tobbletCikkek?.nyolcaskettesProgressOff()
                 }
                 context.supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, context.tobbletCikkekPolcra, "CIKKEKPOLCRA")
+                    .replace(R.id.frame_container, context.tobbletCikkekPolcra!!, "CIKKEKPOLCRA")
                     .commit()
             }
         } catch (e: Exception) {
@@ -2186,7 +2187,7 @@ class SQL(private val sqlMessage: SQLAlert) {
     fun checkBinIn02(code: String, context: MainActivity) {
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.tobbletCikkekPolcra.progrssOn()
+                context.tobbletCikkekPolcra?.progrssOn()
             }
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection = DriverManager.getConnection(url)
@@ -2194,22 +2195,22 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.setString(1, code)
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
-                context.tobbletCikkekPolcra.clearPocl()
+                context.tobbletCikkekPolcra?.clearPocl()
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nem olyan polc ami a raktárba ")
-                    context.tobbletCikkekPolcra.progrssOff()
+                    context.tobbletCikkekPolcra?.progrssOff()
                 }
             } else {
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.tobbletCikkekPolcra.setPolc()
-                    context.tobbletCikkekPolcra.progrssOff()
+                    context.tobbletCikkekPolcra?.setPolc()
+                    context.tobbletCikkekPolcra?.progrssOff()
                 }
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("A polc ellenőrzésénél hiba lépett fel \n$e")
-                context.tobbletCikkekPolcra.clearPocl()
-                context.tobbletCikkekPolcra.progrssOff()
+                context.tobbletCikkekPolcra?.clearPocl()
+                context.tobbletCikkekPolcra?.progrssOff()
             }
         }
     }

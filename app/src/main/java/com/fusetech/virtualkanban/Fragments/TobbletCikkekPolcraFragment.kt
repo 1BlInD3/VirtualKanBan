@@ -23,22 +23,26 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
+private const val TAG = "TobbletCikkekPolcraFrag"
+
 @Suppress("UNCHECKED_CAST")
 class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClickListener {
 
-    private lateinit var kontenerID : TextView
-    private lateinit var cikkID : TextView
-    private lateinit var cikkNumber : EditText
-    private lateinit var megjegyzes1: TextView
-    private lateinit var megjegyzes2 : TextView
-    private lateinit var intrem : TextView
-    private lateinit var unit : TextView
-    private lateinit var igeny : EditText
-    private lateinit var polc : EditText
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var progressBar : ProgressBar
-    private lateinit var visszaBtn : Button
-    private lateinit var mainActivity : MainActivity
+    private var kontenerID: TextView? = null
+    private var cikkID: TextView? = null
+    private var cikkNumber: EditText? = null
+    private var megjegyzes1: TextView? = null
+    private var megjegyzes2: TextView? = null
+    private var intrem: TextView? = null
+    private var unit: TextView? = null
+    private var igeny: EditText? = null
+    private var polc: EditText? = null
+    private var recyclerView: RecyclerView? = null
+    private var progressBar: ProgressBar? = null
+    private var visszaBtn: Button? = null
+    private var mainActivity: MainActivity? = null
+    private var tsideContainer: FrameLayout? = null
+    private var myView: View? = null
     private var cikkid = 0
     private var kontid = 0
     private var cikkkod = ""
@@ -47,55 +51,55 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
     private var mintrem = ""
     private var munit = ""
     private var mcikkszam = ""
-    private var mmennyiseg : String? = ""
-    private lateinit var tsideContainer: FrameLayout
+    private var mmennyiseg: String? = ""
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_tobblet_cikkek_polcra, container, false)
+        myView = inflater.inflate(R.layout.fragment_tobblet_cikkek_polcra, container, false)
         mainActivity = activity as MainActivity
-        kontenerID = view.tkontenerIDKiszedes
-        tsideContainer = view.tside_container2
-        tsideContainer.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
-        cikkID = view.tcikkIDKiszedes
-        cikkNumber = view.tkiszedesCikkEdit
-        cikkNumber.isFocusable = false
-        cikkNumber.isFocusableInTouchMode = false
-        megjegyzes1 = view.tkiszedesMegj1
-        megjegyzes2 = view.tkiszedesMegj2
-        intrem = view.tintrem
-        unit = view.tkiszedesUnit
-        igeny = view.tkiszedesIgenyEdit
-        polc = view.tkiszedesPolc
+        kontenerID = myView?.tkontenerIDKiszedes!!
+        tsideContainer = myView?.tside_container2!!
+        tsideContainer?.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+        cikkID = myView?.tcikkIDKiszedes!!
+        cikkNumber = myView?.tkiszedesCikkEdit!!
+        cikkNumber?.isFocusable = false
+        cikkNumber?.isFocusableInTouchMode = false
+        megjegyzes1 = myView?.tkiszedesMegj1!!
+        megjegyzes2 = myView?.tkiszedesMegj2!!
+        intrem = myView?.tintrem!!
+        unit = myView?.tkiszedesUnit!!
+        igeny = myView?.tkiszedesIgenyEdit!!
+        polc = myView?.tkiszedesPolc!!
         //mennyiseg = view.tkiszedesMennyiseg
-        recyclerView = view.tlocationRecycler
-        progressBar = view.tkihelyezesProgress
-        visszaBtn = view.tkiszedesVissza
-        recyclerView.adapter = PolcLocationAdapter(tempLocations,this)
-        recyclerView.layoutManager = LinearLayoutManager(view.context)
-        recyclerView.setHasFixedSize(true)
-        igeny.isFocusable = false
-        igeny.isFocusableInTouchMode = false
-        polc.isFocusable = false
-        polc.isFocusableInTouchMode = false
-        recyclerView.isFocusable = false
-        recyclerView.isFocusableInTouchMode = false
+        recyclerView = myView?.tlocationRecycler!!
+        progressBar = myView?.tkihelyezesProgress!!
+        visszaBtn = myView?.tkiszedesVissza!!
+        recyclerView?.adapter = PolcLocationAdapter(tempLocations, this)
+        recyclerView?.layoutManager = LinearLayoutManager(myView?.context)
+        recyclerView?.setHasFixedSize(true)
+        igeny?.isFocusable = false
+        igeny?.isFocusableInTouchMode = false
+        polc?.isFocusable = false
+        polc?.isFocusableInTouchMode = false
+        recyclerView?.isFocusable = false
+        recyclerView?.isFocusableInTouchMode = false
         loadData()
         progrssOff()
 
-        visszaBtn.setOnClickListener {
-            cikkNumber.setText("")
-            kontenerID.text = ""
-            cikkID.text = ""
+        visszaBtn?.setOnClickListener {
+            cikkNumber?.setText("")
+            kontenerID?.text = ""
+            cikkID?.text = ""
             tempLocations.clear()
-            polc.setText("")
-            recyclerView.adapter?.notifyDataSetChanged()
-            mainActivity.run {
+            polc?.setText("")
+            recyclerView?.adapter?.notifyDataSetChanged()
+            mainActivity?.run {
                 setContainerStatusAndGetItems(kontid.toString())
             }
         }
-        return view
+        return myView
     }
 
     override fun onResume() {
@@ -111,42 +115,48 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         mmennyiseg = arguments?.getString("MMENNY")
         fillWidgets()
     }
-    private fun fillWidgets(){
-        kontenerID.text = kontid.toString()
-        cikkID.text = cikkid.toString()
-        cikkNumber.setText(cikkkod)
-        megjegyzes1.text = mmegjegyzes1
-        megjegyzes2.text = mmegjegyzes2
-        intrem.text = mintrem
-        unit.text = munit
-        igeny.setText(mmennyiseg)
+
+    private fun fillWidgets() {
+        kontenerID?.text = kontid.toString()
+        cikkID?.text = cikkid.toString()
+        cikkNumber?.setText(cikkkod)
+        megjegyzes1?.text = mmegjegyzes1
+        megjegyzes2?.text = mmegjegyzes2
+        intrem?.text = mintrem
+        unit?.text = munit
+        igeny?.setText(mmennyiseg)
 
     }
-    private fun loadData(){
+
+    private fun loadData() {
         tempLocations.clear()
-        val myList: ArrayList<PolcLocation> = arguments?.getSerializable("LOCATIONBIN") as ArrayList<PolcLocation>
-        if(myList.size > 0) {
-            for (i in 0 until myList.size){
-                tempLocations.add(PolcLocation(myList[i].polc,myList[i].mennyiseg))
+        val myList: ArrayList<PolcLocation> =
+            arguments?.getSerializable("LOCATIONBIN") as ArrayList<PolcLocation>
+        if (myList.size > 0) {
+            for (i in 0 until myList.size) {
+                tempLocations.add(PolcLocation(myList[i].polc, myList[i].mennyiseg))
             }
-            recyclerView.adapter?.notifyDataSetChanged()
+            recyclerView?.adapter?.notifyDataSetChanged()
         }
     }
 
     override fun polcItemClick(position: Int) {
         Log.d("TAG", "polcItemClick: ")
     }
-    fun progrssOff(){
-        progressBar.visibility = View.GONE
+
+    fun progrssOff() {
+        progressBar?.visibility = View.GONE
     }
-    fun progrssOn(){
-        progressBar.visibility = View.VISIBLE
+
+    fun progrssOn() {
+        progressBar?.visibility = View.VISIBLE
     }
-    fun setCode(code: String){
+
+    fun setCode(code: String) {
         isSent = false
-        if(polc.text.isEmpty()){
-            mainActivity.raktarcheck(code)
-            polc.setText(code)
+        if (polc?.text?.isEmpty()!!) {
+            mainActivity?.raktarcheck(code)
+            polc?.setText(code)
             progress.visibility = View.VISIBLE
             CoroutineScope(IO).launch {
                 async {
@@ -154,7 +164,7 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
                         "IOTHREAD",
                         "onCreateView: ${Thread.currentThread().name}"
                     )
-                    mainActivity.sendKihelyezesXmlData(
+                    mainActivity?.sendKihelyezesXmlData(
                         cikkkod,
                         "BE",//SZ01
                         mmennyiseg.toString().toDouble(),
@@ -163,49 +173,74 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
                         code
                     )
                 }.await()
-                if(isSent){
+                if (isSent) {
                     CoroutineScope(Main).launch {
-                        mainActivity.setAlert("BRAVOOO")
-                        cikkNumber.setText("")
-                        kontenerID.text = ""
-                        cikkID.text = ""
-                        polc.setText("")
+                        mainActivity?.setAlert("BRAVOOO")
+                        cikkNumber?.setText("")
+                        kontenerID?.text = ""
+                        cikkID?.text = ""
+                        polc?.setText("")
                         tempLocations.clear()
-                        recyclerView.adapter?.notifyDataSetChanged()
+                        recyclerView?.adapter?.notifyDataSetChanged()
                     }
                     CoroutineScope(Main).launch {
                         progress.visibility = View.GONE
                     }
-                    mainActivity.updateCikkandContainer(cikkid,kontid)
-                }else{
+                    mainActivity?.updateCikkandContainer(cikkid, kontid)
+                } else {
                     CoroutineScope(Main).launch {
-                        mainActivity.setAlert("A picsába")
+                        mainActivity?.setAlert("A picsába")
                         progress.visibility = View.GONE
                     }
                 }
             }
-        }
-        else{
-            mainActivity.setAlert("Egy nagy faaaaszt")
+        } else {
+            mainActivity?.setAlert("Egy nagy faaaaszt")
         }
     }
-    fun clearPocl(){
-        polc.setText("")
+
+    fun clearPocl() {
+        polc?.setText("")
     }
-    fun setPolc(){
-       /* mennyiseg.isEnabled = true
-        mennyiseg.requestFocus()*/
+
+    fun setPolc() {
+        /* mennyiseg.isEnabled = true
+         mennyiseg.requestFocus()*/
 
     }
-    fun onButtonPressed(){
-        visszaBtn.performClick()
+
+    fun onButtonPressed() {
+        visszaBtn?.performClick()
     }
-    fun onTimeout(){
-        cikkNumber.setText("")
-        kontenerID.text = ""
-        cikkID.text = ""
+
+    fun onTimeout() {
+        cikkNumber?.setText("")
+        kontenerID?.text = ""
+        cikkID?.text = ""
         tempLocations.clear()
-        polc.setText("")
-        recyclerView.adapter?.notifyDataSetChanged()
+        polc?.setText("")
+        recyclerView?.adapter?.notifyDataSetChanged()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d(TAG, "onDestroyView: ")
+        myView = null
+        kontenerID = null
+        cikkID = null
+        cikkNumber = null
+        megjegyzes1 = null
+        megjegyzes2 = null
+        intrem = null
+        unit = null
+        igeny = null
+        polc = null
+        recyclerView = null
+        recyclerView?.adapter = null
+        progressBar = null
+        visszaBtn = null
+        tsideContainer = null
+        mainActivity?.tobbletCikkekPolcra = null
+        mainActivity = null
     }
 }

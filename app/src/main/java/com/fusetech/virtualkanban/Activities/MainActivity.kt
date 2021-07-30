@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity(),
     val tobbletOsszeallitasFragment = TobbletKontenerOsszeallitasaFragment()
     var tobbletKontenerKihelyzeseFragment : TobbletKontenerKihelyzeseFragment? = null
     var tobbletCikkek : TobbletKontenerCikkekFragment? = null
-    val tobbletCikkekPolcra = TobbletCikkekPolcraFragment()
+    var tobbletCikkekPolcra : TobbletCikkekPolcraFragment? = null
     var koztesFragment: KoztesFragment? = null
     private lateinit var myTimer: CountDownTimer
     private lateinit var exitTimer: CountDownTimer
@@ -318,7 +318,7 @@ class MainActivity : AppCompatActivity(),
                         //loadTobbletKontenerKihelyezes()
                     }
                     getFragment("CIKKEKPOLCRA") -> {////////////////////////
-                        tobbletCikkekPolcra.onTimeout()
+                        tobbletCikkekPolcra?.onTimeout()
                         loadLoginFragment()
                     }
                     else -> {
@@ -491,7 +491,7 @@ class MainActivity : AppCompatActivity(),
                     tobbletOsszeallitasFragment.setCode(barcodeData)
                 }
                 getFragment("CIKKEKPOLCRA") -> {
-                    tobbletCikkekPolcra.setCode(barcodeData)
+                    tobbletCikkekPolcra?.setCode(barcodeData)
                 }
             }
             myTimer.start()
@@ -1021,7 +1021,7 @@ class MainActivity : AppCompatActivity(),
                     //loadTobbletKontenerKihelyezes()
                 }
                 getFragment("CIKKEKPOLCRA") -> {
-                    tobbletCikkekPolcra.onButtonPressed()
+                    tobbletCikkekPolcra?.onButtonPressed()
                 }
                 getFragment("LOGIN") -> {
                     Log.d(TAG, "onBackPressed: LOGIN")
