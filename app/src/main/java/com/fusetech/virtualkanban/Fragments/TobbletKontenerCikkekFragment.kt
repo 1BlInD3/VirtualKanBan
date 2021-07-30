@@ -2,6 +2,7 @@ package com.fusetech.virtualkanban.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_tobblet_kontener_cikkek.view.*
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.tobbletItem
 import com.fusetech.virtualkanban.dataItems.KontenerbenLezarasItem
 
-
+private const val TAG = "TobbletKontenerCikkekFr"
 @Suppress("UNCHECKED_CAST")
 class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onItemClickListener {
     interface Tobblet {
@@ -33,41 +34,42 @@ class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onIt
             cikkszam: String
         )
     }
-    private lateinit var recycler: RecyclerView
-    private lateinit var vissza: Button
-    private lateinit var kontener: TextView
-    private lateinit var tobblet: Tobblet
-    private lateinit var mainActivity: MainActivity
-    private lateinit var progress82: ProgressBar
+    private  var recycler: RecyclerView? = null
+    private  var vissza: Button? = null
+    private  var kontener: TextView? = null
+    private  var tobblet: Tobblet? = null
+    private  var mainActivity: MainActivity? = null
+    private  var progress82: ProgressBar? = null
+    private var myView: View? = null
 
     var kontenerID: String? = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_tobblet_kontener_cikkek, container, false)
+        myView = inflater.inflate(R.layout.fragment_tobblet_kontener_cikkek, container, false)
         mainActivity = activity as MainActivity
-        progress82 = view.nyolckettesProgress
+        progress82 = myView?.nyolckettesProgress
         nyolcaskettesProgressOff()
-        recycler = view.kihelyezesRecycler
-        vissza = view.visszaTobbletButton
-        kontener = view.kontenerIDText
-        recycler.adapter = KontenerbenLezarasAdapter(tobbletItem, this)
-        recycler.layoutManager = LinearLayoutManager(view.context)
-        recycler.setHasFixedSize(true)
+        recycler = myView?.kihelyezesRecycler
+        vissza = myView?.visszaTobbletButton
+        kontener = myView?.kontenerIDText
+        recycler?.adapter = KontenerbenLezarasAdapter(tobbletItem, this)
+        recycler?.layoutManager = LinearLayoutManager(myView?.context)
+        recycler?.setHasFixedSize(true)
         loadData()
-        kontener.setText(kontenerID)
-        vissza.setOnClickListener {
-            mainActivity.run {
+        kontener?.setText(kontenerID)
+        vissza?.setOnClickListener {
+            mainActivity?.run {
                 //loadMenuFragment(true)
                 loadTobbletKontenerKihelyezes()
             }
         }
-        return view
+        return myView
     }
 
     override fun onItemClick(position: Int) {
-        tobblet.sendTobblet(
+        tobblet?.sendTobblet(
             tobbletItem[position].id,
             tobbletItem[position].kontener_id,
             tobbletItem[position].megjegyzes1!!,
@@ -99,7 +101,7 @@ class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onIt
                 )
             )
         }
-        recycler.adapter?.notifyDataSetChanged()
+        recycler?.adapter?.notifyDataSetChanged()
     }
 
     override fun onAttach(context: Context) {
@@ -111,9 +113,23 @@ class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onIt
         }
     }
     fun nyolcaskettesProgressOn(){
-        progress82.visibility = View.VISIBLE
+        progress82?.visibility = View.VISIBLE
     }
     fun nyolcaskettesProgressOff(){
-        progress82.visibility = View.GONE
+        progress82?.visibility = View.GONE
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d(TAG, "onDestroyView: ")
+        myView = null
+        recycler = null
+        recycler?.adapter = null
+        vissza = null
+        kontener = null
+        tobblet = null
+        progress82 = null
+        mainActivity?.tobbletCikkek = null
+        mainActivity = null
     }
 }

@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity(),
     */
     private var manager: AidcManager? = null
     private var barcodeReader: BarcodeReader? = null
-    private lateinit var barcodeData: String
+    private var barcodeData: String = ""
     var loginFragment: LoginFragment? = null
     var dolgKod: String = ""// vissza ide
     private lateinit var connection: Connection
@@ -134,8 +134,8 @@ class MainActivity : AppCompatActivity(),
     var kihelyezes : IgenyKontenerKiszedese? = null
     var kihelyezesFragmentLista : KihelyezesListaFragment? = null
     val tobbletOsszeallitasFragment = TobbletKontenerOsszeallitasaFragment()
-    val tobbletKontenerKihelyzeseFragment = TobbletKontenerKihelyzeseFragment()
-    val tobbletCikkek = TobbletKontenerCikkekFragment()
+    var tobbletKontenerKihelyzeseFragment : TobbletKontenerKihelyzeseFragment? = null
+    var tobbletCikkek : TobbletKontenerCikkekFragment? = null
     val tobbletCikkekPolcra = TobbletCikkekPolcraFragment()
     var koztesFragment: KoztesFragment? = null
     private lateinit var myTimer: CountDownTimer
@@ -562,6 +562,7 @@ class MainActivity : AppCompatActivity(),
         if (barcodeReader != null) {
             barcodeReader?.removeBarcodeListener(this)
             barcodeReader?.close()
+            manager = null
         }
         LocalBroadcastManager.getInstance(this).unregisterReceiver(logoutWhenCharging)
     }
@@ -1016,7 +1017,7 @@ class MainActivity : AppCompatActivity(),
                     loadMenuFragment(true)
                 }
                 getFragment("TOBBLETKIHELYEZESCIKKEK") -> {
-                    setContainerBackToOpen(tobbletCikkek.kontenerID!!)// lehet hogy ez nem is fog kelleni?!
+                    setContainerBackToOpen(tobbletCikkek?.kontenerID!!)// lehet hogy ez nem is fog kelleni?!
                     //loadTobbletKontenerKihelyezes()
                 }
                 getFragment("CIKKEKPOLCRA") -> {

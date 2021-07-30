@@ -1941,6 +1941,7 @@ class SQL(private val sqlMessage: SQLAlert) {
 
     fun tobbletKontenerElemek(context: MainActivity) {
         try {
+            context.tobbletKontenerKihelyzeseFragment = TobbletKontenerKihelyzeseFragment()
             val kontenerItem: ArrayList<KontenerItem> = ArrayList()
             CoroutineScope(Dispatchers.Main).launch {
                 context.menuFragment?.setMenuProgressOn()
@@ -1957,7 +1958,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 }
             } else {
                 tobbletKontener.clear()
-                do {
+                do { //Itt kéne a dátumot beírni
                     val id: String? = resultSet.getString("id")
                     val kontener = resultSet.getString("kontener")
                     val statusz = resultSet.getInt("statusz")
@@ -1977,10 +1978,10 @@ class SQL(private val sqlMessage: SQLAlert) {
                 } while (resultSet.next())
                 val bundle = Bundle()
                 bundle.putSerializable("TOBBLETKONTENEREK", kontenerItem)
-                context.tobbletKontenerKihelyzeseFragment.arguments = bundle
+                context.tobbletKontenerKihelyzeseFragment?.arguments = bundle
                 context.supportFragmentManager.beginTransaction().replace(
                     R.id.frame_container,
-                    context.tobbletKontenerKihelyzeseFragment,
+                    context.tobbletKontenerKihelyzeseFragment!!,
                     "TKK"
                 ).commit()
                 CoroutineScope(Dispatchers.Main).launch {
@@ -1997,8 +1998,9 @@ class SQL(private val sqlMessage: SQLAlert) {
 
     fun updateContainerAndOpenItems(code: String?, context: MainActivity) {
         try {
+            context.tobbletCikkek = TobbletKontenerCikkekFragment()
             CoroutineScope(Dispatchers.Main).launch {
-                context.tobbletKontenerKihelyzeseFragment.setProgressBar8On()
+                context.tobbletKontenerKihelyzeseFragment?.setProgressBar8On()
             }
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection = DriverManager.getConnection(connectionString)
@@ -2016,7 +2018,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nincsenek elemek")
-                    context.tobbletKontenerKihelyzeseFragment.setProgressBar8Off()
+                    context.tobbletKontenerKihelyzeseFragment?.setProgressBar8Off()
                 }
             } else {
                 val tobbletCikkek: ArrayList<KontenerbenLezarasItem> = ArrayList()
@@ -2050,18 +2052,18 @@ class SQL(private val sqlMessage: SQLAlert) {
                 val bundle = Bundle()
                 bundle.putSerializable("TOBBLETESCIKKEK", tobbletCikkek)
                 bundle.putString("KONTENERTOBBLETCIKK", code)
-                context.tobbletCikkek.arguments = bundle
+                context.tobbletCikkek?.arguments = bundle
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.tobbletKontenerKihelyzeseFragment.setProgressBar8Off()
+                    context.tobbletKontenerKihelyzeseFragment?.setProgressBar8Off()
                 }
                 context.supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, context.tobbletCikkek, "TOBBLETKIHELYEZESCIKKEK")
+                    .replace(R.id.frame_container, context.tobbletCikkek!!, "TOBBLETKIHELYEZESCIKKEK")
                     .commit()
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("8as nem tudta lezárni a konténert és megnyitni a másikat\n$e")
-                context.tobbletKontenerKihelyzeseFragment.setProgressBar8Off()
+                context.tobbletKontenerKihelyzeseFragment?.setProgressBar8Off()
             }
         }
     }
@@ -2095,8 +2097,9 @@ class SQL(private val sqlMessage: SQLAlert) {
         context: MainActivity
     ) {
         try {
+            context.tobbletCikkek = TobbletKontenerCikkekFragment()
             CoroutineScope(Dispatchers.Main).launch {
-                context.tobbletCikkek.nyolcaskettesProgressOn()
+                context.tobbletCikkek?.nyolcaskettesProgressOn()
             }
             val raktarBin: ArrayList<PolcLocation> = ArrayList()
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -2110,7 +2113,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 if (!resultSet1.next()) {
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("Nincs a raktárban!")
-                        context.tobbletCikkek.nyolcaskettesProgressOff()
+                        context.tobbletCikkek?.nyolcaskettesProgressOff()
                     }
                 } else {
                     do {
@@ -2129,7 +2132,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     bundle.putString("MCIKK", cikkszam)
                     context.tobbletCikkekPolcra.arguments = bundle
                     CoroutineScope(Dispatchers.Main).launch {
-                        context.tobbletCikkek.nyolcaskettesProgressOff()
+                        context.tobbletCikkek?.nyolcaskettesProgressOff()
                     }
                     context.supportFragmentManager.beginTransaction()
                         .replace(R.id.frame_container, context.tobbletCikkekPolcra, "CIKKEKPOLCRA")
@@ -2146,7 +2149,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 if (!resultSet3.next()) {
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("Nincs a raktárban!")
-                        context.tobbletCikkek.nyolcaskettesProgressOff()
+                        context.tobbletCikkek?.nyolcaskettesProgressOff()
                     }
                 } else {
                     do {
@@ -2166,7 +2169,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 bundle.putString("MCIKK", cikkszam)
                 context.tobbletCikkekPolcra.arguments = bundle
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.tobbletCikkek.nyolcaskettesProgressOff()
+                    context.tobbletCikkek?.nyolcaskettesProgressOff()
                 }
                 context.supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_container, context.tobbletCikkekPolcra, "CIKKEKPOLCRA")
@@ -2175,7 +2178,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Open nyolcas \n$e")
-                context.tobbletCikkek.nyolcaskettesProgressOff()
+                context.tobbletCikkek?.nyolcaskettesProgressOff()
             }
         }
     }
@@ -2266,9 +2269,9 @@ class SQL(private val sqlMessage: SQLAlert) {
                 val bundle = Bundle()
                 bundle.putSerializable("TOBBLETESCIKKEK", tobbletCikkek)
                 bundle.putString("KONTENERTOBBLETCIKK", kontener.toString())
-                context.tobbletCikkek.arguments = bundle
+                context.tobbletCikkek?.arguments = bundle
                 context.supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, context.tobbletCikkek, "TOBBLETKIHELYEZESCIKKEK")
+                    .replace(R.id.frame_container, context.tobbletCikkek!!, "TOBBLETKIHELYEZESCIKKEK")
                     .commit()
             }
         } catch (e: Exception) {
