@@ -1942,6 +1942,7 @@ class SQL(private val sqlMessage: SQLAlert) {
     fun tobbletKontenerElemek(context: MainActivity) {
         try {
             context.tobbletKontenerKihelyzeseFragment = TobbletKontenerKihelyzeseFragment()
+            //context.menuFragment = MenuFragment()
             val kontenerItem: ArrayList<KontenerItem> = ArrayList()
             CoroutineScope(Dispatchers.Main).launch {
                 context.menuFragment?.setMenuProgressOn()
@@ -1987,11 +1988,13 @@ class SQL(private val sqlMessage: SQLAlert) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.menuFragment?.setMenuProgressOn()
                 }
+                //context.menuFragment = null
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("$e")
                 context.menuFragment?.setMenuProgressOff()
+                //context.menuFragment = null
             }
         }
     }
@@ -2097,7 +2100,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         context: MainActivity
     ) {
         try {
-            context.tobbletCikkek = TobbletKontenerCikkekFragment()
+            //context.tobbletCikkek = TobbletKontenerCikkekFragment()
             context.tobbletCikkekPolcra = TobbletCikkekPolcraFragment()
             CoroutineScope(Dispatchers.Main).launch {
                 context.tobbletCikkek?.nyolcaskettesProgressOn()
@@ -2217,6 +2220,7 @@ class SQL(private val sqlMessage: SQLAlert) {
 
     fun closeItemAndCheckContainer(cikk: Int, kontener: Int, context: MainActivity) {
         try {
+            context.tobbletCikkek = TobbletKontenerCikkekFragment()
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.cikkUpdate))
