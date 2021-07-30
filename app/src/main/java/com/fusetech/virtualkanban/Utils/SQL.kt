@@ -782,8 +782,8 @@ class SQL(private val sqlMessage: SQLAlert) {
 
     fun cikkPolcQuery(code: String, context: MainActivity) {
         val connection: Connection
-        val polcResultFragment = PolcResultFragment()
-        val cikkResultFragment = CikkResultFragment()
+        context.polcResultFragment = PolcResultFragment()
+        context.cikkResultFragment = CikkResultFragment()
         val bundle = Bundle()
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -822,9 +822,9 @@ class SQL(private val sqlMessage: SQLAlert) {
                     bundle.putString("megjegyzes2", megjegyzes2)
                     bundle.putString("unit", unit)
                     bundle.putString("intrem", intrem)
-                    cikkResultFragment.arguments = bundle
+                    context.cikkResultFragment?.arguments = bundle
                     context.supportFragmentManager.beginTransaction()
-                        .replace(R.id.cikk_container, cikkResultFragment).commit()
+                        .replace(R.id.cikk_container, context.cikkResultFragment!!).commit()
                 }
             } else {
                 val preparedStatement2: PreparedStatement =
@@ -850,9 +850,9 @@ class SQL(private val sqlMessage: SQLAlert) {
 
                     } while (resultSet2.next())
                     bundle.putSerializable("polc", context.polcItems)
-                    polcResultFragment.arguments = bundle
+                    context.polcResultFragment?.arguments = bundle
                     context.supportFragmentManager.beginTransaction()
-                        .replace(R.id.cikk_container, polcResultFragment).commit()
+                        .replace(R.id.cikk_container, context.polcResultFragment!!,"PRF").commit()
                 }
             }
         } catch (e: Exception) {

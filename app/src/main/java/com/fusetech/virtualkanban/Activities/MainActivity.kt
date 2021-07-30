@@ -108,7 +108,8 @@ class MainActivity : AppCompatActivity(),
     var igenyFragment = IgenyKontenerOsszeallitasFragment()
     var igenyLezarasFragment : IgenyKontenerLezarasFragment? = null
     var igenyKiszedesFragment: IgenyKontenerKiszedesFragment? = null
-
+    var polcResultFragment: PolcResultFragment? = null
+    var cikkResultFragment: CikkResultFragment? = null
     //var igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
     private lateinit var igenyKiszedesCikk: IgenyKontnerKiszedesCikk
     var igenyKiszedesCikkLezaras: IgenyKontenerLezarasCikkLezaras? = null
@@ -116,7 +117,7 @@ class MainActivity : AppCompatActivity(),
     var szallitoJarmuFragment: SzallitoJartmuFragment? = null
     var igenyKontenerKiszedesCikkKiszedes: IgenyKontenerKiszedesCikkKiszedes? = null
     var ellenorzoKodFragment: EllenorzoKodFragment? = null
-    private val cikklekerdezesFragment = CikklekerdezesFragment()
+    var cikklekerdezesFragment : CikklekerdezesFragment? = null
     private var polcLocation: ArrayList<PolcLocation>? = ArrayList()
     var kontener = ""
     var menuFragment: MenuFragment? = null
@@ -402,8 +403,9 @@ class MainActivity : AppCompatActivity(),
     }
 
     fun loadCikklekerdezesFragment() {
+        cikklekerdezesFragment = CikklekerdezesFragment()
         supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_container, cikklekerdezesFragment, "CIKK").addToBackStack(null)
+            .replace(R.id.frame_container, cikklekerdezesFragment!!, "CIKK").addToBackStack(null)
             .commit()
     }
 
@@ -452,11 +454,11 @@ class MainActivity : AppCompatActivity(),
                         sql.checkRightSql(dolgKod, this@MainActivity)
                     }
                 }
-                cikklekerdezesFragment.isVisible -> {
+                cikklekerdezesFragment?.isVisible!! -> {
                     loadLoadFragment("Várom az eredményt")
                     cikkItems.clear()
                     polcItems.clear()
-                    cikklekerdezesFragment.setBinOrItem(barcodeData)
+                    cikklekerdezesFragment?.setBinOrItem(barcodeData)
                     CoroutineScope(IO).launch {
                         sql.cikkPolcQuery(barcodeData, this@MainActivity)
                     }
@@ -648,7 +650,7 @@ class MainActivity : AppCompatActivity(),
             loadLoadFragment("Várom az eredményt")
             cikkItems.clear()
             polcItems.clear()
-            cikklekerdezesFragment.setBinOrItem(value)
+            cikklekerdezesFragment?.setBinOrItem(value)
             CoroutineScope(IO).launch {
                 sql.cikkPolcQuery(value, this@MainActivity)
             }
