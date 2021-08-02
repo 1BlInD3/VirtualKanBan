@@ -782,8 +782,6 @@ class SQL(private val sqlMessage: SQLAlert) {
 
     fun cikkPolcQuery(code: String, context: MainActivity) {
         val connection: Connection
-        context.polcResultFragment = PolcResultFragment()
-        context.cikkResultFragment = CikkResultFragment()
         val bundle = Bundle()
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -800,8 +798,9 @@ class SQL(private val sqlMessage: SQLAlert) {
                 if (!resultSet1.next()) {
                     val loadFragment = LoadFragment.newInstance("Nincs ilyen kód a rendszerben")
                     context.supportFragmentManager.beginTransaction()
-                        .replace(R.id.cikk_container, loadFragment).commit()
+                        .replace(R.id.cikk_container, loadFragment, "LRF").commit()
                 } else {
+                    context.cikkResultFragment = CikkResultFragment()
                     val megjegyzes1: String? = resultSet1.getString("Description1")
                     val megjegyzes2: String? = resultSet1.getString("Description2")
                     val unit: String? = resultSet1.getString("Unit")
@@ -824,7 +823,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     bundle.putString("intrem", intrem)
                     context.cikkResultFragment?.arguments = bundle
                     context.supportFragmentManager.beginTransaction()
-                        .replace(R.id.cikk_container, context.cikkResultFragment!!).commit()
+                        .replace(R.id.cikk_container, context.cikkResultFragment!!,"CRF").commit()
                 }
             } else {
                 val preparedStatement2: PreparedStatement =
@@ -836,6 +835,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     context.supportFragmentManager.beginTransaction()
                         .replace(R.id.cikk_container, loadFragment).commit()
                 } else {
+                    context.polcResultFragment = PolcResultFragment()
                     do {
                         context.polcItems.add(
                             PolcItems(
@@ -859,7 +859,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             Log.d(TAG, "$e")
             val loadFragment = LoadFragment.newInstance("A feldolgozás során hiba lépett fel")
             context.supportFragmentManager.beginTransaction()
-                .replace(R.id.cikk_container, loadFragment)
+                .replace(R.id.cikk_container, loadFragment, "LRF")
                 .commit()
         }
     }

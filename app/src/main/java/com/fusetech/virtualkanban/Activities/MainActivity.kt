@@ -143,6 +143,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var exitTimer: CountDownTimer
     var hatosFragment : HatosCikkekFragment? = null
     private lateinit var logoutWhenCharging: BroadcastReceiver
+    var loadFragment: LoadFragment? = null
     var a = 0
 
     companion object {
@@ -521,8 +522,7 @@ class MainActivity : AppCompatActivity(),
                 15 -> loadTobbletKontenerKihelyezes()  //8
                 16 -> loadCikklekerdezesFragment()  //9
             }
-        }else
-        {
+        }else if(getMenuFragment()){
             when(keyCode){
                 7 -> finishAndRemoveTask() //0
                 16 -> loadCikklekerdezesFragment()  //9

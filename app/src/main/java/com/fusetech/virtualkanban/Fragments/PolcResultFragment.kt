@@ -61,6 +61,20 @@ class PolcResultFragment : Fragment() {
         }
     }
 
+    fun clearLeak(){
+        myView = null
+        horizontalScrollView = null
+        frame2 = null
+        constraint = null
+        child = null
+        frameLayout = null
+        recyclerView = null
+        recyclerView?.adapter = null
+        mainActivity?.removeFragment("PRF")
+        mainActivity?.polcResultFragment = null
+        //mainActivity?.cikklekerdezesFragment = null
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         myView = null
@@ -73,7 +87,7 @@ class PolcResultFragment : Fragment() {
         recyclerView?.adapter = null
         mainActivity?.removeFragment("PRF")
         mainActivity?.polcResultFragment = null
-        mainActivity?.cikklekerdezesFragment = null
+        //mainActivity?.cikklekerdezesFragment = null
         mainActivity = null
     }
 }
