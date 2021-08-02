@@ -359,8 +359,11 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
 
     override fun onDestroyView() {
         super.onDestroyView()
+        clearLeak()
+
+    }
+    fun clearLeak(){
         myView = null
-        mainActivity = null
         recyclerView = null
         recyclerView?.adapter = null
         lezarButton = null
@@ -375,5 +378,6 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         mennyiseg_igeny2 = null
         mennyiseg_igeny2?.filters = null
         kilepButton = null
+        mainActivity = null
     }
 }

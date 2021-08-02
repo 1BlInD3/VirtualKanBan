@@ -171,6 +171,9 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
 
     override fun onDestroyView() {
         super.onDestroyView()
+        clearLeak()
+    }
+    fun clearLeak(){
         myView = null
         exitBtn = null
         lezarBtn = null
@@ -180,6 +183,5 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
         progress = null
         mainActivity?.igenyKiszedesCikkLezaras = null
         mainActivity = null
-
     }
 }

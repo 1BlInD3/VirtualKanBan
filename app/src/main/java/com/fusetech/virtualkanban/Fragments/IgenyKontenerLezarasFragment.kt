@@ -143,6 +143,9 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
     override fun onDestroyView() {
         super.onDestroyView()
         Log.d(TAG, "onDestroyView: KonténerLezárás")
+        clearLeak()
+    }
+    fun clearLeak(){
         myView = null
         child = null
         dataFrame = null

@@ -362,6 +362,25 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
 
     fun onTimeout() {
         mainActivity?.cikkUpdate(cikkIDKiszedes.text.trim().toString().toInt())
+        //clearLeak()
+        myView = null
+        cikkEdit = null
+        meg1 = null
+        meg2 = null
+        intrem = null
+        unit = null
+        igeny = null
+        polc = null
+        mennyiseg = null
+        lezar = null
+        vissza = null
+        progress = null
+        kontenerNumber = null
+        cikkNumber = null
+        locationRecycler = null
+        locationRecycler?.adapter = null
+        xmlData = null
+        mainActivity?.igenyKontenerKiszedesCikkKiszedes = null
         mainActivity?.loadLoginFragment()
     }
 
@@ -454,6 +473,10 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     override fun onDestroyView() {
         super.onDestroyView()
         Log.d(TAG, "onDestroyView: LEFUTOTT")
+        clearLeak()
+
+    }
+    fun clearLeak(){
         myView = null
         cikkEdit = null
         meg1 = null

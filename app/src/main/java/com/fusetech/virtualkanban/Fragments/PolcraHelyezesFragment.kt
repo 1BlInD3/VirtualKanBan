@@ -357,6 +357,8 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         tranzitQtyText?.text = ""
         myItems.clear()
         recycler?.adapter?.notifyDataSetChanged()
+        mainActivity?.loadLoginFragment()
+        clearLeak()
         /*if (view != null) {
             val ihm =
                 activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -366,7 +368,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                 0
             )
         }*/
-        mainActivity?.loadLoginFragment()
+
     }
 
     fun setCode(code: String) {
@@ -429,6 +431,10 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
 
     override fun onDestroyView() {
         super.onDestroyView()
+        clearLeak()
+
+    }
+    private fun clearLeak(){
         myView = null
         mainActivity = null
         kilepButton = null
@@ -447,6 +453,5 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         mennyisegText?.filters = null
         cikkText = null
         polcText?.filters = null
-
     }
 }

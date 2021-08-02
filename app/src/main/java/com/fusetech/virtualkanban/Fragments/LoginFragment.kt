@@ -49,11 +49,14 @@ class LoginFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mainActivity = null
+        clearLeak()
+    }
+    fun clearLeak(){
         myView = null
         cancelBtn = null
         idTxt = null
         progressBar = null
         mainActivity?.loginFragment = null
+        mainActivity = null
     }
 }

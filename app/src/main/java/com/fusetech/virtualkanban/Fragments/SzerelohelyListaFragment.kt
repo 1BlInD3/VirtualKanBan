@@ -54,5 +54,6 @@ class SzerelohelyListaFragment : Fragment() {
         myView = null
         recycler = null
         recycler?.adapter = null
+        
     }
 }

@@ -237,6 +237,7 @@ class MainActivity : AppCompatActivity(),
             }
 
             override fun onFinish() {
+                loginFragment?.clearLeak()
                 finishAndRemoveTask()
             }
         }
@@ -251,6 +252,7 @@ class MainActivity : AppCompatActivity(),
             override fun onFinish() {
                 when {
                     getFragment("MENU") -> {
+                        menuFragment = null
                         loadLoginFragment()
                     }
                     getFragment("LOGIN") -> {
@@ -261,14 +263,17 @@ class MainActivity : AppCompatActivity(),
                     }
                     getFragment("IGENY") -> { //2
                         igenyFragment.clearAll()
+                        igenyFragment.clearLeak()
                         loadLoginFragment()
                     }
                     getFragment("CIKKLEZARASFRAGMENT") -> { //3-2
                         igenyKiszedesCikkLezaras?.onTimeout()
                         removeFragment("CIKKLEZARASFRAGMENT")
+                        igenyKiszedesCikkLezaras?.clearLeak()
                         loadLoginFragment()
                     }
                     getFragment("IGENYLEZARAS") -> { //3-1
+                        igenyFragment.clearLeak()
                         loadLoginFragment()
                     }
                     getFragment("KISZEDESCIKK") -> { //4-3
@@ -279,6 +284,7 @@ class MainActivity : AppCompatActivity(),
                         loadLoginFragment()
                     }
                     getFragment("KISZEDES") -> { //4-1
+                        igenyKiszedesFragment?.destroy()
                         loadLoginFragment()
                     }
                     getFragment("KIHELYEZES") -> { //5-1
@@ -455,7 +461,7 @@ class MainActivity : AppCompatActivity(),
                         sql.checkRightSql(dolgKod, this@MainActivity)
                     }
                 }
-                cikklekerdezesFragment?.isVisible!! -> {
+                getFragment("CIKK")->{
                     if(getFragment("CRF")){
                         cikkResultFragment?.clearLeak()
                     }else if(getFragment("PRF")){
