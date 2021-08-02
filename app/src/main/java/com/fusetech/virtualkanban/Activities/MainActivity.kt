@@ -456,6 +456,13 @@ class MainActivity : AppCompatActivity(),
                     }
                 }
                 cikklekerdezesFragment?.isVisible!! -> {
+                    if(getFragment("CRF")){
+                        cikkResultFragment?.clearLeak()
+                    }else if(getFragment("PRF")){
+                        polcResultFragment?.clearLeak()
+                    }else if(getFragment("LRF")){
+                        loadFragment?.clearLeak()
+                    }
                     loadLoadFragment("Várom az eredményt")
                     cikkItems.clear()
                     polcItems.clear()
