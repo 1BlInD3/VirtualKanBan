@@ -796,9 +796,9 @@ class SQL(private val sqlMessage: SQLAlert) {
                 preparedStatement1.setString(1, code)
                 val resultSet1: ResultSet = preparedStatement1.executeQuery()
                 if (!resultSet1.next()) {
-                    val loadFragment = LoadFragment.newInstance("Nincs ilyen kód a rendszerben")
+                    context.loadFragment = LoadFragment.newInstance("Nincs ilyen kód a rendszerben")
                     context.supportFragmentManager.beginTransaction()
-                        .replace(R.id.cikk_container, loadFragment, "LRF").commit()
+                        .replace(R.id.cikk_container, context.loadFragment!!, "LRF").commit()
                 } else {
                     context.cikkResultFragment = CikkResultFragment()
                     val megjegyzes1: String? = resultSet1.getString("Description1")
@@ -857,9 +857,9 @@ class SQL(private val sqlMessage: SQLAlert) {
             }
         } catch (e: Exception) {
             Log.d(TAG, "$e")
-            val loadFragment = LoadFragment.newInstance("A feldolgozás során hiba lépett fel")
+            context.loadFragment = LoadFragment.newInstance("A feldolgozás során hiba lépett fel")
             context.supportFragmentManager.beginTransaction()
-                .replace(R.id.cikk_container, loadFragment, "LRF")
+                .replace(R.id.cikk_container, context.loadFragment!!, "LRF")
                 .commit()
         }
     }

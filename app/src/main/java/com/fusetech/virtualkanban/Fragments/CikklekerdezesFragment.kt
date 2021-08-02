@@ -76,6 +76,8 @@ class CikklekerdezesFragment : Fragment() {
             mainActivity?.polcResultFragment?.clearLeak()
         }else if(mainActivity?.getFragment("CRF")!!){
             mainActivity?.cikkResultFragment?.clearLeak()
+        }else if(mainActivity?.getFragment("LRF")!!){
+            mainActivity?.loadFragment?.clearLeak()
         }
         myView = null
         clayout = null

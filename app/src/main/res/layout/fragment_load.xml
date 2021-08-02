@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/pocakszin2">
@@ -15,6 +16,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="65dp"
         android:text="Várom az eredményt :"
+        android:textSize="20dp"
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
