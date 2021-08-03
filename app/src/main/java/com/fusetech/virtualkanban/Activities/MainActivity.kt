@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity(),
     private val sql = SQL(this)
     var kihelyezes : IgenyKontenerKiszedese? = null
     var kihelyezesFragmentLista : KihelyezesListaFragment? = null
-    val tobbletOsszeallitasFragment = TobbletKontenerOsszeallitasaFragment()
+    var tobbletOsszeallitasFragment = TobbletKontenerOsszeallitasaFragment()
     var tobbletKontenerKihelyzeseFragment : TobbletKontenerKihelyzeseFragment? = null
     var tobbletCikkek : TobbletKontenerCikkekFragment? = null
     var tobbletCikkekPolcra : TobbletCikkekPolcraFragment? = null
@@ -305,6 +305,7 @@ class MainActivity : AppCompatActivity(),
                     getFragment("CIKKLEZARASFRAGMENTHATOS") -> { //6-2
                         hatosFragment?.onTimeout()
                         removeFragment("CIKKLEZARASFRAGMENTHATOS")
+                        hatosFragment = null
                         loadLoginFragment()
                     }
                     getFragment("VARAS") -> { //6-1
@@ -312,6 +313,7 @@ class MainActivity : AppCompatActivity(),
                     }
                     getFragment("TOBBLET") -> { //7
                         tobbletOsszeallitasFragment.onKilepPressed()
+                        menuFragment = null
                         loadLoginFragment()
                     }
                     getFragment("SZALLITO") -> {

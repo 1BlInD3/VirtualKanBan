@@ -416,5 +416,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         recyclerView = null
         recyclerView?.adapter = null
         mennyiseg_igeny2?.filters = null
+        mainActivity?.menuFragment = null
+        mainActivity = null
     }
 }
