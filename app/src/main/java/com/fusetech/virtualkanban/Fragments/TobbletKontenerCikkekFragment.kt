@@ -102,6 +102,7 @@ class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onIt
             )
         }
         recycler?.adapter?.notifyDataSetChanged()
+        recycler?.requestFocus()
     }
 
     override fun onAttach(context: Context) {

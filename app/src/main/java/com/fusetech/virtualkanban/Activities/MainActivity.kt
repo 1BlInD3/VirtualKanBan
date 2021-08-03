@@ -106,10 +106,11 @@ class MainActivity : AppCompatActivity(),
     var polcItems: ArrayList<PolcItems> = ArrayList()
     var polcHelyezesFragment = PolcraHelyezesFragment()
     var igenyFragment = IgenyKontenerOsszeallitasFragment()
-    var igenyLezarasFragment : IgenyKontenerLezarasFragment? = null
+    var igenyLezarasFragment: IgenyKontenerLezarasFragment? = null
     var igenyKiszedesFragment: IgenyKontenerKiszedesFragment? = null
     var polcResultFragment: PolcResultFragment? = null
     var cikkResultFragment: CikkResultFragment? = null
+
     //var igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
     private lateinit var igenyKiszedesCikk: IgenyKontnerKiszedesCikk
     var igenyKiszedesCikkLezaras: IgenyKontenerLezarasCikkLezaras? = null
@@ -117,7 +118,7 @@ class MainActivity : AppCompatActivity(),
     var szallitoJarmuFragment: SzallitoJartmuFragment? = null
     var igenyKontenerKiszedesCikkKiszedes: IgenyKontenerKiszedesCikkKiszedes? = null
     var ellenorzoKodFragment: EllenorzoKodFragment? = null
-    var cikklekerdezesFragment : CikklekerdezesFragment? = null
+    var cikklekerdezesFragment: CikklekerdezesFragment? = null
     private var polcLocation: ArrayList<PolcLocation>? = ArrayList()
     var kontener = ""
     var menuFragment: MenuFragment? = null
@@ -132,16 +133,16 @@ class MainActivity : AppCompatActivity(),
     val save = SaveFile()
     val retro = RetrofitFunctions(this)
     private val sql = SQL(this)
-    var kihelyezes : IgenyKontenerKiszedese? = null
-    var kihelyezesFragmentLista : KihelyezesListaFragment? = null
+    var kihelyezes: IgenyKontenerKiszedese? = null
+    var kihelyezesFragmentLista: KihelyezesListaFragment? = null
     var tobbletOsszeallitasFragment = TobbletKontenerOsszeallitasaFragment()
-    var tobbletKontenerKihelyzeseFragment : TobbletKontenerKihelyzeseFragment? = null
-    var tobbletCikkek : TobbletKontenerCikkekFragment? = null
-    var tobbletCikkekPolcra : TobbletCikkekPolcraFragment? = null
+    var tobbletKontenerKihelyzeseFragment: TobbletKontenerKihelyzeseFragment? = null
+    var tobbletCikkek: TobbletKontenerCikkekFragment? = null
+    var tobbletCikkekPolcra: TobbletCikkekPolcraFragment? = null
     var koztesFragment: KoztesFragment? = null
     private lateinit var myTimer: CountDownTimer
     private lateinit var exitTimer: CountDownTimer
-    var hatosFragment : HatosCikkekFragment? = null
+    var hatosFragment: HatosCikkekFragment? = null
     private lateinit var logoutWhenCharging: BroadcastReceiver
     var loadFragment: LoadFragment? = null
     var a = 0
@@ -322,18 +323,19 @@ class MainActivity : AppCompatActivity(),
                     getFragment("ELLENOR") -> {
                         loadLoginFragment()
                     }
-                    getFragment("TKK") -> {  //////////////////////////////
+                    getFragment("CIKKEKPOLCRA") -> {//////////////////////// 8-3
+                        tobbletCikkekPolcra?.onTimeout()
                         loadLoginFragment()
                     }
-                    getFragment("TOBBLETKIHELYEZESCIKKEK") -> {
+                    getFragment("TOBBLETKIHELYEZESCIKKEK") -> { //8-2
                         //setContainerBackToOpen(tobbletCikkek.kontenerID!!)// lehet hogy ez nem is fog kelleni?!
                         loadLoginFragment()
                         //loadTobbletKontenerKihelyezes()
                     }
-                    getFragment("CIKKEKPOLCRA") -> {////////////////////////
-                        tobbletCikkekPolcra?.onTimeout()
+                    getFragment("TKK") -> {  ////////////////////////////// 8-1
                         loadLoginFragment()
                     }
+
                     else -> {
                         //loadLoginFragment()
                         Log.d(TAG, "onFinish: ELSE")
@@ -466,12 +468,12 @@ class MainActivity : AppCompatActivity(),
                         sql.checkRightSql(dolgKod, this@MainActivity)
                     }
                 }
-                getFragment("CIKK")->{
-                    if(getFragment("CRF")){
+                getFragment("CIKK") -> {
+                    if (getFragment("CRF")) {
                         cikkResultFragment?.clearLeak()
-                    }else if(getFragment("PRF")){
+                    } else if (getFragment("PRF")) {
                         polcResultFragment?.clearLeak()
-                    }else if(getFragment("LRF")){
+                    } else if (getFragment("LRF")) {
                         loadFragment?.clearLeak()
                     }
                     loadLoadFragment("Várom az eredményt")
@@ -527,7 +529,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         cancelTimer()
-        if (getMenuFragment()&&menuFragment?.hasRightToOpen()!!) {
+        if (getMenuFragment() && menuFragment?.hasRightToOpen()!!) {
             when (keyCode) {
                 7 -> finishAndRemoveTask() //0
                 8 -> loadPolcHelyezesFragment() //1
@@ -540,8 +542,8 @@ class MainActivity : AppCompatActivity(),
                 15 -> loadTobbletKontenerKihelyezes()  //8
                 16 -> loadCikklekerdezesFragment()  //9
             }
-        }else if(getMenuFragment()){
-            when(keyCode){
+        } else if (getMenuFragment()) {
+            when (keyCode) {
                 7 -> finishAndRemoveTask() //0
                 16 -> loadCikklekerdezesFragment()  //9
             }
