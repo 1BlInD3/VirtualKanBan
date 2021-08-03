@@ -335,6 +335,23 @@ class MainActivity : AppCompatActivity(),
                     getFragment("TKK") -> {  ////////////////////////////// 8-1
                         loadLoginFragment()
                     }
+                    getFragment("PRF") -> { // 9-3
+                        removeFragment("PRF")
+                        polcResultFragment?.clearLeak()
+                        loadLoginFragment()
+                    }
+                    getFragment("CRF") -> { // 9-2
+                        removeFragment("CRF")
+                        cikkResultFragment?.clearLeak()
+                        loadLoginFragment()
+                    }
+                    getFragment("LRF") -> { //9-4
+                        loadFragment?.clearLeak()
+                        loadLoginFragment()
+                    }
+                    getFragment("CIKK") -> { // 9-1
+                        loadLoginFragment()
+                    }
 
                     else -> {
                         //loadLoginFragment()
@@ -352,12 +369,112 @@ class MainActivity : AppCompatActivity(),
                 when (intent?.action) {
                     Intent.ACTION_POWER_CONNECTED -> {
                         Log.d(TAG, "onReceive: Rajta vagyok a recieveren")
-                        //setAlert("Elindult a connect")
-                        finishAndRemoveTask()
+                        when {
+                            getFragment("MENU") -> {
+                                menuFragment = null
+                                finishAndRemoveTask()
+                            }
+                            getFragment("LOGIN") -> {
+                                Log.d(TAG, "onFinish: Loginhoz vissza")
+                                finishAndRemoveTask()
+                            }
+                            getFragment("POLC") -> { //1
+                                polcHelyezesFragment.onTimeout()
+                            }
+                            getFragment("IGENY") -> { //2
+                                igenyFragment.clearAll()
+                                igenyFragment.clearLeak()
+                                finishAndRemoveTask()
+                            }
+                            getFragment("CIKKLEZARASFRAGMENT") -> { //3-2
+                                igenyKiszedesCikkLezaras?.onTimeout()
+                                removeFragment("CIKKLEZARASFRAGMENT")
+                                igenyKiszedesCikkLezaras?.clearLeak()
+                                finishAndRemoveTask()
+                            }
+                            getFragment("IGENYLEZARAS") -> { //3-1
+                                igenyFragment.clearLeak()
+                                finishAndRemoveTask()
+                            }
+                            getFragment("KISZEDESCIKK") -> { //4-3
+                                igenyKontenerKiszedesCikkKiszedes?.onTimeout()
+                            }
+                            getFragment("NEGYESCIKKEK") -> { //4-2
+                                removeFragment("NEGYESCIKKEK")
+                                finishAndRemoveTask()
+                            }
+                            getFragment("KISZEDES") -> { //4-1
+                                igenyKiszedesFragment?.destroy()
+                                finishAndRemoveTask()
+                            }
+                            getFragment("KIHELYEZESITEMS") -> { //5-3
+                                removeFragment("KIHELYEZESITEMS")
+                                kihelyezes?.exit()
+                                kihelyezesFragmentLista = null
+                                finishAndRemoveTask()
+                            }
+                            getFragment("KIHELYEZESLISTA") -> { //5-2
+                                removeFragment("KIHELYEZESLISTA")
+                                kihelyezes?.exit()
+                                finishAndRemoveTask()
+                            }
+                            getFragment("KIHELYEZES") -> { //5-1
+                                kihelyezes?.exit()
+                                finishAndRemoveTask()
+                            }
+                            getFragment("CIKKLEZARASFRAGMENTHATOS") -> { //6-2
+                                hatosFragment?.onTimeout()
+                                removeFragment("CIKKLEZARASFRAGMENTHATOS")
+                                hatosFragment = null
+                                finishAndRemoveTask()
+                            }
+                            getFragment("VARAS") -> { //6-1
+                                finishAndRemoveTask()
+                            }
+                            getFragment("TOBBLET") -> { //7
+                                tobbletOsszeallitasFragment.onKilepPressed()
+                                menuFragment = null
+                                finishAndRemoveTask()
+                            }
+                            getFragment("SZALLITO") -> {
+                                finishAndRemoveTask()
+                            }
+                            getFragment("ELLENOR") -> {
+                                finishAndRemoveTask()
+                            }
+                            getFragment("CIKKEKPOLCRA") -> {//////////////////////// 8-3
+                                tobbletCikkekPolcra?.onTimeout()
+                                finishAndRemoveTask()
+                            }
+                            getFragment("TOBBLETKIHELYEZESCIKKEK") -> { //8-2
+                                //setContainerBackToOpen(tobbletCikkek.kontenerID!!)// lehet hogy ez nem is fog kelleni?!
+                                finishAndRemoveTask()
+                                //loadTobbletKontenerKihelyezes()
+                            }
+                            getFragment("TKK") -> {  ////////////////////////////// 8-1
+                                finishAndRemoveTask()
+                            }
+                            getFragment("PRF") -> { // 9-3
+                                removeFragment("PRF")
+                                polcResultFragment?.clearLeak()
+                                finishAndRemoveTask()
+                            }
+                            getFragment("CRF") -> { // 9-2
+                                removeFragment("CRF")
+                                cikkResultFragment?.clearLeak()
+                                finishAndRemoveTask()
+                            }
+                            getFragment("LRF") -> { //9-4
+                                loadFragment?.clearLeak()
+                                finishAndRemoveTask()
+                            }
+                            getFragment("CIKK") -> { // 9-1
+                                finishAndRemoveTask()
+                            }
+
+                        }
                     }
-                    /*Intent.ACTION_POWER_DISCONNECTED -> {
-                        setAlert("Elindult a dis")
-                    }*/
+
                 }
             }
 

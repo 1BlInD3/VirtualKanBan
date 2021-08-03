@@ -24,7 +24,6 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.tempLocations
-import com.fusetech.virtualkanban.activities.MainActivity.Companion.kivalasztottSzallitoJarmu
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -53,7 +52,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     private var igenyeltMennyisegAmiNemValtozik: Double = 0.0
     private var locationRecycler: RecyclerView? = null
     private val itemLocationList: ArrayList<PolcLocation> = ArrayList()
-    private var xmlData: SendXmlData? = null
+    private lateinit var xmlData: SendXmlData
     private var maxMennyiseg: Double = 0.0
     private var myView: View? = null
     var isSaved = false
@@ -180,12 +179,12 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             //mainActivity.loadKiszedesFragment()
             mainActivity!!.checkIfContainerStatus(kontenerIDKiszedes.text.trim().toString())
         }
-        mennyiseg!!.setOnClickListener {
+        mennyiseg?.setOnClickListener {
             var osszeadva = false
             isUpdated = false
             if (mennyiseg?.text?.trim().toString().toDouble() <= maxMennyiseg) {
                 if (mennyiseg?.text.toString().toDouble() > szazalek(10)) {
-                    mainActivity!!.setAlert("Túl sok ennyit nem vehetsz ki")
+                    mainActivity?.setAlert("Túl sok ennyit nem vehetsz ki")
                 } else /*if (mennyiseg.text.trim().toString().toDouble() <= igenyeltMennyiseg)*/ {
                     val a = mennyiseg?.text?.trim().toString().toDouble()
                     val b = polc!!.text.trim().toString()
@@ -253,13 +252,13 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                             )
                                             for (i in 0 until tempLocations.size) {
                                                 isSent = false
-                                                xmlData!!.sendXmlData(
+                                                xmlData.sendXmlData(
                                                     cikk,
                                                     tempLocations[i].polc,
                                                     tempLocations[i].mennyiseg?.toDouble(),
                                                     "02",
                                                     "21",
-                                                    kivalasztottSzallitoJarmu //SZ01
+                                                    "SZ01"
                                                 )
                                             }
                                         }.await()
@@ -379,7 +378,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         cikkNumber = null
         locationRecycler = null
         locationRecycler?.adapter = null
-        xmlData = null
+        //xmlData = null
         mainActivity?.igenyKontenerKiszedesCikkKiszedes = null
         mainActivity?.loadLoginFragment()
     }
@@ -493,7 +492,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         cikkNumber = null
         locationRecycler = null
         locationRecycler?.adapter = null
-        xmlData = null
+        //xmlData = null
         mainActivity = null
     }
 }

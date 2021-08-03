@@ -122,6 +122,8 @@ class MenuFragment : Fragment() {
             mainActivity?.loadCikklekerdezesFragment()
         }
         kilepes?.setOnClickListener {
+            mainActivity?.removeFragment("MENU")
+            mainActivity?.menuFragment = null
             mainActivity?.finishAndRemoveTask()
         }
         return myView
