@@ -287,15 +287,18 @@ class MainActivity : AppCompatActivity(),
                         igenyKiszedesFragment?.destroy()
                         loadLoginFragment()
                     }
-                    getFragment("KIHELYEZES") -> { //5-1
+                    getFragment("KIHELYEZESITEMS") -> { //5-3
+                        removeFragment("KIHELYEZESITEMS")
                         kihelyezes?.exit()
+                        kihelyezesFragmentLista = null
                         loadLoginFragment()
                     }
                     getFragment("KIHELYEZESLISTA") -> { //5-2
+                        removeFragment("KIHELYEZESLISTA")
                         kihelyezes?.exit()
                         loadLoginFragment()
                     }
-                    getFragment("KIHELYEZESITEMS") -> { //5-3
+                    getFragment("KIHELYEZES") -> { //5-1
                         kihelyezes?.exit()
                         loadLoginFragment()
                     }
