@@ -317,12 +317,6 @@ class MainActivity : AppCompatActivity(),
                         menuFragment = null
                         loadLoginFragment()
                     }
-                    getFragment("SZALLITO") -> {
-                        loadLoginFragment()
-                    }
-                    getFragment("ELLENOR") -> {
-                        loadLoginFragment()
-                    }
                     getFragment("CIKKEKPOLCRA") -> {//////////////////////// 8-3
                         tobbletCikkekPolcra?.onTimeout()
                         loadLoginFragment()
@@ -352,7 +346,12 @@ class MainActivity : AppCompatActivity(),
                     getFragment("CIKK") -> { // 9-1
                         loadLoginFragment()
                     }
-
+                    getFragment("SZALLITO") -> {
+                        loadLoginFragment()
+                    }
+                    getFragment("ELLENOR") -> {
+                        loadLoginFragment()
+                    }
                     else -> {
                         //loadLoginFragment()
                         Log.d(TAG, "onFinish: ELSE")
@@ -1091,29 +1090,83 @@ class MainActivity : AppCompatActivity(),
                 getFragment("MENU") -> {
                     loadLoginFragment()
                 }
-                getFragment("CIKKLEZARASFRAGMENT") -> {
-                    igenyKiszedesCikkLezaras?.buttonPerform()
+                getFragment("POLC") -> { // 1
+                    polcHelyezesFragment.onKilepPressed()
                 }
                 getFragment("IGENY") -> { //2
                     igenyFragment.clearAll()
                     loadMenuFragment(true)
                 }
-                getFragment("CIKKLEZARASFRAGMENTHATOS") -> {
+                getFragment("CIKKLEZARASFRAGMENT") -> { // 3-2
+                    progress.visibility = View.VISIBLE
+                    igenyKiszedesCikkLezaras?.buttonPerform()
+                    progress.visibility = View.GONE
+                }
+                getFragment("IGENYLEZARAS") -> { // 3-1
+                    igenyKontenerKiszedes()
+                }
+                getFragment("KISZEDESCIKK") -> { // 4-3
+                    /* loadMenuFragment(true)
+                     igenyKontenerKiszedes()*/
+                    progress.visibility = View.VISIBLE
+                    igenyKontenerKiszedesCikkKiszedes?.performButton()
+                    progress.visibility = View.GONE
+                }
+                getFragment("NEGYESCIKKEK") -> { // 4-2
+                    //loadMenuFragment(true)
+                    //loadKiszedesFragment()
+                    progress.visibility = View.VISIBLE
+                    removeFragment("NEGYESCIKKEK")
+                    igenyKontenerKiszedes()
+                    progress.visibility = View.GONE
+                }
+                getFragment("KISZEDES") -> { // 4-1
+                    loadMenuFragment(true)
+                }
+                getFragment("KIHELYEZESITEMS") -> { // 5-3
+                    progress.visibility = View.VISIBLE
+                    kihelyezes?.onBack()
+                    getContainerList("SZ01")
+                    progress.visibility = View.GONE
+                }
+                getFragment("KIHELYEZESLISTA") -> { // 5-2
+                    progress.visibility = View.VISIBLE
+                    kihelyezes?.exit()
+                    loadMenuFragment(true)
+                    progress.visibility = View.GONE
+                }
+                getFragment("KIHELYEZES") -> { // 5-1
+                    kihelyezes?.exit()
+                    loadMenuFragment(true)
+                }
+                getFragment("CIKKLEZARASFRAGMENTHATOS") -> { // 6-2
+                    progress.visibility = View.VISIBLE
                     hatosFragment?.buttonPerform()
                     removeFragment("CIKKLEZARASFRAGMENTHATOS")
+                    progress.visibility = View.GONE
+                }
+                getFragment("VARAS") -> { // 6-1
+                    loadMenuFragment(true)
+                }
+                getFragment("TOBBLET") -> { // 7
+                    tobbletOsszeallitasFragment.onKilepPressed()
+                }
+                getFragment("CIKKEKPOLCRA") -> { // 8-3
+                    progress.visibility = View.VISIBLE
+                    tobbletCikkekPolcra?.onButtonPressed()
+                    progress.visibility = View.GONE
+                }
+                getFragment("TOBBLETKIHELYEZESCIKKEK") -> { // 8-2
+                    progress.visibility = View.VISIBLE
+                    setContainerBackToOpen(tobbletCikkek?.kontenerID!!)// lehet hogy ez nem is fog kelleni?!
+                    progress.visibility = View.GONE
+                    //loadTobbletKontenerKihelyezes()
+                }
+                getFragment("TKK") -> { // 8-1
+                    loadMenuFragment(true)
                 }
                 getFragment("SZALLITO") -> {
                     loadMenuFragment(true)
-                    igenyKontenerKiszedes()
-                }
-                getFragment("KISZEDESCIKK") -> {
-                    /* loadMenuFragment(true)
-                     igenyKontenerKiszedes()*/
-                    igenyKontenerKiszedesCikkKiszedes?.performButton()
-                }
-                getFragment("NEGYESCIKKEK") -> {
-                    loadMenuFragment(true)
-                    //loadKiszedesFragment()
                     igenyKontenerKiszedes()
                 }
                 getFragment("ELLENOR") -> {
@@ -1122,48 +1175,16 @@ class MainActivity : AppCompatActivity(),
                     Toast.makeText(applicationContext, "Ellenőrizd le!!!!", Toast.LENGTH_LONG)
                         .show()
                 }
-                getFragment("DUMMY") -> {
+                getFragment("CIKK") -> {
+                    loadLoginFragment()
+                }
+                /*getFragment("TOBBLETOSSZE") -> {
                     loadMenuFragment(true)
-                }
-                getFragment("POLC") -> {
-                    polcHelyezesFragment.onKilepPressed()
-                }
-                getFragment("KISZEDES") -> {
-                    loadMenuFragment(true)
-                }
-                getFragment("KIHELYEZESLISTA") -> {
-                    kihelyezes?.exit()
-                    loadMenuFragment(true)
-                }
-                getFragment("KIHELYEZESITEMS") -> {
-                    kihelyezes?.onBack()
-                    getContainerList("SZ01")
-                }
-                getFragment("KIHELYEZES") -> {
-                    kihelyezes?.exit()
-                    loadMenuFragment(true)
-                }
-                getFragment("TOBBLETOSSZE") -> {
-                    loadMenuFragment(true)
-                }
-                getFragment("TOBBLET") -> {
-                    tobbletOsszeallitasFragment.onKilepPressed()
-                }
-                getFragment("VARAS") -> {
-                    loadMenuFragment(true)
-                }
-                getFragment("TKK") -> {
-                    loadMenuFragment(true)
-                }
-                getFragment("TOBBLETKIHELYEZESCIKKEK") -> {
-                    setContainerBackToOpen(tobbletCikkek?.kontenerID!!)// lehet hogy ez nem is fog kelleni?!
-                    //loadTobbletKontenerKihelyezes()
-                }
-                getFragment("CIKKEKPOLCRA") -> {
-                    tobbletCikkekPolcra?.onButtonPressed()
-                }
+                }*/
                 getFragment("LOGIN") -> {
                     Log.d(TAG, "onBackPressed: LOGIN")
+                    menuFragment = null
+                    finishAndRemoveTask()
                 }
                 //getFragment()
                 else -> {

@@ -156,4 +156,7 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         mainAcitivity?.removeFragment("NEGYESCIKKEK")
         mainAcitivity = null
     }
+    fun performExit(){
+        visszaBtn?.performClick()
+    }
 }
