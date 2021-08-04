@@ -1088,6 +1088,7 @@ class MainActivity : AppCompatActivity(),
         try {
             when {
                 getFragment("MENU") -> {
+                    menuFragment = null
                     loadLoginFragment()
                 }
                 getFragment("POLC") -> { // 1
@@ -1152,9 +1153,10 @@ class MainActivity : AppCompatActivity(),
                     tobbletOsszeallitasFragment.onKilepPressed()
                 }
                 getFragment("CIKKEKPOLCRA") -> { // 8-3
-                    progress.visibility = View.VISIBLE
+                    Log.d(TAG, "onBackPressed: CIKKEKPOLCRA")
+                    //progress.visibility = View.VISIBLE
                     tobbletCikkekPolcra?.onButtonPressed()
-                    progress.visibility = View.GONE
+                   // progress.visibility = View.GONE
                 }
                 getFragment("TOBBLETKIHELYEZESCIKKEK") -> { // 8-2
                     progress.visibility = View.VISIBLE

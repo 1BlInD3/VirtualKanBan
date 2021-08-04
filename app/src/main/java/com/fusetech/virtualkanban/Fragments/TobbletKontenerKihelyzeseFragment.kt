@@ -85,6 +85,7 @@ class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontener
         }
         recycler?.adapter?.notifyDataSetChanged()
         recycler?.requestFocus()
+
     }
 
     override fun onDestroyView() {

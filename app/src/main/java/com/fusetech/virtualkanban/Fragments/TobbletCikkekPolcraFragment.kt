@@ -17,6 +17,7 @@ import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_tobblet_cikkek_polcra.view.*
 import com.fusetech.virtualkanban.adapters.PolcLocationAdapter
 import com.fusetech.virtualkanban.dataItems.PolcLocation
+import kotlinx.android.synthetic.main.fragment_load.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -89,6 +90,7 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         progrssOff()
 
         visszaBtn?.setOnClickListener {
+            mainActivity?.progressBar?.visibility = View.VISIBLE
             cikkNumber?.setText("")
             kontenerID?.text = ""
             cikkID?.text = ""
@@ -98,6 +100,7 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
             mainActivity?.run {
                 setContainerStatusAndGetItems(kontid.toString())
             }
+            mainActivity?.progressBar?.visibility = View.GONE
         }
         return myView
     }

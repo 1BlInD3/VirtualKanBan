@@ -1945,7 +1945,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             //context.menuFragment = MenuFragment()
             val kontenerItem: ArrayList<KontenerItem> = ArrayList()
             CoroutineScope(Dispatchers.Main).launch {
-                context.menuFragment?.setMenuProgressOn()
+                progress.visibility = View.VISIBLE
             }
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection: Connection = DriverManager.getConnection(connectionString)
@@ -1954,8 +1954,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.setAlert("Nincs többlet konténer")
-                    context.menuFragment?.setMenuProgressOff()
+                    progress.visibility = View.GONE
                 }
             } else {
                 tobbletKontener.clear()
@@ -1986,14 +1985,14 @@ class SQL(private val sqlMessage: SQLAlert) {
                     "TKK"
                 ).commit()
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.menuFragment?.setMenuProgressOn()
+                    progress.visibility = View.GONE
                 }
                 //context.menuFragment = null
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("$e")
-                context.menuFragment?.setMenuProgressOff()
+                progress.visibility = View.GONE
                 //context.menuFragment = null
             }
         }
@@ -2003,7 +2002,11 @@ class SQL(private val sqlMessage: SQLAlert) {
         try {
             context.tobbletCikkek = TobbletKontenerCikkekFragment()
             CoroutineScope(Dispatchers.Main).launch {
-                context.tobbletKontenerKihelyzeseFragment?.setProgressBar8On()
+                if(context.tobbletKontenerKihelyzeseFragment!=null){
+                    context.tobbletKontenerKihelyzeseFragment?.setProgressBar8On()
+                }else{
+                    progress.visibility = View.VISIBLE
+                }
             }
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection = DriverManager.getConnection(connectionString)
@@ -2021,7 +2024,11 @@ class SQL(private val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nincsenek elemek")
-                    context.tobbletKontenerKihelyzeseFragment?.setProgressBar8Off()
+                    if(context.tobbletKontenerKihelyzeseFragment!=null){
+                        context.tobbletKontenerKihelyzeseFragment?.setProgressBar8Off()
+                    }else{
+                        progress.visibility = View.GONE
+                    }
                 }
             } else {
                 val tobbletCikkek: ArrayList<KontenerbenLezarasItem> = ArrayList()
@@ -2057,7 +2064,11 @@ class SQL(private val sqlMessage: SQLAlert) {
                 bundle.putString("KONTENERTOBBLETCIKK", code)
                 context.tobbletCikkek?.arguments = bundle
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.tobbletKontenerKihelyzeseFragment?.setProgressBar8Off()
+                    if(context.tobbletKontenerKihelyzeseFragment!=null){
+                        context.tobbletKontenerKihelyzeseFragment?.setProgressBar8Off()
+                    }else{
+                        progress.visibility = View.GONE
+                    }
                 }
                 context.supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_container, context.tobbletCikkek!!, "TOBBLETKIHELYEZESCIKKEK")
@@ -2066,7 +2077,11 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("8as nem tudta lezárni a konténert és megnyitni a másikat\n$e")
-                context.tobbletKontenerKihelyzeseFragment?.setProgressBar8Off()
+                if(context.tobbletKontenerKihelyzeseFragment!=null){
+                    context.tobbletKontenerKihelyzeseFragment?.setProgressBar8Off()
+                }else{
+                    progress.visibility = View.GONE
+                }
             }
         }
     }
