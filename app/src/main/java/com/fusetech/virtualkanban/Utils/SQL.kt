@@ -1199,7 +1199,11 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.menuFragment?.setMenuProgressOn()
+                if(context.menuFragment != null){
+                    context.menuFragment?.setMenuProgressOn()
+                }else{
+                    progress.visibility = View.VISIBLE
+                }
             }
             connection = DriverManager.getConnection(url)
             val statement =
@@ -1207,7 +1211,11 @@ class SQL(private val sqlMessage: SQLAlert) {
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.menuFragment?.setMenuProgressOff()
+                    if(context.menuFragment != null){
+                        context.menuFragment?.setMenuProgressOff()
+                    }else{
+                        progress.visibility = View.GONE
+                    }
                 }
                 context.supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_container, context.kiszedesreVaroIgenyFragment!!, "VARAS")
@@ -1230,14 +1238,23 @@ class SQL(private val sqlMessage: SQLAlert) {
                     .replace(R.id.frame_container, context.kiszedesreVaroIgenyFragment!!, "VARAS")
                     /*.addToBackStack(null)*/.commit()
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.menuFragment?.setMenuProgressOff()
+                    if(context.menuFragment != null){
+                        context.menuFragment?.setMenuProgressOff()
+                    }else{
+                        progress.visibility = View.GONE
+                    }
                     context.menuFragment = null
                 }
             }
         } catch (e: Exception) {
             Log.d(TAG, "loadIgenyKiszedes: $e")
             CoroutineScope(Dispatchers.Main).launch {
-                context.menuFragment?.setMenuProgressOff()
+                //context.menuFragment?.setMenuProgressOff()
+                if(context.menuFragment != null){
+                    context.menuFragment?.setMenuProgressOff()
+                }else{
+                    progress.visibility = View.GONE
+                }
                 context.setAlert("Probléma van :\n $e")
             }
         }
@@ -1249,7 +1266,8 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.kiszedesreVaroIgenyFragment?.setProgressBarOn()
+                //context.kiszedesreVaroIgenyFragment?.setProgressBarOn()
+                progress.visibility = View.VISIBLE
             }
             connection = DriverManager.getConnection(url)
             val statement =
@@ -1261,7 +1279,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                 Log.d(TAG, "loadKontenerCikkek: HIBA VAN")
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("A konténerben nincs 1 státuszú cikk")
-                    context.kiszedesreVaroIgenyFragment?.setProgressBarOff()
+                    //context.kiszedesreVaroIgenyFragment?.setProgressBarOff()
+                    progress.visibility = View.GONE
                     context.kiszedesreVaro()
                 }
             } else {
@@ -1309,13 +1328,13 @@ class SQL(private val sqlMessage: SQLAlert) {
                     )
                     .commit()
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.kiszedesreVaroIgenyFragment?.setProgressBarOff()
+                    progress.visibility = View.GONE
                 }
             }
         } catch (e: Exception) {
             Log.d(TAG, "loadKontenerCikkek: $e")
             CoroutineScope(Dispatchers.Main).launch {
-                context.kiszedesreVaroIgenyFragment?.setProgressBarOff()
+                progress.visibility = View.GONE
             }
         }
     }

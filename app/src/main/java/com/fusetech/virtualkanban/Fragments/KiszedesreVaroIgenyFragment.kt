@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -89,6 +90,7 @@ class KiszedesreVaroIgenyFragment : Fragment(), KontenerAdapter.onKontenerClickL
         return myView
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onKontenerClick(position: Int) {
         Log.d(TAG, "onKontenerClick: MEGNYOMTAM")
         childRecycler?.isFocusable = false
@@ -99,6 +101,7 @@ class KiszedesreVaroIgenyFragment : Fragment(), KontenerAdapter.onKontenerClickL
         childRecycler?.adapter?.notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadData() {
         try {
             kontenerList.clear()
