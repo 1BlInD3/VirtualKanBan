@@ -470,7 +470,6 @@ class MainActivity : AppCompatActivity(),
                             getFragment("CIKK") -> { // 9-1
                                 finishAndRemoveTask()
                             }
-
                         }
                     }
 
@@ -1154,17 +1153,17 @@ class MainActivity : AppCompatActivity(),
                    // progress.visibility = View.GONE
                 }
                 getFragment("TOBBLETKIHELYEZESCIKKEK") -> { // 8-2
-                    progress.visibility = View.VISIBLE
                     setContainerBackToOpen(tobbletCikkek?.kontenerID!!)// lehet hogy ez nem is fog kelleni?!
-                    progress.visibility = View.GONE
                     //loadTobbletKontenerKihelyezes()
                 }
                 getFragment("TKK") -> { // 8-1
                     loadMenuFragment(true)
                 }
                 getFragment("SZALLITO") -> {
-                    loadMenuFragment(true)
-                    igenyKontenerKiszedes()
+                    /*loadMenuFragment(true)
+                    igenyKontenerKiszedes()*/
+                    Toast.makeText(applicationContext, "Húzd le a kódot!!!!", Toast.LENGTH_LONG)
+                        .show()
                 }
                 getFragment("ELLENOR") -> {
                     //loadMenuFragment(true)
@@ -1172,8 +1171,22 @@ class MainActivity : AppCompatActivity(),
                     Toast.makeText(applicationContext, "Ellenőrizd le!!!!", Toast.LENGTH_LONG)
                         .show()
                 }
-                getFragment("CIKK") -> {
-                    loadLoginFragment()
+                getFragment("PRF") -> { // 9-3
+                    removeFragment("PRF")
+                    polcResultFragment?.clearLeak()
+                    loadMenuFragment(true)
+                }
+                getFragment("CRF") -> { // 9-2
+                    removeFragment("CRF")
+                    cikkResultFragment?.clearLeak()
+                    loadMenuFragment(true)
+                }
+                getFragment("LRF") -> { //9-4
+                    loadFragment?.clearLeak()
+                    loadMenuFragment(true)
+                }
+                getFragment("CIKK") -> { // 9-1
+                    loadMenuFragment(true)
                 }
                 /*getFragment("TOBBLETOSSZE") -> {
                     loadMenuFragment(true)
