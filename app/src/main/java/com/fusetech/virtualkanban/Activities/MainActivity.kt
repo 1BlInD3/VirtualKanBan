@@ -1125,19 +1125,16 @@ class MainActivity : AppCompatActivity(),
                     loadMenuFragment(true)
                 }
                 getFragment("KIHELYEZESITEMS") -> { // 5-3
-                    progress.visibility = View.VISIBLE
-                    kihelyezes?.onBack()
-                    getContainerList("SZ01")
-                    progress.visibility = View.GONE
+                    //kihelyezes?.onBack()
+                    kihelyezes?.onButtonPressed()
+                    //getContainerList("SZ01")
                 }
-                getFragment("KIHELYEZESLISTA") -> { // 5-2
-                    progress.visibility = View.VISIBLE
+                /*getFragment("KIHELYEZESLISTA") -> { // 5-2
                     kihelyezes?.exit()
                     loadMenuFragment(true)
-                    progress.visibility = View.GONE
-                }
+                }*/
                 getFragment("KIHELYEZES") -> { // 5-1
-                    kihelyezes?.exit()
+                    kihelyezes?.onButtonPressed()
                     loadMenuFragment(true)
                 }
                 getFragment("CIKKLEZARASFRAGMENTHATOS") -> { // 6-2

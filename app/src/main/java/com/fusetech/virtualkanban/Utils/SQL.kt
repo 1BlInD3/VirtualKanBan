@@ -1808,7 +1808,8 @@ class SQL(private val sqlMessage: SQLAlert) {
         try {
             val fragment = SzerelohelyListaFragment()
             CoroutineScope(Dispatchers.Main).launch {
-                context.kihelyezes?.progressBarOn()
+                //context.kihelyezes?.progressBarOn()
+                progress.visibility = View.VISIBLE
             }
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection: Connection = DriverManager.getConnection(connectionString)
@@ -1820,7 +1821,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nem jó szállítójármű")
                     context.kihelyezes?.mindentVissza()
-                    context.kihelyezes?.progressBarOff()
+                    progress.visibility = View.GONE
                 }
             } else {
                 val myList: ArrayList<SzerelohelyItem> = ArrayList()
@@ -1829,7 +1830,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     myList.add(SzerelohelyItem(szerelohely.toUpperCase(Locale.ROOT)))
                 } while (resultSet.next())
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.kihelyezes?.progressBarOff()
+                    progress.visibility = View.GONE
                 }
                 val bundle = Bundle()
                 bundle.putSerializable("KILISTA", myList)
@@ -1840,7 +1841,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("$e")
-                context.kihelyezes?.progressBarOff()
+                progress.visibility = View.GONE
             }
         }
     }
@@ -1849,7 +1850,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         try {
             context.kihelyezesFragmentLista = KihelyezesListaFragment()
             CoroutineScope(Dispatchers.Main).launch {
-                context.kihelyezes?.progressBarOn()
+                progress.visibility = View.VISIBLE
             }
             val myList: ArrayList<KihelyezesKontenerElemek> = ArrayList()
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -1862,7 +1863,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Üres a konténer")
                     context.kihelyezes?.setFocusToBin()
-                    context.kihelyezes?.progressBarOff()
+                    progress.visibility = View.GONE
                 }
             } else {
                 do {
@@ -1889,7 +1890,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     )
                 } while (resultSet.next())
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.kihelyezes?.progressBarOff()
+                    progress.visibility = View.GONE
                 }
                 val bundle = Bundle()
                 bundle.putSerializable("KIHELYEZESLISTA", myList)
@@ -1904,7 +1905,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("$e")
-                context.kihelyezes?.progressBarOff()
+                progress.visibility = View.GONE
             }
         }
     }

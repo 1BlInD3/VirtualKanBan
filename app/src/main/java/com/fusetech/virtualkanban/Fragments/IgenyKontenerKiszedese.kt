@@ -98,6 +98,9 @@ class IgenyKontenerKiszedese : Fragment() {
             }
         }
     }
+    fun onButtonPressed(){
+        kilep?.performClick()
+    }
     fun mindentVissza(){
         szallitoText?.setText("")
         szallitoText?.isFocusable = true
