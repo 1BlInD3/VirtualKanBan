@@ -1138,10 +1138,8 @@ class MainActivity : AppCompatActivity(),
                     loadMenuFragment(true)
                 }
                 getFragment("CIKKLEZARASFRAGMENTHATOS") -> { // 6-2
-                    progress.visibility = View.VISIBLE
                     hatosFragment?.buttonPerform()
                     removeFragment("CIKKLEZARASFRAGMENTHATOS")
-                    progress.visibility = View.GONE
                 }
                 getFragment("VARAS") -> { // 6-1
                     loadMenuFragment(true)

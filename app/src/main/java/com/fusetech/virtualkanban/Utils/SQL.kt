@@ -1502,6 +1502,9 @@ class SQL(private val sqlMessage: SQLAlert) {
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
+            CoroutineScope(Dispatchers.Main).launch {
+                progress.visibility = View.VISIBLE
+            }
             connection = DriverManager.getConnection(url)
             val statement = connection.prepareStatement(res.getString(R.string.getAtvevo))
             statement.setInt(1, code)
@@ -1509,6 +1512,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nincs neki átvevője")
+                    progress.visibility = View.GONE
                 }
             } else {
                 val atvevo = resultSet.getString("atvevo")
@@ -1518,17 +1522,20 @@ class SQL(private val sqlMessage: SQLAlert) {
                 if (!resultSet1.next()) {
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("Nem fogja senki")
+                        progress.visibility = View.GONE
                     }
                 } else {
                     val nev = resultSet1.getString("TextDescription")
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("$nev fogja a cikket")
+                        progress.visibility = View.GONE
                     }
                 }
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Probléma a nevekkel $e")
+                progress.visibility = View.GONE
             }
         }
     }
