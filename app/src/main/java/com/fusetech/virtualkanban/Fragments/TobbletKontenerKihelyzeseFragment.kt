@@ -76,7 +76,7 @@ class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontener
                 KontenerItem(
                     myList[i].kontener,
                     myList[i].polc,
-                    "1900-01-01",
+                    myList[i].datum,
                     myList[i].tetelszam,
                     myList[i].kontner_id,
                     myList[i].status

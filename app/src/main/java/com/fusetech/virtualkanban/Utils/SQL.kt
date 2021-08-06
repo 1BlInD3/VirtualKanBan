@@ -2035,7 +2035,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     progress.visibility = View.VISIBLE
                 }
             }
-            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            Class.forName("net.sourceforge.jtds.jdbc.Driver") //EZT KÉNE KIIKTATNI HOGY ÁTÍRJA AZ ADATBÁZIST
             val connection = DriverManager.getConnection(connectionString)
             /*val statement =
                 connection.prepareStatement(res.getString(R.string.updateContainerStatus))
@@ -2266,7 +2266,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.cikkUpdate))
-            statement.setInt(1, 8)//9
+            statement.setInt(1, 9)//9 v 8
             statement.setString(2, context.dolgKod)
             statement.setInt(3, cikk)
             statement.executeUpdate()
@@ -2280,7 +2280,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 }
                 val statement3 =
                     connection.prepareStatement(res.getString(R.string.updateContainerStatusJust))
-                statement3.setInt(1, 8)//
+                statement3.setInt(1, 9)//
                 statement3.setInt(2, kontener)
                 statement3.executeUpdate()
                 tobbletKontenerElemek(context)

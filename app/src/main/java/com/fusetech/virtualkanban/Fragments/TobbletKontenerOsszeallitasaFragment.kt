@@ -112,7 +112,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                 igenyReveresed.clear()
                 getDataFromList()
             } catch (e: Exception) {
-                Toast.makeText(view!!.context, "Nincs felvett tétel", Toast.LENGTH_SHORT).show()
+                Toast.makeText(myView!!.context, "Nincs felvett tétel", Toast.LENGTH_SHORT).show()
             }
         }
         megjegyzes1_igeny?.text = ""
@@ -129,6 +129,9 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                 cikkItem_igeny?.text.toString(),
                 polcTextIgeny?.text?.trim().toString()
             )
+            mennyiseg_igeny2?.isFocusable = true
+            mennyiseg_igeny2?.isFocusableInTouchMode = true
+            mennyiseg_igeny2?.requestFocus()
         }
         mennyiseg_igeny2?.setOnClickListener {
             val konti = kontenerText!!.text.trim().substring(4, kontenerText!!.text.trim().length)
@@ -160,6 +163,10 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                     )
                 }
                 recyclerView?.adapter?.notifyDataSetChanged()
+                cikkItem_igeny?.isFocusable = true
+                cikkItem_igeny?.isFocusableInTouchMode = true
+                cikkItem_igeny?.requestFocus()
+                cikkItem_igeny?.selectAll()
             }
             sendBinCode2.sendDetails2(
                 cikkItem_igeny?.text.toString().trim(), mennyiseg_igeny2?.text.toString().toDouble(),
