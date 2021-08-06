@@ -1098,27 +1098,21 @@ class MainActivity : AppCompatActivity(),
                     loadMenuFragment(true)
                 }
                 getFragment("CIKKLEZARASFRAGMENT") -> { // 3-2
-                    progress.visibility = View.VISIBLE
                     igenyKiszedesCikkLezaras?.buttonPerform()
-                    progress.visibility = View.GONE
                 }
                 getFragment("IGENYLEZARAS") -> { // 3-1
-                    igenyKontenerKiszedes()
+                    loadMenuFragment(true)
                 }
                 getFragment("KISZEDESCIKK") -> { // 4-3
                     /* loadMenuFragment(true)
                      igenyKontenerKiszedes()*/
-                    progress.visibility = View.VISIBLE
                     igenyKontenerKiszedesCikkKiszedes?.performButton()
-                    progress.visibility = View.GONE
                 }
                 getFragment("NEGYESCIKKEK") -> { // 4-2
                     //loadMenuFragment(true)
                     //loadKiszedesFragment()
-                    progress.visibility = View.VISIBLE
                     removeFragment("NEGYESCIKKEK")
                     igenyKontenerKiszedes()
-                    progress.visibility = View.GONE
                 }
                 getFragment("KISZEDES") -> { // 4-1
                     loadMenuFragment(true)

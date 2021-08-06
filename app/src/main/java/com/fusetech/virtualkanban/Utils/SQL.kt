@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.fusetech.virtualkanban.activities.MainActivity
 import com.fusetech.virtualkanban.R
@@ -650,7 +651,11 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.menuFragment?.setMenuProgressOn()
+                if(context.menuFragment != null){
+                    context.menuFragment?.setMenuProgressOn()
+                }else{
+                    progress.visibility = View.VISIBLE
+                }
             }
             connection = DriverManager.getConnection(url)
             val statement =
@@ -660,7 +665,11 @@ class SQL(private val sqlMessage: SQLAlert) {
                 Log.d(TAG, "loadIgenyLezaras: Nincs ilyen konténer")
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nincs lezárni való konténer!!!")
-                    context.menuFragment?.setMenuProgressOff()
+                    if(context.menuFragment != null){
+                        context.menuFragment?.setMenuProgressOff()
+                    }else{
+                        progress.visibility = View.GONE
+                    }
                 }
             } else {
                 context.kontener1List.clear()
@@ -689,14 +698,22 @@ class SQL(private val sqlMessage: SQLAlert) {
                     .replace(R.id.frame_container, context.igenyLezarasFragment!!, "IGENYLEZARAS")
                     .addToBackStack(null).commit()
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.menuFragment?.setMenuProgressOff()
+                    if(context.menuFragment != null){
+                        context.menuFragment?.setMenuProgressOff()
+                    }else{
+                        progress.visibility = View.GONE
+                    }
                 }
             }
         } catch (e: Exception) {
             Log.d(TAG, "loadIgenyLezaras: $e")
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Hálózati probléma! Próbáld újra\n $e")
-                context.menuFragment?.setMenuProgressOff()
+                if(context.menuFragment != null){
+                    context.menuFragment?.setMenuProgressOff()
+                }else{
+                    progress.visibility = View.GONE
+                }
             }
         }
     }
@@ -909,7 +926,10 @@ class SQL(private val sqlMessage: SQLAlert) {
                     context.retro.retrofitGet(file, endPoint)
                     mainUrl = a
                 }
-            }
+            }/*else{
+                context.setAlert("Nincs elfogadva a permission")
+                requestStoragePermission()
+            }*/
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Scala send \n${e}")
@@ -1045,7 +1065,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.menuFragment?.setMenuProgressOn()
+                progress.visibility = View.VISIBLE
             }
             connection = DriverManager.getConnection(url)
             val statement =
@@ -1053,7 +1073,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.menuFragment?.setMenuProgressOff()
+                    progress.visibility = View.GONE
                 }
                 context.supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_container, context.igenyKiszedesFragment!!, "KISZEDES")
@@ -1087,13 +1107,13 @@ class SQL(private val sqlMessage: SQLAlert) {
                     .replace(R.id.frame_container, context.igenyKiszedesFragment!!, "KISZEDES")
                     .commit()
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.menuFragment?.setMenuProgressOff()
+                    progress.visibility = View.GONE
                 }
             }
         } catch (e: Exception) {
             Log.d(TAG, "loadIgenyKiszedes: $e")
             CoroutineScope(Dispatchers.Main).launch {
-                context.menuFragment?.setMenuProgressOff()
+                progress.visibility = View.GONE
                 context.setAlert("Probléma van :\n $e")
             }
         }
@@ -1105,7 +1125,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyKiszedesFragment?.setProgressBarOn()
+                progress.visibility = View.VISIBLE
             }
             connection = DriverManager.getConnection(connectionString)
             val statement =
@@ -1116,7 +1136,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 context.loadSzallitoJarmu(kontener)
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.igenyKiszedesFragment?.setProgressBarOff()
+                    progress.visibility = View.GONE
                     context.igenyKiszedesFragment?.destroy()
                 }
             } else {
@@ -1134,7 +1154,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 if (!resultSet1.next()) {
                     CoroutineScope(Dispatchers.Main).launch {
                         //setAlert("A konténer üres")
-                        context.igenyKiszedesFragment?.setProgressBarOff()
+                        progress.visibility = View.GONE
                     }
                     //context.igenyKiszedesFragment?.destroy()
                     context.ellenorzoKodFragment = EllenorzoKodFragment()
@@ -1180,7 +1200,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         .replace(R.id.data_frame2, fragment, "NEGYESCIKKEK").commit()
                     //context.igenyKiszedesFragment = null
                     CoroutineScope(Dispatchers.Main).launch {
-                        context.igenyKiszedesFragment?.setProgressBarOff()
+                        progress.visibility = View.GONE
                     }
                 }
             }
@@ -1188,7 +1208,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Hiba \n $e")
                 Log.d(TAG, "checkIfContainerIsOpen: $e")
-                context.igenyKiszedesFragment?.setProgressBarOff()
+                progress.visibility = View.GONE
             }
         }
     }
