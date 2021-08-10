@@ -2,10 +2,7 @@ package com.fusetech.virtualkanban.activities
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.os.Bundle
@@ -33,7 +30,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
+import java.lang.StringBuilder
+import java.net.NetworkInterface
 import java.sql.*
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 private const val TAG = "MainActivity"
@@ -1290,5 +1292,26 @@ class MainActivity : AppCompatActivity(),
                 Toast.makeText(this, "Nincs elfogadva", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+    fun getMacAddr(): String {
+        try {
+            val all: List<NetworkInterface> =
+                Collections.list(NetworkInterface.getNetworkInterfaces())
+            for (nif in all) {
+                if (!nif.name.equals("wlan0", ignoreCase = true)) continue
+                val macBytes = nif.hardwareAddress ?: return ""
+                val res1 = StringBuilder()
+                for (b in macBytes) {
+                    res1.append(String.format("%02X:", b))
+                }
+                if (res1.length > 0) {
+                    res1.deleteCharAt(res1.length - 1)
+                }
+                return res1.toString()
+            }
+        } catch (ex: java.lang.Exception) {
+            Log.d(ContentValues.TAG, "getMacAddr: $ex")
+        }
+        return "02:00:00:00:00:00"
     }
 }
