@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -16,6 +17,7 @@ import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.fusetech.virtualkanban.dataItems.*
 import com.fusetech.virtualkanban.fragments.*
@@ -32,6 +34,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import java.sql.*
+
 
 private const val TAG = "MainActivity"
 
@@ -96,6 +99,7 @@ class MainActivity : AppCompatActivity(),
     * 8-as opció
     * a 4-es opcióhoz hasonló, csak a 02-es raktár polcaira helyezi vissza a cikkeket
     */
+    val EXTERNAL_STORAGE = 101
     private var manager: AidcManager? = null
     private var barcodeReader: BarcodeReader? = null
     private var barcodeData: String = ""
@@ -229,7 +233,7 @@ class MainActivity : AppCompatActivity(),
             }
             barcodeReader?.addBarcodeListener(this@MainActivity)
         }
-
+        requestStoragePermission()
         loadLoginFragment()
 
         exitTimer = object : CountDownTimer(1 * 60 * 1000, 1000) {
@@ -1248,6 +1252,40 @@ class MainActivity : AppCompatActivity(),
     override fun hatosInfo(id: Int) {
         CoroutineScope(IO).launch {
             sql.cikkCodeSql(id, this@MainActivity)
+        }
+    }
+    private fun requestStoragePermission(){
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+            AlertDialog.Builder(this)
+                .setTitle("El kell az engedélyt fogadni")
+                .setMessage("Különben nem fog működni")
+                .setPositiveButton("OK"){ _, _ ->
+                    ActivityCompat.requestPermissions(this@MainActivity,
+                        arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE) , EXTERNAL_STORAGE)
+                }
+                .setNegativeButton("Nem"){ dialog, which ->
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
+        }else{
+            ActivityCompat.requestPermissions(this,
+                arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE) , EXTERNAL_STORAGE)
+        }
+    }
+    override
+    fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        //super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode == EXTERNAL_STORAGE){
+            if(grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(this, "El van fogadva", Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(this, "Nincs elfogadva", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

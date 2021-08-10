@@ -1,12 +1,9 @@
 package com.fusetech.virtualkanban.utils
 
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.core.content.ContextCompat
 import com.fusetech.virtualkanban.activities.MainActivity
 import com.fusetech.virtualkanban.R
 import kotlinx.coroutines.CoroutineScope
@@ -899,11 +896,11 @@ class SQL(private val sqlMessage: SQLAlert) {
         val file = File(path, name)
         try {
             val currentDate = SimpleDateFormat("yyyy-MM-dd").format(Date())
-            if (ContextCompat.checkSelfPermission(
+            /*if (ContextCompat.checkSelfPermission(
                     context,
                     android.Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ) == PackageManager.PERMISSION_GRANTED
-            ) {
+            ) {*/
                 context.save.saveFile(
                     file,
                     context.xml.createXml(
@@ -926,10 +923,10 @@ class SQL(private val sqlMessage: SQLAlert) {
                     context.retro.retrofitGet(file, endPoint)
                     mainUrl = a
                 }
-            }/*else{
-                context.setAlert("Nincs elfogadva a permission")
-                requestStoragePermission()
-            }*/
+            //}else{
+            //    context.setAlert("Nincs elfogadva a permission")
+                //context.requestStoragePermission()
+            //}
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Scala send \n${e}")
@@ -943,14 +940,14 @@ class SQL(private val sqlMessage: SQLAlert) {
                         10000
                     ) + ".txt"
                 )
-                if (ContextCompat.checkSelfPermission(
+                /*if (ContextCompat.checkSelfPermission(
                         context,
                         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
                     ) == PackageManager.PERMISSION_GRANTED
-                ) {
+                ) {*/
                     context.save.saveFile(catchFile, "myData")
                     context.retro.retrofitGet(catchFile, "//10.0.0.11/TeszWeb/bin")
-                }
+                //}
             }
         }
     }
@@ -1065,7 +1062,11 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                progress.visibility = View.VISIBLE
+                if(context.menuFragment != null){
+                    context.menuFragment?.setMenuProgressOn()
+                }else{
+                    progress.visibility = View.VISIBLE
+                }
             }
             connection = DriverManager.getConnection(url)
             val statement =
@@ -1073,7 +1074,11 @@ class SQL(private val sqlMessage: SQLAlert) {
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    progress.visibility = View.GONE
+                    if(context.menuFragment != null){
+                        context.menuFragment?.setMenuProgressOff()
+                    }else{
+                        progress.visibility = View.GONE
+                    }
                 }
                 context.supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_container, context.igenyKiszedesFragment!!, "KISZEDES")
@@ -1107,13 +1112,21 @@ class SQL(private val sqlMessage: SQLAlert) {
                     .replace(R.id.frame_container, context.igenyKiszedesFragment!!, "KISZEDES")
                     .commit()
                 CoroutineScope(Dispatchers.Main).launch {
-                    progress.visibility = View.GONE
+                    if(context.menuFragment != null){
+                        context.menuFragment?.setMenuProgressOff()
+                    }else{
+                        progress.visibility = View.GONE
+                    }
                 }
             }
         } catch (e: Exception) {
             Log.d(TAG, "loadIgenyKiszedes: $e")
             CoroutineScope(Dispatchers.Main).launch {
-                progress.visibility = View.GONE
+                if(context.menuFragment != null){
+                    context.menuFragment?.setMenuProgressOff()
+                }else{
+                    progress.visibility = View.GONE
+                }
                 context.setAlert("Probléma van :\n $e")
             }
         }
