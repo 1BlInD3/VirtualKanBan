@@ -12,8 +12,7 @@ import com.fusetech.virtualkanban.activities.SplashScreen.Companion.backupURL
 import com.fusetech.virtualkanban.activities.SplashScreen.Companion.endPoint
 import com.fusetech.virtualkanban.activities.SplashScreen.Companion.logPath
 import com.fusetech.virtualkanban.activities.SplashScreen.Companion.timeOut
-import com.fusetech.virtualkanban.activities.SplashScreen.Companion.szallitoJarmu
-import com.fusetech.virtualkanban.activities.SplashScreen.Companion.ellenorzoKod
+import com.fusetech.virtualkanban.activities.SplashScreen.Companion.szallito
 import kotlin.Exception
 
 private const val TAG = "RetrofitFunctions"
@@ -65,10 +64,12 @@ class RetrofitFunctions(val trigger: Trigger) {
             Log.d(TAG, "getConfigDetails: $logPath")
             timeOut = response.body()!!.timeOut.toLong()
             Log.d(TAG, "getConfigDetails: $timeOut")
-            szallitoJarmu = response.body()!!.szallitoJarmu
+            /*szallitoJarmu = response.body()!!.szallitoJarmu
             Log.d(TAG, "getConfigDetails: $szallitoJarmu")
             ellenorzoKod = response.body()!!.ellenorzoKod
-            Log.d(TAG, "getConfigDetails: $ellenorzoKod")
+            Log.d(TAG, "getConfigDetails: $ellenorzoKod")*/
+            szallito = response.body()!!.szallito
+            Log.d(TAG, "getConfigDetails: $szallito")
         } catch (e: Exception) {
             Log.d(TAG, "getConfigDetails: CATCH ÁG")
             Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + "getConfig"}")

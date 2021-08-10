@@ -27,8 +27,9 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
         var endPoint = """"""
         var logPath = ""
         var timeOut = 1L
-        var szallitoJarmu: ArrayList<String> = ArrayList()
-        var ellenorzoKod: ArrayList<String> = ArrayList()
+        //var szallitoJarmu: ArrayList<String> = ArrayList()
+       // var ellenorzoKod: ArrayList<String> = ArrayList()
+        var szallito: HashMap<String,String> = HashMap()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,8 +52,9 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
                     intent.putExtra("endpoint", endPoint)
                     intent.putExtra("logPath", logPath)
                     intent.putExtra("timeOut", timeOut)
-                    intent.putExtra("szallitoJarmu", szallitoJarmu)
-                    intent.putExtra("ellenorzokod", ellenorzoKod)
+                    intent.putExtra("szallitoMap", szallito)
+                    //intent.putExtra("szallitoJarmu", szallitoJarmu)
+                   // intent.putExtra("ellenorzokod", ellenorzoKod)
                     startActivity(intent)
                     finish()
                 }

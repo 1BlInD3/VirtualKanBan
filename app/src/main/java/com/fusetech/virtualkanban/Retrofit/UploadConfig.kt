@@ -6,8 +6,7 @@ class UploadConfig(
     val endPoint: String,
     val logPath: String,
     val timeOut: Int,
-    val szallitoJarmu: ArrayList<String>,
-    val ellenorzoKod: ArrayList<String>
+    val szallito: HashMap<String,String>
 ) {
 
 }

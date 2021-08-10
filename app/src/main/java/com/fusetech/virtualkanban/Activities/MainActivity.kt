@@ -166,13 +166,14 @@ class MainActivity : AppCompatActivity(),
         val tobbletItem: ArrayList<KontenerbenLezarasItem> = ArrayList()
         val tempLocations: ArrayList<PolcLocation> = ArrayList()
         val tobbletKontener: ArrayList<KontenerItem> = ArrayList()
-        var mainUrl = "http://10.0.2.149:8030/"
+        var mainUrl = "http://10.0.1.69:8030/"
         var backupURL = "http://10.0.1.199:8030/"
         var endPoint = """"""
         var logPath = ""
         var timeOut = 0L
         var szallitoJarmu: ArrayList<String> = ArrayList()
         var ellenorzoKod: ArrayList<String> = ArrayList()
+        var szallitoMap: HashMap<String,String> = HashMap()
         var kivalasztottSzallitoJarmu = ""
         var kivalasztottSzallitoJarmuEllenorzo = ""
     }
@@ -191,10 +192,12 @@ class MainActivity : AppCompatActivity(),
         Log.d("MYBUNDLE", "onCreate: $logPath")
         timeOut = bundle.getLong("timeOut")
         Log.d("MYBUNDLE", "onCreate: $timeOut")
-        szallitoJarmu = bundle.getStringArrayList("szallitoJarmu")!!
+        szallitoMap = bundle.getSerializable("szallitoMap") as HashMap<String, String>
+        Log.d("MYBUNDLE", "onCreate: ${szallitoMap.get("SZ01")}")
+        /*szallitoJarmu = bundle.getStringArrayList("szallitoJarmu")!!
         Log.d("MYBUNDLE", "onCreate: $szallitoJarmu")
         ellenorzoKod = bundle.getStringArrayList("ellenorzokod")!!
-        Log.d("MYBUNDLE", "onCreate: $ellenorzoKod")
+        Log.d("MYBUNDLE", "onCreate: $ellenorzoKod")*/
         res = resources
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
@@ -1263,7 +1266,7 @@ class MainActivity : AppCompatActivity(),
                     ActivityCompat.requestPermissions(this@MainActivity,
                         arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE) , EXTERNAL_STORAGE)
                 }
-                .setNegativeButton("Nem"){ dialog, which ->
+                .setNegativeButton("Nem"){ dialog, _ ->
                     dialog.dismiss()
                 }
                 .create()
@@ -1281,7 +1284,7 @@ class MainActivity : AppCompatActivity(),
     ) {
         //super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(requestCode == EXTERNAL_STORAGE){
-            if(grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 Toast.makeText(this, "El van fogadva", Toast.LENGTH_SHORT).show()
             }else{
                 Toast.makeText(this, "Nincs elfogadva", Toast.LENGTH_SHORT).show()
