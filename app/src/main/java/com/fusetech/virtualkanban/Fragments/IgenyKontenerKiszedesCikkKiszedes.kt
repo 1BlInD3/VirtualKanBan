@@ -182,9 +182,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         mennyiseg?.setOnClickListener {
             var osszeadva = false
             isUpdated = false
-            if (mennyiseg?.text?.trim().toString().toDouble() <= maxMennyiseg) {
-                if (mennyiseg?.text.toString().toDouble() > szazalek(10)) {
-                    mainActivity?.setAlert("Túl sok ennyit nem vehetsz ki")
+            //if (mennyiseg?.text?.trim().toString().toDouble() <= maxMennyiseg) {
+                if (mennyiseg?.text?.trim().toString().toDouble() > getPolcValue(polc!!.text.trim().toString())) {
+                    mainActivity?.setAlert("Túl sok ennyit nem vehetsz ki erről a polcról")
                 } else /*if (mennyiseg.text.trim().toString().toDouble() <= igenyeltMennyiseg)*/ {
                     val a = mennyiseg?.text?.trim().toString().toDouble()
                     val b = polc!!.text.trim().toString()
@@ -321,11 +321,6 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                         }
                     }
                 }
-            } else {
-                CoroutineScope(Main).launch {
-                    mainActivity!!.setAlert("Többet adtál meg mint ami a polcon van")
-                }
-            }
             mennyiseg?.setText("")
             mennyiseg?.isFocusable = false
             mennyiseg?.isFocusableInTouchMode = false
