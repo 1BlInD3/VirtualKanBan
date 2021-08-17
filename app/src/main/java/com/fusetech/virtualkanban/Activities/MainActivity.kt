@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity(),
     private var barcodeReader: BarcodeReader? = null
     private var barcodeData: String = ""
     var loginFragment: LoginFragment? = null
-    var dolgKod: String = ""// vissza ide
+
     private lateinit var connection: Connection
     var cikkItems: ArrayList<CikkItems> = ArrayList()
     var polcItems: ArrayList<PolcItems> = ArrayList()
@@ -182,6 +182,7 @@ class MainActivity : AppCompatActivity(),
         var szallitoMap: HashMap<String,String> = HashMap()
         var kivalasztottSzallitoJarmu = ""
         var kivalasztottSzallitoJarmuEllenorzo = ""
+        var dolgKod: String = ""// vissza ide
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

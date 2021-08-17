@@ -51,7 +51,8 @@
         android:inputType="textPersonName"
         android:padding="4dp"
         app:layout_constraintStart_toEndOf="@+id/textView18"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <TextView
         android:id="@+id/kiszedesMegj1"
@@ -112,7 +113,8 @@
         android:inputType="textPersonName"
         android:padding="4dp"
         app:layout_constraintStart_toEndOf="@+id/kiszedesIgeny"
-        app:layout_constraintTop_toBottomOf="@+id/kiszedesCikkEdit" />
+        app:layout_constraintTop_toBottomOf="@+id/kiszedesCikkEdit"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/textView28"
@@ -137,7 +139,8 @@
         android:inputType="textPersonName"
         android:padding="4dp"
         app:layout_constraintStart_toEndOf="@+id/textView28"
-        app:layout_constraintTop_toBottomOf="@+id/kiszedesIgenyEdit" />
+        app:layout_constraintTop_toBottomOf="@+id/kiszedesIgenyEdit"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/textView29"
@@ -163,7 +166,8 @@
         android:padding="4dp"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toEndOf="@+id/textView29"
-        app:layout_constraintTop_toBottomOf="@+id/kiszedesPolc" />
+        app:layout_constraintTop_toBottomOf="@+id/kiszedesPolc"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/kiszedesUnit"
@@ -205,8 +209,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout3"
@@ -342,5 +345,15 @@
         android:textColor="@android:color/black"
         app:layout_constraintStart_toEndOf="@+id/textView22"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+    <ImageView
+        android:id="@+id/emptyBin"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/emptybox"
+        app:layout_constraintBottom_toTopOf="@+id/side_container2"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,6 +18,7 @@ import com.fusetech.virtualkanban.activities.MainActivity.Companion.url
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.mainUrl
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.backupURL
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.endPoint
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.dolgKod
 import com.fusetech.virtualkanban.dataItems.*
 import com.fusetech.virtualkanban.fragments.*
 import com.fusetech.virtualkanban.fragments.PolcraHelyezesFragment.Companion.myItems
@@ -466,7 +467,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 val statement1 =
                     connection.prepareStatement(res.getString(R.string.updateBin))
                 statement1.setString(1, code)
-                statement1.setString(2, context.dolgKod)
+                statement1.setString(2, dolgKod)
                 statement1.setString(3, "0")
                 statement1.executeUpdate()
                 CoroutineScope(Dispatchers.Main).launch {
@@ -504,7 +505,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 val statement1 =
                     connection.prepareStatement(res.getString(R.string.updateBin))
                 statement1.setString(1, code)
-                statement1.setString(2, context.dolgKod)
+                statement1.setString(2, dolgKod)
                 statement1.setString(3, "6")
                 statement1.executeUpdate()
                 CoroutineScope(Dispatchers.Main).launch {
@@ -918,7 +919,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         polchely,
                         rba,
                         polchelyre,
-                        context.dolgKod
+                        dolgKod
                     )
                 )
                 Log.d("IOTHREAD", "sendXmlData: ${Thread.currentThread().name}")
@@ -1162,14 +1163,14 @@ class SQL(private val sqlMessage: SQLAlert) {
             } else {
                 val statement2 =
                     connection.prepareStatement(res.getString(R.string.atvevoBeiras))
-                statement2.setString(1, context.dolgKod)
+                statement2.setString(1, dolgKod)
                 statement2.setString(2, kontener)
                 statement2.executeUpdate()
                 Log.d(TAG, "checkIfContainerIsOpen: Sikeres update")
                 val statment3 =
                     connection.prepareStatement(res.getString(R.string.igenyKontenerLezarasCikkLezaras))
                 statment3.setInt(1, kontener.toInt())
-                statment3.setString(2, context.dolgKod)
+                statment3.setString(2, dolgKod)
                 val resultSet1 = statment3.executeQuery()
                 if (!resultSet1.next()) {
                     CoroutineScope(Dispatchers.Main).launch {
@@ -1400,7 +1401,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             val statement =
                 connection.prepareStatement(res.getString(R.string.cikkCheck))// ezt is ki kell javítani, hogy 1 v kettő legyen jó státusz
             statement.setInt(1, id)
-            statement.setString(2, context.dolgKod)
+            statement.setString(2, dolgKod)
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -1412,7 +1413,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 val statement1 =
                     connection.prepareStatement(res.getString(R.string.cikkUpdate))
                 statement1.setInt(1, 2)
-                statement1.setString(2, context.dolgKod)
+                statement1.setString(2, dolgKod)
                 statement1.setInt(3, id)
                 statement1.executeUpdate()
                 val tempPolcLocations: ArrayList<PolcLocation> = ArrayList()
@@ -1694,7 +1695,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             connection = DriverManager.getConnection(connectionString)
             val statement =
                 connection.prepareStatement(res.getString(R.string.updateCikkAtvevo))
-            statement.setString(1, context.dolgKod)
+            statement.setString(1, dolgKod)
             statement.setString(2, itemId)
             statement.executeUpdate()
             CoroutineScope(Dispatchers.Main).launch {
@@ -1810,7 +1811,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 connection.prepareStatement(res.getString(R.string.updateContainerStatus))
             statment.setInt(1, 1)
             statment.setString(2, "NULL")//ide kell majd valami
-            statment.setString(3, context.dolgKod)//ide kell a bejelentkezős kód
+            statment.setString(3, dolgKod)//ide kell a bejelentkezős kód
             statment.setString(4, kontener_id)
             statment.executeUpdate()
             Log.d(TAG, "updateCikkAndKontener: Konténer lezárva")
@@ -2307,7 +2308,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             val connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.cikkUpdate))
             statement.setInt(1, 9)//9 v 8
-            statement.setString(2, context.dolgKod)
+            statement.setString(2, dolgKod)
             statement.setInt(3, cikk)
             statement.executeUpdate()
             val statement2 =

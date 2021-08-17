@@ -25,6 +25,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.tempLocations
 import com.fusetech.virtualkanban.utils.Email
+import java.sql.Connection
+import java.sql.DriverManager
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -49,6 +51,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     private var mainActivity: MainActivity? = null
     private var kontenerNumber: TextView? = null
     private var cikkNumber: TextView? = null
+    private var emptyBin: ImageView? = null
     private var igenyeltMennyiseg: Double = 0.0
     private var igenyeltMennyisegAmiNemValtozik: Double = 0.0
     private var locationRecycler: RecyclerView? = null
@@ -116,6 +119,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         kontenerNumber = myView!!.kontenerIDKiszedes
         cikkNumber = myView!!.cikkIDKiszedes
         setProgressBarOff()
+        emptyBin = myView?.emptyBin
         cikkEdit!!.isFocusable = false
         cikkEdit!!.isFocusableInTouchMode = false
         igeny!!.isFocusable = false
@@ -134,7 +138,8 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             builder.setTitle("Figyelem")
                 .setMessage("Biztos le akarod így zárni?")
             builder.setPositiveButton("Igen") { dialog, which ->
-                if (polc!!.text.trim().toString().isNotEmpty() && (mennyiseg?.text?.trim().toString()
+                if (polc!!.text.trim().toString().isNotEmpty() && (mennyiseg?.text?.trim()
+                        .toString()
                         .isEmpty() || mennyiseg?.text?.trim()
                         .toString() == "0" || mennyiseg?.text?.trim().toString() == "0.0")
                 ) {
@@ -184,10 +189,18 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         mennyiseg?.setOnClickListener {
             var osszeadva = false
             isUpdated = false
-            //if (mennyiseg?.text?.trim().toString().toDouble() <= maxMennyiseg) {
-                if (mennyiseg?.text?.trim().toString().toDouble() > getPolcValue(polc!!.text.trim().toString())) {
+            if (mennyiseg?.text?.trim().toString().isNotEmpty()) {
+                if (mennyiseg?.text?.trim().toString().toDouble() > getPolcValue(
+                        polc!!.text.trim().toString()
+                    )
+                ) {
                     mainActivity?.setAlert("Túl sok ennyit nem vehetsz ki erről a polcról")
-                    email.sendEmail("kutyu@fusetech.hu","attila.balind@fusetech.hu","Készletkorrekció","Készletet kéne korrigálni")
+                    email.sendEmail(
+                        "kutyu@fusetech.hu",
+                        "attila.balind@fusetech.hu",
+                        "Készletkorrekció",
+                        "Készletet kéne korrigálni"
+                    )
                 } else /*if (mennyiseg.text.trim().toString().toDouble() <= igenyeltMennyiseg)*/ {
                     val a = mennyiseg?.text?.trim().toString().toDouble()
                     val b = polc!!.text.trim().toString()
@@ -281,13 +294,14 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                                 "onCreateView: ${Thread.currentThread().name}"
                                             )
                                             //mainActivity!!.loadMenuFragment(true)
-                                            try{
-                                                mainActivity?.igenyKontenerKiszedesCikkKiszedes = null
+                                            try {
+                                                mainActivity?.igenyKontenerKiszedesCikkKiszedes =
+                                                    null
                                                 mainActivity!!.loadKoztes()
                                                 mainActivity!!.checkIfContainerStatus(
                                                     k
                                                 )
-                                            }catch (e: Exception){
+                                            } catch (e: Exception) {
                                                 Log.d(TAG, "onCreateView: $e")
                                             }
 
@@ -315,22 +329,61 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                 }
                                 locationRecycler?.adapter?.notifyDataSetChanged()
                                 /*for (i in 0 until tempLocations.size) {
-                                    Log.d(
-                                        TAG,
-                                        "NEM ${tempLocations[i].polc} + ${tempLocations[i].mennyiseg}"
-                                    )
-                                }*/
+                                Log.d(
+                                    TAG,
+                                    "NEM ${tempLocations[i].polc} + ${tempLocations[i].mennyiseg}"
+                                )
+                            }*/
                             }
                         }
                     }
                 }
-            mennyiseg?.setText("")
-            mennyiseg?.isFocusable = false
-            mennyiseg?.isFocusableInTouchMode = false
-            polc?.isFocusable = true
-            polc?.isFocusableInTouchMode = true
-            polc?.setText("")
-            polc?.requestFocus()
+                mennyiseg?.setText("")
+                mennyiseg?.isFocusable = false
+                mennyiseg?.isFocusableInTouchMode = false
+                polc?.isFocusable = true
+                polc?.isFocusableInTouchMode = true
+                polc?.setText("")
+                polc?.requestFocus()
+            }
+        }
+
+        emptyBin?.setOnLongClickListener {
+            if (polc!!.text.trim().toString().isNotEmpty()) {
+                val builder = AlertDialog.Builder(myView?.context)
+                builder.setTitle("Üres polc?")
+                    .setMessage("A polc valóban üres?")
+                    .setPositiveButton("Igen") { dialog, which ->
+                        CoroutineScope(IO).launch {
+                            val a = getName(MainActivity.dolgKod)
+                            if (a != "") {
+                                email.sendEmail(
+                                    "kutyu@fusetech.hu",
+                                    "attila.balind@fusetech.hu",
+                                    "Készletkorrekció",
+                                    "A(z) ${polc!!.text} polc elvileg üres. A Scala szerint ${
+                                        getPolcValue(
+                                            polc!!.text.trim().toString()
+                                        )
+                                    } ${unit!!.text.trim()} van rajta\nAdatok:\nCikkszám: ${cikkEdit!!.text}\n${meg1!!.text}\n${meg2!!.text}\n${intrem!!.text}\nKüldte: $a"
+                                )
+
+                            }
+                        }
+                    }
+                    .setNegativeButton("Nem") { dialog, which ->
+
+                    }
+                builder.create()
+                builder.show()
+            } else {
+                val builder = AlertDialog.Builder(myView?.context)
+                builder.setTitle("Üres polc?")
+                builder.setMessage("Előbb válaszd ki a polcot!")
+                builder.create()
+                builder.show()
+            }
+            true
         }
 
         return myView
@@ -473,7 +526,8 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         clearLeak()
 
     }
-    fun clearLeak(){
+
+    fun clearLeak() {
         myView = null
         cikkEdit = null
         meg1 = null
@@ -493,12 +547,30 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         //xmlData = null
         mainActivity = null
     }
-    private fun getPolcValue(polcName: String): Double{
-        for(i in 0 until itemLocationList.size){
-            if(itemLocationList[i].polc?.trim().equals(polcName)){
+
+    private fun getPolcValue(polcName: String): Double {
+        for (i in 0 until itemLocationList.size) {
+            if (itemLocationList[i].polc?.trim().equals(polcName)) {
                 return itemLocationList[i].mennyiseg?.trim().toString().toDouble()
             }
         }
         return 0.0
+    }
+
+    private fun getName(code: String): String {
+        var name = ""
+        val connection: Connection
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        connection = DriverManager.getConnection(MainActivity.url)
+        val statement =
+            connection.prepareStatement(MainActivity.res.getString(R.string.nev))
+        statement.setString(1, code)
+        val resultSet = statement.executeQuery()
+        if (!resultSet.next()) {
+            mainActivity?.setAlert("Nem jó kód a névnél")
+        } else {
+            name = resultSet.getString("TextDescription")
+        }
+        return name
     }
 }

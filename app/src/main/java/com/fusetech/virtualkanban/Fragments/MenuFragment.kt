@@ -11,6 +11,7 @@ import android.widget.ProgressBar
 import com.fusetech.virtualkanban.activities.MainActivity
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_menu.view.*
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.dolgKod
 
 private const val ARG_PARAM1 = "param1"
 
@@ -85,7 +86,7 @@ class MenuFragment : Fragment() {
         igenyOssze?.setOnClickListener {
             if (igenyOssze?.isEnabled!!) {
                 //mainActivity.loadIgenyOsszeallitasFragment("","")// ez csak megjelenítés semmi sql nem fut alatta
-                mainActivity?.containerCheck(mainActivity?.dolgKod!!)
+                mainActivity?.containerCheck(dolgKod)
             }
         }
         igenyLezar?.setOnClickListener {
@@ -110,7 +111,7 @@ class MenuFragment : Fragment() {
         }
         tobbletOssze?.setOnClickListener {
             if (tobbletOssze?.isEnabled!!) {
-                mainActivity?.containerCheck7(mainActivity?.dolgKod!!)
+                mainActivity?.containerCheck7(dolgKod)
             }
         }
         tobbletKihelyez?.setOnClickListener {
