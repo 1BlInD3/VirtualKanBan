@@ -100,7 +100,11 @@ class MainActivity : AppCompatActivity(),
     *
     * 8-as opció
     * a 4-es opcióhoz hasonló, csak a 02-es raktár polcaira helyezi vissza a cikkeket
+
+    /*
+        ha több van a polchelyen mint amit a kütyü behoz ()
     */
+     */
     val EXTERNAL_STORAGE = 101
     private var manager: AidcManager? = null
     private var barcodeReader: BarcodeReader? = null

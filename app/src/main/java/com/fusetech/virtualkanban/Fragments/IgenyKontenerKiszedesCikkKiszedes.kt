@@ -24,6 +24,7 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.tempLocations
+import com.fusetech.virtualkanban.utils.Email
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -58,6 +59,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     var isSaved = false
     var isUpdated = false
     private val sql = SQL(this)
+    val email = Email()
 
     interface SendXmlData {
         fun sendXmlData(
@@ -185,6 +187,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             //if (mennyiseg?.text?.trim().toString().toDouble() <= maxMennyiseg) {
                 if (mennyiseg?.text?.trim().toString().toDouble() > getPolcValue(polc!!.text.trim().toString())) {
                     mainActivity?.setAlert("Túl sok ennyit nem vehetsz ki erről a polcról")
+                    email.sendEmail("kutyu@fusetech.hu","attila.balind@fusetech.hu","Készletkorrekció","Készletet kéne korrigálni")
                 } else /*if (mennyiseg.text.trim().toString().toDouble() <= igenyeltMennyiseg)*/ {
                     val a = mennyiseg?.text?.trim().toString().toDouble()
                     val b = polc!!.text.trim().toString()
@@ -415,11 +418,11 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         }
     }
 
-    private fun szazalek(x: Int): Double {
+    /*private fun szazalek(x: Int): Double {
         val ceiling: Int =
             ((igenyeltMennyisegAmiNemValtozik / mennyiseg?.text.toString().toDouble()) * x).toInt()
         return (igenyeltMennyisegAmiNemValtozik + ceiling)
-    }
+    }*/
 
     override fun polcItemClick(position: Int) {
         Log.d(TAG, "polcItemClick: MEGNYOMTAM")
