@@ -53,6 +53,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun checkRightSql(code: String, context: MainActivity) {
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -64,8 +65,14 @@ class SQL(private val sqlMessage: SQLAlert) {
             val resultSet: ResultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 Log.d(TAG, "checkRightSql: hülyeséggel lép be")
-                context.loadMenuFragment(false)
+                //context.loadMenuFragment(false)
             } else {
+               // val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+                val statement1 = connection.prepareStatement(res.getString(R.string.kutyuLogin))
+                statement1.setString(1,code)
+                statement1.setString(2,context.getMacAddr())
+                //statement1.setString(3, currentDateAndTime)
+                statement1.executeUpdate()
                 if (resultSet.getInt("Jog") == 1) {
                     context.loadMenuFragment(true)
                     context.loginFragment = null
@@ -78,7 +85,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             Log.d(TAG, "Nincs kapcsolat")
             CoroutineScope(Dispatchers.Main).launch {
                 context.loginFragment?.stopSpinning()
-                context.loginFragment?.setId("Hiaba lépett fel a feldolgozás során")
+                context.loginFragment?.setId("Hiaba lépett fel a feldolgozás során $e")
             }
         }
     }

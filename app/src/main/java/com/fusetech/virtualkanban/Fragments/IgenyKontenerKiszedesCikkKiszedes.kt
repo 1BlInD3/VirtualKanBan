@@ -495,4 +495,12 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         //xmlData = null
         mainActivity = null
     }
+    private fun getPolcValue(polcName: String): Double{
+        for(i in 0 until itemLocationList.size){
+            if(itemLocationList[i].polc?.trim().equals(polcName)){
+                return itemLocationList[i].mennyiseg?.trim().toString().toDouble()
+            }
+        }
+        return 0.0
+    }
 }
