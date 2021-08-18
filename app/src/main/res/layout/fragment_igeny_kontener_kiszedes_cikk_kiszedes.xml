@@ -347,12 +347,12 @@
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
     <ImageView
-        android:id="@+id/emptyBin"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="12dp"
+        android:id="@+id/bejelentesBtn"
+        android:layout_width="75dp"
+        android:layout_height="78dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:src="@drawable/emptybox"
+        android:src="@drawable/megaphone"
         app:layout_constraintBottom_toTopOf="@+id/side_container2"
         app:layout_constraintEnd_toEndOf="parent" />
 
