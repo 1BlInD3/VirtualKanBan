@@ -25,6 +25,7 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.tempLocations
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.sz0x
 import com.fusetech.virtualkanban.utils.Email
 import java.sql.Connection
 import java.sql.DriverManager
@@ -258,7 +259,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                                     tempLocations[i].mennyiseg?.toDouble(),
                                                     "02",
                                                     "21",
-                                                    "SZ01"
+                                                    sz0x
                                                 )
                                             }
                                         }.await()
@@ -560,19 +561,20 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         }
         return name
     }
+
     @SuppressLint("NotifyDataSetChanged")
-    private fun removeFromList(bin: String){
-        for(i in 0 until itemLocationList.size){
-            if(bin.trim()==itemLocationList[i].polc?.trim()){
+    private fun removeFromList(bin: String) {
+        for (i in 0 until itemLocationList.size) {
+            if (bin.trim() == itemLocationList[i].polc?.trim()) {
                 itemLocationList.remove(itemLocationList[i])
                 break
             }
         }
         locationRecycler?.adapter?.notifyDataSetChanged()
 
-        if(itemLocationList.size < 1){
+        if (itemLocationList.size < 1) {
             lezaras()
-        }else{
+        } else {
             polc?.setText("")
             polc?.isFocusable = true
             polc?.isFocusableInTouchMode = true
@@ -580,7 +582,8 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             mennyiseg?.isFocusable = false
         }
     }
-    private fun lezaras(){
+
+    private fun lezaras() {
         CoroutineScope(IO).launch {
             async {
                 mainActivity!!.updateItemStatus(cikkNumber!!.text.trim().toString())

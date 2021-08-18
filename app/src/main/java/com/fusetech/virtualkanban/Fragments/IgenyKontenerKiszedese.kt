@@ -11,6 +11,7 @@ import android.widget.FrameLayout
 import android.widget.ProgressBar
 import com.fusetech.virtualkanban.activities.MainActivity
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.kihelyezesItems
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.sz0x
 import com.fusetech.virtualkanban.dataItems.SzerelohelyItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedese.view.*
@@ -67,7 +68,7 @@ class IgenyKontenerKiszedese : Fragment() {
                     onBack()
                     mainActivity?.kihelyezesFragmentLista = null
                     mainActivity?.removeFragment("KIHELYEZESITEMS")
-                    mainActivity!!.getContainerList("SZ01")
+                    mainActivity!!.getContainerList(sz0x)
                 }
                 else -> {
                     exit()

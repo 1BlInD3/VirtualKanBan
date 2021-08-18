@@ -9,6 +9,7 @@ import com.fusetech.virtualkanban.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.sz0x
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.connectionString
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.res
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.progress
@@ -1161,7 +1162,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     context.igenyKiszedesFragment?.destroy()
                 }
             } else {
-               // MainActivity.sz0x = resultSet.getString("SzallitoJarmu")
+                sz0x = resultSet.getString("SzallitoJarmu")
                 val statement2 =
                     connection.prepareStatement(res.getString(R.string.atvevoBeiras))
                 statement2.setString(1, dolgKod)
@@ -1873,6 +1874,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     progress.visibility = View.GONE
                 }
             } else {
+                sz0x = code
                 val myList: ArrayList<SzerelohelyItem> = ArrayList()
                 do {
                     val szerelohely = resultSet.getString("termeles_rakhely")
@@ -1998,7 +2000,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 context.kihelyezes?.onBack()
                 context.kihelyezesFragmentLista = null
                 context.removeFragment("KIHELYEZESITEMS")
-                context.getContainerList("SZ01")
+                context.getContainerList(sz0x)
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {

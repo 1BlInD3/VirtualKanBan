@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import com.fusetech.virtualkanban.fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.sz0x
 import java.lang.Exception
 
 private const val ARG_PARAM1 = "param1"
@@ -71,7 +72,7 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
                             async {
                                 mainActivity?.sendKihelyezesXmlData(
                                     myList[i].vonalkod,
-                                    "SZ01",
+                                    sz0x,
                                     myList[i].kiadva.toDouble(),
                                     "21",
                                     "01",

@@ -102,8 +102,12 @@ class MainActivity : AppCompatActivity(),
     * a 4-es opcióhoz hasonló, csak a 02-es raktár polcaira helyezi vissza a cikkeket
 
     /*
-        ha több van a polchelyen mint amit a kütyü behoz ()
-    */
+        HA többször akarunk kivenni, akkor kérdezze meg hogy üres-e a polc vagy nem,
+        csak így kell kivenni. HA üres akkor küldjön emailt, a polccal levett mennyiséggel és a polc mennyiséggel
+
+
+        Többlet dedikált gomb: Polchely kell legyen benne és nulla legyen a polcchleyen lévő mennyiség. VAn többlet m az x polcon? megadás után email. x polcon cikkszámoadatok, ennyivel több volt Mennyi többletmennyiség maradt a polcon?.
+     */
      */
     val EXTERNAL_STORAGE = 101
     private var manager: AidcManager? = null
@@ -180,8 +184,6 @@ class MainActivity : AppCompatActivity(),
         var szallitoJarmu: ArrayList<String> = ArrayList()
         var ellenorzoKod: ArrayList<String> = ArrayList()
         var szallitoMap: HashMap<String,String> = HashMap()
-        var kivalasztottSzallitoJarmu = ""
-        var kivalasztottSzallitoJarmuEllenorzo = ""
         var dolgKod: String = ""// vissza ide
         var sz0x: String = ""
     }
@@ -751,16 +753,11 @@ class MainActivity : AppCompatActivity(),
                     setAlert("Nincs a tranzitraktárban!")
                 }
             } else {
-                kivalasztottSzallitoJarmu = barcodeData
-                for (i in 0 until szallitoJarmu.size) {
-                    if (kivalasztottSzallitoJarmu == szallitoJarmu[i]) {
-                        kivalasztottSzallitoJarmuEllenorzo = ellenorzoKod[i]
-                    }
-                }
+                sz0x = barcodeData
                 val statement =
                     connection.prepareStatement(resources.getString(R.string.updateContainerStatus))
                 statement.setInt(1, 2)
-                statement.setString(2, kivalasztottSzallitoJarmu)//JSON ból a szállítójármű
+                statement.setString(2, sz0x)//JSON ból a szállítójármű
                 statement.setString(3, dolgKod)//ide kell a bejelentkezős kód
                 statement.setString(4, kontener)
                 statement.executeUpdate()
