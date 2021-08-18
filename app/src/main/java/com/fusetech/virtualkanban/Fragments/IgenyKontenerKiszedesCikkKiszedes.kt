@@ -172,7 +172,6 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             mainActivity!!.checkIfContainerStatus(kontenerIDKiszedes.text.trim().toString())
         }
         mennyiseg?.setOnClickListener {
-            var osszeadva = false
             isUpdated = false
             if (mennyiseg?.text?.trim().toString().isNotEmpty()) {
                 if (mennyiseg?.text?.trim().toString().toDouble() > getPolcValue(
@@ -180,156 +179,75 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     )
                 ) {
                     mainActivity?.setAlert("Túl sok ennyit nem vehetsz ki erről a polcról")
-                    email.sendEmail(
+                    /*email.sendEmail(
                         "kutyu@fusetech.hu",
                         "attila.balind@fusetech.hu",
                         "Készletkorrekció",
                         "Készletet kéne korrigálni"
-                    )
-                } else /*if (mennyiseg.text.trim().toString().toDouble() <= igenyeltMennyiseg)*/ {
-                    val a = mennyiseg?.text?.trim().toString().toDouble()
-                    val b = polc!!.text.trim().toString()
-                    val c = cikkNumber!!.text.trim().toString()
-                    val cikk = cikkEdit!!.text.trim().toString()
-                    val d = kontenerNumber!!.text.trim().toString()
-                    val k = kontenerIDKiszedes.text.trim().toString()
-                    CoroutineScope(IO).launch {
-                        async {
-                            mainActivity!!.insertDataToRaktarTetel(
-                                c,
-                                a,
-                                "02",
-                                b
-                            )
-                        }.await()
-                        if (isSaved) {
-                            CoroutineScope(Main).launch {
-                                igenyeltMennyiseg -= a
-                                igeny!!.setText(igenyeltMennyiseg.toString())
-                                for (i in 0 until itemLocationList.size) {
-                                    if (itemLocationList[i].polc?.trim() == b) {
-                                        itemLocationList[i].mennyiseg =
-                                            (itemLocationList[i].mennyiseg.toString()
-                                                .toDouble() - a).toString()
-                                    }
-                                }
-                                //TÖMBBE ÍRÁS
-                                if (tempLocations.size == 0) {
-                                    tempLocations.add(
-                                        PolcLocation(
-                                            b,
-                                            a.toString()
-                                        )
-                                    )
-                                } else {
-                                    for (i in 0 until tempLocations.size) {
-                                        if (tempLocations[i].polc == b) {
-                                            tempLocations[i].mennyiseg =
-                                                (tempLocations[i].mennyiseg.toString()
-                                                    .toDouble() + a).toString()
-                                            osszeadva = true
-                                        }
-                                    }
-                                    if (!osszeadva) {
-                                        tempLocations.add(
-                                            PolcLocation(
-                                                b,
-                                                a.toString()
-                                            )
-                                        )
-                                    }
-                                }
-                                // megnézni, hogy kész e az igény
-                                if (igenyeltMennyiseg <= 0.0) {
-                                    CoroutineScope(Main).launch {
-                                        setProgressBarOn()
-                                    }
-                                    isUpdated = false
-                                    CoroutineScope(IO).launch {
-                                        async {
-                                            Log.d(
-                                                "IOTHREAD",
-                                                "onCreateView: ${Thread.currentThread().name}"
-                                            )
-                                            for (i in 0 until tempLocations.size) {
-                                                isSent = false
-                                                xmlData.sendXmlData(
-                                                    cikk,
-                                                    tempLocations[i].polc,
-                                                    tempLocations[i].mennyiseg?.toDouble(),
-                                                    "02",
-                                                    "21",
-                                                    sz0x
-                                                )
-                                            }
-                                        }.await()
-                                        if (isSent) {
-                                            try {
-                                                mainActivity!!.checkIfContainerIsDone(d, c, "02", b)
-                                                mainActivity!!.updateItemStatus(c)
-                                                mainActivity!!.updateItemAtvevo(c)
-                                                mainActivity!!.checkIfContainerIsDone(d, c, "02", b)
-                                            } catch (e: Exception) {
-                                                CoroutineScope(Main).launch {
-                                                    mainActivity!!.setAlert("isSent után\n $e")
-                                                }
-                                            }
-                                            Log.d(
-                                                "IOTHREAD",
-                                                "onCreateView: ${Thread.currentThread().name}"
-                                            )
-                                            //mainActivity!!.loadMenuFragment(true)
-                                            try {
-                                                mainActivity?.igenyKontenerKiszedesCikkKiszedes =
-                                                    null
-                                                mainActivity!!.loadKoztes()
-                                                mainActivity!!.checkIfContainerStatus(
-                                                    k
-                                                )
-                                            } catch (e: Exception) {
-                                                Log.d(TAG, "onCreateView: $e")
-                                            }
-
-                                        } else {
-                                            //kitörölni az utolsó tranzakciót
-                                            sql.deleteKontenerRaktarTetel(c)
-                                            CoroutineScope(Main).launch {
-                                                setProgressBarOff()
-                                                mainActivity!!.setAlert("Hiba volt az XML feltöltésnél")
-                                            }
-                                            mainActivity?.igenyKontenerKiszedesCikkKiszedes = null
-                                            mainActivity!!.loadKoztes()
-                                            mainActivity!!.checkIfContainerStatus(
-                                                k
-                                            )
-                                        }
-                                        Log.d(TAG, "onCreateView: LEFUTOTT")
-                                    }
-
-                                } else {
-                                    Log.d(TAG, "onCreateView: Frissíteni a táblákat")
-                                    CoroutineScope(IO).launch {
-                                        mainActivity!!.checkIfContainerIsDone(d, c, "02", b)
-                                    }
-                                }
-                                locationRecycler?.adapter?.notifyDataSetChanged()
-                                /*for (i in 0 until tempLocations.size) {
-                                Log.d(
-                                    TAG,
-                                    "NEM ${tempLocations[i].polc} + ${tempLocations[i].mennyiseg}"
+                    )*/
+                } else if (mennyiseg?.text?.trim().toString().toDouble() == igenyeltMennyiseg) {
+                    sendLogic()
+                    mennyiseg?.setText("")
+                    mennyiseg?.isFocusable = false
+                    mennyiseg?.isFocusableInTouchMode = false
+                    polc?.isFocusable = true
+                    polc?.isFocusableInTouchMode = true
+                    polc?.setText("")
+                    polc?.requestFocus()
+                } else if ((mennyiseg?.text?.trim().toString().toDouble() < igenyeltMennyiseg) && (getPolcValue(polc!!.text.trim().toString()) >mennyiseg?.text?.trim().toString().toDouble())) {
+                    val builder = AlertDialog.Builder(myView!!.context)
+                    builder.setTitle("Kevesebb van a polcon?")
+                    builder.setMessage("Azért nem vetted ki az egészet, mert nincs ennyi a polcon?")
+                    builder.setPositiveButton("Igen") { _, _ ->
+                        CoroutineScope(IO).launch {
+                            val a = getName(MainActivity.dolgKod)
+                            if (a != "") {
+                                email.sendEmail(
+                                    "kutyu@fusetech.hu",
+                                    "attila.balind@fusetech.hu",
+                                    "Készletkorrekció",
+                                    "A(z) ${polc!!.text} polcon kevesebb mennyiség található. A Scala szerint ${
+                                        getPolcValue(polc!!.text.trim().toString())
+                                    } ${unit!!.text.trim()} volt rajta\nValójában ${
+                                        mennyiseg?.text?.trim().toString().toDouble()
+                                    }${unit!!.text.trim()} tudtam levenni\nAdatok:\nCikkszám: ${cikkEdit!!.text}\n${meg1!!.text}\n${meg2!!.text}\n${intrem!!.text}\nKüldte: $a"
                                 )
-                            }*/
+
+                            }
+                            sendLogic()
+                            CoroutineScope(Main).launch {
+                                mennyiseg?.setText("")
+                                mennyiseg?.isFocusable = false
+                                mennyiseg?.isFocusableInTouchMode = false
+                                polc?.isFocusable = true
+                                polc?.isFocusableInTouchMode = true
+                                polc?.setText("")
+                                polc?.requestFocus()
                             }
                         }
                     }
+                    builder.setNegativeButton("Nem") { _, _ ->
+                        sendLogic()
+                        mennyiseg?.setText("")
+                        mennyiseg?.isFocusable = false
+                        mennyiseg?.isFocusableInTouchMode = false
+                        polc?.isFocusable = true
+                        polc?.isFocusableInTouchMode = true
+                        polc?.setText("")
+                        polc?.requestFocus()
+                    }
+                    builder.create()
+                    builder.show()
+                }else{
+                    sendLogic()
+                    mennyiseg?.setText("")
+                    mennyiseg?.isFocusable = false
+                    mennyiseg?.isFocusableInTouchMode = false
+                    polc?.isFocusable = true
+                    polc?.isFocusableInTouchMode = true
+                    polc?.setText("")
+                    polc?.requestFocus()
                 }
-                mennyiseg?.setText("")
-                mennyiseg?.isFocusable = false
-                mennyiseg?.isFocusableInTouchMode = false
-                polc?.isFocusable = true
-                polc?.isFocusableInTouchMode = true
-                polc?.setText("")
-                polc?.requestFocus()
             }
         }
 
@@ -601,6 +519,145 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                 mainActivity!!.checkIfContainerStatus(
                     kontenerIDKiszedes.text.trim().toString()
                 )
+            }
+        }
+    }
+
+    private fun sendLogic() {
+        var osszeadva = false
+        val a = mennyiseg?.text?.trim().toString().toDouble()
+        val b = polc!!.text.trim().toString()
+        val c = cikkNumber!!.text.trim().toString()
+        val cikk = cikkEdit!!.text.trim().toString()
+        val d = kontenerNumber!!.text.trim().toString()
+        val k = kontenerIDKiszedes.text.trim().toString()
+        CoroutineScope(IO).launch {
+            async {
+                mainActivity!!.insertDataToRaktarTetel(
+                    c,
+                    a,
+                    "02",
+                    b
+                )
+            }.await()
+            if (isSaved) {
+                CoroutineScope(Main).launch {
+                    igenyeltMennyiseg -= a
+                    igeny!!.setText(igenyeltMennyiseg.toString())
+                    for (i in 0 until itemLocationList.size) {
+                        if (itemLocationList[i].polc?.trim() == b) {
+                            itemLocationList[i].mennyiseg =
+                                (itemLocationList[i].mennyiseg.toString()
+                                    .toDouble() - a).toString()
+                        }
+                    }
+                    //TÖMBBE ÍRÁS
+                    if (tempLocations.size == 0) {
+                        tempLocations.add(
+                            PolcLocation(
+                                b,
+                                a.toString()
+                            )
+                        )
+                    } else {
+                        for (i in 0 until tempLocations.size) {
+                            if (tempLocations[i].polc == b) {
+                                tempLocations[i].mennyiseg =
+                                    (tempLocations[i].mennyiseg.toString()
+                                        .toDouble() + a).toString()
+                                osszeadva = true
+                            }
+                        }
+                        if (!osszeadva) {
+                            tempLocations.add(
+                                PolcLocation(
+                                    b,
+                                    a.toString()
+                                )
+                            )
+                        }
+                    }
+                    // megnézni, hogy kész e az igény
+                    if (igenyeltMennyiseg <= 0.0) {
+                        CoroutineScope(Main).launch {
+                            setProgressBarOn()
+                        }
+                        isUpdated = false
+                        CoroutineScope(IO).launch {
+                            async {
+                                Log.d(
+                                    "IOTHREAD",
+                                    "onCreateView: ${Thread.currentThread().name}"
+                                )
+                                for (i in 0 until tempLocations.size) {
+                                    isSent = false
+                                    xmlData.sendXmlData(
+                                        cikk,
+                                        tempLocations[i].polc,
+                                        tempLocations[i].mennyiseg?.toDouble(),
+                                        "02",
+                                        "21",
+                                        sz0x
+                                    )
+                                }
+                            }.await()
+                            if (isSent) {
+                                try {
+                                    mainActivity!!.checkIfContainerIsDone(d, c, "02", b)
+                                    mainActivity!!.updateItemStatus(c)
+                                    mainActivity!!.updateItemAtvevo(c)
+                                    mainActivity!!.checkIfContainerIsDone(d, c, "02", b)
+                                } catch (e: Exception) {
+                                    CoroutineScope(Main).launch {
+                                        mainActivity!!.setAlert("isSent után\n $e")
+                                    }
+                                }
+                                Log.d(
+                                    "IOTHREAD",
+                                    "onCreateView: ${Thread.currentThread().name}"
+                                )
+                                //mainActivity!!.loadMenuFragment(true)
+                                try {
+                                    mainActivity?.igenyKontenerKiszedesCikkKiszedes =
+                                        null
+                                    mainActivity!!.loadKoztes()
+                                    mainActivity!!.checkIfContainerStatus(
+                                        k
+                                    )
+                                } catch (e: Exception) {
+                                    Log.d(TAG, "onCreateView: $e")
+                                }
+
+                            } else {
+                                //kitörölni az utolsó tranzakciót
+                                sql.deleteKontenerRaktarTetel(c)
+                                CoroutineScope(Main).launch {
+                                    setProgressBarOff()
+                                    mainActivity!!.setAlert("Hiba volt az XML feltöltésnél")
+                                }
+                                mainActivity?.igenyKontenerKiszedesCikkKiszedes = null
+                                mainActivity!!.loadKoztes()
+                                mainActivity!!.checkIfContainerStatus(
+                                    k
+                                )
+                            }
+                            Log.d(TAG, "onCreateView: LEFUTOTT")
+                        }
+
+                    } else {
+                        Log.d(TAG, "onCreateView: Frissíteni a táblákat")
+                        CoroutineScope(IO).launch {
+                            mainActivity!!.checkIfContainerIsDone(d, c, "02", b)
+                        }
+                    }
+                    locationRecycler?.adapter?.notifyDataSetChanged()
+                    /*for (i in 0 until tempLocations.size) {
+                    Log.d(
+                        TAG,
+                        "NEM ${tempLocations[i].polc} + ${tempLocations[i].mennyiseg}"
+                    )
+                }*/
+                }
             }
         }
     }

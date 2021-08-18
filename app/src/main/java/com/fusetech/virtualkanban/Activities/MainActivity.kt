@@ -181,8 +181,8 @@ class MainActivity : AppCompatActivity(),
         var endPoint = """"""
         var logPath = ""
         var timeOut = 0L
-        var szallitoJarmu: ArrayList<String> = ArrayList()
-        var ellenorzoKod: ArrayList<String> = ArrayList()
+        //var szallitoJarmu: ArrayList<String> = ArrayList()
+       // var ellenorzoKod: ArrayList<String> = ArrayList()
         var szallitoMap: HashMap<String,String> = HashMap()
         var dolgKod: String = ""// vissza ide
         var sz0x: String = ""
