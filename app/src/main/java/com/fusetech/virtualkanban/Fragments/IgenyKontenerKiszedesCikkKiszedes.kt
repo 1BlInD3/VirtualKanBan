@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.fragments
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
@@ -62,7 +63,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     var isSaved = false
     var isUpdated = false
     private val sql = SQL(this)
-    val email = Email()
+    private val email = Email()
 
     interface SendXmlData {
         fun sendXmlData(
@@ -87,6 +88,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -137,7 +139,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             val builder = AlertDialog.Builder(myView!!.context)
             builder.setTitle("Figyelem")
                 .setMessage("Biztos le akarod így zárni?")
-            builder.setPositiveButton("Igen") { dialog, which ->
+            builder.setPositiveButton("Igen") { _, _ ->
                 if (polc!!.text.trim().toString().isNotEmpty() && (mennyiseg?.text?.trim()
                         .toString()
                         .isEmpty() || mennyiseg?.text?.trim()
@@ -172,7 +174,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                 }
                 Log.d(TAG, "onCreateView: Megnyomtam az IGEN gombot")
             }
-            builder.setNegativeButton("Nem") { dialog, which ->
+            builder.setNegativeButton("Nem") { _, _ ->
                 Log.d(TAG, "onCreateView: Megnyomtam a NEM gombot")
             }
             builder.create()
@@ -353,7 +355,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                 val builder = AlertDialog.Builder(myView?.context)
                 builder.setTitle("Üres polc?")
                     .setMessage("A polc valóban üres?")
-                    .setPositiveButton("Igen") { dialog, which ->
+                    .setPositiveButton("Igen") { _, _ ->
                         CoroutineScope(IO).launch {
                             val a = getName(MainActivity.dolgKod)
                             if (a != "") {
@@ -369,9 +371,12 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                 )
 
                             }
+                            CoroutineScope(Main).launch {
+                                removeFromList(polc!!.text.trim().toString())
+                            }
                         }
                     }
-                    .setNegativeButton("Nem") { dialog, which ->
+                    .setNegativeButton("Nem") { _, _ ->
 
                     }
                 builder.create()
@@ -434,6 +439,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         mainActivity?.loadLoginFragment()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
         tempLocations.clear()
@@ -559,9 +565,8 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
 
     private fun getName(code: String): String {
         var name = ""
-        val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
-        connection = DriverManager.getConnection(MainActivity.url)
+        val connection: Connection = DriverManager.getConnection(MainActivity.url)
         val statement =
             connection.prepareStatement(MainActivity.res.getString(R.string.nev))
         statement.setString(1, code)
@@ -572,5 +577,20 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             name = resultSet.getString("TextDescription")
         }
         return name
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    private fun removeFromList(bin: String){
+        for(i in 0 until itemLocationList.size){
+            if(bin.trim()==itemLocationList[i].polc?.trim()){
+                itemLocationList.remove(itemLocationList[i])
+            }
+        }
+        locationRecycler?.adapter?.notifyDataSetChanged()
+        polc?.setText("")
+        polc?.isFocusable = true
+        polc?.isFocusableInTouchMode = true
+        polc?.requestFocus()
+        mennyiseg?.isFocusable = false
+        mennyiseg?.isFocusableInTouchMode = false
     }
 }
