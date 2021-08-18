@@ -183,6 +183,7 @@ class MainActivity : AppCompatActivity(),
         var kivalasztottSzallitoJarmu = ""
         var kivalasztottSzallitoJarmuEllenorzo = ""
         var dolgKod: String = ""// vissza ide
+        var sz0x: String = ""
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

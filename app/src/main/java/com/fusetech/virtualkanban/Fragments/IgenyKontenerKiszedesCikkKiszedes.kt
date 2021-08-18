@@ -145,25 +145,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                         .isEmpty() || mennyiseg?.text?.trim()
                         .toString() == "0" || mennyiseg?.text?.trim().toString() == "0.0")
                 ) {
-                    CoroutineScope(IO).launch {
-                        async {
-                            mainActivity!!.updateItemStatus(cikkNumber!!.text.trim().toString())
-                        }.await()
-                        if (isUpdated) {
-                            mainActivity!!.updateItemAtvevo(cikkNumber!!.text.trim().toString())
-                            mainActivity!!.checkIfContainerIsDone(
-                                kontenerNumber!!.text.trim().toString(),
-                                cikkNumber!!.text.trim().toString(),
-                                "02",
-                                polc!!.text.trim().toString()
-                            )
-                            mainActivity?.igenyKontenerKiszedesCikkKiszedes = null
-                            mainActivity!!.loadKoztes()
-                            mainActivity!!.checkIfContainerStatus(
-                                kontenerIDKiszedes.text.trim().toString()
-                            )
-                        }
-                    }
+                    lezaras()
                 } else {
                     mainActivity!!.setAlert("Nincs polchely, vagy van mennyiség beírva, így nem zárhatod le!")
                     /*Toast.makeText(
@@ -583,14 +565,40 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         for(i in 0 until itemLocationList.size){
             if(bin.trim()==itemLocationList[i].polc?.trim()){
                 itemLocationList.remove(itemLocationList[i])
+                break
             }
         }
         locationRecycler?.adapter?.notifyDataSetChanged()
-        polc?.setText("")
-        polc?.isFocusable = true
-        polc?.isFocusableInTouchMode = true
-        polc?.requestFocus()
-        mennyiseg?.isFocusable = false
-        mennyiseg?.isFocusableInTouchMode = false
+
+        if(itemLocationList.size < 1){
+            lezaras()
+        }else{
+            polc?.setText("")
+            polc?.isFocusable = true
+            polc?.isFocusableInTouchMode = true
+            polc?.requestFocus()
+            mennyiseg?.isFocusable = false
+        }
+    }
+    private fun lezaras(){
+        CoroutineScope(IO).launch {
+            async {
+                mainActivity!!.updateItemStatus(cikkNumber!!.text.trim().toString())
+            }.await()
+            if (isUpdated) {
+                mainActivity!!.updateItemAtvevo(cikkNumber!!.text.trim().toString())
+                mainActivity!!.checkIfContainerIsDone(
+                    kontenerNumber!!.text.trim().toString(),
+                    cikkNumber!!.text.trim().toString(),
+                    "02",
+                    polc!!.text.trim().toString()
+                )
+                mainActivity?.igenyKontenerKiszedesCikkKiszedes = null
+                mainActivity!!.loadKoztes()
+                mainActivity!!.checkIfContainerStatus(
+                    kontenerIDKiszedes.text.trim().toString()
+                )
+            }
+        }
     }
 }

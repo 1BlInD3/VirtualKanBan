@@ -1161,6 +1161,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     context.igenyKiszedesFragment?.destroy()
                 }
             } else {
+               // MainActivity.sz0x = resultSet.getString("SzallitoJarmu")
                 val statement2 =
                     connection.prepareStatement(res.getString(R.string.atvevoBeiras))
                 statement2.setString(1, dolgKod)
