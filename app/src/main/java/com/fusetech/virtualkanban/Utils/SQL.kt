@@ -1608,7 +1608,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                         connection.prepareStatement(res.getString(R.string.kontenerKiszedve))
                     val myDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
                     state.setString(1, myDate)
-                    state.setString(2, context.selectedContainer)
+                    state.setInt(2,3) //5 hogy ne látszódjon kint a raktárba
+                    state.setString(3, context.selectedContainer)
                     state.executeUpdate()
                     context.igenyKontenerKiszedes()
                     CoroutineScope(Dispatchers.Main).launch {
