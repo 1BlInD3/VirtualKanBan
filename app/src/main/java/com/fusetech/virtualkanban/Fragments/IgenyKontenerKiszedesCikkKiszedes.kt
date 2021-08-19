@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.activities.MainActivity
@@ -52,8 +53,11 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     private var progress: ProgressBar? = null
     private var mainActivity: MainActivity? = null
     private var kontenerNumber: TextView? = null
+    private var szalagCim: TextView? = null
     private var cikkNumber: TextView? = null
     private var bejelentes: ImageView? = null
+    private var background: ConstraintLayout? = null
+    private var appHeader: ConstraintLayout? = null
     private var igenyeltMennyiseg: Double = 0.0
     private var igenyeltMennyisegAmiNemValtozik: Double = 0.0
     private var locationRecycler: RecyclerView? = null
@@ -122,7 +126,10 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         kontenerNumber = myView!!.kontenerIDKiszedes
         cikkNumber = myView!!.cikkIDKiszedes
         bejelentes = myView!!.bejelentesBtn
+        szalagCim = myView!!.textView16
         bejelentes?.visibility = View.GONE
+        background = myView!!.backGroundConstrait
+        appHeader = myView!!.constraintLayout
         setProgressBarOff()
         cikkEdit!!.isFocusable = false
         cikkEdit!!.isFocusableInTouchMode = false
@@ -179,9 +186,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                         polc!!.text.trim().toString()
                     )
                 ) {
-                    if(bejelentes?.visibility == View.VISIBLE){
+                    if (bejelentes?.visibility == View.VISIBLE) {
                         mainActivity?.setAlert("A jelentéshez nyomd meg hosszan a megafon ikont!")
-                    }else{
+                    } else {
                         mainActivity?.setAlert("Túl sok ennyit nem vehetsz ki erről a polcról")
                     }
                     /*email.sendEmail(
@@ -212,28 +219,34 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                         CoroutineScope(IO).launch {
                             val a = getName(MainActivity.dolgKod)
                             if (a != "") {
-                                email.sendEmail(
-                                    "kutyu@fusetech.hu",
-                                    "attila.balind@fusetech.hu",
-                                    "Készletkorrekció",
-                                    "A(z) ${polc!!.text} polcon kevesebb mennyiség található. A Scala szerint ${
-                                        getPolcValue(polc!!.text.trim().toString())
-                                    } ${unit!!.text.trim()} volt rajta\nValójában ${
-                                        mennyiseg?.text?.trim().toString().toDouble()
-                                    }${unit!!.text.trim()} tudtam levenni\nAdatok:\nCikkszám: ${cikkEdit!!.text}\n${meg1!!.text}\n${meg2!!.text}\n${intrem!!.text}\nKüldte: $a"
-                                )
+                                try{
+                                    email.sendEmail(
+                                        "kutyu@fusetech.hu",
+                                        "attila.balind@fusetech.hu",
+                                        "Készletkorrekció",
+                                        "A(z) ${polc!!.text} polcon kevesebb mennyiség található. A Scala szerint ${
+                                            getPolcValue(polc!!.text.trim().toString())
+                                        } ${unit!!.text.trim()} volt rajta\nValójában ${
+                                            mennyiseg?.text?.trim().toString().toDouble()
+                                        }${unit!!.text.trim()} tudtam levenni\nAdatok:\nCikkszám: ${cikkEdit!!.text}\n${meg1!!.text}\n${meg2!!.text}\n${intrem!!.text}\nKüldte: $a"
+                                    )
+                                    sendLogic()
+                                    CoroutineScope(Main).launch {
+                                        mennyiseg?.setText("")
+                                        mennyiseg?.isFocusable = false
+                                        mennyiseg?.isFocusableInTouchMode = false
+                                        polc?.isFocusable = true
+                                        polc?.isFocusableInTouchMode = true
+                                        polc?.setText("")
+                                        polc?.requestFocus()
+                                        bejelentes?.visibility = View.GONE
+                                    }
+                                }catch (e: Exception){
+                                    mainActivity?.setAlert("HIánynál fellépett a probléma\n $e")
+                                }
 
-                            }
-                            sendLogic()
-                            CoroutineScope(Main).launch {
-                                mennyiseg?.setText("")
-                                mennyiseg?.isFocusable = false
-                                mennyiseg?.isFocusableInTouchMode = false
-                                polc?.isFocusable = true
-                                polc?.isFocusableInTouchMode = true
-                                polc?.setText("")
-                                polc?.requestFocus()
-                                bejelentes?.visibility = View.GONE
+                            }else{
+                                mainActivity?.setAlert("Nem sikerült a nevet megszereezni")
                             }
                         }
                     }
@@ -250,6 +263,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     }
                     builder.create()
                     builder.show()
+
                 } else {
                     sendLogic()
                     mennyiseg?.setText("")
@@ -304,6 +318,55 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
              }
              true
          }*/
+        bejelentes?.setOnLongClickListener {
+            if (mennyiseg?.text?.trim().toString().isNotEmpty() && mennyiseg?.text?.trim()
+                    .toString().toDouble() > 0
+            ) {
+                CoroutineScope(IO).launch {
+                    try{
+                        val a = getName(MainActivity.dolgKod)
+                        if( a!= ""){
+                            email.sendEmail(
+                                "kutyu@fusetech.hu",
+                                "attila.balind@fusetech.hu",
+                                "Készletkorrekció",
+                                "A(z) ${polc!!.text} polcon több mennyiség található. A Scala szerint ${
+                                    getPolcValue(polc!!.text.trim().toString())
+                                } ${unit!!.text.trim()} volt rajta.\nValójában ${
+                                    mennyiseg?.text?.trim().toString().toDouble()
+                                }${unit!!.text.trim()} volt rajta még\nAdatok:\nCikkszám: ${cikkEdit!!.text}\n${meg1!!.text}\n${meg2!!.text}\n${intrem!!.text}\nKüldte: $a"
+                            )
+                            CoroutineScope(Main).launch {
+                                background?.setBackgroundColor(resources.getColor(R.color.pocakszin2))
+                                appHeader?.setBackgroundColor(resources.getColor(R.color.pocakszin4))
+                                szalagCim?.text = resources.getString(R.string.ikk)
+                                bejelentes?.visibility = View.GONE
+                                mennyiseg?.isFocusable = false
+                                mennyiseg?.isFocusableInTouchMode = false
+                                polc?.setText("")
+                                polc?.requestFocus()
+                                mennyiseg?.setText("")
+                                mainActivity?.setAlert("E-mail sikeresen elküldve!")
+                            }
+                        }else{
+                            CoroutineScope(Main).launch {
+                                mainActivity?.setAlert("Nem lehet a nevet a többletnél megszerezni!")
+                            }
+
+                        }
+                    }catch (e: Exception){
+                        CoroutineScope(Main).launch {
+                            mainActivity?.setAlert("Hiba történt a többlet rendezésénél\n $e")
+                        }
+
+                    }
+                }
+
+            } else {
+                mainActivity?.setAlert("Nem lehet a mennyiség üres!")
+            }
+            true
+        }
 
         return myView
     }
@@ -416,8 +479,14 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     mennyiseg?.isFocusableInTouchMode = true
                     mennyiseg?.requestFocus()
                     maxMennyiseg = itemLocationList[i].mennyiseg?.trim().toString().toDouble()
-                    if(itemLocationList[i].mennyiseg?.trim().toString().toDouble() == 0.0 && bejelentes?.visibility == View.GONE){
+                    if (itemLocationList[i].mennyiseg?.trim().toString()
+                            .toDouble() == 0.0 && bejelentes?.visibility == View.GONE
+                    ) {
                         bejelentes?.visibility = View.VISIBLE
+                        appHeader?.setBackgroundColor(resources.getColor(R.color.darkRed))
+                        background?.setBackgroundColor(resources.getColor(R.color.mildRed))
+                        szalagCim?.text = resources.getString(R.string.bejelentes)
+
                     }
                 }
             }
@@ -542,6 +611,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun sendLogic() {
         var osszeadva = false
         val a = mennyiseg?.text?.trim().toString().toDouble()

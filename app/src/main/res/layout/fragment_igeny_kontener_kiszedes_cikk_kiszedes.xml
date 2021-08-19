@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/backGroundConstrait"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.IgenyKontenerKiszedesCikkKiszedes"
-    android:background="@color/pocakszin2">
+    android:background="@color/pocakszin2"
+    tools:context=".fragments.IgenyKontenerKiszedesCikkKiszedes">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -60,8 +61,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="megj1"
-        android:textSize="16sp"
         android:textColor="@android:color/black"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/kiszedesCikkEdit" />
@@ -72,8 +73,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="megj2"
-        android:textSize="16sp"
         android:textColor="@android:color/black"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/kiszedesMegj1" />
@@ -84,8 +85,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="intrem"
-        android:textSize="16sp"
         android:textColor="@android:color/black"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/kiszedesMegj2" />

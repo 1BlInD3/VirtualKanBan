@@ -56,4 +56,6 @@
     <string name="emptyBins"> SELECT Bin.WarehouseID,Bin.BinNumber,Bin.BinDescript1,SC33.BinNumber FROM ScaCompDB.dbo.VF_SC360300_StockBinNo as Bin left outer join ScaCompDB.dbo.VF_SC330300_StockBatch_GroupBin as SC33 on Bin.WarehouseID=SC33.WarehouseID and Bin.BinNumber=SC33.BinNumber where Bin.WarehouseID=\'02\' and ISNULL(SC33.BinNumber,\'0\')=\'0\' order by Bin.BinNumber</string>
     <string name="kutyuLogin">INSERT INTO [leltar].[dbo].[kutyu_login] (Kod,MacAddress,Date) VALUES(?,?,CURRENT_TIMESTAMP)</string>
     <string name="tovabb">Tovább</string>
+    <string name="bejelentes">Bejelentő mód</string>
+    <string name="ikk">4. Igény konténer kiszedése</string>
 </resources>
