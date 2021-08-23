@@ -1021,8 +1021,8 @@ class MainActivity : AppCompatActivity(),
         sql.insertDataToRaktarTetelSql(cikk, mennyiseg, raktarKod, polc, this@MainActivity)
     }
 
-    fun updateItemStatus(itemId: String) {
-        sql.updtaeItemStatusSql(itemId, this@MainActivity)
+    fun updateItemStatus(itemId: String, status: Int) {
+        sql.updtaeItemStatusSql(itemId, this@MainActivity,status)
     }
 
     fun updateItemAtvevo(itemId: String) {

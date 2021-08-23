@@ -1,6 +1,7 @@
 package com.fusetech.virtualkanban.utils
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -1447,11 +1448,28 @@ class SQL(private val sqlMessage: SQLAlert) {
                     statement2.setString(1, cikk)
                     val resultSet2 = statement2.executeQuery()
                     if (!resultSet2.next()) {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            context.setAlert("Nincs készleten")
+                        CoroutineScope(Dispatchers.Main).launch { //ide kell írni hogy ha nincs a készleten zárja le nullával
+                            val builder = AlertDialog.Builder(context)
+                            builder.setTitle("Nincs készleten")
+                            builder.setMessage("A tétel nincs készleten, kiütöd nullára?")
+                            builder.setPositiveButton("Igen"){_,_ ->
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    context.checkIfContainerIsDone(kontnerNumber.toString(),id.toString(),"02","")
+                                    context.updateItemStatus(id.toString(),3)
+                                    context.updateItemAtvevo(id.toString())
+                                    context.checkIfContainerIsDone(kontnerNumber.toString(),id.toString(),"02","")
+                                }
+                            }
+                            builder.setNegativeButton("Nem"){_,_ ->
+
+                            }
+                            builder.create()
+                            builder.show()
+                            //context.setAlert("Nincs készleten")
                             progress.visibility = View.GONE
                         }
                     } else {
+                        context.igenyKontenerKiszedesCikkKiszedes = IgenyKontenerKiszedesCikkKiszedes()
                         val myList: ArrayList<PolcLocation> = ArrayList()
                         do {
                             val polc = resultSet2.getString("BinNumber")
@@ -1481,6 +1499,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         progress.visibility = View.GONE
                     }
                 } else {
+                    context.igenyKontenerKiszedesCikkKiszedes = IgenyKontenerKiszedesCikkKiszedes()
                     //HA VAN AZ ÁTMENETI ADATTÁBLÁBA ÉRTÉK
                     var a = 0.0
                     do {
@@ -1499,14 +1518,29 @@ class SQL(private val sqlMessage: SQLAlert) {
                     val resultSet2 = statement2.executeQuery()
                     if (!resultSet2.next()) {
                         CoroutineScope(Dispatchers.Main).launch {
-                            context.setAlert("Nincs készleten")
+                            CoroutineScope(Dispatchers.IO).launch {
+                                val builder = AlertDialog.Builder(context)
+                                builder.setTitle("Nincs készleten")
+                                builder.setMessage("A tétel nincs készleten, kiütöd nullára?")
+                                builder.setPositiveButton("Igen"){_,_ ->
+                                    context.checkIfContainerIsDone(kontnerNumber.toString(),id.toString(),"02","")
+                                    context.updateItemStatus(id.toString(),3)
+                                    context.updateItemAtvevo(id.toString())
+                                    context.checkIfContainerIsDone(kontnerNumber.toString(),id.toString(),"02","")
+                                }
+                                builder.setNegativeButton("Nem"){_,_ ->
+
+                                }
+                                builder.create()
+                                builder.show()
+                            } // ide kell írni hogy zárja le nullával automatikusan
                             progress.visibility = View.GONE
                         }
                     } else {
                         val myList: ArrayList<PolcLocation> = ArrayList()
                         do {
                             val polc = resultSet2.getString("BinNumber")
-                            val mennyiseg = resultSet2.getString("BalanceQty")
+                            val mennyiseg = resultSet2.getDouble("BalanceQty").toString()
                             myList.add(PolcLocation(polc, mennyiseg))
                         } while (resultSet2.next())
                         val bundle = Bundle()
@@ -1712,7 +1746,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         }
     }
 
-    fun updtaeItemStatusSql(itemId: String, context: MainActivity) {
+    fun updtaeItemStatusSql(itemId: String, context: MainActivity, status: Int) {
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -1722,7 +1756,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             connection = DriverManager.getConnection(connectionString)
             val statement =
                 connection.prepareStatement(res.getString(R.string.updateKontenerTeletStatusz))
-            statement.setInt(1, 3)
+            statement.setInt(1, status)
             statement.setString(2, itemId)
             statement.executeUpdate()
             context.igenyKontenerKiszedesCikkKiszedes?.isUpdated = true

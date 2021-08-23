@@ -100,10 +100,10 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
     }
 
     override fun onItemClick(position: Int) {
-        mainAcitivity?.igenyKontenerKiszedesCikkKiszedes = IgenyKontenerKiszedesCikkKiszedes()
+        //mainAcitivity?.igenyKontenerKiszedesCikkKiszedes = IgenyKontenerKiszedesCikkKiszedes() //ezt a kettőt máshol kéne meghívni
         cikkAdatok?.cikkAdatok(cikkItem4[position].cikkszam,cikkItem4[position].megjegyzes1,cikkItem4[position].megjegyzes2,
         cikkItem4[position].intrem,cikkItem4[position].igeny.toString().toDouble(),cikkItem4[position].unit,cikkItem4[position].id,cikkItem4[position].kontener_id)
-        myView = null
+       /* myView = null
         recycler = null
         recycler?.adapter = null
         tovabbBtn = null
@@ -111,8 +111,8 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         kontenerNev = null
         progress = null
         cikkAdatok = null
-        mainAcitivity?.removeFragment("NEGYESCIKKEK")
-        mainAcitivity = null
+       // mainAcitivity?.removeFragment("NEGYESCIKKEK") // meg ezt
+        mainAcitivity = null*/
 
     }
     private fun loadData(){
