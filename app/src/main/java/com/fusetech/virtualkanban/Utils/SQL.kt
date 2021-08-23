@@ -1455,7 +1455,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         val myList: ArrayList<PolcLocation> = ArrayList()
                         do {
                             val polc = resultSet2.getString("BinNumber")
-                            val mennyiseg = resultSet2.getString("BalanceQty")
+                            val mennyiseg = resultSet2.getDouble("BalanceQty").toString()
                             myList.add(PolcLocation(polc, mennyiseg))
                         } while (resultSet2.next())
                         val bundle = Bundle()

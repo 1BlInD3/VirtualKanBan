@@ -174,6 +174,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                 builder.show()
             }else{
                 // akkor ez a cikk 5-ös státuszt kell kapjon
+
             }
 
         }
