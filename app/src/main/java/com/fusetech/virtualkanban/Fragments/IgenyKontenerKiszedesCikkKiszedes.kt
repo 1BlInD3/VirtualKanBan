@@ -159,7 +159,28 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                 builder.create()
                 builder.show()
             }else{
-                closeAnyways(3)
+                CoroutineScope(IO).launch {
+                    val b = polc!!.text.trim().toString()
+                    val c = cikkNumber!!.text.trim().toString()
+                    val d = kontenerNumber!!.text.trim().toString()
+                    val k = kontenerIDKiszedes.text.trim().toString()
+                    nullavalKiut(c)
+                    mainActivity!!.checkIfContainerIsDone(d, c, "02", b)
+                    mainActivity!!.updateItemStatus(c,3)
+                    mainActivity!!.updateItemAtvevo(c)
+                    mainActivity!!.checkIfContainerIsDone(d, c, "02", b)
+                    try {
+                        mainActivity?.igenyKontenerKiszedesCikkKiszedes =
+                            null
+                        mainActivity!!.loadKoztes()
+                        mainActivity!!.checkIfContainerStatus(
+                            k
+                        )
+                    } catch (e: Exception) {
+                        Log.d(TAG, "lezaras nullaval: $e")
+                    }
+                }
+                //closeAnyways(3)
                 // akkor ez a cikk 3-ös státuszt kell kapjon
             }
         }
@@ -499,6 +520,20 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             name = resultSet.getString("TextDescription")
         }
         return name
+    }
+
+    private fun nullavalKiut(id: String){
+        try{
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            val connection = DriverManager.getConnection(MainActivity.connectionString)
+            val statement = connection.prepareStatement(MainActivity.res.getString(R.string.updateMozgatottMennyiseg))
+            statement.setString(1,id)
+            statement.executeUpdate()
+        }catch (e:Exception){
+            CoroutineScope(Main).launch {
+                mainActivity?.setAlert("Itt a probléma\n $e")
+            }
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

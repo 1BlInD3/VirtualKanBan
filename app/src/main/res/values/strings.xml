@@ -58,4 +58,5 @@
     <string name="tovabb">Tovább</string>
     <string name="bejelentes">Bejelentő mód</string>
     <string name="ikk">4. Igény konténer kiszedése</string>
+    <string name="updateMozgatottMennyiseg">UPDATE [leltar].[dbo].[kontener_tetel] SET mozgatott_mennyiseg = 0.0 where id = ? </string>
 </resources>

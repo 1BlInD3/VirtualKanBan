@@ -70,10 +70,10 @@ class SQL(private val sqlMessage: SQLAlert) {
                 Log.d(TAG, "checkRightSql: hülyeséggel lép be")
                 //context.loadMenuFragment(false)
             } else {
-               // val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+                // val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
                 val statement1 = connection.prepareStatement(res.getString(R.string.kutyuLogin))
-                statement1.setString(1,code)
-                statement1.setString(2,context.getMacAddr())
+                statement1.setString(1, code)
+                statement1.setString(2, context.getMacAddr())
                 //statement1.setString(3, currentDateAndTime)
                 statement1.executeUpdate()
                 if (resultSet.getInt("Jog") == 1) {
@@ -583,7 +583,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         }
     }
 
-    fun closeContainerSql(statusz: Int, datum: String, context: MainActivity,kontener: String) {
+    fun closeContainerSql(statusz: Int, datum: String, context: MainActivity, kontener: String) {
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -658,9 +658,9 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                if(context.menuFragment != null){
+                if (context.menuFragment != null) {
                     context.menuFragment?.setMenuProgressOn()
-                }else{
+                } else {
                     progress.visibility = View.VISIBLE
                 }
             }
@@ -672,9 +672,9 @@ class SQL(private val sqlMessage: SQLAlert) {
                 Log.d(TAG, "loadIgenyLezaras: Nincs ilyen konténer")
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nincs lezárni való konténer!!!")
-                    if(context.menuFragment != null){
+                    if (context.menuFragment != null) {
                         context.menuFragment?.setMenuProgressOff()
-                    }else{
+                    } else {
                         progress.visibility = View.GONE
                     }
                 }
@@ -705,9 +705,9 @@ class SQL(private val sqlMessage: SQLAlert) {
                     .replace(R.id.frame_container, context.igenyLezarasFragment!!, "IGENYLEZARAS")
                     .addToBackStack(null).commit()
                 CoroutineScope(Dispatchers.Main).launch {
-                    if(context.menuFragment != null){
+                    if (context.menuFragment != null) {
                         context.menuFragment?.setMenuProgressOff()
-                    }else{
+                    } else {
                         progress.visibility = View.GONE
                     }
                 }
@@ -716,9 +716,9 @@ class SQL(private val sqlMessage: SQLAlert) {
             Log.d(TAG, "loadIgenyLezaras: $e")
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Hálózati probléma! Próbáld újra\n $e")
-                if(context.menuFragment != null){
+                if (context.menuFragment != null) {
                     context.menuFragment?.setMenuProgressOff()
-                }else{
+                } else {
                     progress.visibility = View.GONE
                 }
             }
@@ -847,7 +847,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     bundle.putString("intrem", intrem)
                     context.cikkResultFragment?.arguments = bundle
                     context.supportFragmentManager.beginTransaction()
-                        .replace(R.id.cikk_container, context.cikkResultFragment!!,"CRF").commit()
+                        .replace(R.id.cikk_container, context.cikkResultFragment!!, "CRF").commit()
                 }
             } else {
                 val preparedStatement2: PreparedStatement =
@@ -876,7 +876,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     bundle.putSerializable("polc", context.polcItems)
                     context.polcResultFragment?.arguments = bundle
                     context.supportFragmentManager.beginTransaction()
-                        .replace(R.id.cikk_container, context.polcResultFragment!!,"PRF").commit()
+                        .replace(R.id.cikk_container, context.polcResultFragment!!, "PRF").commit()
                 }
             }
         } catch (e: Exception) {
@@ -911,31 +911,31 @@ class SQL(private val sqlMessage: SQLAlert) {
                     android.Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ) == PackageManager.PERMISSION_GRANTED
             ) {*/
-                context.save.saveFile(
-                    file,
-                    context.xml.createXml(
-                        currentDate,
-                        mennyisege,
-                        cikkszam,
-                        rbol,
-                        polchely,
-                        rba,
-                        polchelyre,
-                        dolgKod
-                    )
+            context.save.saveFile(
+                file,
+                context.xml.createXml(
+                    currentDate,
+                    mennyisege,
+                    cikkszam,
+                    rbol,
+                    polchely,
+                    rba,
+                    polchelyre,
+                    dolgKod
                 )
-                Log.d("IOTHREAD", "sendXmlData: ${Thread.currentThread().name}")
-                try {
-                    context.retro.retrofitGet(file, endPoint)
-                } catch (e: Exception) {
-                    val a = mainUrl
-                    mainUrl = backupURL
-                    context.retro.retrofitGet(file, endPoint)
-                    mainUrl = a
-                }
+            )
+            Log.d("IOTHREAD", "sendXmlData: ${Thread.currentThread().name}")
+            try {
+                context.retro.retrofitGet(file, endPoint)
+            } catch (e: Exception) {
+                val a = mainUrl
+                mainUrl = backupURL
+                context.retro.retrofitGet(file, endPoint)
+                mainUrl = a
+            }
             //}else{
             //    context.setAlert("Nincs elfogadva a permission")
-                //context.requestStoragePermission()
+            //context.requestStoragePermission()
             //}
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
@@ -955,8 +955,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
                     ) == PackageManager.PERMISSION_GRANTED
                 ) {*/
-                    context.save.saveFile(catchFile, "myData")
-                    context.retro.retrofitGet(catchFile, "//10.0.0.11/TeszWeb/bin")
+                context.save.saveFile(catchFile, "myData")
+                context.retro.retrofitGet(catchFile, "//10.0.0.11/TeszWeb/bin")
                 //}
             }
         }
@@ -1072,9 +1072,9 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                if(context.menuFragment != null){
+                if (context.menuFragment != null) {
                     context.menuFragment?.setMenuProgressOn()
-                }else{
+                } else {
                     progress.visibility = View.VISIBLE
                 }
             }
@@ -1084,9 +1084,9 @@ class SQL(private val sqlMessage: SQLAlert) {
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    if(context.menuFragment != null){
+                    if (context.menuFragment != null) {
                         context.menuFragment?.setMenuProgressOff()
-                    }else{
+                    } else {
                         progress.visibility = View.GONE
                     }
                 }
@@ -1122,9 +1122,9 @@ class SQL(private val sqlMessage: SQLAlert) {
                     .replace(R.id.frame_container, context.igenyKiszedesFragment!!, "KISZEDES")
                     .commit()
                 CoroutineScope(Dispatchers.Main).launch {
-                    if(context.menuFragment != null){
+                    if (context.menuFragment != null) {
                         context.menuFragment?.setMenuProgressOff()
-                    }else{
+                    } else {
                         progress.visibility = View.GONE
                     }
                 }
@@ -1132,9 +1132,9 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             Log.d(TAG, "loadIgenyKiszedes: $e")
             CoroutineScope(Dispatchers.Main).launch {
-                if(context.menuFragment != null){
+                if (context.menuFragment != null) {
                     context.menuFragment?.setMenuProgressOff()
-                }else{
+                } else {
                     progress.visibility = View.GONE
                 }
                 context.setAlert("Probléma van :\n $e")
@@ -1142,7 +1142,10 @@ class SQL(private val sqlMessage: SQLAlert) {
         }
     }
 
-    fun checkIfContainerIsOpen(kontener: String, context: MainActivity) {////////////////////////////////////////////////////////////////////////////////////////////////////
+    fun checkIfContainerIsOpen(
+        kontener: String,
+        context: MainActivity
+    ) {////////////////////////////////////////////////////////////////////////////////////////////////////
         val connection: Connection
         context.koztesFragment = null
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -1243,9 +1246,9 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                if(context.menuFragment != null){
+                if (context.menuFragment != null) {
                     context.menuFragment?.setMenuProgressOn()
-                }else{
+                } else {
                     progress.visibility = View.VISIBLE
                 }
             }
@@ -1255,9 +1258,9 @@ class SQL(private val sqlMessage: SQLAlert) {
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    if(context.menuFragment != null){
+                    if (context.menuFragment != null) {
                         context.menuFragment?.setMenuProgressOff()
-                    }else{
+                    } else {
                         progress.visibility = View.GONE
                     }
                 }
@@ -1282,9 +1285,9 @@ class SQL(private val sqlMessage: SQLAlert) {
                     .replace(R.id.frame_container, context.kiszedesreVaroIgenyFragment!!, "VARAS")
                     /*.addToBackStack(null)*/.commit()
                 CoroutineScope(Dispatchers.Main).launch {
-                    if(context.menuFragment != null){
+                    if (context.menuFragment != null) {
                         context.menuFragment?.setMenuProgressOff()
-                    }else{
+                    } else {
                         progress.visibility = View.GONE
                     }
                     context.menuFragment = null
@@ -1294,9 +1297,9 @@ class SQL(private val sqlMessage: SQLAlert) {
             Log.d(TAG, "loadIgenyKiszedes: $e")
             CoroutineScope(Dispatchers.Main).launch {
                 //context.menuFragment?.setMenuProgressOff()
-                if(context.menuFragment != null){
+                if (context.menuFragment != null) {
                     context.menuFragment?.setMenuProgressOff()
-                }else{
+                } else {
                     progress.visibility = View.GONE
                 }
                 context.setAlert("Probléma van :\n $e")
@@ -1451,16 +1454,29 @@ class SQL(private val sqlMessage: SQLAlert) {
                         CoroutineScope(Dispatchers.Main).launch { //ide kell írni hogy ha nincs a készleten zárja le nullával
                             val builder = AlertDialog.Builder(context)
                             builder.setTitle("Nincs készleten")
-                            builder.setMessage("A tétel nincs készleten, kiütöd nullára?")
-                            builder.setPositiveButton("Igen"){_,_ ->
+                            builder.setMessage("Nincs raktárkészleten az adott cikk, ezért ez 0 mennyiséggel lezárásra kerül.\n Folytatja?")
+                            builder.setPositiveButton("Igen") { _, _ ->
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    context.checkIfContainerIsDone(kontnerNumber.toString(),id.toString(),"02","")
-                                    context.updateItemStatus(id.toString(),3)
+                                    context.checkIfContainerIsDone(
+                                        kontnerNumber.toString(),
+                                        id.toString(),
+                                        "02",
+                                        ""
+                                    )
+                                    context.updateItemStatus(id.toString(), 3)
                                     context.updateItemAtvevo(id.toString())
-                                    context.checkIfContainerIsDone(kontnerNumber.toString(),id.toString(),"02","")
+                                    context.checkIfContainerIsDone(
+                                        kontnerNumber.toString(),
+                                        id.toString(),
+                                        "02",
+                                        ""
+                                    )
+                                    context.loadKoztes()
+                                    context.checkIfContainerStatus(kontnerNumber.toString())
+                                    context.removeFragment("NEGYESCIKKEK")
                                 }
                             }
-                            builder.setNegativeButton("Nem"){_,_ ->
+                            builder.setNegativeButton("Nem") { _, _ ->
 
                             }
                             builder.create()
@@ -1469,7 +1485,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                             progress.visibility = View.GONE
                         }
                     } else {
-                        context.igenyKontenerKiszedesCikkKiszedes = IgenyKontenerKiszedesCikkKiszedes()
+                        context.igenyKontenerKiszedesCikkKiszedes =
+                            IgenyKontenerKiszedesCikkKiszedes()
                         val myList: ArrayList<PolcLocation> = ArrayList()
                         do {
                             val polc = resultSet2.getString("BinNumber")
@@ -1521,14 +1538,30 @@ class SQL(private val sqlMessage: SQLAlert) {
                             CoroutineScope(Dispatchers.IO).launch {
                                 val builder = AlertDialog.Builder(context)
                                 builder.setTitle("Nincs készleten")
-                                builder.setMessage("A tétel nincs készleten, kiütöd nullára?")
-                                builder.setPositiveButton("Igen"){_,_ ->
-                                    context.checkIfContainerIsDone(kontnerNumber.toString(),id.toString(),"02","")
-                                    context.updateItemStatus(id.toString(),3)
+                                builder.setMessage(
+                                    "Nincs raktárkészleten az adott cikk, ezért ez 0 mennyiséggel lezárásra kerül.\n" +
+                                            " Folytatja?"
+                                )
+                                builder.setPositiveButton("Igen") { _, _ ->
+                                    context.checkIfContainerIsDone(
+                                        kontnerNumber.toString(),
+                                        id.toString(),
+                                        "02",
+                                        ""
+                                    )
+                                    context.updateItemStatus(id.toString(), 3)
                                     context.updateItemAtvevo(id.toString())
-                                    context.checkIfContainerIsDone(kontnerNumber.toString(),id.toString(),"02","")
+                                    context.checkIfContainerIsDone(
+                                        kontnerNumber.toString(),
+                                        id.toString(),
+                                        "02",
+                                        ""
+                                    )
+                                    context.loadKoztes()
+                                    context.checkIfContainerStatus(kontnerNumber.toString())
+                                    context.removeFragment("NEGYESCIKKEK")
                                 }
-                                builder.setNegativeButton("Nem"){_,_ ->
+                                builder.setNegativeButton("Nem") { _, _ ->
 
                                 }
                                 builder.create()
@@ -1642,7 +1675,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         connection.prepareStatement(res.getString(R.string.kontenerKiszedve))
                     val myDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
                     state.setString(1, myDate)
-                    state.setInt(2,3) //5 hogy ne látszódjon kint a raktárba
+                    state.setInt(2, 3) //5 hogy ne látszódjon kint a raktárba
                     state.setString(3, context.selectedContainer)
                     state.executeUpdate()
                     context.igenyKontenerKiszedes()
@@ -2108,9 +2141,9 @@ class SQL(private val sqlMessage: SQLAlert) {
         try {
             context.tobbletCikkek = TobbletKontenerCikkekFragment()
             CoroutineScope(Dispatchers.Main).launch {
-                if(context.tobbletKontenerKihelyzeseFragment!=null){
+                if (context.tobbletKontenerKihelyzeseFragment != null) {
                     context.tobbletKontenerKihelyzeseFragment?.setProgressBar8On()
-                }else{
+                } else {
                     progress.visibility = View.VISIBLE
                 }
             }
@@ -2130,9 +2163,9 @@ class SQL(private val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nincsenek elemek")
-                    if(context.tobbletKontenerKihelyzeseFragment!=null){
+                    if (context.tobbletKontenerKihelyzeseFragment != null) {
                         context.tobbletKontenerKihelyzeseFragment?.setProgressBar8Off()
-                    }else{
+                    } else {
                         progress.visibility = View.GONE
                     }
                 }
@@ -2170,22 +2203,26 @@ class SQL(private val sqlMessage: SQLAlert) {
                 bundle.putString("KONTENERTOBBLETCIKK", code)
                 context.tobbletCikkek?.arguments = bundle
                 CoroutineScope(Dispatchers.Main).launch {
-                    if(context.tobbletKontenerKihelyzeseFragment!=null){
+                    if (context.tobbletKontenerKihelyzeseFragment != null) {
                         context.tobbletKontenerKihelyzeseFragment?.setProgressBar8Off()
-                    }else{
+                    } else {
                         progress.visibility = View.GONE
                     }
                 }
                 context.supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, context.tobbletCikkek!!, "TOBBLETKIHELYEZESCIKKEK")
+                    .replace(
+                        R.id.frame_container,
+                        context.tobbletCikkek!!,
+                        "TOBBLETKIHELYEZESCIKKEK"
+                    )
                     .commit()
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("8as nem tudta lezárni a konténert és megnyitni a másikat\n$e")
-                if(context.tobbletKontenerKihelyzeseFragment!=null){
+                if (context.tobbletKontenerKihelyzeseFragment != null) {
                     context.tobbletKontenerKihelyzeseFragment?.setProgressBar8Off()
-                }else{
+                } else {
                     progress.visibility = View.GONE
                 }
             }
@@ -2260,7 +2297,11 @@ class SQL(private val sqlMessage: SQLAlert) {
                         context.tobbletCikkek?.nyolcaskettesProgressOff()
                     }
                     context.supportFragmentManager.beginTransaction()
-                        .replace(R.id.frame_container, context.tobbletCikkekPolcra!!, "CIKKEKPOLCRA")
+                        .replace(
+                            R.id.frame_container,
+                            context.tobbletCikkekPolcra!!,
+                            "CIKKEKPOLCRA"
+                        )
                         .commit()
                 }
             } else {
@@ -2397,7 +2438,11 @@ class SQL(private val sqlMessage: SQLAlert) {
                 bundle.putString("KONTENERTOBBLETCIKK", kontener.toString())
                 context.tobbletCikkek?.arguments = bundle
                 context.supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, context.tobbletCikkek!!, "TOBBLETKIHELYEZESCIKKEK")
+                    .replace(
+                        R.id.frame_container,
+                        context.tobbletCikkek!!,
+                        "TOBBLETKIHELYEZESCIKKEK"
+                    )
                     .commit()
             }
         } catch (e: Exception) {
