@@ -33,7 +33,7 @@ class LoginFragment : Fragment() {
         mainActivity  = activity as MainActivity
         mainActivity?.startExitTimer()
         cancelBtn?.setOnClickListener{
-            mainActivity?.loadMenuFragment(false)
+            mainActivity?.finishAndRemoveTask()
         }
         return myView
     }

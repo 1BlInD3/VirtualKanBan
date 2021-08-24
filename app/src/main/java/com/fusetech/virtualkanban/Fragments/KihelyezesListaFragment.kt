@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -98,10 +99,10 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
             mainActivity?.kihelyezes?.progressBarOff()
             kihelyezes?.isEnabled = true
         }
-
         return myView
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun getData() {
         val myItems: ArrayList<KihelyezesKontenerElemek> =
             arguments?.getSerializable("KIHELYEZESLISTA") as ArrayList<KihelyezesKontenerElemek>

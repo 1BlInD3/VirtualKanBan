@@ -181,6 +181,7 @@ class MainActivity : AppCompatActivity(),
         var endPoint = """"""
         var logPath = ""
         var timeOut = 0L
+        var hasRight = false
         //var szallitoJarmu: ArrayList<String> = ArrayList()
        // var ellenorzoKod: ArrayList<String> = ArrayList()
         var szallitoMap: HashMap<String,String> = HashMap()
@@ -1180,19 +1181,19 @@ class MainActivity : AppCompatActivity(),
                 getFragment("PRF") -> { // 9-3
                     removeFragment("PRF")
                     polcResultFragment?.clearLeak()
-                    loadMenuFragment(true)
+                    loadMenuFragment(hasRight)
                 }
                 getFragment("CRF") -> { // 9-2
                     removeFragment("CRF")
                     cikkResultFragment?.clearLeak()
-                    loadMenuFragment(true)
+                    loadMenuFragment(hasRight)
                 }
                 getFragment("LRF") -> { //9-4
                     loadFragment?.clearLeak()
-                    loadMenuFragment(true)
+                    loadMenuFragment(hasRight)
                 }
                 getFragment("CIKK") -> { // 9-1
-                    loadMenuFragment(true)
+                    loadMenuFragment(hasRight)
                 }
                 /*getFragment("TOBBLETOSSZE") -> {
                     loadMenuFragment(true)

@@ -67,21 +67,36 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.setString(1, code)
             val resultSet: ResultSet = statement.executeQuery()
             if (!resultSet.next()) {
-                Log.d(TAG, "checkRightSql: hülyeséggel lép be")
-                //context.loadMenuFragment(false)
+                val statement2 = connection.prepareStatement("SELECT [Key1] FROM [Fusetech].[dbo].[DolgKodok] WHERE Key1 = ?")
+                statement2.setString(1, code)
+                val resultSet2 = statement2.executeQuery()
+                if(!resultSet2.next()){
+                    CoroutineScope(Dispatchers.Main).launch {
+                        context.setAlert("Nincs jogosultságod belépni")
+                        context.loginFragment?.stopSpinning()
+                    }
+                }else{
+                    context.loadMenuFragment(false)
+                    context.loginFragment = null
+                    MainActivity.hasRight = false
+                    val statement1 = connection.prepareStatement(res.getString(R.string.kutyuLogin))
+                    statement1.setString(1, code)
+                    statement1.setString(2, context.getMacAddr())
+                    statement1.executeUpdate()
+                }
             } else {
-                // val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
-                val statement1 = connection.prepareStatement(res.getString(R.string.kutyuLogin))
-                statement1.setString(1, code)
-                statement1.setString(2, context.getMacAddr())
-                //statement1.setString(3, currentDateAndTime)
-                statement1.executeUpdate()
                 if (resultSet.getInt("Jog") == 1) {
                     context.loadMenuFragment(true)
                     context.loginFragment = null
+                    MainActivity.hasRight = true
+                    val statement1 = connection.prepareStatement(res.getString(R.string.kutyuLogin))
+                    statement1.setString(1, code)
+                    statement1.setString(2, context.getMacAddr())
+                    statement1.executeUpdate()
                 } else {
                     context.loadMenuFragment(false)
                     context.loginFragment = null
+                    MainActivity.hasRight = false
                 }
             }
         } catch (e: Exception) {
@@ -1926,7 +1941,6 @@ class SQL(private val sqlMessage: SQLAlert) {
         try {
             val fragment = SzerelohelyListaFragment()
             CoroutineScope(Dispatchers.Main).launch {
-                //context.kihelyezes?.progressBarOn()
                 progress.visibility = View.VISIBLE
             }
             Class.forName("net.sourceforge.jtds.jdbc.Driver")

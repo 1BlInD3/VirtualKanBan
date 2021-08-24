@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -21,7 +22,6 @@ class SzerelohelyListaFragment : Fragment() {
 
     private var recycler : RecyclerView? = null
     private var myView: View? = null
-    //private val myList: ArrayList<SzerelohelyItem> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +39,7 @@ class SzerelohelyListaFragment : Fragment() {
         return myView
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun getData(){
         kihelyezesItems.clear()
         val lista : ArrayList<SzerelohelyItem> = arguments?.getSerializable("KILISTA") as ArrayList<SzerelohelyItem>

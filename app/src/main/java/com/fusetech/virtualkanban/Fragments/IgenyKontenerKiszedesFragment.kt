@@ -51,7 +51,7 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
     }
 
 
-    @SuppressLint("InflateParams")
+    @SuppressLint("InflateParams", "NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -97,6 +97,7 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
             }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onKontenerClick(position: Int) {
         mainActivity?.checkIfContainerStatus(kontenerList[position].kontner_id.toString())
         exit3Btn?.isFocusable = false
