@@ -708,8 +708,14 @@ class MainActivity : AppCompatActivity(),
             }
         } else if (getMenuFragment()) {
             when (keyCode) {
-                7 -> finishAndRemoveTask() //0
-                16 -> loadCikklekerdezesFragment()  //9
+                7 -> {
+                    menuFragment?.kilepesClick()
+                    finishAndRemoveTask()
+                } //0
+                16 -> {
+                    menuFragment?.cikklekerdezesClick()
+                    loadCikklekerdezesFragment()
+                }  //9
             }
         }
         myTimer.start()
