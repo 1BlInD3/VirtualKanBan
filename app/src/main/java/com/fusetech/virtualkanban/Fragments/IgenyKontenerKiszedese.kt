@@ -1,10 +1,13 @@
 package com.fusetech.virtualkanban.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.InputType
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -56,6 +59,8 @@ class IgenyKontenerKiszedese : Fragment() {
         szerelohely = myView!!.szereloText
         szerelohely?.isFocusable = false
         szerelohely?.isFocusableInTouchMode = false
+       /* szallitoText?.isFocusable = false
+        szallitoText?.isFocusableInTouchMode = true*/
         szallitoText?.requestFocus()
         kilep?.setOnClickListener {
             when{
@@ -154,4 +159,12 @@ class IgenyKontenerKiszedese : Fragment() {
         szerelohely?.selectAll()
 
     }
+    fun deleteFocused(){
+        if(szallitoText?.hasFocus()!!){
+            szallitoText?.setText("")
+        }else{
+            szerelohely?.setText("")
+        }
+    }
+
 }

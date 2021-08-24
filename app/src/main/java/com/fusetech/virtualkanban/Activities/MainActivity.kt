@@ -717,6 +717,8 @@ class MainActivity : AppCompatActivity(),
                     loadCikklekerdezesFragment()
                 }  //9
             }
+        }else if (getFragment("KIHELYEZES")){
+            kihelyezes?.deleteFocused()
         }
         myTimer.start()
         return super.onKeyUp(keyCode, event)
