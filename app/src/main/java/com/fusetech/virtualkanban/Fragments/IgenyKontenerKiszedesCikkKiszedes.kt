@@ -138,9 +138,10 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         igeny!!.isFocusableInTouchMode = false
         mennyiseg?.isFocusable = false
         mennyiseg?.isFocusableInTouchMode = false
-        polc?.keyListener = null
+       /*polc?.keyListener = null
         polc?.isFocusable = false
-        polc?.isFocusableInTouchMode = false
+        polc?.isFocusableInTouchMode = false*/
+        polc?.requestFocus()
         //mennyiseg.requestFocus()
         loadData()
         locationRecycler?.adapter?.notifyDataSetChanged()
@@ -778,6 +779,11 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                 )
             }
             Log.d(TAG, "onCreateView: LEFUTOTT")
+        }
+    }
+    fun deleteFocused(){
+        if(polc?.hasFocus()!!){
+            polc?.setText("")
         }
     }
 }
