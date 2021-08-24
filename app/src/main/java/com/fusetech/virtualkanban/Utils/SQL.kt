@@ -1857,7 +1857,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOn()
+                progress.visibility = View.VISIBLE
             }
             connection = DriverManager.getConnection(connectionString)
             val statement =
@@ -1868,12 +1868,12 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.executeUpdate()
             Log.d(TAG, "cikkUpdate: sikeres")
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
+                progress.visibility = View.GONE
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("CikkUpdateHiba $e")
-                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
+                progress.visibility = View.GONE
             }
         }
     }
@@ -1919,7 +1919,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOn()
+                progress.visibility = View.VISIBLE
             }
             connection = DriverManager.getConnection(url)
             val statement = connection.prepareStatement(res.getString(R.string.isPolc))
@@ -1928,18 +1928,18 @@ class SQL(private val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nincs ilyen polc")
-                    context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
+                    progress.visibility = View.GONE
                 }
             } else {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.igenyKontenerKiszedesCikkKiszedes?.setBin(code)
-                    context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
+                    progress.visibility = View.GONE
                 }
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Probléma $e")
-                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
+                progress.visibility = View.GONE
             }
         }
     }

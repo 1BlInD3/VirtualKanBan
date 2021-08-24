@@ -132,7 +132,6 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         bejelentes?.visibility = View.GONE
         background = myView!!.backGroundConstrait
         appHeader = myView!!.constraintLayout
-        setProgressBarOff()
         cikkEdit!!.isFocusable = false
         cikkEdit!!.isFocusableInTouchMode = false
         igeny!!.isFocusable = false
@@ -349,15 +348,6 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             itemLocationList.add(PolcLocation(myList[i].polc, myList[i].mennyiseg))
         }
     }
-
-    fun setProgressBarOff() {
-        progress?.visibility = View.GONE
-    }
-
-    fun setProgressBarOn() {
-        progress?.visibility = View.VISIBLE
-    }
-
     fun performButton() {
         vissza?.performClick()
     }
@@ -544,7 +534,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             return name
 
         }catch (e: Exception){
-            var name = ""
+            val name = ""
             CoroutineScope(Main).launch {
                 MainActivity.progress.visibility = View.GONE
             }
@@ -670,7 +660,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     // megnézni, hogy kész e az igény
                     if (igenyeltMennyiseg <= 0.0) {
                         CoroutineScope(Main).launch {
-                            setProgressBarOn()
+                            MainActivity.progress.visibility = View.VISIBLE
                         }
                         isUpdated = false
                         CoroutineScope(IO).launch {
@@ -722,7 +712,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                 //kitörölni az utolsó tranzakciót
                                 sql.deleteKontenerRaktarTetel(c)
                                 CoroutineScope(Main).launch {
-                                    setProgressBarOff()
+                                    MainActivity.progress.visibility = View.GONE
                                     mainActivity!!.setAlert("Hiba volt az XML feltöltésnél")
                                 }
                                 mainActivity?.igenyKontenerKiszedesCikkKiszedes = null
@@ -804,7 +794,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                 //kitörölni az utolsó tranzakciót
                 sql.deleteKontenerRaktarTetel(c)
                 CoroutineScope(Main).launch {
-                    setProgressBarOff()
+                    MainActivity.progress.visibility = View.GONE
                     mainActivity!!.setAlert("Hiba volt az XML feltöltésnél")
                 }
                 mainActivity?.igenyKontenerKiszedesCikkKiszedes = null

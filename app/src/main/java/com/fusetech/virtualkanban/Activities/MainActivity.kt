@@ -813,7 +813,9 @@ class MainActivity : AppCompatActivity(),
                 //itt kéne beolvasni a 4es opciót
                 loadKiszedesFragment()
                 sql.checkIfContainerIsOpen(kontener, this@MainActivity)
-                progress.visibility = View.GONE
+                CoroutineScope(Main).launch {
+                    progress.visibility = View.GONE
+                }
             }
         } catch (e: Exception) {
             CoroutineScope(Main).launch {

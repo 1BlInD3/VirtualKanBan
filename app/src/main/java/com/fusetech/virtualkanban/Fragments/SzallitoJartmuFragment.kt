@@ -10,6 +10,9 @@ import android.widget.EditText
 import com.fusetech.virtualkanban.activities.MainActivity
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_szallito_jartmu.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 
 
 class SzallitoJartmuFragment : Fragment() {
@@ -39,8 +42,10 @@ class SzallitoJartmuFragment : Fragment() {
     }
 
     fun setJarmu(jarmu: String) {
-        szallitoEdit?.setText(jarmu)
-        szallitoEdit?.isEnabled = false
+        CoroutineScope(Main).launch {
+            szallitoEdit?.setText(jarmu)
+            szallitoEdit?.isEnabled = false
+        }
     }
 
     override fun onDestroyView() {
