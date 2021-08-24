@@ -223,6 +223,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                             val a = getName(MainActivity.dolgKod)
                             if (a != "") {
                                 try {
+                                    CoroutineScope(Main).launch {
+                                        MainActivity.progress.visibility = View.VISIBLE
+                                    }
                                     email.sendEmail(
                                         "kutyu@fusetech.hu",
                                         "attila.balind@fusetech.hu",
@@ -245,6 +248,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                         polc?.requestFocus()
                                         bejelentes?.visibility = View.GONE
                                         mainActivity?.setAlert("E-mail elküldve\n A polc már nincs a listában")
+                                        MainActivity.progress.visibility = View.GONE
                                     }
                                 } catch (e: Exception) {
                                     mainActivity?.setAlert("HIánynál fellépett a probléma\n $e")
@@ -515,19 +519,37 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     }
 
     private fun getName(code: String): String {
-        var name = ""
-        Class.forName("net.sourceforge.jtds.jdbc.Driver")
-        val connection: Connection = DriverManager.getConnection(MainActivity.url)
-        val statement =
-            connection.prepareStatement(MainActivity.res.getString(R.string.nev))
-        statement.setString(1, code)
-        val resultSet = statement.executeQuery()
-        if (!resultSet.next()) {
-            mainActivity?.setAlert("Nem jó kód a névnél")
-        } else {
-            name = resultSet.getString("TextDescription")
+        try{
+            CoroutineScope(Main).launch {
+                MainActivity.progress.visibility = View.VISIBLE
+            }
+            var name = ""
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            val connection: Connection = DriverManager.getConnection(MainActivity.url)
+            val statement =
+                connection.prepareStatement(MainActivity.res.getString(R.string.nev))
+            statement.setString(1, code)
+            val resultSet = statement.executeQuery()
+            if (!resultSet.next()) {
+                mainActivity?.setAlert("Nem jó kód a névnél")
+                CoroutineScope(Main).launch {
+                    MainActivity.progress.visibility = View.GONE
+                }
+            } else {
+                name = resultSet.getString("TextDescription")
+                CoroutineScope(Main).launch {
+                    MainActivity.progress.visibility = View.GONE
+                }
+            }
+            return name
+
+        }catch (e: Exception){
+            var name = ""
+            CoroutineScope(Main).launch {
+                MainActivity.progress.visibility = View.GONE
+            }
+            return name
         }
-        return name
     }
 
     private fun nullavalKiut(id: String){
@@ -597,6 +619,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         val d = kontenerNumber!!.text.trim().toString()
         val k = kontenerIDKiszedes.text.trim().toString()
         CoroutineScope(IO).launch {
+            CoroutineScope(Main).launch {
+                progress?.visibility = View.VISIBLE
+            }
             async {
                 mainActivity!!.insertDataToRaktarTetel(
                     c,
@@ -717,6 +742,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     }
                     locationRecycler?.adapter?.notifyDataSetChanged()
                 }
+            }
+            CoroutineScope(Main).launch {
+                progress?.visibility = View.GONE
             }
         }
     }

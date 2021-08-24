@@ -179,7 +179,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                                 polcText?.setText("")
                                 polcText?.isEnabled = false
                                 mennyisegText?.isEnabled = true
-                                mennyisegText?.selectAll()
+                                mennyisegText?.setText("")
                                 mennyisegText?.requestFocus()
                                 checkBinIsInTheList(bin, qty)
                             }

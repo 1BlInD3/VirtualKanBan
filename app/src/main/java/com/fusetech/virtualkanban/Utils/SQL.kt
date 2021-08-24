@@ -920,6 +920,9 @@ class SQL(private val sqlMessage: SQLAlert) {
         ) + ".xml"
         val file = File(path, name)
         try {
+            CoroutineScope(Dispatchers.Main).launch{
+                progress.visibility = View.VISIBLE
+            }
             val currentDate = SimpleDateFormat("yyyy-MM-dd").format(Date())
             /*if (ContextCompat.checkSelfPermission(
                     context,
@@ -955,6 +958,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Scala send \n${e}")
+                progress.visibility = View.GONE
                 if (file.exists()) {
                     file.delete()
                 }
@@ -1726,7 +1730,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         val szallito: String
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOn()
+                progress.visibility = View.VISIBLE
             }
             connection = DriverManager.getConnection(connectionString)
             val statement1 =
@@ -1736,7 +1740,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             if (!resultSet1.next()) {
                 Log.d(TAG, "checkIfContainerIsDone: nincs mozgatott mennyiség (hazugság)")
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
+                    progress.visibility = View.GONE
                 }
             } else {
                 mozgatott = resultSet1.getDouble("mozgatott_mennyiseg")
@@ -1745,6 +1749,9 @@ class SQL(private val sqlMessage: SQLAlert) {
                 statement2.setString(1, container)
                 val resultSet2 = statement2.executeQuery()
                 if (!resultSet2.next()) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        progress.visibility = View.GONE
+                    }
                     Log.d(TAG, "checkIfContainerIsDone: nincs szállítójármű")
                 } else {
                     szallito = resultSet2.getString("SzallitoJarmu")
@@ -1757,15 +1764,15 @@ class SQL(private val sqlMessage: SQLAlert) {
                     statement3.setString(5, itemId)
                     statement3.executeUpdate()
                     Log.d(TAG, "checkIfContainerIsDone: Sikeres update")
-                }
-                CoroutineScope(Dispatchers.Main).launch {
-                    context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
+                    CoroutineScope(Dispatchers.Main).launch {
+                        progress.visibility = View.GONE
+                    }
                 }
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Probléma a konténer ellenőrzésével $e")
-                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
+                progress.visibility = View.GONE
             }
         }
     }
@@ -1775,7 +1782,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOn()
+                progress.visibility = View.VISIBLE
             }
             connection = DriverManager.getConnection(connectionString)
             val statement =
@@ -1784,12 +1791,12 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.setString(2, itemId)
             statement.executeUpdate()
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
+                progress.visibility = View.GONE
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Nem tudom az átvevőt kinullázni $e")
-                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
+                progress.visibility = View.GONE
             }
         }
     }
@@ -1799,7 +1806,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOn()
+                progress.visibility = View.VISIBLE
             }
             connection = DriverManager.getConnection(connectionString)
             val statement =
@@ -1809,12 +1816,12 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.executeUpdate()
             context.igenyKontenerKiszedesCikkKiszedes?.isUpdated = true
             CoroutineScope(Dispatchers.Main).launch {
-                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
+                progress.visibility = View.GONE
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Probléma a tétel 3-ra írásával $e")
-                context.igenyKontenerKiszedesCikkKiszedes?.setProgressBarOff()
+                progress.visibility = View.GONE
             }
         }
     }
