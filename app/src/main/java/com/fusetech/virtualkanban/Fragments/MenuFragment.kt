@@ -180,4 +180,34 @@ class MenuFragment : Fragment() {
         }
         return false
     }
+    fun polcHelyezesClick(){
+        polcHelyezes?.requestFocus()
+    }
+    fun igenyOsszeClick(){
+        igenyOssze?.requestFocus()
+    }
+    fun igenyLezarClick(){
+        igenyLezar?.requestFocus()
+    }
+    fun igenyKiszedClick(){
+        igenyKiszed?.requestFocus()
+    }
+    fun igenyKihelyezClick(){
+        igenyKihelyez?.requestFocus()
+    }
+    fun kiszedesreVaroClick(){
+        kiszedesreVar?.requestFocus()
+    }
+    fun tobbletOsszeClick(){
+        tobbletOssze?.requestFocus()
+    }
+    fun tobbletKihelyezClick(){
+        tobbletKihelyez?.requestFocus()
+    }
+    fun cikklekerdezesClick(){
+        cikkLekerdezes?.requestFocus()
+    }
+    fun kilepesClick(){
+        kilepes?.requestFocus()
+    }
 }

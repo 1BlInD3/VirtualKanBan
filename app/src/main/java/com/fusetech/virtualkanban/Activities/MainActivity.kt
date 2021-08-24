@@ -182,9 +182,10 @@ class MainActivity : AppCompatActivity(),
         var logPath = ""
         var timeOut = 0L
         var hasRight = false
+
         //var szallitoJarmu: ArrayList<String> = ArrayList()
-       // var ellenorzoKod: ArrayList<String> = ArrayList()
-        var szallitoMap: HashMap<String,String> = HashMap()
+        // var ellenorzoKod: ArrayList<String> = ArrayList()
+        var szallitoMap: HashMap<String, String> = HashMap()
         var dolgKod: String = ""// vissza ide
         var sz0x: String = ""
     }
@@ -664,16 +665,46 @@ class MainActivity : AppCompatActivity(),
         cancelTimer()
         if (getMenuFragment() && menuFragment?.hasRightToOpen()!!) {
             when (keyCode) {
-                7 -> finishAndRemoveTask() //0
-                8 -> loadPolcHelyezesFragment() //1
-                9 -> containerCheck(dolgKod)  //2
-                10 -> igenyKontenerCheck()  //3
-                11 -> igenyKontenerKiszedes()  //4
-                12 -> loadKihelyezesFragment()  //5
-                13 -> kiszedesreVaro()  //6
-                14 -> containerCheck7(dolgKod)  //7
-                15 -> loadTobbletKontenerKihelyezes()  //8
-                16 -> loadCikklekerdezesFragment()  //9
+                7 -> {
+                    menuFragment?.kilepesClick()
+                    finishAndRemoveTask()
+                } //0
+                8 -> {
+                    menuFragment?.polcHelyezesClick()
+                    loadPolcHelyezesFragment()
+                } //1
+                9 -> {
+                    menuFragment?.igenyOsszeClick()
+                    containerCheck(dolgKod)
+                }  //2
+                10 -> {
+                    menuFragment?.igenyLezarClick()
+                    igenyKontenerCheck()
+                }  //3
+                11 -> {
+                    menuFragment?.igenyKiszedClick()
+                    igenyKontenerKiszedes()
+                }  //4
+                12 -> {
+                    menuFragment?.igenyKihelyezClick()
+                    loadKihelyezesFragment()
+                }  //5
+                13 -> {
+                    menuFragment?.kiszedesreVaroClick()
+                    kiszedesreVaro()
+                }  //6
+                14 -> {
+                    menuFragment?.tobbletOsszeClick()
+                    containerCheck7(dolgKod)
+                }  //7
+                15 -> {
+                    menuFragment?.tobbletKihelyezClick()
+                    loadTobbletKontenerKihelyezes()
+                }  //8
+                16 -> {
+                    menuFragment?.cikklekerdezesClick()
+                    loadCikklekerdezesFragment()
+                }  //9
             }
         } else if (getMenuFragment()) {
             when (keyCode) {
@@ -1023,7 +1054,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     fun updateItemStatus(itemId: String, status: Int) {
-        sql.updtaeItemStatusSql(itemId, this@MainActivity,status)
+        sql.updtaeItemStatusSql(itemId, this@MainActivity, status)
     }
 
     fun updateItemAtvevo(itemId: String) {
@@ -1157,7 +1188,7 @@ class MainActivity : AppCompatActivity(),
                     Log.d(TAG, "onBackPressed: CIKKEKPOLCRA")
                     //progress.visibility = View.VISIBLE
                     tobbletCikkekPolcra?.onButtonPressed()
-                   // progress.visibility = View.GONE
+                    // progress.visibility = View.GONE
                 }
                 getFragment("TOBBLETKIHELYEZESCIKKEK") -> { // 8-2
                     setContainerBackToOpen(tobbletCikkek?.kontenerID!!)// lehet hogy ez nem is fog kelleni?!
@@ -1263,25 +1294,35 @@ class MainActivity : AppCompatActivity(),
             sql.cikkCodeSql(id, this@MainActivity)
         }
     }
-    private fun requestStoragePermission(){
-        if(ActivityCompat.shouldShowRequestPermissionRationale(this,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+
+    private fun requestStoragePermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        ) {
             AlertDialog.Builder(this)
                 .setTitle("El kell az engedélyt fogadni")
                 .setMessage("Különben nem fog működni")
-                .setPositiveButton("OK"){ _, _ ->
-                    ActivityCompat.requestPermissions(this@MainActivity,
-                        arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE) , EXTERNAL_STORAGE)
+                .setPositiveButton("OK") { _, _ ->
+                    ActivityCompat.requestPermissions(
+                        this@MainActivity,
+                        arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), EXTERNAL_STORAGE
+                    )
                 }
-                .setNegativeButton("Nem"){ dialog, _ ->
+                .setNegativeButton("Nem") { dialog, _ ->
                     dialog.dismiss()
                 }
                 .create()
                 .show()
-        }else{
-            ActivityCompat.requestPermissions(this,
-                arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE) , EXTERNAL_STORAGE)
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), EXTERNAL_STORAGE
+            )
         }
     }
+
     override
     fun onRequestPermissionsResult(
         requestCode: Int,
@@ -1289,14 +1330,15 @@ class MainActivity : AppCompatActivity(),
         grantResults: IntArray
     ) {
         //super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == EXTERNAL_STORAGE){
-            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == EXTERNAL_STORAGE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "El van fogadva", Toast.LENGTH_SHORT).show()
-            }else{
+            } else {
                 Toast.makeText(this, "Nincs elfogadva", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
     fun getMacAddr(): String {
         try {
             val all: List<NetworkInterface> =
