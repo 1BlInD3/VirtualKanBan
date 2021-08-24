@@ -1,13 +1,10 @@
 package com.fusetech.virtualkanban.fragments
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.InputType
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -140,7 +137,6 @@ class IgenyKontenerKiszedese : Fragment() {
     fun progressBarOff(){
         progress?.visibility = View.INVISIBLE
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         myView = null
@@ -152,7 +148,6 @@ class IgenyKontenerKiszedese : Fragment() {
         progress = null
     }
     fun setFocusToBin(){
-        //szerelohely.requestFocus()
         szerelohely?.isFocusable = true
         szerelohely?.isFocusableInTouchMode = true
         szerelohely?.requestFocus()

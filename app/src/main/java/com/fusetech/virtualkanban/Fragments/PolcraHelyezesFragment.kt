@@ -378,7 +378,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             CoroutineScope(IO).launch {
                 sendCode?.sendCode(cikkText?.text?.trim().toString())
             }
-        } else {
+        } else if(polcText?.hasFocus()!!){
             polcText?.setText(code)
             polcText?.selectAll()
             polcText?.performClick()

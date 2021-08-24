@@ -573,20 +573,19 @@ class MainActivity : AppCompatActivity(),
         kontener = kontener_id
         szallitoJarmuFragment = SzallitoJartmuFragment()
         supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_container, szallitoJarmuFragment!!, "SZALLITO").addToBackStack(null)
+            .replace(R.id.frame_container, szallitoJarmuFragment!!, "SZALLITO")
             .commit()
     }
 
     fun loadKiszedesFragment() {
         val kiszedes = IgenyKontenerKiszedesFragment()
-        supportFragmentManager.beginTransaction().replace(R.id.frame_container, kiszedes)
-            .addToBackStack(null).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container, kiszedes).commit()
     }
 
     fun loadKihelyezesFragment() {
         kihelyezes = IgenyKontenerKiszedese()
         supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_container, kihelyezes!!, "KIHELYEZES").addToBackStack(null).commit()
+            .replace(R.id.frame_container, kihelyezes!!, "KIHELYEZES").commit()
     }
 
     override fun onBarcodeEvent(p0: BarcodeReadEvent?) {
@@ -785,6 +784,9 @@ class MainActivity : AppCompatActivity(),
     private fun updateKontenerKiszedesre(kontener: String) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
+            CoroutineScope(Main).launch {
+                progress.visibility = View.VISIBLE
+            }
             connection = DriverManager.getConnection(connectionString)
             val statement2 = connection.prepareStatement(resources.getString(R.string.isPolc21))
             statement2.setString(1, "21")
@@ -793,6 +795,7 @@ class MainActivity : AppCompatActivity(),
             if (!resultSet.next()) {
                 CoroutineScope(Main).launch {
                     setAlert("Nincs a tranzitraktárban!")
+                    progress.visibility = View.GONE
                 }
             } else {
                 sz0x = barcodeData
@@ -810,10 +813,12 @@ class MainActivity : AppCompatActivity(),
                 //itt kéne beolvasni a 4es opciót
                 loadKiszedesFragment()
                 sql.checkIfContainerIsOpen(kontener, this@MainActivity)
+                progress.visibility = View.GONE
             }
         } catch (e: Exception) {
             CoroutineScope(Main).launch {
                 setAlert("Probléma a feltöltésben!\n $e")
+                progress.visibility = View.GONE
             }
         }
     }

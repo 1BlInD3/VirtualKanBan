@@ -242,7 +242,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
     }
 
     fun setBinFocusOn() {
-        polcTextIgeny?.selectAll()
+        polcTextIgeny?.setText("")
         polcTextIgeny?.requestFocus()
     }
 
