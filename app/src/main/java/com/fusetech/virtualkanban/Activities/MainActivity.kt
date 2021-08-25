@@ -36,6 +36,7 @@ import java.sql.*
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import android.content.DialogInterface
 
 
 private const val TAG = "MainActivity"
@@ -837,8 +838,10 @@ class MainActivity : AppCompatActivity(),
         val builder = AlertDialog.Builder(this@MainActivity)
         builder.setTitle("Figyelem")
             .setMessage(text)
+        builder.setPositiveButton("OK"){_,_ ->
+        }
         builder.create()
-        builder.show()
+        builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
     }
 
     override fun setValue(value: String) {
@@ -1377,4 +1380,12 @@ class MainActivity : AppCompatActivity(),
         }
         return "02:00:00:00:00:00"
     }
+   /* fun abc(){
+        builder.setOnShowListener(OnShowListener {
+            val positive: Button = builder.getButton(AlertDialog.BUTTON_POSITIVE)
+            positive.setFocusable(true)
+            positive.setFocusableInTouchMode(true)
+            positive.requestFocus()
+        })
+    }*/
 }

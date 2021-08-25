@@ -66,7 +66,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         fun closeContainer2(statusz: Int, datum: String)
     }
 
-    @SuppressLint("SimpleDateFormat")
+    @SuppressLint("SimpleDateFormat", "NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

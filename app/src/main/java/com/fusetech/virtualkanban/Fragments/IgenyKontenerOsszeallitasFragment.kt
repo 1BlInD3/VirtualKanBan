@@ -70,7 +70,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         }
     }
 
-    @SuppressLint("SimpleDateFormat")
+    @SuppressLint("SimpleDateFormat", "NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -211,6 +211,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         return myView
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun clearAll() {
         mainActivity?.listIgenyItems?.clear()
         kontenerText?.text = ""
@@ -295,6 +296,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         Log.d("igenyitem", "igenyClick: $position")
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun getDataFromList() {
         val myList: ArrayList<IgenyItem> =
             arguments?.getSerializable("IGENY") as ArrayList<IgenyItem>
@@ -326,6 +328,13 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         super.onResume()
         kontenerText?.text = arguments?.getString("KONTENER")
         polcTextIgeny?.setText(arguments?.getString("TERMRAKH"))
+        if(polcTextIgeny!!.text.isNotEmpty()){
+            polcTextIgeny?.isFocusable = false
+            polcTextIgeny?.isFocusableInTouchMode = false
+            cikkItem_igeny?.isFocusable = true
+            cikkItem_igeny?.isFocusableInTouchMode = true
+            cikkItem_igeny?.requestFocus()
+        }
     }
 
     class DecimalDigitsInputFilter(digitsBeforeZero: Int, digitsAfterZero: Int) :

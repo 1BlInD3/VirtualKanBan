@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.InputFilter
@@ -66,6 +67,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         )
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -325,12 +327,8 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         kilepButton?.performClick()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun onTimeout() {
-        /*if (view != null) {
-            val ihm =
-                activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            ihm.hideSoftInputFromWindow(myView.windowToken, 0)
-        }*/
         ujCikk?.requestFocus()
         //cikkText.requestFocus()
         TextKeyListener.clear(cikkText?.text)
@@ -359,16 +357,6 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         recycler?.adapter?.notifyDataSetChanged()
         mainActivity?.loadLoginFragment()
         clearLeak()
-        /*if (view != null) {
-            val ihm =
-                activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            ihm.toggleSoftInputFromWindow(
-                myView.applicationWindowToken,
-                InputMethodManager.SHOW_FORCED,
-                0
-            )
-        }*/
-
     }
 
     fun setCode(code: String) {
@@ -395,12 +383,14 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun getDataFromList(position: Int, value: Double) {
         val quantity = myItems[position].mennyiseg?.toDouble()
         myItems[position].mennyiseg = (quantity?.plus(value)).toString()
         recycler?.adapter?.notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun checkBinIsInTheList(falseBin: String, value: Double) {
         for (i in 0 until myItems.size) {
             if (myItems[i].polc?.trim() == falseBin) {
@@ -418,6 +408,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun reload() {
         CoroutineScope(Main).launch {
             recycler?.adapter?.notifyDataSetChanged()

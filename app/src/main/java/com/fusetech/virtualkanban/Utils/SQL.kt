@@ -993,10 +993,21 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.setString(1, code)
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    context.setAlert("Nincs ilyen cikk a rendszerben")
-                    context.igenyFragment.setProgressBarOff()
-                    context.igenyFragment.setFocusToItem()
+                val statement1 = connection.prepareStatement(res.getString(R.string.cikkSql4))
+                statement1.setString(1,code)
+                val resultSet1 = statement1.executeQuery()
+                if(!resultSet1.next()){
+                    CoroutineScope(Dispatchers.Main).launch {
+                        context.setAlert("Nincs ilyen cikk a rendszerben")
+                        context.igenyFragment.setProgressBarOff()
+                        context.igenyFragment.setFocusToItem()
+                    }
+                }else{
+                    CoroutineScope(Dispatchers.Main).launch {
+                        context.setAlert("A cikknek nincs mennyisége a rendszerben")
+                        context.igenyFragment.setProgressBarOff()
+                        context.igenyFragment.setFocusToItem()
+                    }
                 }
             } else {
                 val megjegyzesIgeny: String = resultSet.getString("Description1")
