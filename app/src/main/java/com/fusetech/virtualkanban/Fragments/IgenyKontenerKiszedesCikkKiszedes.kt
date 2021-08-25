@@ -124,7 +124,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         mennyiseg = myView?.kiszedesMennyiseg
         lezar = myView!!.kiszedesLezar
         vissza = myView!!.kiszedesVissza
-        progress = myView!!.kihelyezesProgress
+        //progress = myView!!.kihelyezesProgress
         kontenerNumber = myView!!.kontenerIDKiszedes
         cikkNumber = myView!!.cikkIDKiszedes
         bejelentes = myView!!.bejelentesBtn
