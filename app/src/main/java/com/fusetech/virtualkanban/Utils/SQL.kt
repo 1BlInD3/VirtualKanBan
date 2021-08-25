@@ -2,6 +2,7 @@ package com.fusetech.virtualkanban.utils
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -835,9 +836,28 @@ class SQL(private val sqlMessage: SQLAlert) {
                 preparedStatement1.setString(1, code)
                 val resultSet1: ResultSet = preparedStatement1.executeQuery()
                 if (!resultSet1.next()) {
-                    context.loadFragment = LoadFragment.newInstance("Nincs ilyen kód a rendszerben")
-                    context.supportFragmentManager.beginTransaction()
-                        .replace(R.id.cikk_container, context.loadFragment!!, "LRF").commit()
+                    val statement2 = connection.prepareStatement(res.getString(R.string.cikkSql4))
+                    statement2.setString(1,code)
+                    val resultSet2 = statement2.executeQuery()
+                    if(!resultSet2.next()){
+                        context.loadFragment = LoadFragment.newInstance("Nincs ilyen kód a rendszerben")
+                        context.supportFragmentManager.beginTransaction()
+                            .replace(R.id.cikk_container, context.loadFragment!!, "LRF").commit()
+                    }else{
+                        context.cikkResultFragment = CikkResultFragment()
+                        val megjegyzes1: String? = resultSet2.getString("Description1")
+                        val megjegyzes2: String? = resultSet2.getString("Description2")
+                        val unit: String? = resultSet2.getString("Unit")
+                        val intrem: String? = resultSet2.getString("IntRem")
+                        bundle.putSerializable("cikk", context.cikkItems)
+                        bundle.putString("megjegyzes", megjegyzes1)
+                        bundle.putString("megjegyzes2", megjegyzes2)
+                        bundle.putString("unit", unit)
+                        bundle.putString("intrem", intrem)
+                        context.cikkResultFragment?.arguments = bundle
+                        context.supportFragmentManager.beginTransaction()
+                            .replace(R.id.cikk_container, context.cikkResultFragment!!, "CRF").commit()
+                    }
                 } else {
                     context.cikkResultFragment = CikkResultFragment()
                     val megjegyzes1: String? = resultSet1.getString("Description1")
@@ -1510,7 +1530,7 @@ class SQL(private val sqlMessage: SQLAlert) {
 
                             }
                             builder.create()
-                            builder.show()
+                            builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
                             //context.setAlert("Nincs készleten")
                             progress.visibility = View.GONE
                         }
@@ -1595,7 +1615,7 @@ class SQL(private val sqlMessage: SQLAlert) {
 
                                 }
                                 builder.create()
-                                builder.show()
+                                builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
                             } // ide kell írni hogy zárja le nullával automatikusan
                             progress.visibility = View.GONE
                         }

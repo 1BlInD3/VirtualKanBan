@@ -64,8 +64,10 @@ class CikkResultFragment : Fragment() {
     }
     private fun loadCikkItems() {
         val myList: ArrayList<CikkItems> = arguments?.getSerializable("cikk") as ArrayList<CikkItems>
-        for (i in 0 until myList.size) {
-            myCikkItems.add(CikkItems(myList[i].mMennyiseg,myList[i].mPolc,myList[i].mRaktar,myList[i].mAllapot))
+        if(myList.size>0){
+            for (i in 0 until myList.size) {
+                myCikkItems.add(CikkItems(myList[i].mMennyiseg,myList[i].mPolc,myList[i].mRaktar,myList[i].mAllapot))
+            }
         }
     }
     fun clearLeak(){

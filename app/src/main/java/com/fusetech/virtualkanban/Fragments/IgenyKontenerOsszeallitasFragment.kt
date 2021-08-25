@@ -104,7 +104,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         Log.d(TAG, "onCreateView: ${arguments?.getString("KONTENER")}")
         Log.d(TAG, "onCreateView: ${arguments?.getString("TERMRAKH")}")
         setBinFocusOn()
-        if (polcTextIgeny?.text?.isNotEmpty()!!) {
+        /*if (polcTextIgeny?.text?.isNotEmpty()!!) {
             polcTextIgeny?.isFocusable = false
             polcTextIgeny?.isFocusableInTouchMode = false
             cikkItem_igeny?.isFocusable = true
@@ -116,7 +116,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
             } catch (e: Exception) {
                 Toast.makeText(myView?.context, "Nincs felvett tétel", Toast.LENGTH_SHORT).show()
             }
-        }
+        }*/
         megjegyzes1_igeny?.text = ""
         megjegyzes2_igeny2?.text = ""
         intrem_igeny2?.text = ""
@@ -166,7 +166,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
             )
             cikkItem_igeny?.isFocusable = true
             cikkItem_igeny?.isFocusableInTouchMode = true
-            cikkItem_igeny?.selectAll()
+            cikkItem_igeny?.setText("")
             cikkItem_igeny?.requestFocus()
             mennyiseg_igeny2?.setText("")
             mennyiseg_igeny2?.isFocusable = false
@@ -251,7 +251,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         cikkItem_igeny?.isFocusable = true
         cikkItem_igeny?.isFocusableInTouchMode = true
         cikkItem_igeny?.requestFocus()
-        cikkItem_igeny?.selectAll()
+        cikkItem_igeny?.setText("")
         polcTextIgeny?.isFocusable = false
         polcTextIgeny?.isFocusableInTouchMode = false
     }
@@ -334,6 +334,12 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
             cikkItem_igeny?.isFocusable = true
             cikkItem_igeny?.isFocusableInTouchMode = true
             cikkItem_igeny?.requestFocus()
+            try {
+                igenyReveresed.clear()
+                getDataFromList()
+            } catch (e: Exception) {
+                Toast.makeText(myView?.context, "Nincs felvett tétel", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -360,9 +366,11 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         if (polcTextIgeny?.text?.isEmpty()!!) {
             polcTextIgeny?.setText(code)
             sendBinCode.sendBinCode(code)
-        } else {
+        } else if(cikkItem_igeny?.text?.isEmpty()!!){
             cikkItem_igeny?.setText(code)
             mainActivity?.isItem(code)
+        }else{
+            Log.d(TAG, "setCode: Mit akarsz?")
         }
     }
 

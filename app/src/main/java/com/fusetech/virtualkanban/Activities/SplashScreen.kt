@@ -1,6 +1,7 @@
 package com.fusetech.virtualkanban.activities
 
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -79,11 +80,11 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
         val builder = AlertDialog.Builder(this@SplashScreen)
         builder.setTitle("Figyelem")
             .setMessage("A szerver nem elérhető!")
-            .setPositiveButton("OK"){dialog, which ->
+            .setPositiveButton("OK"){_,_ ->
                 finishAndRemoveTask()
             }
         builder.create()
-        builder.show()
+        builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
     }
 
     override fun triggerError() {

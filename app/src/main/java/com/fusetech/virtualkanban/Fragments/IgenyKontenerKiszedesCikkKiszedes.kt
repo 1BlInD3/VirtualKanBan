@@ -3,6 +3,7 @@ package com.fusetech.virtualkanban.fragments
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputFilter
 import android.util.Log
@@ -164,7 +165,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     Log.d(TAG, "onCreateView: Megnyomtam a NEM gombot")
                 }
                 builder.create()
-                builder.show()
+                builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
             }else{
                 CoroutineScope(IO).launch {
                     val b = polc!!.text.trim().toString()
@@ -270,7 +271,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                         bejelentes?.visibility = View.GONE
                     }
                     builder.create()
-                    builder.show()
+                    builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
 
                 } else {
                     sendLogic()
