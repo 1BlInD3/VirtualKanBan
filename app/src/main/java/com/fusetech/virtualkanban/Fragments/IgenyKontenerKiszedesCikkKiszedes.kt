@@ -209,6 +209,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                         mainActivity?.setAlert("A jelentéshez nyomd meg hosszan a megafon ikont!")
                     } else {
                         mainActivity?.setAlert("Túl sok ennyit nem vehetsz ki erről a polcról")
+                        mennyiseg?.selectAll()
                     }
                 }else if ((mennyiseg?.text?.trim().toString()
                         .toDouble() < igenyeltMennyiseg) && (getPolcValue(
