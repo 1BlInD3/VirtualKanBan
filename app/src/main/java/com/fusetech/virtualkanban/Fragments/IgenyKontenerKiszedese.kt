@@ -157,7 +157,7 @@ class IgenyKontenerKiszedese : Fragment() {
     fun deleteFocused(){
         if(szallitoText?.hasFocus()!!){
             szallitoText?.setText("")
-        }else{
+        }else if(szerelohely?.hasFocus()!!){
             szerelohely?.setText("")
         }
     }

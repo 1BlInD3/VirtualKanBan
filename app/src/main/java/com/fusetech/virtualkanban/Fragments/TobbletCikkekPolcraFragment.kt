@@ -170,7 +170,7 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
                     mainActivity?.raktarcheck(code)
                     polc?.setText(code)
                     progress.visibility = View.VISIBLE
-                    if (polc?.text?.isEmpty()!!) {
+                    if (polc?.text?.isNotEmpty()!!) {
                         CoroutineScope(IO).launch {
                             async {
                                 Log.d(
@@ -188,7 +188,7 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
                             }.await()
                             if (isSent) {
                                 CoroutineScope(Main).launch {
-                                    mainActivity?.setAlert("BRAVOOO")
+                                    //mainActivity?.setAlert("BRAVOOO")
                                     cikkNumber?.setText("")
                                     kontenerID?.text = ""
                                     cikkID?.text = ""

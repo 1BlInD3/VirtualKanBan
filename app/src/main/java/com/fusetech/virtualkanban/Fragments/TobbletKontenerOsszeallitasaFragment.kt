@@ -266,7 +266,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                     }
                 }
             } else {
-                mainActivity?.setAlert("Nem sikerült lezárni a cikkeket")
+                mainActivity?.setAlert("Nem vettél fel cikkeket")
             }
         }
 
@@ -311,6 +311,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
 
     fun setBinFocusOn() {
         polcTextIgeny?.requestFocus()
+        polcTextIgeny?.selectAll()
     }
 
     fun setFocusToItem(code: String) {
@@ -442,5 +443,12 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         mennyiseg_igeny2?.filters = null
         mainActivity?.menuFragment = null
         mainActivity = null
+    }
+    fun setCikkszamBlank(){
+        cikkItem_igeny?.requestFocus()
+        cikkItem_igeny?.selectAll()
+        mennyiseg_igeny2?.setText("")
+        mennyiseg_igeny2?.isFocusable = false
+        mennyiseg_igeny2?.isFocusableInTouchMode = false
     }
 }

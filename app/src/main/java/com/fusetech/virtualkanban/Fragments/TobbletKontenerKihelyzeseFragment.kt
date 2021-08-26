@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -64,10 +65,8 @@ class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontener
         progress?.visibility = View.GONE
     }
 
-    fun setProgressBar8On() {
-        progress?.visibility = View.VISIBLE
-    }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun loadData() {
         val myList: ArrayList<KontenerItem> =
             arguments?.getSerializable("TOBBLETKONTENEREK") as ArrayList<KontenerItem>

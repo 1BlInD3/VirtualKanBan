@@ -703,7 +703,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 Log.d(TAG, "loadIgenyLezaras: Nincs ilyen konténer")
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.setAlert("Nincs lezárni való konténer!!!")
+                    context.setAlert("Nincs lezárni való konténer!")
                     if (context.menuFragment != null) {
                         context.menuFragment?.setMenuProgressOff()
                     } else {
@@ -1088,7 +1088,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                 val resultSet1 = statement1.executeQuery()
                 if (!resultSet1.next()) {
                     CoroutineScope(Dispatchers.Main).launch {
-                        context.setAlert("Nincs ilyen cikk a sem a polcon sem a termelésben")
+                        context.setAlert("Nincs ilyen cikk sem a polcon sem a termelésben")
+                        context.tobbletOsszeallitasFragment.setCikkszamBlank()
                         context.tobbletOsszeallitasFragment.setProgressBarOff()
                         context.tobbletOsszeallitasFragment.setFocusToItem(bin)
                     }
@@ -1104,6 +1105,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     } while (resultSet1.next())
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("A cikk ezeken a polcokon található a termelésben: \n\n$message")
+                        context.tobbletOsszeallitasFragment.setCikkszamBlank()
                         context.tobbletOsszeallitasFragment.setProgressBarOff()
                         context.tobbletOsszeallitasFragment.setFocusToItem(bin)
                     }
@@ -2224,11 +2226,12 @@ class SQL(private val sqlMessage: SQLAlert) {
         try {
             context.tobbletCikkek = TobbletKontenerCikkekFragment()
             CoroutineScope(Dispatchers.Main).launch {
-                if (context.tobbletKontenerKihelyzeseFragment != null) {
+               /* if (context.tobbletKontenerKihelyzeseFragment != null) {
                     context.tobbletKontenerKihelyzeseFragment?.setProgressBar8On()
                 } else {
                     progress.visibility = View.VISIBLE
-                }
+                }*/
+                progress.visibility = View.VISIBLE
             }
             Class.forName("net.sourceforge.jtds.jdbc.Driver") //EZT KÉNE KIIKTATNI HOGY ÁTÍRJA AZ ADATBÁZIST
             val connection = DriverManager.getConnection(connectionString)
@@ -2246,11 +2249,12 @@ class SQL(private val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nincsenek elemek")
-                    if (context.tobbletKontenerKihelyzeseFragment != null) {
+                    /*if (context.tobbletKontenerKihelyzeseFragment != null) {
                         context.tobbletKontenerKihelyzeseFragment?.setProgressBar8Off()
                     } else {
                         progress.visibility = View.GONE
-                    }
+                    }*/
+                    progress.visibility = View.GONE
                 }
             } else {
                 val tobbletCikkek: ArrayList<KontenerbenLezarasItem> = ArrayList()
@@ -2286,11 +2290,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 bundle.putString("KONTENERTOBBLETCIKK", code)
                 context.tobbletCikkek?.arguments = bundle
                 CoroutineScope(Dispatchers.Main).launch {
-                    if (context.tobbletKontenerKihelyzeseFragment != null) {
-                        context.tobbletKontenerKihelyzeseFragment?.setProgressBar8Off()
-                    } else {
-                        progress.visibility = View.GONE
-                    }
+                    progress.visibility = View.GONE
                 }
                 context.supportFragmentManager.beginTransaction()
                     .replace(
@@ -2303,11 +2303,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("8as nem tudta lezárni a konténert és megnyitni a másikat\n$e")
-                if (context.tobbletKontenerKihelyzeseFragment != null) {
-                    context.tobbletKontenerKihelyzeseFragment?.setProgressBar8Off()
-                } else {
-                    progress.visibility = View.GONE
-                }
+                progress.visibility = View.GONE
             }
         }
     }
@@ -2344,7 +2340,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             //context.tobbletCikkek = TobbletKontenerCikkekFragment()
             context.tobbletCikkekPolcra = TobbletCikkekPolcraFragment()
             CoroutineScope(Dispatchers.Main).launch {
-                context.tobbletCikkek?.nyolcaskettesProgressOn()
+                progress.visibility = View.VISIBLE
             }
             val raktarBin: ArrayList<PolcLocation> = ArrayList()
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
@@ -2358,7 +2354,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 if (!resultSet1.next()) {
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("Nincs a raktárban!")
-                        context.tobbletCikkek?.nyolcaskettesProgressOff()
+                        progress.visibility = View.GONE
                     }
                 } else {
                     do {
@@ -2377,7 +2373,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     bundle.putString("MCIKK", cikkszam)
                     context.tobbletCikkekPolcra?.arguments = bundle
                     CoroutineScope(Dispatchers.Main).launch {
-                        context.tobbletCikkek?.nyolcaskettesProgressOff()
+                        progress.visibility = View.GONE
                     }
                     context.supportFragmentManager.beginTransaction()
                         .replace(
@@ -2398,7 +2394,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 if (!resultSet3.next()) {
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("Nincs a raktárban!")
-                        context.tobbletCikkek?.nyolcaskettesProgressOff()
+                        progress.visibility = View.GONE
                     }
                 } else {
                     do {
@@ -2418,7 +2414,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 bundle.putString("MCIKK", cikkszam)
                 context.tobbletCikkekPolcra?.arguments = bundle
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.tobbletCikkek?.nyolcaskettesProgressOff()
+                    progress.visibility = View.GONE
                 }
                 context.supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_container, context.tobbletCikkekPolcra!!, "CIKKEKPOLCRA")
@@ -2427,7 +2423,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Open nyolcas \n$e")
-                context.tobbletCikkek?.nyolcaskettesProgressOff()
+                progress.visibility = View.GONE
             }
         }
     }
