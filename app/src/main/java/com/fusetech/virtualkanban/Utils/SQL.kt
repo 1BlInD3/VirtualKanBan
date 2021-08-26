@@ -504,7 +504,7 @@ class SQL(private val sqlMessage: SQLAlert) {
     fun checkCode02(code: String, context: MainActivity) {
         val connection: Connection
         CoroutineScope(Dispatchers.Main).launch {
-            context.tobbletOsszeallitasFragment.setProgressBarOn()
+            progress.visibility = View.VISIBLE
         }
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -517,7 +517,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("A polc nem a 01 raktárban található")
                     context.tobbletOsszeallitasFragment.setBinFocusOn()
-                    context.tobbletOsszeallitasFragment.setProgressBarOff()
+                    progress.visibility = View.GONE
                 }
             } else {
                 val statement1 =
@@ -528,13 +528,13 @@ class SQL(private val sqlMessage: SQLAlert) {
                 statement1.executeUpdate()
                 CoroutineScope(Dispatchers.Main).launch {
                     context.tobbletOsszeallitasFragment.setFocusToItem(code)
-                    context.tobbletOsszeallitasFragment.setProgressBarOff()
+                    progress.visibility = View.GONE
                 }
             }
         } catch (e: Exception) {
             Log.d(TAG, "check01: $e")
             CoroutineScope(Dispatchers.Main).launch {
-                context.tobbletOsszeallitasFragment.setProgressBarOff()
+                progress.visibility = View.GONE
             }
         }
     }
@@ -580,6 +580,9 @@ class SQL(private val sqlMessage: SQLAlert) {
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
+            CoroutineScope(Dispatchers.Main).launch {
+                progress.visibility = View.VISIBLE
+            }
             connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.insertItem))
             statement.setString(1, konti)
@@ -591,10 +594,12 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.setString(7, term)
             statement.setString(8, unit)
             statement.executeUpdate()
+            progress.visibility = View.GONE
         } catch (e: Exception) {
             Log.d(TAG, "uploadItem: $e")
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Hiba történt, lépj vissza a 'Kilépés' gombbal a menübe, majd vissza, hogy megnézd mi lett utoljára felvéve")
+                progress.visibility = View.GONE
             }
         }
     }
@@ -641,6 +646,9 @@ class SQL(private val sqlMessage: SQLAlert) {
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
+            CoroutineScope(Dispatchers.Main).launch {
+                progress.visibility = View.VISIBLE
+            }
             connection = DriverManager.getConnection(connectionString)
             val statement =
                 connection.prepareStatement(res.getString(R.string.closeContainer7))
@@ -651,21 +659,29 @@ class SQL(private val sqlMessage: SQLAlert) {
             Log.d(TAG, "closeContainerSql: sikeres lezárás")
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Sikeres konténer lezárás!")
+                progress.visibility = View.GONE
             }
             val statement1 =
                 connection.prepareStatement(res.getString(R.string.updateItemStatus))
             statement1.setInt(1, statusz)
             statement1.setString(2, context.kontener)
             try {
+                CoroutineScope(Dispatchers.Main).launch {
+                    progress.visibility = View.VISIBLE
+                }
                 statement1.executeUpdate()
             } catch (e: Exception) {
                 Log.d(TAG, "closeContainerSql: $e")
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("A cikk státuszok felülírásánál hiba lépett fel, gyere az IT-re")
+                    progress.visibility = View.GONE
                 }
             }
         } catch (e: Exception) {
             Log.d(TAG, "closeContainerSql: $e")
+            CoroutineScope(Dispatchers.Main).launch {
+                progress.visibility = View.GONE
+            }
         }
     }
 

@@ -125,63 +125,78 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             sendBinCode2.sendBinCode2(polcTextIgeny?.text.toString())
         }
         cikkItem_igeny?.setOnClickListener {
-            mainActivity?.isItem2(
-                cikkItem_igeny?.text.toString(),
-                polcTextIgeny?.text?.trim().toString()
-            )
-            mennyiseg_igeny2?.isFocusable = true
-            mennyiseg_igeny2?.isFocusableInTouchMode = true
-            mennyiseg_igeny2?.requestFocus()
+            if(cikkItem_igeny?.text?.isNotEmpty()!!){
+                mainActivity?.isItem2(
+                    cikkItem_igeny?.text.toString(),
+                    polcTextIgeny?.text?.trim().toString()
+                )
+                mennyiseg_igeny2?.isFocusable = true
+                mennyiseg_igeny2?.isFocusableInTouchMode = true
+                mennyiseg_igeny2?.requestFocus()
+            }else{
+                mennyiseg_igeny2?.isFocusable = false
+                mennyiseg_igeny2?.isFocusableInTouchMode = false
+            }
         }
         mennyiseg_igeny2?.setOnClickListener {
-            val konti = kontenerText!!.text.trim().substring(4, kontenerText!!.text.trim().length)
-            igenyList.add(
-                IgenyItem(
-                    cikkItem_igeny?.text.toString().trim(), megjegyzes1_igeny!!.text.toString().trim(),
-                    mennyiseg_igeny2?.text.toString().trim()
-                )
-            )
-            if (igenyList.size == 1) {
-                igenyReveresed.clear()
-                igenyReveresed.add(
+            if(cikkItem_igeny?.text?.isNotEmpty()!! && mennyiseg_igeny2?.text?.trim().toString().toDouble() > 0){
+                val konti = kontenerText!!.text.trim().substring(4, kontenerText!!.text.trim().length)
+                igenyList.add(
                     IgenyItem(
-                        igenyList[0].cikkszam,
-                        igenyList[0].megnevezes,
-                        igenyList[0].mennyiseg
+                        cikkItem_igeny?.text.toString().trim(), megjegyzes1_igeny!!.text.toString().trim(),
+                        mennyiseg_igeny2?.text.toString().trim()
                     )
                 )
-                recyclerView?.adapter?.notifyDataSetChanged()
-            } else if (igenyList.size > 1) {
-                igenyReveresed.clear()
-                for (i in igenyList.size downTo 1) {
+                if (igenyList.size == 1) {
+                    igenyReveresed.clear()
                     igenyReveresed.add(
                         IgenyItem(
-                            igenyList[i - 1].cikkszam,
-                            igenyList[i - 1].megnevezes,
-                            igenyList[i - 1].mennyiseg
+                            igenyList[0].cikkszam,
+                            igenyList[0].megnevezes,
+                            igenyList[0].mennyiseg
                         )
                     )
+                    recyclerView?.adapter?.notifyDataSetChanged()
+                } else if (igenyList.size > 1) {
+                    igenyReveresed.clear()
+                    for (i in igenyList.size downTo 1) {
+                        igenyReveresed.add(
+                            IgenyItem(
+                                igenyList[i - 1].cikkszam,
+                                igenyList[i - 1].megnevezes,
+                                igenyList[i - 1].mennyiseg
+                            )
+                        )
+                    }
+                    recyclerView?.adapter?.notifyDataSetChanged()
+                    cikkItem_igeny?.isFocusable = true
+                    cikkItem_igeny?.isFocusableInTouchMode = true
+                    cikkItem_igeny?.requestFocus()
+                    cikkItem_igeny?.selectAll()
                 }
-                recyclerView?.adapter?.notifyDataSetChanged()
-                cikkItem_igeny?.isFocusable = true
-                cikkItem_igeny?.isFocusableInTouchMode = true
-                cikkItem_igeny?.requestFocus()
+                sendBinCode2.sendDetails2(
+                    cikkItem_igeny?.text.toString().trim(), mennyiseg_igeny2?.text.toString().toDouble(),
+                    polcTextIgeny?.text.toString().trim(), unit_igeny2?.text.toString(),
+                    konti
+                )
+                cikkItem_igeny?.isEnabled = true
                 cikkItem_igeny?.selectAll()
+                cikkItem_igeny?.requestFocus()
+                mennyiseg_igeny2?.setText("")
+                mennyiseg_igeny2?.isEnabled = false
+                megjegyzes2_igeny2?.text = ""
+                intrem_igeny2?.text = ""
+                unit_igeny2?.text = ""
+                megjegyzes1_igeny?.text = ""
+            }else{
+                mainActivity?.setAlert("Rendes mennyiséget vigyél fel!")
+                mennyiseg_igeny2?.isFocusable = true
+                mennyiseg_igeny2?.isFocusableInTouchMode = true
+                cikkItem_igeny?.isFocusable = false
+                cikkItem_igeny?.isFocusableInTouchMode = false
+                mennyiseg_igeny2?.selectAll()
+                //mennyiseg_igeny2?.requestFocus()
             }
-            sendBinCode2.sendDetails2(
-                cikkItem_igeny?.text.toString().trim(), mennyiseg_igeny2?.text.toString().toDouble(),
-                polcTextIgeny?.text.toString().trim(), unit_igeny2?.text.toString(),
-                konti
-            )
-            cikkItem_igeny?.isEnabled = true
-            cikkItem_igeny?.selectAll()
-            cikkItem_igeny?.requestFocus()
-            mennyiseg_igeny2?.setText("")
-            mennyiseg_igeny2?.isEnabled = false
-            megjegyzes2_igeny2?.text = ""
-            intrem_igeny2?.text = ""
-            unit_igeny2?.text = ""
-            megjegyzes1_igeny?.text = ""
         }
 
         kilepButton?.setOnClickListener {
@@ -204,7 +219,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         lezarButton?.setOnClickListener {
             if (igenyReveresed.size > 0) {
                 val polc = polcTextIgeny!!.text.trim().toString()
-                setProgressBarOn()
+                //setProgressBarOn()
                 val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
                 var a = 0
                 CoroutineScope(IO).launch {
@@ -230,7 +245,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                         if (polcTextIgeny!!.text.isEmpty() && igenyReveresed.size == 0) {
                             sendBinCode2.closeContainer2(7, currentDateAndTime)
                             CoroutineScope(Main).launch {
-                                setProgressBarOff()
+                                //setProgressBarOff()
                                 clearAll()
                                 Log.d(TAG, "onCreateView: lezártam az üreset")
                             }
@@ -238,7 +253,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                         } else {
                             sendBinCode2.closeContainer2(7, currentDateAndTime)
                             CoroutineScope(Main).launch {
-                                setProgressBarOff()
+                                //setProgressBarOff()
                                 clearAll()
                                 Log.d(TAG, "onCreateView: lezártam amibe volt adat")
                             }
@@ -246,18 +261,19 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                         }
                     } else {
                         CoroutineScope(Main).launch {
-                            mainActivity?.setAlert("Nem teljes a siker")
+                            mainActivity?.setAlert("Nem teljes a siker, nem mindegyik cikk van lezárva")
                         }
                     }
                 }
             } else {
-                mainActivity?.setAlert("Nincs semmilyen cikk felvéve igénynek")
+                mainActivity?.setAlert("Nem sikerült lezárni a cikkeket")
             }
         }
 
         return myView
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun clearAll() {
         lezarButton?.requestFocus()
         kontenerText?.text = ""
@@ -333,6 +349,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         Log.d("igenyitem", "igenyClick: $position")
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun getDataFromList() {
         val myList: ArrayList<IgenyItem> =
             arguments?.getSerializable("TOBBLET") as ArrayList<IgenyItem>

@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -54,6 +55,7 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
     private var mcikkszam = ""
     private var mmennyiseg: String? = ""
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -131,6 +133,7 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadData() {
         tempLocations.clear()
         val myList: ArrayList<PolcLocation> =
@@ -216,6 +219,7 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         visszaBtn?.performClick()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun onTimeout() {
         cikkNumber?.setText("")
         kontenerID?.text = ""
