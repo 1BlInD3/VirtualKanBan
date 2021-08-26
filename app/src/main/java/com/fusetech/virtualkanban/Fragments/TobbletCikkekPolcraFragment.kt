@@ -84,8 +84,9 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         recyclerView?.setHasFixedSize(true)
         igeny?.isFocusable = false
         igeny?.isFocusableInTouchMode = false
-        polc?.isFocusable = false
-        polc?.isFocusableInTouchMode = false
+        /* polc?.isFocusable = false
+         polc?.isFocusableInTouchMode = false*/
+        polc?.requestFocus()
         recyclerView?.isFocusable = false
         recyclerView?.isFocusableInTouchMode = false
         loadData()
@@ -158,50 +159,62 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         progressBar?.visibility = View.VISIBLE
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setCode(code: String) {
+        var a = false
         isSent = false
         if (polc?.text?.isEmpty()!!) {
-            mainActivity?.raktarcheck(code)
-            polc?.setText(code)
-            progress.visibility = View.VISIBLE
-            CoroutineScope(IO).launch {
-                async {
-                    Log.d(
-                        "IOTHREAD",
-                        "onCreateView: ${Thread.currentThread().name}"
-                    )
-                    mainActivity?.sendKihelyezesXmlData(
-                        cikkkod,
-                        "BE",//SZ01
-                        mmennyiseg.toString().toDouble(),
-                        "21",
-                        "02",
-                        code
-                    )
-                }.await()
-                if (isSent) {
-                    CoroutineScope(Main).launch {
-                        mainActivity?.setAlert("BRAVOOO")
-                        cikkNumber?.setText("")
-                        kontenerID?.text = ""
-                        cikkID?.text = ""
-                        polc?.setText("")
-                        tempLocations.clear()
-                        recyclerView?.adapter?.notifyDataSetChanged()
-                    }
-                    CoroutineScope(Main).launch {
-                        progress.visibility = View.GONE
-                    }
-                    mainActivity?.updateCikkandContainer(cikkid, kontid)
-                } else {
-                    CoroutineScope(Main).launch {
-                        mainActivity?.setAlert("A picsába")
-                        progress.visibility = View.GONE
+            for (i in 0 until tempLocations.size) {
+                if (tempLocations[i].polc?.trim() == code) {
+                    a = true
+                    mainActivity?.raktarcheck(code)
+                    polc?.setText(code)
+                    progress.visibility = View.VISIBLE
+                    if (polc?.text?.isEmpty()!!) {
+                        CoroutineScope(IO).launch {
+                            async {
+                                Log.d(
+                                    "IOTHREAD",
+                                    "onCreateView: ${Thread.currentThread().name}"
+                                )
+                                mainActivity?.sendKihelyezesXmlData(
+                                    cikkkod,
+                                    "BE",//SZ01
+                                    mmennyiseg.toString().toDouble(),
+                                    "21",
+                                    "02",
+                                    code
+                                )
+                            }.await()
+                            if (isSent) {
+                                CoroutineScope(Main).launch {
+                                    mainActivity?.setAlert("BRAVOOO")
+                                    cikkNumber?.setText("")
+                                    kontenerID?.text = ""
+                                    cikkID?.text = ""
+                                    polc?.setText("")
+                                    tempLocations.clear()
+                                    recyclerView?.adapter?.notifyDataSetChanged()
+                                }
+                                CoroutineScope(Main).launch {
+                                    progress.visibility = View.GONE
+                                }
+                                mainActivity?.updateCikkandContainer(cikkid, kontid)
+                            } else {
+                                CoroutineScope(Main).launch {
+                                    mainActivity?.setAlert("A picsába")
+                                    progress.visibility = View.GONE
+                                }
+                            }
+                        }
+                    } else {
+                        mainActivity?.setAlert("Egy nagy faaaaszt")
                     }
                 }
             }
-        } else {
-            mainActivity?.setAlert("Egy nagy faaaaszt")
+            if(!a){
+                mainActivity?.setAlert("Nincs a listában ilyen polc!\nVálassz egyet a listából")
+            }
         }
     }
 
@@ -249,5 +262,11 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         tsideContainer = null
         mainActivity?.tobbletCikkekPolcra = null
         mainActivity = null
+    }
+
+    fun deleteFocused() {
+        if (polc?.hasFocus()!!) {
+            polc?.setText("")
+        }
     }
 }

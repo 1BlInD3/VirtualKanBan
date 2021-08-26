@@ -721,6 +721,8 @@ class MainActivity : AppCompatActivity(),
             kihelyezes?.deleteFocused()
         }else if (getFragment("KISZEDESCIKK")){
             igenyKontenerKiszedesCikkKiszedes?.deleteFocused()
+        }else if(getFragment("CIKKEKPOLCRA")){
+            tobbletCikkekPolcra?.deleteFocused()
         }
         myTimer.start()
         return super.onKeyUp(keyCode, event)

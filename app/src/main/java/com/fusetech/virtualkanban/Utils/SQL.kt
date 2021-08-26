@@ -2152,7 +2152,11 @@ class SQL(private val sqlMessage: SQLAlert) {
             //context.menuFragment = MenuFragment()
             val kontenerItem: ArrayList<KontenerItem> = ArrayList()
             CoroutineScope(Dispatchers.Main).launch {
-                progress.visibility = View.VISIBLE
+                if(context.menuFragment != null){
+                    context.menuFragment?.setMenuProgressOn()
+                }else{
+                    progress.visibility = View.VISIBLE
+                }
             }
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection: Connection = DriverManager.getConnection(connectionString)
@@ -2161,7 +2165,11 @@ class SQL(private val sqlMessage: SQLAlert) {
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    progress.visibility = View.GONE
+                    if(context.menuFragment != null){
+                        context.menuFragment?.setMenuProgressOff()
+                    }else{
+                        progress.visibility = View.GONE
+                    }
                 }
             } else {
                 tobbletKontener.clear()
@@ -2192,15 +2200,22 @@ class SQL(private val sqlMessage: SQLAlert) {
                     "TKK"
                 ).commit()
                 CoroutineScope(Dispatchers.Main).launch {
-                    progress.visibility = View.GONE
+                    if(context.menuFragment != null){
+                        context.menuFragment?.setMenuProgressOff()
+                    }else{
+                        progress.visibility = View.GONE
+                    }
                 }
                 //context.menuFragment = null
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("$e")
-                progress.visibility = View.GONE
-                //context.menuFragment = null
+                if(context.menuFragment != null){
+                    context.menuFragment?.setMenuProgressOff()
+                }else{
+                    progress.visibility = View.GONE
+                }
             }
         }
     }

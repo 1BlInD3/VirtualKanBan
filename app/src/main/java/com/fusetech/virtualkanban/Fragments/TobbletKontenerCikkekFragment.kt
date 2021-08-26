@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -81,6 +82,7 @@ class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onIt
         )
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun loadData() {
         val myList: ArrayList<KontenerbenLezarasItem> =
             arguments?.getSerializable("TOBBLETESCIKKEK") as ArrayList<KontenerbenLezarasItem>
