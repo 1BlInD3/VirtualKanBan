@@ -90,6 +90,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         cikkItem_igeny = myView?.tcikk_igeny
         mennyiseg_igeny2 = myView?.tmennyiseg_igeny
         mennyiseg_igeny2?.isFocusable = false
+        mennyiseg_igeny2?.isFocusableInTouchMode = false
         cikkItem_igeny?.isFocusable = false
         kilepButton = myView?.tkilep_igeny_button
         mennyiseg_igeny2?.filters = arrayOf<InputFilter>(
@@ -130,10 +131,10 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                     cikkItem_igeny?.text.toString(),
                     polcTextIgeny?.text?.trim().toString()
                 )
-            }else{
+            }/*else{
                 mennyiseg_igeny2?.isFocusable = false
                 mennyiseg_igeny2?.isFocusableInTouchMode = false
-            }
+            }*/
         }
         mennyiseg_igeny2?.setOnClickListener {
             if(cikkItem_igeny?.text?.isNotEmpty()!! && mennyiseg_igeny2?.text?.trim().toString().toDouble() > 0){
@@ -450,7 +451,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         cikkItem_igeny?.selectAll()
         cikkItem_igeny?.requestFocus()
         mennyiseg_igeny2?.setText("")
-        mennyiseg_igeny2?.isEnabled = false
+       // mennyiseg_igeny2?.isEnabled = false
         megjegyzes2_igeny2?.text = ""
         intrem_igeny2?.text = ""
         unit_igeny2?.text = ""

@@ -887,14 +887,21 @@ class MainActivity : AppCompatActivity(),
     fun check02Polc(bin: String): Boolean {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
+            CoroutineScope(Main).launch {
+                progress.visibility = View.VISIBLE
+            }
             connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(resources.getString(R.string.is02Polc))
             statement.setString(1, bin)
             val resultSet = statement.executeQuery()
+            CoroutineScope(Main).launch {
+                progress.visibility = View.GONE
+            }
             return resultSet.next()
         } catch (e: Exception) {
             CoroutineScope(Main).launch {
                 setAlert("$e")
+                progress.visibility = View.GONE
             }
             return false
         }

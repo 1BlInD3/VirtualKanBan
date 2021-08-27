@@ -200,7 +200,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         }
         mennyiseg?.setOnClickListener {
             isUpdated = false
-            if (mennyiseg?.text?.trim().toString().isNotEmpty()) {
+            if (mennyiseg?.text?.trim().toString().isNotEmpty() && mennyiseg?.text?.trim().toString().toDouble() > 0) {
                 if (mennyiseg?.text?.trim().toString().toDouble() > getPolcValue(
                         polc!!.text.trim().toString()
                     )

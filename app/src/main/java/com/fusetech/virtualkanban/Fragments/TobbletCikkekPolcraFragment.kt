@@ -202,13 +202,13 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
                                 mainActivity?.updateCikkandContainer(cikkid, kontid)
                             } else {
                                 CoroutineScope(Main).launch {
-                                    mainActivity?.setAlert("A picsába")
+                                    mainActivity?.setAlert("Az XML nem lett a scala felé elküldve")
                                     progress.visibility = View.GONE
                                 }
                             }
                         }
                     } else {
-                        mainActivity?.setAlert("Egy nagy faaaaszt")
+                        mainActivity?.setAlert("Vigyél fel polchelyet")
                     }
                 }
             }

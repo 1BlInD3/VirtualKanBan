@@ -161,9 +161,6 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                 val cikk = cikkText?.text.toString().trim()
                 isSentTranzit = false
                 CoroutineScope(IO).launch {
-                    CoroutineScope(Main).launch {
-                        setProgressBarOn()
-                    }
                     async {
                         Log.d("IOTHREAD", "${Thread.currentThread().name} 1es opcio")
                         if (mainActivity?.check02Polc(bin)!!) {
@@ -207,12 +204,9 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                                 sideContainer?.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
                             }
                         }
-                        CoroutineScope(Main).launch {
-                            setProgressBarOff()
-                        }
                     } else {
                         CoroutineScope(Main).launch {
-                            setProgressBarOff()
+                            mainActivity?.setAlert("Nem sikerült a tranzit XML-t elküldeni a Scala felé")
                         }
                     }
                 }

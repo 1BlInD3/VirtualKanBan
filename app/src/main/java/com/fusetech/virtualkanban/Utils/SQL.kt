@@ -130,7 +130,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 Log.d(TAG, "checkTrannzit: Hülyeség nincs a tranzitban")
                 CoroutineScope(Dispatchers.Main).launch {
-                    context.setAlert("A cikk vagy zárolt, vagy nincs a tranzit raktárban!")
+                    context.setAlert("A $code cikk vagy zárolt, vagy nincs a tranzit raktárban!")
                     context.polcHelyezesFragment.setCikkNumberBack()
                     context.polcHelyezesFragment.setProgressBarOff()
                 }
@@ -205,6 +205,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             Log.d(TAG, "checkTrannzit: $e")
             CoroutineScope(Dispatchers.Main).launch {
                 context.polcHelyezesFragment.setProgressBarOff()
+                context.setAlert("Tranzitos hiba $e")
             }
         }
     }
@@ -496,7 +497,9 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             Log.d(TAG, "check01: $e")
             CoroutineScope(Dispatchers.Main).launch {
+                context.igenyFragment.setBinFocusOn()
                 context.igenyFragment.setProgressBarOff()
+                context.setAlert("HIba történt\n$e")
             }
         }
     }
@@ -550,6 +553,9 @@ class SQL(private val sqlMessage: SQLAlert) {
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
+            CoroutineScope(Dispatchers.Main).launch {
+                progress.visibility = View.VISIBLE
+            }
             connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.insertItem))
             statement.setString(1, konti)
@@ -561,10 +567,14 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.setString(7, term)
             statement.setString(8, unit)
             statement.executeUpdate()
+            CoroutineScope(Dispatchers.Main).launch {
+                progress.visibility = View.GONE
+            }
         } catch (e: Exception) {
             Log.d(TAG, "uploadItem: $e")
             CoroutineScope(Dispatchers.Main).launch {
-                context.setAlert("$e\nHiba történt, lépj vissza a 'Kilépés' gombbal a menübe, majd vissza, hogy megnézd mi lett utoljára felvéve")
+                context.setAlert("Hiba történt, lépj vissza a 'Kilépés' gombbal a menübe, majd vissza, hogy megnézd mi lett utoljára felvéve\n$e")
+                progress.visibility = View.GONE
             }
         }
     }
@@ -640,7 +650,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             Log.d(TAG, "closeContainerSql: $e")
             CoroutineScope(Dispatchers.Main).launch {
-                context.setAlert("Nem sikerült")
+                context.setAlert("Nem sikerült\n$e")
             }
         }
     }
@@ -1048,13 +1058,13 @@ class SQL(private val sqlMessage: SQLAlert) {
                 val resultSet1 = statement1.executeQuery()
                 if(!resultSet1.next()){
                     CoroutineScope(Dispatchers.Main).launch {
-                        context.setAlert("Nincs ilyen cikk a rendszerben")
+                        context.setAlert("Nincs ilyen cikk a rendszerben $code")
                         context.igenyFragment.setProgressBarOff()
                         context.igenyFragment.setFocusToItem()
                     }
                 }else{
                     CoroutineScope(Dispatchers.Main).launch {
-                        context.setAlert("A cikknek nincs mennyisége a rendszerben")
+                        context.setAlert("A $code cikknek nincs mennyisége a rendszerben")
                         context.igenyFragment.setProgressBarOff()
                         context.igenyFragment.setFocusToItem()
                     }
@@ -1079,6 +1089,8 @@ class SQL(private val sqlMessage: SQLAlert) {
             Log.d(TAG, "checkItem: $e")
             CoroutineScope(Dispatchers.Main).launch {
                 context.igenyFragment.setProgressBarOff()
+                context.igenyFragment.setFocusToItem()
+                context.setAlert("Hiba történt a cikk ellenőrzés közben\n$e")
             }
         }
     }
