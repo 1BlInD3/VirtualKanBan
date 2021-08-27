@@ -397,4 +397,10 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         kilepButton = null
         mainActivity = null
     }
+
+    fun deleteFocused(){
+        if(polcTextIgeny?.hasFocus()!!){
+            polcTextIgeny?.setText("")
+        }
+    }
 }

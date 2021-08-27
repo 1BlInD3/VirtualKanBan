@@ -84,6 +84,8 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
                                 mainActivity?.updateCikkAfterSend(myList[i].id)
                                 a++
                             }
+                        }else{
+                            a++
                         }
                     }
                     if (a == myList.size) {
@@ -92,7 +94,7 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
                     }
                 }
             } catch (e: Exception) {
-                mainActivity?.setAlert("$e")
+                mainActivity?.setAlert("${e.printStackTrace()}")
                 mainActivity?.kihelyezes?.progressBarOff()
                 kihelyezes?.isEnabled = true
             }

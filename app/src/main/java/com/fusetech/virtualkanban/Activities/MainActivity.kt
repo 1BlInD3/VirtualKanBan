@@ -252,7 +252,7 @@ class MainActivity : AppCompatActivity(),
         requestStoragePermission()
         loadLoginFragment()
 
-        exitTimer = object : CountDownTimer(1 * 60 * 1000, 1000) {
+        exitTimer = object : CountDownTimer(60000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 Log.d(TAG, "onTick: ")
             }
@@ -723,6 +723,8 @@ class MainActivity : AppCompatActivity(),
             igenyKontenerKiszedesCikkKiszedes?.deleteFocused()
         }else if(getFragment("CIKKEKPOLCRA")){
             tobbletCikkekPolcra?.deleteFocused()
+        }else if(getFragment("IGENY")){
+            igenyFragment.deleteFocused()
         }
         myTimer.start()
         return super.onKeyUp(keyCode, event)
@@ -1351,6 +1353,7 @@ class MainActivity : AppCompatActivity(),
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         //super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == EXTERNAL_STORAGE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

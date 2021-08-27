@@ -2131,7 +2131,8 @@ class SQL(private val sqlMessage: SQLAlert) {
             val statement = connection.prepareStatement(res.getString(R.string.kontenerKiszedve))
             val datum = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
             statement.setString(1, datum)
-            statement.setInt(2, code)
+            statement.setInt(2,5)
+            statement.setInt(3, code)
             statement.executeUpdate()
             CoroutineScope(Dispatchers.Main).launch {
                 context.kihelyezes?.progressBarOff()
