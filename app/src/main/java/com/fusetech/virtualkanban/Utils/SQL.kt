@@ -564,7 +564,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             Log.d(TAG, "uploadItem: $e")
             CoroutineScope(Dispatchers.Main).launch {
-                context.setAlert("Hiba történt, lépj vissza a 'Kilépés' gombbal a menübe, majd vissza, hogy megnézd mi lett utoljára felvéve\n $e")
+                context.setAlert("$e\nHiba történt, lépj vissza a 'Kilépés' gombbal a menübe, majd vissza, hogy megnézd mi lett utoljára felvéve")
             }
         }
     }
@@ -594,11 +594,14 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.setString(7, term)
             statement.setString(8, unit)
             statement.executeUpdate()
-            progress.visibility = View.GONE
+            CoroutineScope(Dispatchers.Main).launch {
+                progress.visibility = View.GONE
+                context.tobbletOsszeallitasFragment.setAfterUpdate()
+            }
         } catch (e: Exception) {
             Log.d(TAG, "uploadItem: $e")
             CoroutineScope(Dispatchers.Main).launch {
-                context.setAlert("Hiba történt, lépj vissza a 'Kilépés' gombbal a menübe, majd vissza, hogy megnézd mi lett utoljára felvéve")
+                context.setAlert("Hiba történt, lépj vissza a 'Kilépés' gombbal a menübe, majd vissza, hogy megnézd mi lett utoljára felvéve\n$e")
                 progress.visibility = View.GONE
             }
         }
@@ -670,6 +673,9 @@ class SQL(private val sqlMessage: SQLAlert) {
                     progress.visibility = View.VISIBLE
                 }
                 statement1.executeUpdate()
+                CoroutineScope(Dispatchers.Main).launch {
+                    progress.visibility = View.GONE
+                }
             } catch (e: Exception) {
                 Log.d(TAG, "closeContainerSql: $e")
                 CoroutineScope(Dispatchers.Main).launch {
@@ -982,10 +988,18 @@ class SQL(private val sqlMessage: SQLAlert) {
             try {
                 context.retro.retrofitGet(file, endPoint)
             } catch (e: Exception) {
-                val a = mainUrl
-                mainUrl = backupURL
-                context.retro.retrofitGet(file, endPoint)
-                mainUrl = a
+                try{
+                    val a = mainUrl
+                    mainUrl = backupURL
+                    context.retro.retrofitGet(file, endPoint)
+                    mainUrl = a
+                }catch (e: Exception){
+                    CoroutineScope(Dispatchers.Main).launch {
+                        context.setAlert("Hálózati probléma")
+                        progress.visibility = View.GONE
+                    }
+                }
+
             }
             //}else{
             //    context.setAlert("Nincs elfogadva a permission")
@@ -1072,7 +1086,8 @@ class SQL(private val sqlMessage: SQLAlert) {
     fun checkItem2(code: String, bin: String, context: MainActivity) {
         val connection: Connection
         CoroutineScope(Dispatchers.Main).launch {
-            context.tobbletOsszeallitasFragment.setProgressBarOn()
+            //context.tobbletOsszeallitasFragment.setProgressBarOn()
+            progress.visibility = View.VISIBLE
         }
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -1088,9 +1103,9 @@ class SQL(private val sqlMessage: SQLAlert) {
                 val resultSet1 = statement1.executeQuery()
                 if (!resultSet1.next()) {
                     CoroutineScope(Dispatchers.Main).launch {
-                        context.setAlert("Nincs ilyen cikk sem a polcon sem a termelésben")
+                        context.setAlert("A $code cikk nincs sem a polcon sem a termelésben")
                         context.tobbletOsszeallitasFragment.setCikkszamBlank()
-                        context.tobbletOsszeallitasFragment.setProgressBarOff()
+                        progress.visibility = View.GONE
                         context.tobbletOsszeallitasFragment.setFocusToItem(bin)
                     }
                 } else {
@@ -1106,7 +1121,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("A cikk ezeken a polcokon található a termelésben: \n\n$message")
                         context.tobbletOsszeallitasFragment.setCikkszamBlank()
-                        context.tobbletOsszeallitasFragment.setProgressBarOff()
+                        progress.visibility = View.GONE
                         context.tobbletOsszeallitasFragment.setFocusToItem(bin)
                     }
                 }
@@ -1122,14 +1137,15 @@ class SQL(private val sqlMessage: SQLAlert) {
                         intremIgeny,
                         unitIgeny
                     )
-                    context.tobbletOsszeallitasFragment.setProgressBarOff()
+                    progress.visibility = View.GONE
                     context.tobbletOsszeallitasFragment.setFocusToQuantity()
                 }
             }
         } catch (e: Exception) {
             Log.d(TAG, "checkItem: $e")
             CoroutineScope(Dispatchers.Main).launch {
-                context.tobbletOsszeallitasFragment.setProgressBarOff()
+                progress.visibility = View.GONE
+                context.setAlert("Nincs hálózati kapcsolat?\n$e")
             }
         }
     }

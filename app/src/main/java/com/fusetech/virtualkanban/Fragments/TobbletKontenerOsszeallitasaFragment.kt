@@ -130,9 +130,6 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                     cikkItem_igeny?.text.toString(),
                     polcTextIgeny?.text?.trim().toString()
                 )
-                mennyiseg_igeny2?.isFocusable = true
-                mennyiseg_igeny2?.isFocusableInTouchMode = true
-                mennyiseg_igeny2?.requestFocus()
             }else{
                 mennyiseg_igeny2?.isFocusable = false
                 mennyiseg_igeny2?.isFocusableInTouchMode = false
@@ -157,6 +154,10 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                         )
                     )
                     recyclerView?.adapter?.notifyDataSetChanged()
+                    cikkItem_igeny?.isFocusable = true
+                    cikkItem_igeny?.isFocusableInTouchMode = true
+                    cikkItem_igeny?.requestFocus()
+                    cikkItem_igeny?.selectAll()
                 } else if (igenyList.size > 1) {
                     igenyReveresed.clear()
                     for (i in igenyList.size downTo 1) {
@@ -179,15 +180,6 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                     polcTextIgeny?.text.toString().trim(), unit_igeny2?.text.toString(),
                     konti
                 )
-                cikkItem_igeny?.isEnabled = true
-                cikkItem_igeny?.selectAll()
-                cikkItem_igeny?.requestFocus()
-                mennyiseg_igeny2?.setText("")
-                mennyiseg_igeny2?.isEnabled = false
-                megjegyzes2_igeny2?.text = ""
-                intrem_igeny2?.text = ""
-                unit_igeny2?.text = ""
-                megjegyzes1_igeny?.text = ""
             }else{
                 mainActivity?.setAlert("Rendes mennyiséget vigyél fel!")
                 mennyiseg_igeny2?.isFocusable = true
@@ -324,10 +316,12 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
     }
 
     fun setFocusToQuantity() {
-        mennyiseg_igeny2?.isEnabled = true
-        mennyiseg_igeny2?.selectAll()
+        mennyiseg_igeny2?.isFocusable = true
+        mennyiseg_igeny2?.isFocusableInTouchMode = true
         mennyiseg_igeny2?.requestFocus()
+        mennyiseg_igeny2?.selectAll()
         cikkItem_igeny?.isFocusable = false
+        cikkItem_igeny?.isFocusableInTouchMode = false
     }
 
     override fun onAttach(context: Context) {
@@ -450,5 +444,21 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         mennyiseg_igeny2?.setText("")
         mennyiseg_igeny2?.isFocusable = false
         mennyiseg_igeny2?.isFocusableInTouchMode = false
+    }
+    fun setAfterUpdate(){
+        cikkItem_igeny?.isEnabled = true
+        cikkItem_igeny?.selectAll()
+        cikkItem_igeny?.requestFocus()
+        mennyiseg_igeny2?.setText("")
+        mennyiseg_igeny2?.isEnabled = false
+        megjegyzes2_igeny2?.text = ""
+        intrem_igeny2?.text = ""
+        unit_igeny2?.text = ""
+        megjegyzes1_igeny?.text = ""
+    }
+    fun setAfterCheck(){
+        mennyiseg_igeny2?.isFocusable = true
+        mennyiseg_igeny2?.isFocusableInTouchMode = true
+        mennyiseg_igeny2?.requestFocus()
     }
 }
