@@ -2016,7 +2016,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 val myList: ArrayList<SzerelohelyItem> = ArrayList()
                 do {
                     val szerelohely = resultSet.getString("termeles_rakhely")
-                    myList.add(SzerelohelyItem(szerelohely.toUpperCase(Locale.ROOT)))
+                    myList.add(SzerelohelyItem(szerelohely.uppercase(Locale.ROOT)))
                 } while (resultSet.next())
                 CoroutineScope(Dispatchers.Main).launch {
                     progress.visibility = View.GONE
