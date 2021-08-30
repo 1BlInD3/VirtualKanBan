@@ -168,7 +168,6 @@ class MainActivity : AppCompatActivity(),
         const val connectionString =
             "jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
         lateinit var res: Resources
-
         @SuppressLint("StaticFieldLeak")
         lateinit var progress: ProgressBar
         val kihelyezesItems: ArrayList<SzerelohelyItem> = ArrayList()
@@ -183,7 +182,6 @@ class MainActivity : AppCompatActivity(),
         var logPath = ""
         var timeOut = 0L
         var hasRight = false
-
         //var szallitoJarmu: ArrayList<String> = ArrayList()
         // var ellenorzoKod: ArrayList<String> = ArrayList()
         var szallitoMap: HashMap<String, String> = HashMap()

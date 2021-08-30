@@ -21,5 +21,14 @@ class SaveFile {
     fun prepareFile(path: String, name: String) : File{
         return prepareFile(path,name)
     }
-
+    fun writeLog(file: File, data: String){
+        try{
+            val stream = FileOutputStream(file,true)
+            stream.write(data.toByteArray())
+            stream.close()
+        }catch (e: Exception){
+            Log.d(TAG, "writeLog: ")
+        }
+    }
+    fun readLog(file: File) = file.inputStream().readBytes().toString(Charsets.UTF_8)
 }

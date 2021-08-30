@@ -68,15 +68,16 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.setString(1, code)
             val resultSet: ResultSet = statement.executeQuery()
             if (!resultSet.next()) {
-                val statement2 = connection.prepareStatement("SELECT [Key1] FROM [Fusetech].[dbo].[DolgKodok] WHERE Key1 = ?")
+                val statement2 =
+                    connection.prepareStatement("SELECT [Key1] FROM [Fusetech].[dbo].[DolgKodok] WHERE Key1 = ?")
                 statement2.setString(1, code)
                 val resultSet2 = statement2.executeQuery()
-                if(!resultSet2.next()){
+                if (!resultSet2.next()) {
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("Nincs jogosultságod belépni")
                         context.loginFragment?.stopSpinning()
                     }
-                }else{
+                } else {
                     context.loadMenuFragment(false)
                     context.loginFragment = null
                     MainActivity.hasRight = false
@@ -100,11 +101,31 @@ class SQL(private val sqlMessage: SQLAlert) {
                     MainActivity.hasRight = false
                 }
             }
+            try {
+                if (File(context.getExternalFilesDir(null), "LOG.txt").exists()) {
+                    val email = Email()
+                    val save = SaveFile()
+                    email.sendEmail(
+                        "KutyuLOG@fusetech.hu",
+                        "attila.balind@fusetech.hu",
+                        context.getMacAddr(),
+                        save.readLog(File(context.getExternalFilesDir(null), "LOG.txt"))
+                    )
+                    File(context.getExternalFilesDir(null), "LOG.txt").delete()
+                }
+            } catch (e: Exception) {
+                context.setAlert("$e")
+            }
         } catch (e: Exception) {
             Log.d(TAG, "Nincs kapcsolat")
             CoroutineScope(Dispatchers.Main).launch {
                 context.loginFragment?.stopSpinning()
                 context.loginFragment?.setId("Hiaba lépett fel a feldolgozás során $e")
+                val save = SaveFile()
+                val path = context.getExternalFilesDir(null)
+                val name = "LOG.txt"
+                val mFile = File(path,name)
+                save.writeLog(mFile,setDate()+"$e\n"+setSeparator())
             }
         }
     }
@@ -869,13 +890,14 @@ class SQL(private val sqlMessage: SQLAlert) {
                 val resultSet1: ResultSet = preparedStatement1.executeQuery()
                 if (!resultSet1.next()) {
                     val statement2 = connection.prepareStatement(res.getString(R.string.cikkSql4))
-                    statement2.setString(1,code)
+                    statement2.setString(1, code)
                     val resultSet2 = statement2.executeQuery()
-                    if(!resultSet2.next()){
-                        context.loadFragment = LoadFragment.newInstance("Nincs ilyen kód a rendszerben")
+                    if (!resultSet2.next()) {
+                        context.loadFragment =
+                            LoadFragment.newInstance("Nincs ilyen kód a rendszerben")
                         context.supportFragmentManager.beginTransaction()
                             .replace(R.id.cikk_container, context.loadFragment!!, "LRF").commit()
-                    }else{
+                    } else {
                         context.cikkResultFragment = CikkResultFragment()
                         val megjegyzes1: String? = resultSet2.getString("Description1")
                         val megjegyzes2: String? = resultSet2.getString("Description2")
@@ -888,7 +910,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                         bundle.putString("intrem", intrem)
                         context.cikkResultFragment?.arguments = bundle
                         context.supportFragmentManager.beginTransaction()
-                            .replace(R.id.cikk_container, context.cikkResultFragment!!, "CRF").commit()
+                            .replace(R.id.cikk_container, context.cikkResultFragment!!, "CRF")
+                            .commit()
                     }
                 } else {
                     context.cikkResultFragment = CikkResultFragment()
@@ -972,15 +995,10 @@ class SQL(private val sqlMessage: SQLAlert) {
         ) + ".xml"
         val file = File(path, name)
         try {
-            CoroutineScope(Dispatchers.Main).launch{
+            CoroutineScope(Dispatchers.Main).launch {
                 progress.visibility = View.VISIBLE
             }
             val currentDate = SimpleDateFormat("yyyy-MM-dd").format(Date())
-            /*if (ContextCompat.checkSelfPermission(
-                    context,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {*/
             context.save.saveFile(
                 file,
                 context.xml.createXml(
@@ -998,23 +1016,21 @@ class SQL(private val sqlMessage: SQLAlert) {
             try {
                 context.retro.retrofitGet(file, endPoint)
             } catch (e: Exception) {
-                try{
+                try {
                     val a = mainUrl
                     mainUrl = backupURL
                     context.retro.retrofitGet(file, endPoint)
                     mainUrl = a
-                }catch (e: Exception){
+                } catch (e: Exception) {
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("Hálózati probléma")
                         progress.visibility = View.GONE
+                        if (file.exists()) {
+                            file.delete()
+                        }
                     }
                 }
-
             }
-            //}else{
-            //    context.setAlert("Nincs elfogadva a permission")
-            //context.requestStoragePermission()
-            //}
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Scala send \n${e}")
@@ -1022,7 +1038,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 if (file.exists()) {
                     file.delete()
                 }
-                val catchFile = context.save.prepareFile(
+               /* val catchFile = context.save.prepareFile(
                     context.getExternalFilesDir(null).toString(),
                     SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + Random.nextInt(
                         0,
@@ -1035,7 +1051,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     ) == PackageManager.PERMISSION_GRANTED
                 ) {*/
                 context.save.saveFile(catchFile, "myData")
-                context.retro.retrofitGet(catchFile, "//10.0.0.11/TeszWeb/bin")
+                context.retro.retrofitGet(catchFile, "//10.0.0.11/TeszWeb/bin")*/
                 //}
             }
         }
@@ -1054,15 +1070,15 @@ class SQL(private val sqlMessage: SQLAlert) {
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 val statement1 = connection.prepareStatement(res.getString(R.string.cikkSql4))
-                statement1.setString(1,code)
+                statement1.setString(1, code)
                 val resultSet1 = statement1.executeQuery()
-                if(!resultSet1.next()){
+                if (!resultSet1.next()) {
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("Nincs ilyen cikk a rendszerben $code")
                         context.igenyFragment.setProgressBarOff()
                         context.igenyFragment.setFocusToItem()
                     }
-                }else{
+                } else {
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("A $code cikknek nincs mennyisége a rendszerben")
                         context.igenyFragment.setProgressBarOff()
@@ -1661,7 +1677,8 @@ class SQL(private val sqlMessage: SQLAlert) {
 
                                 }
                                 builder.create()
-                                builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
+                                builder.show().getButton(DialogInterface.BUTTON_POSITIVE)
+                                    .requestFocus()
                             } // ide kell írni hogy zárja le nullával automatikusan
                             progress.visibility = View.GONE
                         }
@@ -2132,16 +2149,16 @@ class SQL(private val sqlMessage: SQLAlert) {
     fun closeCikkek(code: Int, context: MainActivity) {
         try {
             CoroutineScope(Dispatchers.Main).launch {
-               progress.visibility = View.VISIBLE
+                progress.visibility = View.VISIBLE
             }
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection: Connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.cikkLezarva))
             statement.setInt(1, code)
             statement.executeUpdate()
-             CoroutineScope(Dispatchers.Main).launch {
-                 progress.visibility = View.GONE
-             }
+            CoroutineScope(Dispatchers.Main).launch {
+                progress.visibility = View.GONE
+            }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("$e")
@@ -2161,7 +2178,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             val statement = connection.prepareStatement(res.getString(R.string.kontenerKiszedve))
             val datum = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
             statement.setString(1, datum)
-            statement.setInt(2,5)
+            statement.setInt(2, 5)
             statement.setInt(3, code)
             statement.executeUpdate()
             CoroutineScope(Dispatchers.Main).launch {
@@ -2185,9 +2202,9 @@ class SQL(private val sqlMessage: SQLAlert) {
             //context.menuFragment = MenuFragment()
             val kontenerItem: ArrayList<KontenerItem> = ArrayList()
             CoroutineScope(Dispatchers.Main).launch {
-                if(context.menuFragment != null){
+                if (context.menuFragment != null) {
                     context.menuFragment?.setMenuProgressOn()
-                }else{
+                } else {
                     progress.visibility = View.VISIBLE
                 }
             }
@@ -2198,9 +2215,9 @@ class SQL(private val sqlMessage: SQLAlert) {
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    if(context.menuFragment != null){
+                    if (context.menuFragment != null) {
                         context.menuFragment?.setMenuProgressOff()
-                    }else{
+                    } else {
                         progress.visibility = View.GONE
                     }
                 }
@@ -2233,9 +2250,9 @@ class SQL(private val sqlMessage: SQLAlert) {
                     "TKK"
                 ).commit()
                 CoroutineScope(Dispatchers.Main).launch {
-                    if(context.menuFragment != null){
+                    if (context.menuFragment != null) {
                         context.menuFragment?.setMenuProgressOff()
-                    }else{
+                    } else {
                         progress.visibility = View.GONE
                     }
                 }
@@ -2244,9 +2261,9 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("$e")
-                if(context.menuFragment != null){
+                if (context.menuFragment != null) {
                     context.menuFragment?.setMenuProgressOff()
-                }else{
+                } else {
                     progress.visibility = View.GONE
                 }
             }
@@ -2257,11 +2274,11 @@ class SQL(private val sqlMessage: SQLAlert) {
         try {
             context.tobbletCikkek = TobbletKontenerCikkekFragment()
             CoroutineScope(Dispatchers.Main).launch {
-               /* if (context.tobbletKontenerKihelyzeseFragment != null) {
-                    context.tobbletKontenerKihelyzeseFragment?.setProgressBar8On()
-                } else {
-                    progress.visibility = View.VISIBLE
-                }*/
+                /* if (context.tobbletKontenerKihelyzeseFragment != null) {
+                     context.tobbletKontenerKihelyzeseFragment?.setProgressBar8On()
+                 } else {
+                     progress.visibility = View.VISIBLE
+                 }*/
                 progress.visibility = View.VISIBLE
             }
             Class.forName("net.sourceforge.jtds.jdbc.Driver") //EZT KÉNE KIIKTATNI HOGY ÁTÍRJA AZ ADATBÁZIST
@@ -2560,5 +2577,12 @@ class SQL(private val sqlMessage: SQLAlert) {
                 context.setAlert("Visszaírási hiba \n$e")
             }
         }
+    }
+    @SuppressLint("SimpleDateFormat")
+    fun setDate():String{
+        return SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())+"\n"
+    }
+    fun setSeparator(): String{
+        return "-------------------------------------------------------\n"
     }
 }
