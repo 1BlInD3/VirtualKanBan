@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.activities
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.*
@@ -37,6 +38,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import android.content.DialogInterface
+import android.net.wifi.WifiManager
+import java.io.File
 
 
 private const val TAG = "MainActivity"
@@ -187,6 +190,8 @@ class MainActivity : AppCompatActivity(),
         var szallitoMap: HashMap<String, String> = HashMap()
         var dolgKod: String = ""// vissza ide
         var sz0x: String = ""
+        var wifiInfo : String = ""
+        lateinit var path: File
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -210,6 +215,8 @@ class MainActivity : AppCompatActivity(),
         ellenorzoKod = bundle.getStringArrayList("ellenorzokod")!!
         Log.d("MYBUNDLE", "onCreate: $ellenorzoKod")*/
         res = resources
+        path = getExternalFilesDir(null)!!
+       // mFile = File(path,name)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance("", "")
@@ -219,6 +226,7 @@ class MainActivity : AppCompatActivity(),
         ellenorzoKodFragment = EllenorzoKodFragment()
         igenyKiszedesCikk = IgenyKontnerKiszedesCikk()
         progress = progressBar2
+        wifiInfo = getMacAndSignalStrength()
         progress.visibility = View.GONE
         AidcManager.create(this) { aidcManager ->
             manager = aidcManager
@@ -650,6 +658,7 @@ class MainActivity : AppCompatActivity(),
                 }
             }
             myTimer.start()
+            wifiInfo = getMacAndSignalStrength()
         }
     }
 
@@ -661,6 +670,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         cancelTimer()
+        wifiInfo = getMacAndSignalStrength()
         if (getMenuFragment() && menuFragment?.hasRightToOpen()!!) {
             when (keyCode) {
                 7 -> {
@@ -668,6 +678,7 @@ class MainActivity : AppCompatActivity(),
                     finishAndRemoveTask()
                 } //0
                 8 -> {
+                    Log.d(TAG, "onKeyUp: ${getMacAndSignalStrength()}")
                     menuFragment?.polcHelyezesClick()
                     loadPolcHelyezesFragment()
                 } //1
@@ -1327,7 +1338,7 @@ class MainActivity : AppCompatActivity(),
     private fun requestStoragePermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
         ) {
             AlertDialog.Builder(this)
@@ -1336,7 +1347,7 @@ class MainActivity : AppCompatActivity(),
                 .setPositiveButton("OK") { _, _ ->
                     ActivityCompat.requestPermissions(
                         this@MainActivity,
-                        arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), EXTERNAL_STORAGE
+                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION), EXTERNAL_STORAGE
                     )
                 }
                 .setNegativeButton("Nem") { dialog, _ ->
@@ -1347,7 +1358,7 @@ class MainActivity : AppCompatActivity(),
         } else {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), EXTERNAL_STORAGE
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION), EXTERNAL_STORAGE
             )
         }
     }
@@ -1390,12 +1401,9 @@ class MainActivity : AppCompatActivity(),
         }
         return "02:00:00:00:00:00"
     }
-   /* fun abc(){
-        builder.setOnShowListener(OnShowListener {
-            val positive: Button = builder.getButton(AlertDialog.BUTTON_POSITIVE)
-            positive.setFocusable(true)
-            positive.setFocusableInTouchMode(true)
-            positive.requestFocus()
-        })
-    }*/
+    fun getMacAndSignalStrength(): String{
+            val wifimanage = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
+            val wifiinfo = wifimanage.connectionInfo
+            return wifiinfo.bssid+","+wifiinfo.rssi.toString().trim()
+    }
 }
