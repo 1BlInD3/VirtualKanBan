@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -93,6 +94,7 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
             }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onKontenerClick(position: Int) {
         Log.d(TAG, "onKontenerClick: ${kontenerList[position].kontner_id}")
         igenyKontener?.sendContainer(kontenerList[position].kontner_id.toString())
@@ -102,6 +104,7 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         exitBtn?.isFocusableInTouchMode = false
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadData() {
         val myList: ArrayList<KontenerItem> =
             arguments?.getSerializable("KONTENERLISTA") as ArrayList<KontenerItem>

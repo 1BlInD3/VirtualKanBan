@@ -161,5 +161,4 @@ class IgenyKontenerKiszedese : Fragment() {
             szerelohely?.setText("")
         }
     }
-
 }

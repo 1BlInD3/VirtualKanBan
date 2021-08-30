@@ -1186,10 +1186,10 @@ class SQL(private val sqlMessage: SQLAlert) {
                         progress.visibility = View.GONE
                     }
                 }
-                context.supportFragmentManager.beginTransaction()
+                /*context.supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_container, context.igenyKiszedesFragment!!, "KISZEDES")
                     .commit()
-                context.menuFragment = null
+                context.menuFragment = null*/
             } else {
                 context.kontenerList.clear()
                 do {
@@ -2058,6 +2058,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("$e")
+                context.kihelyezes?.mindentVissza()
                 progress.visibility = View.GONE
             }
         }
@@ -2122,6 +2123,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("$e")
+                context.kihelyezes?.setFocusToBin()
                 progress.visibility = View.GONE
             }
         }
@@ -2129,21 +2131,21 @@ class SQL(private val sqlMessage: SQLAlert) {
 
     fun closeCikkek(code: Int, context: MainActivity) {
         try {
-            /*CoroutineScope(Dispatchers.Main).launch {
-                context.kihelyezes.progressBarOn()
-            }*/
+            CoroutineScope(Dispatchers.Main).launch {
+               progress.visibility = View.VISIBLE
+            }
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection: Connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.cikkLezarva))
             statement.setInt(1, code)
             statement.executeUpdate()
-            /* CoroutineScope(Dispatchers.Main).launch {
-                 context.kihelyezes.progressBarOff()
-             }*/
+             CoroutineScope(Dispatchers.Main).launch {
+                 progress.visibility = View.GONE
+             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("$e")
-                //context.kihelyezes.progressBarOff()
+                progress.visibility = View.GONE
             }
         }
     }
