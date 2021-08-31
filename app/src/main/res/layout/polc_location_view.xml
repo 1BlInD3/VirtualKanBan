@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/polcNameText"
-        android:layout_width="80dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:paddingStart="10dp"
@@ -16,13 +16,13 @@
         android:text="Polchely"
         android:textAlignment="textStart"
         android:textColor="@android:color/black"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/dbTxt"
-        android:layout_width="74dp"
+        android:layout_width="94dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
         android:maxLines="1"
@@ -31,7 +31,7 @@
         android:text="Darabszám "
         android:textAlignment="textEnd"
         android:textColor="@android:color/black"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/polcNameText"
         app:layout_constraintTop_toTopOf="@+id/polcNameText" />
 
