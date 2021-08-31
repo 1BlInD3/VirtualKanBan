@@ -392,6 +392,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         }
                     } else {
                         var nullasKontener: String = getNameResult.getInt("id").toString()
+                        val kontId: String = getNameResult.getInt("id").toString()
                         var zeroString = ""
                         if (nullasKontener.length < 10) {
                             val charLength = 10 - nullasKontener.length
@@ -409,6 +410,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         Log.d(TAG, "containerManagement: visszaírtam a konténer értéket")
                         val bundle = Bundle()
                         bundle.putString("KONTENER", nullasKontener)
+                        bundle.putString("KID", kontId)
                         context.tobbletOsszeallitasFragment.arguments = bundle
                         context.supportFragmentManager.beginTransaction()
                             .replace(
@@ -431,19 +433,20 @@ class SQL(private val sqlMessage: SQLAlert) {
                 }
             } else {
                 Log.d(TAG, "containerManagement: van konténer")
-                val id1 = containerResult.getInt("id")
+                val id1 = containerResult.getInt("id").toString()
                 context.kontener = containerResult.getString("kontener")
                 val rakhely: String? = containerResult.getString("termeles_rakhely")
                 Log.d(TAG, "containerManagement: $rakhely")
                 val igenyItemCheck =
                     connection.prepareStatement(res.getString(R.string.loadIgenyItemsToList))
-                igenyItemCheck.setInt(1, id1)//ez a számot át kell írni majd a "kontener"-re
+                igenyItemCheck.setInt(1, id1.trim().toInt())//ez a számot át kell írni majd a "kontener"-re
                 val loadIgenyListResult = igenyItemCheck.executeQuery()
                 if (!loadIgenyListResult.next()) {
                     Log.d(TAG, "containerManagement: Üres")
                     val bundle1 = Bundle()
                     bundle1.putString("KONTENER", context.kontener)
                     bundle1.putString("TERMRAKH", rakhely)
+                    bundle1.putString("KID",id1)
                     context.tobbletOsszeallitasFragment.arguments = bundle1
                     context.supportFragmentManager.beginTransaction()
                         .replace(
@@ -688,7 +691,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         }
     }
 
-    fun closeContainerSql7(statusz: Int, datum: String, context: MainActivity) {
+    fun closeContainerSql7(statusz: Int, datum: String, context: MainActivity, kontener: String) {
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -700,7 +703,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 connection.prepareStatement(res.getString(R.string.closeContainer7))
             statement.setInt(1, statusz)
             statement.setString(2, datum)
-            statement.setString(3, context.kontener)
+            statement.setString(3, kontener)
             statement.executeUpdate()
             Log.d(TAG, "closeContainerSql: sikeres lezárás")
             CoroutineScope(Dispatchers.Main).launch {
@@ -710,7 +713,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             val statement1 =
                 connection.prepareStatement(res.getString(R.string.updateItemStatus))
             statement1.setInt(1, statusz)
-            statement1.setString(2, context.kontener)
+            statement1.setString(2, kontener)
             try {
                 CoroutineScope(Dispatchers.Main).launch {
                     progress.visibility = View.VISIBLE
@@ -1223,6 +1226,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     } else {
                         progress.visibility = View.GONE
                     }
+                    context.setAlert("Nincs igény konténer")
                 }
                 /*context.supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_container, context.igenyKiszedesFragment!!, "KISZEDES")
@@ -2632,7 +2636,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         return SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
     }
 
-    private fun writeLog(hiba: String, megjelenes: String) {
+    fun writeLog(hiba: String, megjelenes: String) {
         val save = SaveFile()
         save.writeLog(
             File(path, "LOG.txt"), """${setDate()};${megjelenes};${hiba};${wifiInfo}

@@ -734,6 +734,8 @@ class MainActivity : AppCompatActivity(),
             tobbletCikkekPolcra?.deleteFocused()
         }else if(getFragment("IGENY")){
             igenyFragment.deleteFocused()
+        }else if(getFragment("TOBBLET")){
+            tobbletOsszeallitasFragment.deleteFocused()
         }
         myTimer.start()
         return super.onKeyUp(keyCode, event)
@@ -835,6 +837,7 @@ class MainActivity : AppCompatActivity(),
             CoroutineScope(Main).launch {
                 setAlert("Probléma a feltöltésben!\n $e")
                 progress.visibility = View.GONE
+                sql.writeLog(e.toString(),"updateKontenerKiszedesre")
             }
         }
     }
@@ -958,8 +961,8 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    override fun closeContainer2(statusz: Int, datum: String) {
-        sql.closeContainerSql7(statusz, datum, this@MainActivity)
+    override fun closeContainer2(statusz: Int, datum: String,kontener: String) {
+        sql.closeContainerSql7(statusz, datum, this@MainActivity,kontener)
     }
 
     fun isItem(code: String) {

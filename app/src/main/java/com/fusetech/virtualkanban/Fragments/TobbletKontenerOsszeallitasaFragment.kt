@@ -52,6 +52,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
     private  var kilepButton: Button? = null
     private var myView : View? = null
     private  var recyclerView: RecyclerView? = null
+    private var id = ""
 
     interface SendBinCode2 {
         fun sendBinCode2(code: String)
@@ -63,7 +64,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             kontener: String
         )
 
-        fun closeContainer2(statusz: Int, datum: String)
+        fun closeContainer2(statusz: Int, datum: String, kontener: String)
     }
 
     @SuppressLint("SimpleDateFormat", "NotifyDataSetChanged")
@@ -101,6 +102,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         )
         kontenerText?.text = arguments?.getString("KONTENER")
         polcTextIgeny?.setText(arguments?.getString("TERMRAKH"))
+        id = arguments?.getString("KID")!!
         Log.d(TAG, "onCreateView: ${arguments?.getString("KONTENER")}")
         Log.d(TAG, "onCreateView: ${arguments?.getString("TERMRAKH")}")
         setBinFocusOn()
@@ -236,7 +238,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                     if (a == igenyReveresed.size) {
                         Log.d(TAG, "onCreateView: $currentDateAndTime")
                         if (polcTextIgeny!!.text.isEmpty() && igenyReveresed.size == 0) {
-                            sendBinCode2.closeContainer2(7, currentDateAndTime)
+                            sendBinCode2.closeContainer2(7, currentDateAndTime,id)
                             CoroutineScope(Main).launch {
                                 //setProgressBarOff()
                                 clearAll()
@@ -244,7 +246,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                             }
                             mainActivity?.loadMenuFragment(true)
                         } else {
-                            sendBinCode2.closeContainer2(7, currentDateAndTime)
+                            sendBinCode2.closeContainer2(7, currentDateAndTime,id)
                             CoroutineScope(Main).launch {
                                 //setProgressBarOff()
                                 clearAll()
@@ -457,9 +459,14 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         unit_igeny2?.text = ""
         megjegyzes1_igeny?.text = ""
     }
-    fun setAfterCheck(){
+    /*fun setAfterCheck(){
         mennyiseg_igeny2?.isFocusable = true
         mennyiseg_igeny2?.isFocusableInTouchMode = true
         mennyiseg_igeny2?.requestFocus()
+    }*/
+    fun deleteFocused(){
+        if(polcTextIgeny?.hasFocus()!!){
+            polcTextIgeny?.setText("")
+        }
     }
 }
