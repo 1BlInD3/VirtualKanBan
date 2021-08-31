@@ -152,7 +152,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         //mennyiseg.requestFocus()
         loadData()
         locationRecycler?.adapter?.notifyDataSetChanged()
-
+        itemLocationList.add(PolcLocation("ABCD","1234567.0000"))
         lezar!!.setOnClickListener {
             if(tempLocations.size>0){
                 val builder = AlertDialog.Builder(myView!!.context)
@@ -191,12 +191,18 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                 //closeAnyways(3)
                 // akkor ez a cikk 3-ös státuszt kell kapjon
             }
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
         }
         vissza!!.setOnClickListener {
             mainActivity!!.cikkUpdate(cikkIDKiszedes.text.trim().toString().toInt())
             mainActivity?.igenyKontenerKiszedesCikkKiszedes = null
             mainActivity!!.loadKoztes()
             mainActivity!!.checkIfContainerStatus(kontenerIDKiszedes.text.trim().toString())
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
         }
         mennyiseg?.setOnClickListener {
             isUpdated = false
@@ -286,6 +292,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     bejelentes?.visibility = View.GONE
                 }
             }
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
         }
         bejelentes?.setOnLongClickListener {
             if (mennyiseg?.text?.trim().toString().isNotEmpty() && mennyiseg?.text?.trim()
@@ -335,6 +344,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
 
             } else {
                 mainActivity?.setAlert("Nem lehet a mennyiség üres!")
+            }
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
             }
             true
         }
@@ -422,6 +434,12 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     }
 
     fun setBin(polcName: String) {
+        if(mainActivity?.isWifiConnected()!!){
+            MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+        }
+        if(mainActivity?.isWifiConnected()!!){
+            MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+        }
         maxMennyiseg = 0.0
         if (polc?.text?.isEmpty()!!) {
             for (i in 0 until itemLocationList.size) {

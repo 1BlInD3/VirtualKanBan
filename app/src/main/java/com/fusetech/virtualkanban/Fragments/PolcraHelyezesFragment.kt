@@ -114,6 +114,9 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             cikkText?.isEnabled = true
             cikkText?.requestFocus()
             polcText?.setText("")
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
         }
 
         cikkText?.setOnClickListener {
@@ -122,6 +125,9 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                 CoroutineScope(IO).launch {
                     sendCode?.sendCode(cikkText?.text?.trim().toString())
                 }
+            }
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
             }
         }
         mennyisegText?.setOnClickListener {
@@ -151,6 +157,9 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                     polcText?.isEnabled = true
                     polcText?.requestFocus()
                 }
+            }
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
             }
         }
         polcText?.setOnClickListener {
@@ -211,6 +220,9 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                     }
                 }
             }
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
         }
         kilepButton?.setOnClickListener {
             ujCikk?.requestFocus()
@@ -238,6 +250,9 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             recycler?.adapter?.notifyDataSetChanged()
 
             mainActivity?.loadMenuFragment(true)
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
         }
         return myView as View
     }
@@ -354,6 +369,9 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
     }
 
     fun setCode(code: String) {
+        if(mainActivity?.isWifiConnected()!!){
+            MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+        }
         if (cikkText?.text?.isEmpty()!!) {
             cikkText?.setText(code)
             cikkText?.selectAll()

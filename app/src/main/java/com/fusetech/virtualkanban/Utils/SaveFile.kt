@@ -17,6 +17,7 @@ class SaveFile {
         }catch (e: Exception){
             Log.d(TAG, "saveXml: ")
         }
+
     }
     fun prepareFile(path: String, name: String) : File{
         return prepareFile(path,name)
@@ -31,4 +32,5 @@ class SaveFile {
         }
     }
     fun readLog(file: File) = file.inputStream().readBytes().toString(Charsets.UTF_8)
+
 }

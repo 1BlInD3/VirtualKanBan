@@ -40,6 +40,8 @@ import kotlin.collections.HashMap
 import android.content.DialogInterface
 import android.net.wifi.WifiManager
 import java.io.File
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 
 
 private const val TAG = "MainActivity"
@@ -164,6 +166,8 @@ class MainActivity : AppCompatActivity(),
     private lateinit var logoutWhenCharging: BroadcastReceiver
     var loadFragment: LoadFragment? = null
     var a = 0
+    var wifi: Boolean? = false
+    lateinit var connManager: ConnectivityManager
 
     companion object {
         const val url =
@@ -198,6 +202,9 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val bundle: Bundle = intent.extras!!
+        connManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        //wifi = connManager.getNetworkCapabilities(connManager.activeNetwork)?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+        Log.d(TAG, "FIFI: $wifi")
         mainUrl = bundle.getString("main")!!
         Log.d("MYBUNDLE", "onCreate: $mainUrl")
         backupURL = bundle.getString("backup")!!
@@ -670,49 +677,78 @@ class MainActivity : AppCompatActivity(),
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         cancelTimer()
-        wifiInfo = getMacAndSignalStrength()
         if (getMenuFragment() && menuFragment?.hasRightToOpen()!!) {
             when (keyCode) {
                 7 -> {
                     menuFragment?.kilepesClick()
                     finishAndRemoveTask()
+                    if(isWifiConnected()){
+                        wifiInfo = getMacAndSignalStrength()
+                    }
                 } //0
                 8 -> {
                     Log.d(TAG, "onKeyUp: ${getMacAndSignalStrength()}")
                     menuFragment?.polcHelyezesClick()
                     loadPolcHelyezesFragment()
+                    if(isWifiConnected()){
+                        wifiInfo = getMacAndSignalStrength()
+                    }
                 } //1
                 9 -> {
                     menuFragment?.igenyOsszeClick()
                     containerCheck(dolgKod)
+                    if(isWifiConnected()){
+                        wifiInfo = getMacAndSignalStrength()
+                    }
                 }  //2
                 10 -> {
                     menuFragment?.igenyLezarClick()
                     igenyKontenerCheck()
+                    if(isWifiConnected()){
+                        wifiInfo = getMacAndSignalStrength()
+                    }
                 }  //3
                 11 -> {
                     menuFragment?.igenyKiszedClick()
                     igenyKontenerKiszedes()
+                    if(isWifiConnected()){
+                        wifiInfo = getMacAndSignalStrength()
+                    }
                 }  //4
                 12 -> {
                     menuFragment?.igenyKihelyezClick()
                     loadKihelyezesFragment()
+                    if(isWifiConnected()){
+                        wifiInfo = getMacAndSignalStrength()
+                    }
                 }  //5
                 13 -> {
                     menuFragment?.kiszedesreVaroClick()
                     kiszedesreVaro()
+                    if(isWifiConnected()){
+                        wifiInfo = getMacAndSignalStrength()
+                    }
                 }  //6
                 14 -> {
                     menuFragment?.tobbletOsszeClick()
                     containerCheck7(dolgKod)
+                    if(isWifiConnected()){
+                        wifiInfo = getMacAndSignalStrength()
+                    }
                 }  //7
                 15 -> {
                     menuFragment?.tobbletKihelyezClick()
                     loadTobbletKontenerKihelyezes()
+                    if(isWifiConnected()){
+                        wifiInfo = getMacAndSignalStrength()
+                    }
                 }  //8
                 16 -> {
                     menuFragment?.cikklekerdezesClick()
                     loadCikklekerdezesFragment()
+                    if(isWifiConnected()){
+                        wifiInfo = getMacAndSignalStrength()
+                    }
                 }  //9
             }
         } else if (getMenuFragment()) {
@@ -1408,5 +1444,8 @@ class MainActivity : AppCompatActivity(),
             val wifimanage = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
             val wifiinfo = wifimanage.connectionInfo
             return wifiinfo.bssid+","+wifiinfo.rssi.toString().trim()
+    }
+    fun isWifiConnected(): Boolean{
+        return connManager.getNetworkCapabilities(connManager.activeNetwork)?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)!!
     }
 }

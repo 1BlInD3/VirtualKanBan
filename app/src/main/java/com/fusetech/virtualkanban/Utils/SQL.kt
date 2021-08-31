@@ -1227,6 +1227,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         progress.visibility = View.GONE
                     }
                     context.setAlert("Nincs igény konténer")
+                    context.loadMenuFragment(true)
                 }
                 /*context.supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_container, context.igenyKiszedesFragment!!, "KISZEDES")

@@ -97,12 +97,18 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
                 mainActivity?.removeFragment("CIKKLEZARASFRAGMENT")
                 mainActivity?.igenyKontenerCheck()
             }
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
         }
         lezarBtn?.setOnClickListener {
             setProgressBarOn()
             mainActivity?.closeContainerAndItem()
             kontItem.clear()
             mainActivity?.loadMenuFragment(true)
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
         }
         if (arguments?.getBoolean("LEZARBUTN")!!) {
             lezarBtn?.visibility = View.VISIBLE

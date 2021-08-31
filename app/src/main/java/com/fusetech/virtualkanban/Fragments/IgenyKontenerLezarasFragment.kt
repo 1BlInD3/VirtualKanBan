@@ -102,6 +102,9 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         childRecycler?.adapter?.notifyDataSetChanged()
         exitBtn?.isFocusable = false
         exitBtn?.isFocusableInTouchMode = false
+        if(mainActivity?.isWifiConnected()!!){
+            MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

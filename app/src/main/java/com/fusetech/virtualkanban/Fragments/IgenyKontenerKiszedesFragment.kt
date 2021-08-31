@@ -104,6 +104,9 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
         exit3Btn?.isFocusableInTouchMode = false
         kontenerList.clear()
         childRecycler?.adapter?.notifyDataSetChanged()
+        if(mainActivity?.isWifiConnected()!!){
+            MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+        }
     }
 
     private fun loadData() {

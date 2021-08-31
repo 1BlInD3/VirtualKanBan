@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -32,7 +33,7 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
     private  var kontenerNev: TextView?= null
     private  var progress: ProgressBar?= null
     private  var cikkAdatok: KiszedesAdatok?= null
-    private  var mainAcitivity: MainActivity?= null
+    private  var mainActivity: MainActivity?= null
     private var myView: View? = null
 
     interface KiszedesAdatok{
@@ -47,12 +48,13 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         myView = inflater.inflate(R.layout.kontenerben_lezaras_view, container, false)
-        mainAcitivity = activity as MainActivity
+        mainActivity = activity as MainActivity
         //mainAcitivity!!.igenyKiszedesFragment = null
         kontenerNev = myView?.kontenerNameLezaras
         recycler = myView?.child_recycler2
@@ -70,6 +72,9 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         recycler?.adapter?.notifyDataSetChanged()
         recycler?.requestFocus()
         visszaBtn?.setOnClickListener{
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
             myView = null
             recycler = null
             recycler?.adapter = null
@@ -80,9 +85,9 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
             cikkAdatok = null
             //mainAcitivity?.loadMenuFragment(true)
             //mainAcitivity?.menuFragment = null
-            mainAcitivity?.removeFragment("NEGYESCIKKEK")
-            mainAcitivity?.igenyKontenerKiszedes()
-            mainAcitivity = null
+            mainActivity?.removeFragment("NEGYESCIKKEK")
+            mainActivity?.igenyKontenerKiszedes()
+            mainActivity = null
         }
 
         return myView
@@ -103,6 +108,9 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         //mainAcitivity?.igenyKontenerKiszedesCikkKiszedes = IgenyKontenerKiszedesCikkKiszedes() //ezt a kettőt máshol kéne meghívni
         cikkAdatok?.cikkAdatok(cikkItem4[position].cikkszam,cikkItem4[position].megjegyzes1,cikkItem4[position].megjegyzes2,
         cikkItem4[position].intrem,cikkItem4[position].igeny.toString().toDouble(),cikkItem4[position].unit,cikkItem4[position].id,cikkItem4[position].kontener_id)
+        if(mainActivity?.isWifiConnected()!!){
+            MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+        }
        /* myView = null
         recycler = null
         recycler?.adapter = null
@@ -153,8 +161,8 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         kontenerNev = null
         progress = null
         cikkAdatok = null
-        mainAcitivity?.removeFragment("NEGYESCIKKEK")
-        mainAcitivity = null
+        mainActivity?.removeFragment("NEGYESCIKKEK")
+        mainActivity = null
     }
     fun performExit(){
         visszaBtn?.performClick()

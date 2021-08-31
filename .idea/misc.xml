@@ -5,8 +5,9 @@
       <map>
         <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/fragment_igeny_kontener_kiszedes.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/fragment_igeny_kontener_kiszedes_cikk_kiszedes.xml" value="0.9" />
+        <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/fragment_igeny_kontener_kiszedes_cikk_kiszedes.xml" value="0.67" />
         <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/fragment_igeny_kontener_kiszedese.xml" value="0.9" />
+        <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/fragment_igeny_kontener_lezaras.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/fragment_igeny_kontener_osszeallitas.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/fragment_polcra_helyezes.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/fragment_szerelohely_lista.xml" value="0.36666666666666664" />
@@ -16,6 +17,8 @@
         <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/fragment_tobblet_kontener_osszeallitasa.xml" value="1.0" />
         <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/kihelyezes_header.xml" value="0.5" />
         <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/kontenerben_lezaras_view.xml" value="0.67" />
+        <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/polc_location_header.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/polc_location_view.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>

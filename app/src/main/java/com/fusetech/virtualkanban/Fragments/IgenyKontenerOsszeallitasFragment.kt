@@ -125,9 +125,15 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         setProgressBarOff()
         polcTextIgeny?.setOnClickListener {
             sendBinCode.sendBinCode(polcTextIgeny?.text.toString())
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
         }
         cikkItem_igeny?.setOnClickListener {
             mainActivity?.isItem(cikkItem_igeny?.text.toString())
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
         }
         mennyiseg_igeny2?.setOnClickListener {
             igenyList.add(
@@ -175,12 +181,18 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
             intrem_igeny2?.text = ""
             unit_igeny2?.text = ""
             megjegyzes1_igeny?.text = ""
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
         }
 
         kilepButton?.setOnClickListener {
             mainActivity?.listIgenyItems?.clear()
             clearAll()
             mainActivity?.loadMenuFragment(true)
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
         }
         lezarButton?.setOnClickListener {
             if (igenyReveresed.size > 0) {
@@ -206,6 +218,9 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
                 }
             } else {
                 mainActivity?.setAlert("Nincsenek tételek a konténerben")
+            }
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
             }
         }
         return myView
@@ -363,6 +378,9 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
     }
 
     fun setCode(code: String) {
+        if(mainActivity?.isWifiConnected()!!){
+            MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+        }
         if (polcTextIgeny?.text?.isEmpty()!!) {
             polcTextIgeny?.setText(code)
             sendBinCode.sendBinCode(code)
