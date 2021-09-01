@@ -103,7 +103,7 @@ class IgenyKontenerKiszedese : Fragment() {
                 szerelohely?.isFocusableInTouchMode = false
                 mainActivity?.loadKihelyezesItems(code)
             }else{
-                mainActivity?.setAlert("Nincs a vonalkód a listában!")
+                mainActivity?.setAlert("A ${code} vonalkód a listában!")
             }
         }
     }

@@ -152,7 +152,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         //mennyiseg.requestFocus()
         loadData()
         locationRecycler?.adapter?.notifyDataSetChanged()
-        itemLocationList.add(PolcLocation("ABCD","1234567.0000"))
+        //itemLocationList.add(PolcLocation("ABCD","1234567.0000"))
         lezar!!.setOnClickListener {
             if(tempLocations.size>0){
                 val builder = AlertDialog.Builder(myView!!.context)

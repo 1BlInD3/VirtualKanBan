@@ -22,6 +22,8 @@ import kotlinx.coroutines.launch
 import com.fusetech.virtualkanban.fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.sz0x
 import java.lang.Exception
+import java.util.HashSet
+import java.util.stream.Collectors
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -89,7 +91,22 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
                         }
                     }
                     if (a == myList.size) {
-                        mainActivity?.closeItem(myList[0].kontenerID)
+                        val list: ArrayList<String> = ArrayList()
+                        val kontenerList: ArrayList<String> = ArrayList()
+                        for(i in 0 until myList.size){
+                           kontenerList.add(myList[i].kontenerID.toString())
+                        }
+                        val unique : Set<String> = HashSet<String>(kontenerList)
+                        for (code in unique){
+                            mainActivity?.closeItem(code)
+                        //list.add(kontenerList.stream().distinct().collect(Collectors.toList()).toString())
+                        }
+                      /*  for (temp in hset) {
+                            println(temp)
+                        }*/
+                        /*for (i in 0 until list.size){
+
+                        }*/
                         Log.d(TAG, "Minden cikk lefutott")
                     }
                 }

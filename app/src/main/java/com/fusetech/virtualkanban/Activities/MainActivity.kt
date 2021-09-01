@@ -175,6 +175,7 @@ class MainActivity : AppCompatActivity(),
         const val connectionString =
             "jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
         lateinit var res: Resources
+
         @SuppressLint("StaticFieldLeak")
         lateinit var progress: ProgressBar
         val kihelyezesItems: ArrayList<SzerelohelyItem> = ArrayList()
@@ -189,12 +190,13 @@ class MainActivity : AppCompatActivity(),
         var logPath = ""
         var timeOut = 0L
         var hasRight = false
+
         //var szallitoJarmu: ArrayList<String> = ArrayList()
         // var ellenorzoKod: ArrayList<String> = ArrayList()
         var szallitoMap: HashMap<String, String> = HashMap()
         var dolgKod: String = ""// vissza ide
         var sz0x: String = ""
-        var wifiInfo : String = ""
+        var wifiInfo: String = ""
         lateinit var path: File
     }
 
@@ -223,7 +225,7 @@ class MainActivity : AppCompatActivity(),
         Log.d("MYBUNDLE", "onCreate: $ellenorzoKod")*/
         res = resources
         path = getExternalFilesDir(null)!!
-       // mFile = File(path,name)
+        // mFile = File(path,name)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance("", "")
@@ -505,10 +507,8 @@ class MainActivity : AppCompatActivity(),
                             }
                         }
                     }
-
                 }
             }
-
         }
         this.registerReceiver(logoutWhenCharging, IntentFilter(mIntent))
 
@@ -682,7 +682,7 @@ class MainActivity : AppCompatActivity(),
                 7 -> {
                     menuFragment?.kilepesClick()
                     finishAndRemoveTask()
-                    if(isWifiConnected()){
+                    if (isWifiConnected()) {
                         wifiInfo = getMacAndSignalStrength()
                     }
                 } //0
@@ -690,63 +690,63 @@ class MainActivity : AppCompatActivity(),
                     Log.d(TAG, "onKeyUp: ${getMacAndSignalStrength()}")
                     menuFragment?.polcHelyezesClick()
                     loadPolcHelyezesFragment()
-                    if(isWifiConnected()){
+                    if (isWifiConnected()) {
                         wifiInfo = getMacAndSignalStrength()
                     }
                 } //1
                 9 -> {
                     menuFragment?.igenyOsszeClick()
                     containerCheck(dolgKod)
-                    if(isWifiConnected()){
+                    if (isWifiConnected()) {
                         wifiInfo = getMacAndSignalStrength()
                     }
                 }  //2
                 10 -> {
                     menuFragment?.igenyLezarClick()
                     igenyKontenerCheck()
-                    if(isWifiConnected()){
+                    if (isWifiConnected()) {
                         wifiInfo = getMacAndSignalStrength()
                     }
                 }  //3
                 11 -> {
                     menuFragment?.igenyKiszedClick()
                     igenyKontenerKiszedes()
-                    if(isWifiConnected()){
+                    if (isWifiConnected()) {
                         wifiInfo = getMacAndSignalStrength()
                     }
                 }  //4
                 12 -> {
                     menuFragment?.igenyKihelyezClick()
                     loadKihelyezesFragment()
-                    if(isWifiConnected()){
+                    if (isWifiConnected()) {
                         wifiInfo = getMacAndSignalStrength()
                     }
                 }  //5
                 13 -> {
                     menuFragment?.kiszedesreVaroClick()
                     kiszedesreVaro()
-                    if(isWifiConnected()){
+                    if (isWifiConnected()) {
                         wifiInfo = getMacAndSignalStrength()
                     }
                 }  //6
                 14 -> {
                     menuFragment?.tobbletOsszeClick()
                     containerCheck7(dolgKod)
-                    if(isWifiConnected()){
+                    if (isWifiConnected()) {
                         wifiInfo = getMacAndSignalStrength()
                     }
                 }  //7
                 15 -> {
                     menuFragment?.tobbletKihelyezClick()
                     loadTobbletKontenerKihelyezes()
-                    if(isWifiConnected()){
+                    if (isWifiConnected()) {
                         wifiInfo = getMacAndSignalStrength()
                     }
                 }  //8
                 16 -> {
                     menuFragment?.cikklekerdezesClick()
                     loadCikklekerdezesFragment()
-                    if(isWifiConnected()){
+                    if (isWifiConnected()) {
                         wifiInfo = getMacAndSignalStrength()
                     }
                 }  //9
@@ -762,15 +762,15 @@ class MainActivity : AppCompatActivity(),
                     loadCikklekerdezesFragment()
                 }  //9
             }
-        }else if (getFragment("KIHELYEZES")){
+        } else if (getFragment("KIHELYEZES")) {
             kihelyezes?.deleteFocused()
-        }else if (getFragment("KISZEDESCIKK")){
+        } else if (getFragment("KISZEDESCIKK")) {
             igenyKontenerKiszedesCikkKiszedes?.deleteFocused()
-        }else if(getFragment("CIKKEKPOLCRA")){
+        } else if (getFragment("CIKKEKPOLCRA")) {
             tobbletCikkekPolcra?.deleteFocused()
-        }else if(getFragment("IGENY")){
+        } else if (getFragment("IGENY")) {
             igenyFragment.deleteFocused()
-        }else if(getFragment("TOBBLET")){
+        } else if (getFragment("TOBBLET")) {
             tobbletOsszeallitasFragment.deleteFocused()
         }
         myTimer.start()
@@ -873,7 +873,7 @@ class MainActivity : AppCompatActivity(),
             CoroutineScope(Main).launch {
                 setAlert("Probléma a feltöltésben!\n $e")
                 progress.visibility = View.GONE
-                sql.writeLog(e.toString(),"updateKontenerKiszedesre")
+                sql.writeLog(e.toString(), "updateKontenerKiszedesre")
             }
         }
     }
@@ -890,7 +890,7 @@ class MainActivity : AppCompatActivity(),
         val builder = AlertDialog.Builder(this@MainActivity)
         builder.setTitle("Figyelem")
             .setMessage(text)
-        builder.setPositiveButton("OK"){_,_ ->
+        builder.setPositiveButton("OK") { _, _ ->
         }
         builder.create()
         builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
@@ -997,8 +997,8 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    override fun closeContainer2(statusz: Int, datum: String,kontener: String) {
-        sql.closeContainerSql7(statusz, datum, this@MainActivity,kontener)
+    override fun closeContainer2(statusz: Int, datum: String, kontener: String) {
+        sql.closeContainerSql7(statusz, datum, this@MainActivity, kontener)
     }
 
     fun isItem(code: String) {
@@ -1188,7 +1188,7 @@ class MainActivity : AppCompatActivity(),
         sql.closeCikkek(code, this@MainActivity)
     }
 
-    fun closeItem(code: Int) {
+    fun closeItem(code: String) {
         sql.closeContainer(code, this@MainActivity)
     }
 
@@ -1386,7 +1386,10 @@ class MainActivity : AppCompatActivity(),
                 .setPositiveButton("OK") { _, _ ->
                     ActivityCompat.requestPermissions(
                         this@MainActivity,
-                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION), EXTERNAL_STORAGE
+                        arrayOf(
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ), EXTERNAL_STORAGE
                     )
                 }
                 .setNegativeButton("Nem") { dialog, _ ->
@@ -1397,7 +1400,10 @@ class MainActivity : AppCompatActivity(),
         } else {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION), EXTERNAL_STORAGE
+                arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ), EXTERNAL_STORAGE
             )
         }
     }
@@ -1440,12 +1446,15 @@ class MainActivity : AppCompatActivity(),
         }
         return "02:00:00:00:00:00"
     }
-    fun getMacAndSignalStrength(): String{
-            val wifimanage = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
-            val wifiinfo = wifimanage.connectionInfo
-            return wifiinfo.bssid+","+wifiinfo.rssi.toString().trim()
+
+    fun getMacAndSignalStrength(): String {
+        val wifimanage = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
+        val wifiinfo = wifimanage.connectionInfo
+        return wifiinfo.bssid + "," + wifiinfo.rssi.toString().trim()
     }
-    fun isWifiConnected(): Boolean{
-        return connManager.getNetworkCapabilities(connManager.activeNetwork)?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)!!
+
+    fun isWifiConnected(): Boolean {
+        return connManager.getNetworkCapabilities(connManager.activeNetwork)
+            ?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)!!
     }
 }

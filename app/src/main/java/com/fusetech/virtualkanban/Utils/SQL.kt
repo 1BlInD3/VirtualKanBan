@@ -2214,7 +2214,7 @@ class SQL(private val sqlMessage: SQLAlert) {
     }
 
     @SuppressLint("SimpleDateFormat")
-    fun closeContainer(code: Int, context: MainActivity) {
+    fun closeContainer(code: String, context: MainActivity) {
         try {
             CoroutineScope(Dispatchers.Main).launch {
                 context.kihelyezes?.progressBarOn()
@@ -2225,7 +2225,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             val datum = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
             statement.setString(1, datum)
             statement.setInt(2, 5)
-            statement.setInt(3, code)
+            statement.setInt(3, code.toInt())
             statement.executeUpdate()
             CoroutineScope(Dispatchers.Main).launch {
                 context.kihelyezes?.progressBarOff()
