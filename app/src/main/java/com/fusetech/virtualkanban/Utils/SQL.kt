@@ -888,6 +888,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 Log.d(TAG, "loadKontenerCikkek: $e")
                 context.setAlert("Hiba lépett fel a tételek betöltésénél")
                 context.igenyLezarasFragment?.setProgressBarOff()
+                context.loadMenuFragment(true)
                 writeLog(e.toString(), "loadKontenerCikkek")
             }
         }
@@ -2019,12 +2020,15 @@ class SQL(private val sqlMessage: SQLAlert) {
             connection = DriverManager.getConnection(connectionString)
             val statement =
                 connection.prepareStatement(res.getString(R.string.updateItemStatus))
-            statement.setString(1, kontener_id)
+            statement.setInt(1,1)
+            statement.setString(2, kontener_id)
             statement.executeUpdate()
             Log.d(TAG, "updateCikkAndKontener: Cikkek lezárva")
         } catch (e: Exception) {
             Log.d(TAG, "updateCikkAndKontener: $e")
-            context.setAlert("Probléma van")
+            CoroutineScope(Dispatchers.Main).launch {
+                context.setAlert("Probléma van")
+            }
             writeLog(e.toString(), "cikkUpdateSql")
         }
     }
@@ -2041,11 +2045,14 @@ class SQL(private val sqlMessage: SQLAlert) {
             statment.setString(3, dolgKod)//ide kell a bejelentkezős kód
             statment.setString(4, kontener_id)
             statment.executeUpdate()
+            loadIgenyLezaras(context)
             Log.d(TAG, "updateCikkAndKontener: Konténer lezárva")
             context.lezarandoKontener = ""
         } catch (e: Exception) {
             Log.d(TAG, "updateKontener: $e")
-            context.setAlert("Probléma van a konténer 1-re átírásánál")
+            CoroutineScope(Dispatchers.Main).launch {
+                context.setAlert("Probléma van a konténer 1-re átírásánál")
+            }
             writeLog(e.toString(), "updateKontenerSql")
         }
     }
@@ -2458,7 +2465,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     do {
                         val binNumber = resultSet1.getString("BinNumber")
                         raktarBin.add(PolcLocation(binNumber, "0"))
-                    } while (resultSet.next())
+                    } while (resultSet1.next())
                     val bundle = Bundle()
                     bundle.putSerializable("LOCATIONBIN", raktarBin)
                     bundle.putInt("IID", id)

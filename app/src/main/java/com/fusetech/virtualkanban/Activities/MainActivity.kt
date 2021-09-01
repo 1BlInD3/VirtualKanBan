@@ -1454,7 +1454,11 @@ class MainActivity : AppCompatActivity(),
     }
 
     fun isWifiConnected(): Boolean {
-        return connManager.getNetworkCapabilities(connManager.activeNetwork)
-            ?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)!!
+        try{
+            return connManager.getNetworkCapabilities(connManager.activeNetwork)
+                ?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)!!
+        }catch (e: java.lang.Exception){
+            return false
+        }
     }
 }

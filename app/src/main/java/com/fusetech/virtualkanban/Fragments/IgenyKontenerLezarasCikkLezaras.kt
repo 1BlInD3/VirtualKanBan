@@ -102,13 +102,15 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
             }
         }
         lezarBtn?.setOnClickListener {
+            lezarBtn?.isEnabled = false
+            exitBtn?.isEnabled = false
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
             setProgressBarOn()
             mainActivity?.closeContainerAndItem()
             kontItem.clear()
             mainActivity?.loadMenuFragment(true)
-            if(mainActivity?.isWifiConnected()!!){
-                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
-            }
         }
         if (arguments?.getBoolean("LEZARBUTN")!!) {
             lezarBtn?.visibility = View.VISIBLE
