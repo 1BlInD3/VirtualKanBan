@@ -128,6 +128,9 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             sendBinCode2.sendBinCode2(polcTextIgeny?.text.toString())
         }
         cikkItem_igeny?.setOnClickListener {
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
             if(cikkItem_igeny?.text?.isNotEmpty()!!){
                 mainActivity?.isItem2(
                     cikkItem_igeny?.text.toString(),
@@ -139,6 +142,9 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             }*/
         }
         mennyiseg_igeny2?.setOnClickListener {
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
             if(cikkItem_igeny?.text?.isNotEmpty()!! && mennyiseg_igeny2?.text?.trim().toString().toDouble() > 0){
                 val konti = kontenerText!!.text.trim().substring(4, kontenerText!!.text.trim().length)
                 igenyList.add(
@@ -200,6 +206,9 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                     activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 ihm.hideSoftInputFromWindow(view.windowToken, 0)
             }*/
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
             clearAll()
             /*if (view != null) {
                 val ihm =
@@ -263,8 +272,10 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             } else {
                 mainActivity?.setAlert("Nem vettél fel cikkeket")
             }
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
         }
-
         return myView
     }
 
@@ -408,9 +419,15 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
 
     fun setCode(code: String) {
         if (polcTextIgeny?.text!!.isEmpty()) {
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
             //polcTextIgeny.setText(code)
             sendBinCode2.sendBinCode2(code)
         } else {
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
             cikkItem_igeny?.setText(code)
             mainActivity?.isItem2(code, polcTextIgeny!!.text.trim().toString())
         }

@@ -46,6 +46,9 @@ class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontener
         setProgressBar8Off()
         loadData()
         button?.setOnClickListener {
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
             mainActivity?.loadMenuFragment(true)
         }
         return myView
@@ -58,6 +61,9 @@ class TobbletKontenerKihelyzeseFragment : Fragment(), KontenerAdapter.onKontener
             mainActivity.setContainerStatusAndGetItems(tobbletKontener[position].kontner_id)
         }*/
         //mainActivity.loadCTobbletCikkek()
+        if(mainActivity?.isWifiConnected()!!){
+            MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+        }
         mainActivity?.setContainerStatusAndGetItems(tobbletKontener[position].kontner_id)
     }
 

@@ -63,6 +63,9 @@ class KiszedesreVaroIgenyFragment : Fragment(), KontenerAdapter.onKontenerClickL
         loadData()
 
         exit3Btn?.setOnClickListener {
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
             kontenerList.clear()
             mainActivity?.loadMenuFragment(true)
         }
@@ -92,6 +95,9 @@ class KiszedesreVaroIgenyFragment : Fragment(), KontenerAdapter.onKontenerClickL
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onKontenerClick(position: Int) {
+        if(mainActivity?.isWifiConnected()!!){
+            MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+        }
         Log.d(TAG, "onKontenerClick: MEGNYOMTAM")
         childRecycler?.isFocusable = false
         childRecycler?.isFocusableInTouchMode = false

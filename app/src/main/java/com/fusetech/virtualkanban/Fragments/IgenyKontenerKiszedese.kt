@@ -77,11 +77,17 @@ class IgenyKontenerKiszedese : Fragment() {
                     mainActivity!!.loadMenuFragment(true)
                 }
             }
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
         }
         return myView
     }
 
     fun setCode(code: String){
+        if(mainActivity?.isWifiConnected()!!){
+            MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+        }
         if(szallitoText!!.text.isEmpty()){
             szallitoText?.setText(code)
             szallitoText?.isFocusable = false

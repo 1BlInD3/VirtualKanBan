@@ -100,6 +100,9 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
             }
             mainActivity?.kihelyezes?.progressBarOff()
             kihelyezes?.isEnabled = true
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
         }
         return myView
     }

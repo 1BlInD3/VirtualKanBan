@@ -93,6 +93,9 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
         progrssOff()
 
         visszaBtn?.setOnClickListener {
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
             mainActivity?.progressBar?.visibility = View.VISIBLE
             cikkNumber?.setText("")
             kontenerID?.text = ""
@@ -215,6 +218,9 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
             if(!a){
                 mainActivity?.setAlert("Nincs a listában ilyen polc!\nVálassz egyet a listából")
             }
+        }
+        if(mainActivity?.isWifiConnected()!!){
+            MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
         }
     }
 

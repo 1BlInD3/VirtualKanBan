@@ -61,6 +61,9 @@ class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onIt
         loadData()
         kontener?.setText(kontenerID)
         vissza?.setOnClickListener {
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
             mainActivity?.run {
                 //loadMenuFragment(true)
                 loadTobbletKontenerKihelyezes()
@@ -70,6 +73,9 @@ class TobbletKontenerCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onIt
     }
 
     override fun onItemClick(position: Int) {
+        if(mainActivity?.isWifiConnected()!!){
+            MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+        }
         tobblet?.sendTobblet(
             tobbletItem[position].id,
             tobbletItem[position].kontener_id,

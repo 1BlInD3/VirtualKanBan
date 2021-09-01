@@ -70,6 +70,9 @@ class HatosCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onItemClickLis
         recycler?.requestFocus()
 
         exitBtn?.setOnClickListener {
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
             exitBtn?.isFocusable = true
             exitBtn?.isFocusableInTouchMode = true
             MainActivity.kontItem.clear()
@@ -79,6 +82,9 @@ class HatosCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onItemClickLis
             mainActivity?.hatosFragment = null
         }
         lezarBtn?.setOnClickListener {
+            if(mainActivity?.isWifiConnected()!!){
+                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            }
             setProgressBarOn()
             mainActivity?.closeContainerAndItem()
             MainActivity.kontItem.clear()
@@ -137,6 +143,9 @@ class HatosCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onItemClickLis
 
     override fun onItemClick(position: Int) {
         hatos?.hatosInfo(MainActivity.kontItem[position].id)
+        if(mainActivity?.isWifiConnected()!!){
+            MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+        }
     }
 
     override fun onDestroyView() {
