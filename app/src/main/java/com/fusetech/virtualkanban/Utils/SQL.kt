@@ -2484,8 +2484,8 @@ class SQL(private val sqlMessage: SQLAlert) {
             } else {
                 do {
                     val binNumber = resultSet.getString("BinNumber")
-                    val mennyiseg2 = resultSet.getString("BalanceQty")
-                    raktarBin.add(PolcLocation(binNumber, mennyiseg2))
+                    val mennyiseg2 = resultSet.getDouble("BalanceQty")
+                    raktarBin.add(PolcLocation(binNumber, mennyiseg2.toString()))
                 } while (resultSet.next())
                 val statement3 = connection.prepareStatement(res.getString(R.string.emptyBins))
                 val resultSet3 = statement3.executeQuery()
