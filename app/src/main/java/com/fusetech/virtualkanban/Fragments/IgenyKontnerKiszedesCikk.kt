@@ -74,20 +74,30 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         visszaBtn?.setOnClickListener{
             if(mainActivity?.isWifiConnected()!!){
                 MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+                myView = null
+                recycler = null
+                recycler?.adapter = null
+                tovabbBtn = null
+                visszaBtn = null
+                kontenerNev = null
+                progress = null
+                cikkAdatok = null
+               // mainActivity?.loadMenuFragment(true)
+               // mainActivity?.igenyKontenerKiszedes()
+                mainActivity?.removeFragment("NEGYESCIKKEK")
+                mainActivity?.igenyKontenerKiszedes()
+                //mainActivity?.igenyKontenerKiszedes()
+                // mainActivity?.removeFragment("KISZEDES")
+                //mainAcitivity?.loadMenuFragment(true)
+                //mainAcitivity?.menuFragment = null
+
+                //mainActivity?.loadMenuFragment(true)
+               // mainActivity?.loadKoztes()
+               // mainActivity?.loadIgenyKontenerKiszedes()
+                mainActivity = null
+            }else{
+                mainActivity?.setAlert("")
             }
-            myView = null
-            recycler = null
-            recycler?.adapter = null
-            tovabbBtn = null
-            visszaBtn = null
-            kontenerNev = null
-            progress = null
-            cikkAdatok = null
-            //mainAcitivity?.loadMenuFragment(true)
-            //mainAcitivity?.menuFragment = null
-            mainActivity?.removeFragment("NEGYESCIKKEK")
-            mainActivity?.igenyKontenerKiszedes()
-            mainActivity = null
         }
 
         return myView
@@ -163,8 +173,5 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         cikkAdatok = null
         mainActivity?.removeFragment("NEGYESCIKKEK")
         mainActivity = null
-    }
-    fun performExit(){
-        visszaBtn?.performClick()
     }
 }

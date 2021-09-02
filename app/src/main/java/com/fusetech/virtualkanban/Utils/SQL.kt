@@ -22,6 +22,7 @@ import com.fusetech.virtualkanban.activities.MainActivity.Companion.mainUrl
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.backupURL
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.endPoint
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.dolgKod
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.kontItem
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.path
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.wifiInfo
 import com.fusetech.virtualkanban.dataItems.*
@@ -1262,6 +1263,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     .replace(R.id.frame_container, context.igenyKiszedesFragment!!, "KISZEDES")
                     .commit()
                 CoroutineScope(Dispatchers.Main).launch {
+
                     if (context.menuFragment != null) {
                         context.menuFragment?.setMenuProgressOff()
                     } else {
@@ -1271,7 +1273,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             }
         } catch (e: Exception) {
             Log.d(TAG, "loadIgenyKiszedes: $e")
-            writeLog(e.toString(), "loadIgenyKiszedes")
+            writeLog(e.toString()+"__${e.stackTraceToString()}", "loadIgenyKiszedes")
             CoroutineScope(Dispatchers.Main).launch {
                 if (context.menuFragment != null) {
                     context.menuFragment?.setMenuProgressOff()

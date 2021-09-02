@@ -102,15 +102,17 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
             }
         }
         lezarBtn?.setOnClickListener {
-            lezarBtn?.isEnabled = false
-            exitBtn?.isEnabled = false
             if(mainActivity?.isWifiConnected()!!){
                 MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+                lezarBtn?.isEnabled = false
+                exitBtn?.isEnabled = false
+                setProgressBarOn()
+                mainActivity?.closeContainerAndItem()
+                kontItem.clear()
+                mainActivity?.loadMenuFragment(true)
+            }else{
+                mainActivity?.setAlert("A wifi nincs bekapcsolva")
             }
-            setProgressBarOn()
-            mainActivity?.closeContainerAndItem()
-            kontItem.clear()
-            mainActivity?.loadMenuFragment(true)
         }
         if (arguments?.getBoolean("LEZARBUTN")!!) {
             lezarBtn?.visibility = View.VISIBLE

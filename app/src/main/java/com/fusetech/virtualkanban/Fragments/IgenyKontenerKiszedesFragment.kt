@@ -37,7 +37,7 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
     private var mainActivity: MainActivity? = null
     private var childFrame: FrameLayout? = null
     private var childRecycler: RecyclerView? = null
-    private var myView : View? = null
+    private var myView: View? = null
     private var child: View? = null
     private var constraint: ConstraintLayout? = null
     private var horizontalScrollView: HorizontalScrollView? = null
@@ -64,19 +64,13 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
         childFrame?.addView(child)
         horizontalScrollView = child?.horizontalScrollView3!!
         horizontalScrollView?.isFocusable = false
-        horizontalScrollView?.isFocusableInTouchMode = false
+
         progress = child?.konteneresProgress
         exit3Btn = child?.exit3Button
         constraint = child?.constant
         exit3Btn?.isFocusable = true
         setProgressBarOff()
-        childRecycler = child?.child_recycler
-        childRecycler?.adapter = KontenerAdapter(kontenerList, this)
-        childRecycler?.layoutManager = LinearLayoutManager(child?.context)
-        childRecycler?.setHasFixedSize(true)
-        kontenerList.clear()
-        loadData()
-        childRecycler?.adapter?.notifyDataSetChanged()
+
 
         exit3Btn?.setOnClickListener {
             kontenerList.clear()
@@ -99,13 +93,15 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onKontenerClick(position: Int) {
-        mainActivity?.checkIfContainerStatus(kontenerList[position].kontner_id.toString())
-        exit3Btn?.isFocusable = false
-        exit3Btn?.isFocusableInTouchMode = false
-        kontenerList.clear()
-        childRecycler?.adapter?.notifyDataSetChanged()
-        if(mainActivity?.isWifiConnected()!!){
+        if (mainActivity?.isWifiConnected()!!) {
             MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+            mainActivity?.checkIfContainerStatus(kontenerList[position].kontner_id.toString())
+            exit3Btn?.isFocusable = false
+            exit3Btn?.isFocusableInTouchMode = false
+            kontenerList.clear()
+            childRecycler?.adapter?.notifyDataSetChanged()
+        } else {
+            mainActivity?.setAlert("Nincs a wifi bekapcsolva")
         }
     }
 
@@ -139,10 +135,19 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
         progress?.visibility = View.VISIBLE
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
+        childRecycler = child?.child_recycler
+        childRecycler?.adapter = KontenerAdapter(kontenerList, this)
+        childRecycler?.layoutManager = LinearLayoutManager(child?.context)
+        childRecycler?.setHasFixedSize(true)
+        kontenerList.clear()
+        loadData()
+        childRecycler?.adapter?.notifyDataSetChanged()
         super.onResume()
         childRecycler?.requestFocus()
     }
+
     /* override fun onPause() {
          super.onPause()
          exit3Btn.isFocusable = false
@@ -164,7 +169,8 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
         mainActivity = null
         horizontalScrollView = null
     }
-    fun destroy(){
+
+    fun destroy() {
         myView = null
         child = null
         childRecycler = null
@@ -174,5 +180,10 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
         mainActivity!!.igenyKiszedesFragment = null
         mainActivity = null
         horizontalScrollView = null
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun reloadStuff() {
+
     }
 }
