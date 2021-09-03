@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.activities.MainActivity
@@ -234,14 +235,14 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                         MainActivity.progress.visibility = View.VISIBLE
                                     }
                                     email.sendEmail(
-                                        "kutyu@fusetech.hu",
-                                        "attila.balind@fusetech.hu",
+                                        "KanBan@fusetech.hu",
+                                        "keszlet.modositas@fusetech.hu",
                                         "Készletkorrekció",
-                                        "A(z) ${polc!!.text} polcon kevesebb mennyiség található. A Scala szerint ${
+                                        "A(z) ${polc!!.text} polcon mennyiségi eltérést észleltem. A Scala szerint ${
                                             getPolcValue(polc!!.text.trim().toString())
                                         } ${unit!!.text.trim()} volt rajta\nValójában ${
                                             mennyiseg?.text?.trim().toString().toDouble()
-                                        }${unit!!.text.trim()} tudtam levenni\nAdatok:\nCikkszám: ${cikkEdit!!.text}\n${meg1!!.text}\n${meg2!!.text}\n${intrem!!.text}\nKüldte: $a"
+                                        }${unit!!.text.trim()} tudtam levenni\nAdatok:\nCikkszám: ${cikkEdit!!.text}\n${meg1!!.text}\n${meg2!!.text}\n${intrem!!.text}\nKüldte: $a\n\nKérlek a levélre ne válaszolj!"
                                     )
                                     sendLogic()
                                     CoroutineScope(Main).launch {
@@ -305,20 +306,22 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                         val a = getName(MainActivity.dolgKod)
                         if (a != "") {
                             email.sendEmail(
-                                "kutyu@fusetech.hu",
-                                "attila.balind@fusetech.hu",
+                                "KanBan@fusetech.hu",
+                                "keszlet.modositas@fusetech.hu",
                                 "Készletkorrekció",
-                                "A(z) ${polc!!.text} polcon több mennyiség található. A Scala szerint ${
+                                "A(z) ${polc!!.text} polcon mennyiségi eltérést észleltem. A Scala szerint ${
                                     getPolcValue(polc!!.text.trim().toString())
                                 } ${unit!!.text.trim()} volt rajta.\nValójában ${
                                     mennyiseg?.text?.trim().toString().toDouble()
-                                }${unit!!.text.trim()} -t találtam még\nAdatok:\nCikkszám: ${cikkEdit!!.text}\n${meg1!!.text}\n${meg2!!.text}\n${intrem!!.text}\nKüldte: $a"
+                                }${unit!!.text.trim()} -t találtam\nAdatok:\nCikkszám: ${cikkEdit!!.text}\n${meg1!!.text}\n${meg2!!.text}\n${intrem!!.text}\nKüldte: $a\n\nKérlek a levélre ne válaszolj"
                             )
                             CoroutineScope(Main).launch {
                                // background?.setBackgroundColor(resources.getColor(R.color.pocakszin2))
                                // appHeader?.setBackgroundColor(resources.getColor(R.color.pocakszin4))
                                 background?.setBackgroundColor(ContextCompat.getColor(myView!!.context,R.color.pocakszin2))
                                 appHeader?.setBackgroundColor(ContextCompat.getColor(myView!!.context,R.color.pocakszin4))
+                                lezar?.isVisible = true
+                                vissza?.isVisible = true
                                 szalagCim?.text = resources.getString(R.string.ikk)
                                 bejelentes?.visibility = View.GONE
                                 mennyiseg?.isFocusable = false
@@ -363,7 +366,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         }
     }
     fun performButton() {
-        vissza?.performClick()
+        if(szalagCim?.text != resources.getString(R.string.bejelentes)){
+            vissza?.performClick()
+        }
     }
 
     fun onTimeout() {
@@ -458,8 +463,11 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                        // appHeader?.setBackgroundColor(resources.getColor(R.color.darkRed))
                         appHeader?.setBackgroundColor(ContextCompat.getColor(myView!!.context,R.color.darkRed))
                         background?.setBackgroundColor(ContextCompat.getColor(myView!!.context,R.color.mildRed))
+                        lezar?.isVisible = false
+                        vissza?.isVisible = false
                        // background?.setBackgroundColor(resources.getColor(R.color.mildRed))
                         szalagCim?.text = resources.getString(R.string.bejelentes)
+                        mainActivity?.setAlert("Beléptél a bejelentő módba. Kérlek add meg a többlet mennyiséget ami a polcon van")
 
                     }
                 }

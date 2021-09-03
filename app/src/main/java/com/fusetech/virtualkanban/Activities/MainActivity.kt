@@ -540,10 +540,10 @@ class MainActivity : AppCompatActivity(),
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_container, koztesFragment!!, "KOZTES").commit()
     }
-    fun loadIgenyKontenerKiszedes(){
+    /*fun loadIgenyKontenerKiszedes(){
         igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
         supportFragmentManager.beginTransaction().replace(R.id.frame_container,igenyKiszedesFragment!!).commit()
-    }
+    }*/
 
     private fun getMenuFragment(): Boolean {
         val fragmentManager = supportFragmentManager
@@ -1464,8 +1464,5 @@ class MainActivity : AppCompatActivity(),
         }catch (e: java.lang.Exception){
             return false
         }
-    }
-    fun mainTry(){
-        igenyKontenerKiszedes()
     }
 }
