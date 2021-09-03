@@ -770,7 +770,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 do {
                     val kontener: String? = resultSet.getString("kontener")
                     val polc: String? = resultSet.getString("polc")
-                    val datum: String? = resultSet.getString("igenyelve")
+                    val datum: String = resultSet.getString("igenyelve").substring(0,16)
                     val tetelszam = resultSet.getInt("tetelszam")
                     val id: String? = resultSet.getString("id")
                     val status: Int = resultSet.getInt("statusz")
@@ -1239,7 +1239,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 do {
                     val kontener: String? = resultSet.getString("kontener")
                     val polc: String? = resultSet.getString("polc")
-                    val datum: String? = resultSet.getString("igenyelve")
+                    val datum: String = resultSet.getString("igenyelve").substring(0,16)
                     val tetelszam = resultSet.getInt("tetelszam")
                     val id: String = resultSet.getString("id")
                     val status: Int = resultSet.getInt("statusz")
@@ -1415,7 +1415,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 do {
                     val kontener: String? = resultSet.getString("kontener")
                     val polc: String? = resultSet.getString("polc")
-                    val datum: String? = resultSet.getString("igenyelve")
+                    val datum = resultSet.getString("igenyelve").substring(0,16)
                     val tetelszam = resultSet.getInt("tetelszam")
                     val id: String = resultSet.getString("id")
                     val status: Int = resultSet.getInt("statusz")
