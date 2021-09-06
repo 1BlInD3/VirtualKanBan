@@ -52,7 +52,7 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView2"
-                    android:layout_width="100dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="2dp"
@@ -70,7 +70,7 @@
                         android:text="Cikkszám"
                         android:textAlignment="center"
                         android:textColor="@android:color/white"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView

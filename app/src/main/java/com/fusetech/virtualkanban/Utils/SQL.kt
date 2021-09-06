@@ -2042,8 +2042,9 @@ class SQL(private val sqlMessage: SQLAlert) {
             val statment =
                 connection.prepareStatement(res.getString(R.string.updateContainerStatus))
             statment.setInt(1, 1)
-            statment.setString(2, "NULL")//ide kell majd valami
-            statment.setString(3, dolgKod)//ide kell a bejelentkezős kód
+            statment.setNull(2, Types.INTEGER)
+            statment.setNull(3, Types.INTEGER)
+            //statment.setString(3, dolgKod)//ide kell a bejelentkezős kód
             statment.setString(4, kontener_id)
             statment.executeUpdate()
             loadIgenyLezaras(context)

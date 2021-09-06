@@ -16,7 +16,9 @@
         <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/fragment_tobblet_kontener_kihelyzese.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/fragment_tobblet_kontener_osszeallitasa.xml" value="1.0" />
         <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/kihelyezes_header.xml" value="0.5" />
-        <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/kontenerben_lezaras_view.xml" value="0.67" />
+        <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/kihelyezes_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/kontenerben_lezaras_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/kontenerben_lezaras_view.xml" value="0.33" />
         <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/konteneres_item.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/konteneres_view.xml" value="0.5" />
         <entry key="..\:/Users/balindattila/Desktop/Benti programok/KanBan/app/src/main/res/layout/polc_header.xml" value="0.36666666666666664" />

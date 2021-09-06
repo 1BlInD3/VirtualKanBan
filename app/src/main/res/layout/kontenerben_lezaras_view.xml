@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/pocakszin2"
@@ -55,7 +56,7 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView7"
-                    android:layout_width="100dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="1dp"
                     android:layout_marginTop="1dp"
@@ -115,24 +116,24 @@
                     android:id="@+id/cardView9"
                     android:layout_width="120dp"
                     android:layout_height="0dp"
+                    android:layout_marginStart="2dp"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:layout_marginStart="2dp"
                     app:cardBackgroundColor="@color/pocakszin4"
                     app:cardCornerRadius="2dp"
-                    app:layout_constraintStart_toEndOf="@+id/cardView8"
+                    app:layout_constraintStart_toEndOf="@+id/cardview11"
                     app:layout_constraintTop_toTopOf="@+id/cardView8">
 
                     <TextView
                         android:id="@+id/text3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:maxLines="1"
                         android:paddingStart="10dp"
                         android:paddingEnd="5dp"
                         android:text="Megjegyzés2"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
                         android:textAlignment="textStart"
                         android:textColor="@android:color/white"
                         android:textSize="18sp" />
@@ -172,12 +173,12 @@
                     android:id="@+id/cardView12"
                     android:layout_width="80dp"
                     android:layout_height="0dp"
+                    android:layout_marginStart="2dp"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:layout_marginStart="1dp"
                     app:cardBackgroundColor="@color/pocakszin4"
                     app:cardCornerRadius="1dp"
-                    app:layout_constraintStart_toEndOf="@+id/cardview11"
+                    app:layout_constraintStart_toEndOf="@+id/cardView10"
                     app:layout_constraintTop_toTopOf="@+id/cardView7">
 
                     <TextView
@@ -185,9 +186,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginStart="1dp"
-                        android:maxLines="1"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
+                        android:maxLines="1"
                         android:paddingStart="10dp"
                         android:text="Kiadva"
                         android:textColor="@android:color/white"
@@ -198,23 +199,23 @@
                     android:id="@+id/cardview11"
                     android:layout_width="80dp"
                     android:layout_height="0dp"
-                    android:layout_marginStart="1dp"
+                    android:layout_marginStart="2dp"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     app:cardBackgroundColor="@color/pocakszin4"
                     app:cardCornerRadius="1dp"
-                    app:layout_constraintStart_toEndOf="@+id/cardView10"
-                    app:layout_constraintTop_toTopOf="@+id/cardView7">
+                    app:layout_constraintStart_toEndOf="@+id/cardView8"
+                    app:layout_constraintTop_toTopOf="@+id/cardView8">
 
                     <TextView
                         android:id="@+id/textView3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:maxLines="1"
                         android:paddingStart="10dp"
                         android:text="Igényelt"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
                         android:textColor="@android:color/white"
                         android:textSize="18sp" />
                 </androidx.cardview.widget.CardView>
@@ -225,14 +226,13 @@
                 android:id="@+id/constant"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
-                app:layout_constraintVertical_bias="0.0"
-                android:focusableInTouchMode="false"
-                android:focusable="false">
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/child_recycler2"
