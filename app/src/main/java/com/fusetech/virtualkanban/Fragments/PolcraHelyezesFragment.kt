@@ -1,7 +1,9 @@
 package com.fusetech.virtualkanban.fragments
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputFilter
 import android.text.Spanned
@@ -138,7 +140,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                         mennyisegText?.selectAll()
                     } else {
                         mennyisegText?.isEnabled = false
-                        sideContainer?.descendantFocusability = ViewGroup.FOCUS_AFTER_DESCENDANTS
+                        //sideContainer?.descendantFocusability = ViewGroup.FOCUS_AFTER_DESCENDANTS
                         //sideContainer?.requestFocus()
                         polcText?.isEnabled = true
                         recycler?.isEnabled = true
@@ -180,7 +182,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                         }
                     }.await()
                     if (isSentTranzit) {
-                        if (trQty > qty) {
+                       /* if (trQty > qty) {
                             CoroutineScope(Main).launch {
                                 tranzitQtyTxt.setText((trQty - qty).toString())
                                 polcText?.setText("")
@@ -190,28 +192,34 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                                 mennyisegText?.requestFocus()
                                 checkBinIsInTheList(bin, qty)
                             }
-                        } else if (trQty == qty) {
+                        } else if (trQty == qty) {*/
                             CoroutineScope(Main).launch {
+                                tranzitQtyTxt.setText((trQty - qty).toString())
                                 checkBinIsInTheList(bin, qty)
-                                tranzitQtyTxt.setText("0")
-                                //getDataFromList(binPos, qty)
-                                mennyisegText?.setText("")
-                                tranzitQtyText?.text = ""
-                                polcText?.setText("")
-                                megjegyzes1Text?.text = ""
-                                megjegyzes2Text?.text = ""
-                                intremText?.text = ""
-                                unitText?.text = ""
-                                mennyisegText?.isEnabled = false
-                                polcText?.isEnabled = false
-                                cikkText?.isEnabled = true
-                                cikkText?.setText("")
-                                cikkText?.requestFocus()
-                                myItems.clear()
-                                recycler?.adapter?.notifyDataSetChanged()
-                                sideContainer?.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                                val builder = AlertDialog.Builder(myView?.context!!)
+                                builder.setTitle("Sikeres polcra helyezés")
+                                builder.setMessage("Cikk: \t\t${cikkText?.text?.trim()}\nMennyiség: \t${mennyisegText?.text} ${unitText?.text?.trim()}\nPolc: \t${polcText?.text}")
+                                builder.setPositiveButton("OK"){_,_ ->
+                                    mennyisegText?.setText("")
+                                    tranzitQtyText?.text = ""
+                                    polcText?.setText("")
+                                    megjegyzes1Text?.text = ""
+                                    megjegyzes2Text?.text = ""
+                                    intremText?.text = ""
+                                    unitText?.text = ""
+                                    mennyisegText?.isEnabled = false
+                                    polcText?.isEnabled = false
+                                    cikkText?.isEnabled = true
+                                    cikkText?.setText("")
+                                    cikkText?.requestFocus()
+                                    myItems.clear()
+                                    recycler?.adapter?.notifyDataSetChanged()
+                                    sideContainer?.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                                }
+                                builder.create()
+                                builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
                             }
-                        }
+                        //}
                     } else {
                         CoroutineScope(Main).launch {
                             mainActivity?.setAlert("Nem sikerült a tranzit XML-t elküldeni a Scala felé")

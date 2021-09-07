@@ -57,7 +57,7 @@
         android:layout_marginBottom="2dp"
         app:cardBackgroundColor="@color/pocakszin4"
         app:cardCornerRadius="2dp"
-        app:layout_constraintStart_toEndOf="@+id/cardView8"
+        app:layout_constraintStart_toEndOf="@+id/cardView13"
         app:layout_constraintTop_toTopOf="@+id/cardView8">
 
         <TextView
@@ -135,6 +135,28 @@
             android:paddingStart="10dp"
             android:textColor="@android:color/white"
             android:text="Állapot"
+            android:textSize="16sp" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView13"
+        android:layout_width="150dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="2dp"
+        app:cardBackgroundColor="@color/pocakszin4"
+        app:cardCornerRadius="2dp"
+        app:layout_constraintStart_toEndOf="@+id/cardView8"
+        app:layout_constraintTop_toTopOf="@+id/cardView10">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:maxLines="1"
+            android:textAlignment="textStart"
+            android:paddingStart="10dp"
+            android:textColor="@android:color/white"
+            android:text="Cikkszám"
             android:textSize="16sp" />
     </androidx.cardview.widget.CardView>
 

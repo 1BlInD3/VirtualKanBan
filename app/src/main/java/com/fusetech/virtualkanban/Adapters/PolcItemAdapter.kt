@@ -17,6 +17,7 @@ class PolcItemAdapter (private var myPolcItems : ArrayList<PolcItems>): Recycler
         val megnevezes2Text: TextView = itemView.megnevezes2
         val intRemText: TextView = itemView.mennyisegHeader
         val allapotText: TextView = itemView.megjegyzesHeader
+        val cikkszamText: TextView = itemView.cikkszam
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PolcItemViewHolder {
@@ -32,6 +33,7 @@ class PolcItemAdapter (private var myPolcItems : ArrayList<PolcItems>): Recycler
         holder.megnevezes2Text.text = currentItem.mMegnevezes2
         holder.intRemText.text = currentItem.mIntRem
         holder.allapotText.text = currentItem.mAllapot
+        holder.cikkszamText.text = currentItem.mCikk
     }
 
     override fun getItemCount()= myPolcItems.size

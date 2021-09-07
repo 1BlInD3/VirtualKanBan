@@ -56,7 +56,7 @@ class PolcResultFragment : Fragment() {
         for(i in 0 until myList.size){
             myPolcList.add(
                 PolcItems(myList[i].mMennyiseg, myList[i].mEgyseg,
-                myList[i].mMegnevezes1,myList[i].mMegnevezes2, myList[i].mIntRem, myList[i].mAllapot)
+                myList[i].mMegnevezes1,myList[i].mMegnevezes2, myList[i].mIntRem, myList[i].mAllapot,myList[i].mCikk)
             )
         }
     }

@@ -979,7 +979,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                                 resultSet2.getString("Description1"),
                                 resultSet2.getString("Description2"),
                                 resultSet2.getString("IntRem"),
-                                resultSet2.getString("QcCategory")
+                                resultSet2.getString("QcCategory"),
+                                resultSet2.getString("StockItem")
                             )
                         )
 
@@ -1363,7 +1364,6 @@ class SQL(private val sqlMessage: SQLAlert) {
                             )
                         )
                     } while (resultSet1.next())
-                    
                     val bundle = Bundle()
                     bundle.putSerializable("NEGYESCIKKEK", konteneresCikkek)
                     bundle.putSerializable("NEGYESNEV", kontener)
