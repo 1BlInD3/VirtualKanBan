@@ -84,9 +84,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         sideContainer = myView?.side_container!!
         sideContainer?.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
         recycler = myView?.locationRecyclerOne!!
-        progressBar = myView?.polcProgressBar!!
         ujCikk = myView?.ujCikkPolcHelyezes!!
-        setProgressBarOff()
         tranzitQtyText?.isFocusable = false
         mennyisegText = myView?.mennyisegTxt!!
         mennyisegText?.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(9, 2))
@@ -141,9 +139,10 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                     } else {
                         mennyisegText?.isEnabled = false
                         sideContainer?.descendantFocusability = ViewGroup.FOCUS_AFTER_DESCENDANTS
-                        sideContainer?.requestFocus()
+                        //sideContainer?.requestFocus()
                         polcText?.isEnabled = true
                         recycler?.isEnabled = true
+                        polcText?.requestFocus()
                     }
                 }
             } else {
@@ -195,7 +194,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                             CoroutineScope(Main).launch {
                                 checkBinIsInTheList(bin, qty)
                                 tranzitQtyTxt.setText("0")
-                                getDataFromList(binPos, qty)
+                                //getDataFromList(binPos, qty)
                                 mennyisegText?.setText("")
                                 tranzitQtyText?.text = ""
                                 polcText?.setText("")
@@ -280,15 +279,6 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             throw RuntimeException(context.toString() + "must implement")
         }
     }
-
-    fun setProgressBarOn() {
-        progressBar?.visibility = View.VISIBLE
-    }
-
-    fun setProgressBarOff() {
-        progressBar?.visibility = View.INVISIBLE
-    }
-
     private fun setBinNumber(binNumber: String?) {
         polcText?.setText(binNumber)
         polcText?.requestFocus()

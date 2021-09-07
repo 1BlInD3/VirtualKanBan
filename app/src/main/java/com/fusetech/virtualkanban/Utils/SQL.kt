@@ -140,7 +140,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                context.polcHelyezesFragment.setProgressBarOn()
+                progress.visibility = View.VISIBLE
             }
             context.removeLocationFragment()
             polcLocation?.clear()
@@ -154,7 +154,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("A $code cikk vagy zárolt, vagy nincs a tranzit raktárban!")
                     context.polcHelyezesFragment.setCikkNumberBack()
-                    context.polcHelyezesFragment.setProgressBarOff()
+                    progress.visibility = View.GONE
                 }
             } else {//ha van a tranzitba
                 val desc1: String? = resultSet.getString("Description1")
@@ -195,12 +195,12 @@ class SQL(private val sqlMessage: SQLAlert) {
                     }
                     context.polcHelyezesFragment.reload()
                     CoroutineScope(Dispatchers.Main).launch {
-                        context.polcHelyezesFragment.setProgressBarOff()
+                        progress.visibility = View.GONE
                     }
                     Log.d(TAG, "checkTrannzit: Nincs a 02-es raktárban")
                 } else {
                     CoroutineScope(Dispatchers.Main).launch {
-                        context.polcHelyezesFragment.setProgressBarOff()
+                        progress.visibility = View.GONE
                     }
                     do {
                         val binNumber: String? = resultSet1.getString("BinNumber")
@@ -226,7 +226,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             Log.d(TAG, "checkTrannzit: $e")
             CoroutineScope(Dispatchers.Main).launch {
-                context.polcHelyezesFragment.setProgressBarOff()
+                progress.visibility = View.GONE
                 context.setAlert("Tranzitos hiba $e")
                 writeLog(e.stackTraceToString(), "arg1 $code arg2 $polcLocation")
             }
@@ -1037,6 +1037,9 @@ class SQL(private val sqlMessage: SQLAlert) {
             Log.d("IOTHREAD", "sendXmlData: ${Thread.currentThread().name}")
             try {
                 context.retro.retrofitGet(file, endPoint)
+                CoroutineScope(Dispatchers.Main).launch {
+                    progress.visibility = View.GONE
+                }
             } catch (e: Exception) {
                 try {
                     val a = mainUrl
@@ -1360,6 +1363,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                             )
                         )
                     } while (resultSet1.next())
+                    
                     val bundle = Bundle()
                     bundle.putSerializable("NEGYESCIKKEK", konteneresCikkek)
                     bundle.putSerializable("NEGYESNEV", kontener)
