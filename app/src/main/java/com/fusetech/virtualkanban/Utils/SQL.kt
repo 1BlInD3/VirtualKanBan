@@ -1653,7 +1653,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                                 builder.setPositiveButton("Igen") { _, _ ->
                                     val email = Email()
                                     CoroutineScope(Dispatchers.IO).launch {
-                                        email.sendEmail("KanBan@fusetech.hu","attila.balind@fusetech.hu","Meghiúsult kiszolgálás","A $cikk nincs a 02 raktárban, viszont megtalálhatók: \n$message")
+                                        email.sendEmail("KanBan@fusetech.hu","keszlet.modositas@fusetech.hu","Meghiúsult kiszolgálás","A $cikk nincs a 02 raktárban, viszont megtalálhatók: \n$message")
                                         context.checkIfContainerIsDone(
                                             kontnerNumber.toString(),
                                             id.toString(),
@@ -1785,7 +1785,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                                 builder.setPositiveButton("Igen") { _, _ ->
                                     val email = Email()
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    email.sendEmail("KanBan@fusetech.hu","attila.balind@fusetech.hu","Meghiúsult kiszolgálás","A $cikk nincs a 02 raktárban, viszont megtalálhatók: \n$message")
+                                    email.sendEmail("KanBan@fusetech.hu","keszlet.modositas@fusetech.hu","Meghiúsult kiszolgálás","A $cikk nincs a 02 raktárban, viszont megtalálhatók: \n$message")
                                     context.checkIfContainerIsDone(
                                             kontnerNumber.toString(),
                                             id.toString(),
