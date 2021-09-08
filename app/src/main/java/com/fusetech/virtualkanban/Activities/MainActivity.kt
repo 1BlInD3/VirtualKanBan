@@ -800,6 +800,9 @@ class MainActivity : AppCompatActivity(),
         kontenerList.clear()
         listIgenyItems.clear()
         polcLocation?.clear()*/
+        polcItems.clear()
+        cikkItems.clear()
+        Log.d(TAG, "onDestroy: ")
         if (barcodeReader != null) {
             barcodeReader?.release()
         }
@@ -808,8 +811,6 @@ class MainActivity : AppCompatActivity(),
 
     override fun onDestroy() {
         super.onDestroy()
-        /*polcItems.clear()
-        cikkItems.clear()*/
         if (barcodeReader != null) {
             barcodeReader?.removeBarcodeListener(this)
             barcodeReader?.close()

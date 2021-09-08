@@ -302,7 +302,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     CoroutineScope(IO).launch {
                         email.sendEmail(
                             "KanBan@fusetech.hu",
-                            "attila.balind@fusetech.hu",
+                            "keszlet.modositas@fusetech.hu",
                             "Üres polc bejelentés",
                             "A ${polc?.text?.trim()} elvileg üres. A Scala szerint ${
                                 getPolcValue(polc?.text?.trim().toString())
