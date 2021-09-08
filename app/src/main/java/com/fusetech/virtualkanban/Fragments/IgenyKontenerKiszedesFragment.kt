@@ -181,9 +181,4 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
         mainActivity = null
         horizontalScrollView = null
     }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun reloadStuff() {
-
-    }
 }

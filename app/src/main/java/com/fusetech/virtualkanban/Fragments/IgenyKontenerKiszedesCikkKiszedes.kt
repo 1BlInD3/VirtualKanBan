@@ -146,16 +146,16 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                 2
             )
         )
-       /*polc?.keyListener = null
-        polc?.isFocusable = false
-        polc?.isFocusableInTouchMode = false*/
+        /*polc?.keyListener = null
+         polc?.isFocusable = false
+         polc?.isFocusableInTouchMode = false*/
         polc?.requestFocus()
         //mennyiseg.requestFocus()
         loadData()
         locationRecycler?.adapter?.notifyDataSetChanged()
         //itemLocationList.add(PolcLocation("ABCD","1234567.0000"))
         lezar!!.setOnClickListener {
-            if(tempLocations.size>0){
+            if (tempLocations.size > 0) {
                 val builder = AlertDialog.Builder(myView!!.context)
                 builder.setTitle("Figyelem")
                     .setMessage("Biztos le akarod így zárni?")
@@ -167,7 +167,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                 }
                 builder.create()
                 builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
-            }else{
+            } else {
                 CoroutineScope(IO).launch {
                     val b = polc!!.text.trim().toString()
                     val c = cikkNumber!!.text.trim().toString()
@@ -175,7 +175,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     val k = kontenerIDKiszedes.text.trim().toString()
                     nullavalKiut(c)
                     mainActivity!!.checkIfContainerIsDone(d, c, "02", b)
-                    mainActivity!!.updateItemStatus(c,3)
+                    mainActivity!!.updateItemStatus(c, 3)
                     mainActivity!!.updateItemAtvevo(c)
                     mainActivity!!.checkIfContainerIsDone(d, c, "02", b)
                     try {
@@ -192,7 +192,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                 //closeAnyways(3)
                 // akkor ez a cikk 3-ös státuszt kell kapjon
             }
-            if(mainActivity?.isWifiConnected()!!){
+            if (mainActivity?.isWifiConnected()!!) {
                 MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
             }
         }
@@ -201,13 +201,15 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             mainActivity?.igenyKontenerKiszedesCikkKiszedes = null
             mainActivity!!.loadKoztes()
             mainActivity!!.checkIfContainerStatus(kontenerIDKiszedes.text.trim().toString())
-            if(mainActivity?.isWifiConnected()!!){
+            if (mainActivity?.isWifiConnected()!!) {
                 MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
             }
         }
         mennyiseg?.setOnClickListener {
             isUpdated = false
-            if (mennyiseg?.text?.trim().toString().isNotEmpty() && mennyiseg?.text?.trim().toString().toDouble() > 0) {
+            if (mennyiseg?.text?.trim().toString().isNotEmpty() && mennyiseg?.text?.trim()
+                    .toString().toDouble() > 0
+            ) {
                 if (mennyiseg?.text?.trim().toString().toDouble() > getPolcValue(
                         polc!!.text.trim().toString()
                     )
@@ -218,7 +220,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                         mainActivity?.setAlert("Túl sok ennyit nem vehetsz ki erről a polcról")
                         mennyiseg?.selectAll()
                     }
-                }else if ((mennyiseg?.text?.trim().toString()
+                } else if ((mennyiseg?.text?.trim().toString()
                         .toDouble() < igenyeltMennyiseg) && (getPolcValue(
                         polc!!.text.trim().toString()
                     ) > mennyiseg?.text?.trim().toString().toDouble())
@@ -292,8 +294,32 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     polc?.requestFocus()
                     bejelentes?.visibility = View.GONE
                 }
+            } else if (mennyiseg?.text?.trim().toString().toDouble() == 0.0) {
+                val builder = AlertDialog.Builder(myView?.context!!)
+                builder.setTitle("Üres polc?")
+                builder.setMessage("A ${polc?.text?.trim()} polc valóban üres?")
+                builder.setPositiveButton("Igen") { _, _ ->
+                    CoroutineScope(IO).launch {
+                        email.sendEmail(
+                            "KanBan@fusetech.hu",
+                            "attila.balind@fusetech.hu",
+                            "Üres polc bejelentés",
+                            "A ${polc?.text?.trim()} elvileg üres. A Scala szerint ${
+                                getPolcValue(polc?.text?.trim().toString())
+                            } ${unit?.text?.trim()} van rajta "
+                        )
+                        CoroutineScope(Main).launch {
+                            removeFromList(polc?.text?.trim().toString())
+                            mennyiseg?.setText("")
+                        }
+                    }
+                }
+                builder.setNegativeButton("Nem") { _, _ ->
+                }
+                builder.create()
+                builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
             }
-            if(mainActivity?.isWifiConnected()!!){
+            if (mainActivity?.isWifiConnected()!!) {
                 MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
             }
         }
@@ -316,10 +342,20 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                 }${unit!!.text.trim()} -t találtam\nAdatok:\nCikkszám: ${cikkEdit!!.text}\n${meg1!!.text}\n${meg2!!.text}\n${intrem!!.text}\nKüldte: $a\n\nKérlek a levélre ne válaszolj"
                             )
                             CoroutineScope(Main).launch {
-                               // background?.setBackgroundColor(resources.getColor(R.color.pocakszin2))
-                               // appHeader?.setBackgroundColor(resources.getColor(R.color.pocakszin4))
-                                background?.setBackgroundColor(ContextCompat.getColor(myView!!.context,R.color.pocakszin2))
-                                appHeader?.setBackgroundColor(ContextCompat.getColor(myView!!.context,R.color.pocakszin4))
+                                // background?.setBackgroundColor(resources.getColor(R.color.pocakszin2))
+                                // appHeader?.setBackgroundColor(resources.getColor(R.color.pocakszin4))
+                                background?.setBackgroundColor(
+                                    ContextCompat.getColor(
+                                        myView!!.context,
+                                        R.color.pocakszin2
+                                    )
+                                )
+                                appHeader?.setBackgroundColor(
+                                    ContextCompat.getColor(
+                                        myView!!.context,
+                                        R.color.pocakszin4
+                                    )
+                                )
                                 lezar?.isVisible = true
                                 vissza?.isVisible = true
                                 szalagCim?.text = resources.getString(R.string.ikk)
@@ -348,7 +384,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             } else {
                 mainActivity?.setAlert("Nem lehet a mennyiség üres!")
             }
-            if(mainActivity?.isWifiConnected()!!){
+            if (mainActivity?.isWifiConnected()!!) {
                 MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
             }
             true
@@ -365,8 +401,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             itemLocationList.add(PolcLocation(myList[i].polc, myList[i].mennyiseg))
         }
     }
+
     fun performButton() {
-        if(szalagCim?.text != resources.getString(R.string.bejelentes)){
+        if (szalagCim?.text != resources.getString(R.string.bejelentes)) {
             vissza?.performClick()
         }
     }
@@ -439,10 +476,10 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     }
 
     fun setBin(polcName: String) {
-        if(mainActivity?.isWifiConnected()!!){
+        if (mainActivity?.isWifiConnected()!!) {
             MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
         }
-        if(mainActivity?.isWifiConnected()!!){
+        if (mainActivity?.isWifiConnected()!!) {
             MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
         }
         maxMennyiseg = 0.0
@@ -460,12 +497,22 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                             .toDouble() == 0.0 && bejelentes?.visibility == View.GONE
                     ) {
                         bejelentes?.visibility = View.VISIBLE
-                       // appHeader?.setBackgroundColor(resources.getColor(R.color.darkRed))
-                        appHeader?.setBackgroundColor(ContextCompat.getColor(myView!!.context,R.color.darkRed))
-                        background?.setBackgroundColor(ContextCompat.getColor(myView!!.context,R.color.mildRed))
+                        // appHeader?.setBackgroundColor(resources.getColor(R.color.darkRed))
+                        appHeader?.setBackgroundColor(
+                            ContextCompat.getColor(
+                                myView!!.context,
+                                R.color.darkRed
+                            )
+                        )
+                        background?.setBackgroundColor(
+                            ContextCompat.getColor(
+                                myView!!.context,
+                                R.color.mildRed
+                            )
+                        )
                         lezar?.isVisible = false
                         vissza?.isVisible = false
-                       // background?.setBackgroundColor(resources.getColor(R.color.mildRed))
+                        // background?.setBackgroundColor(resources.getColor(R.color.mildRed))
                         szalagCim?.text = resources.getString(R.string.bejelentes)
                         mainActivity?.setAlert("Beléptél a bejelentő módba. Kérlek add meg a többlet mennyiséget ami a polcon van")
 
@@ -537,7 +584,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     }
 
     private fun getName(code: String): String {
-        try{
+        try {
             CoroutineScope(Main).launch {
                 MainActivity.progress.visibility = View.VISIBLE
             }
@@ -561,7 +608,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             }
             return name
 
-        }catch (e: Exception){
+        } catch (e: Exception) {
             val name = ""
             CoroutineScope(Main).launch {
                 MainActivity.progress.visibility = View.GONE
@@ -570,14 +617,15 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         }
     }
 
-    private fun nullavalKiut(id: String){
-        try{
+    private fun nullavalKiut(id: String) {
+        try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection = DriverManager.getConnection(MainActivity.connectionString)
-            val statement = connection.prepareStatement(MainActivity.res.getString(R.string.updateMozgatottMennyiseg))
-            statement.setString(1,id)
+            val statement =
+                connection.prepareStatement(MainActivity.res.getString(R.string.updateMozgatottMennyiseg))
+            statement.setString(1, id)
             statement.executeUpdate()
-        }catch (e:Exception){
+        } catch (e: Exception) {
             CoroutineScope(Main).launch {
                 mainActivity?.setAlert("Itt a probléma\n $e")
             }
@@ -608,7 +656,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     private fun lezaras() {
         CoroutineScope(IO).launch {
             async {
-                mainActivity!!.updateItemStatus(cikkNumber!!.text.trim().toString(),3)
+                mainActivity!!.updateItemStatus(cikkNumber!!.text.trim().toString(), 3)
             }.await()
             if (isUpdated) {
                 mainActivity!!.updateItemAtvevo(cikkNumber!!.text.trim().toString())
@@ -712,7 +760,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                             if (isSent) {
                                 try {
                                     mainActivity!!.checkIfContainerIsDone(d, c, "02", b)
-                                    mainActivity!!.updateItemStatus(c,3)
+                                    mainActivity!!.updateItemStatus(c, 3)
                                     mainActivity!!.updateItemAtvevo(c)
                                     mainActivity!!.checkIfContainerIsDone(d, c, "02", b)
                                 } catch (e: Exception) {
@@ -767,7 +815,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         }
     }
 
-    private fun closeAnyways(status: Int){ // Lezárja úgy ahogy van, ha van neki a tömbbe értéke
+    private fun closeAnyways(status: Int) { // Lezárja úgy ahogy van, ha van neki a tömbbe értéke
         val b = polc!!.text.trim().toString()
         val c = cikkNumber!!.text.trim().toString()
         val cikk = cikkEdit!!.text.trim().toString()
@@ -795,7 +843,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             if (isSent) {
                 try {
                     mainActivity!!.checkIfContainerIsDone(d, c, "02", b)
-                    mainActivity!!.updateItemStatus(c,status)
+                    mainActivity!!.updateItemStatus(c, status)
                     mainActivity!!.updateItemAtvevo(c)
                     mainActivity!!.checkIfContainerIsDone(d, c, "02", b)
                 } catch (e: Exception) {
@@ -834,8 +882,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             Log.d(TAG, "onCreateView: LEFUTOTT")
         }
     }
-    fun deleteFocused(){
-        if(polc?.hasFocus()!!){
+
+    fun deleteFocused() {
+        if (polc?.hasFocus()!!) {
             polc?.setText("")
         }
     }
