@@ -146,6 +146,8 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                 2
             )
         )
+        //mainActivity?.hideSystemUI()
+
         /*polc?.keyListener = null
          polc?.isFocusable = false
          polc?.isFocusableInTouchMode = false*/
@@ -161,9 +163,14 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     .setMessage("Biztos le akarod így zárni?")
                 builder.setPositiveButton("Igen") { _, _ ->
                     closeAnyways(3)
+                    mainActivity?.hideSystemUI()
                 }
                 builder.setNegativeButton("Nem") { _, _ ->
                     Log.d(TAG, "onCreateView: Megnyomtam a NEM gombot")
+                    mainActivity?.hideSystemUI()
+                }
+                builder.setOnCancelListener {
+                    mainActivity?.hideSystemUI()
                 }
                 builder.create()
                 builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
@@ -268,6 +275,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                 mainActivity?.setAlert("Nem sikerült a nevet megszereezni")
                             }
                         }
+                        mainActivity?.hideSystemUI()
                     }
                     builder.setNegativeButton("Nem") { _, _ ->
                         sendLogic()
@@ -279,6 +287,10 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                         polc?.setText("")
                         polc?.requestFocus()
                         bejelentes?.visibility = View.GONE
+                        mainActivity?.hideSystemUI()
+                    }
+                    builder.setOnCancelListener {
+                        mainActivity?.hideSystemUI()
                     }
                     builder.create()
                     builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
@@ -313,8 +325,13 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                             mennyiseg?.setText("")
                         }
                     }
+                    mainActivity?.hideSystemUI()
                 }
                 builder.setNegativeButton("Nem") { _, _ ->
+                    mainActivity?.hideSystemUI()
+                }
+                builder.setOnCancelListener {
+                    mainActivity?.hideSystemUI()
                 }
                 builder.create()
                 builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()

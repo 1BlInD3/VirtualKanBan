@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.activity_splash_screen.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -39,7 +40,12 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
         supportActionBar?.hide()
         val retro = RetrofitFunctions(this)
         progress = progressBar3
-
+        this.window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                // or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
 
         try {
             val intent = Intent(this, MainActivity::class.java)
@@ -47,7 +53,7 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
                 retro.getConfigDetails()
                 Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + " splash"}")
                 if(further) {
-                    //delay(2000L)
+                    delay(1000L)
                     intent.putExtra("main", mainUrl)
                     intent.putExtra("backup", backupURL)
                     intent.putExtra("endpoint", endPoint)

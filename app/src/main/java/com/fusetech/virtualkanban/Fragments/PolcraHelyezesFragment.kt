@@ -215,6 +215,10 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                                     myItems.clear()
                                     recycler?.adapter?.notifyDataSetChanged()
                                     sideContainer?.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                                    mainActivity?.hideSystemUI()
+                                }
+                                builder.setOnCancelListener{
+                                    mainActivity?.hideSystemUI()
                                 }
                                 builder.create()
                                 builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()

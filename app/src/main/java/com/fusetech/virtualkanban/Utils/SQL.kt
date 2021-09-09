@@ -1632,7 +1632,10 @@ class SQL(private val sqlMessage: SQLAlert) {
                                     }
                                 }
                                 builder.setNegativeButton("Nem") { _, _ ->
-
+                                    context.hideSystemUI()
+                                }
+                                builder.setOnCancelListener {
+                                    context.hideSystemUI()
                                 }
                                 builder.create()
                                 builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
@@ -1675,7 +1678,10 @@ class SQL(private val sqlMessage: SQLAlert) {
                                     }
                                 }
                                 builder.setNegativeButton("Nem") { _, _ ->
-
+                                    context.hideSystemUI()
+                                }
+                                builder.setOnCancelListener {
+                                    context.hideSystemUI()
                                 }
                                 builder.create()
                                 builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
@@ -1763,7 +1769,10 @@ class SQL(private val sqlMessage: SQLAlert) {
                                         context.removeFragment("NEGYESCIKKEK")
                                     }
                                     builder.setNegativeButton("Nem") { _, _ ->
-
+                                        context.hideSystemUI()
+                                    }
+                                    builder.setOnCancelListener {
+                                       context.hideSystemUI()
                                     }
                                     builder.create()
                                     builder.show().getButton(DialogInterface.BUTTON_POSITIVE)
@@ -1806,7 +1815,10 @@ class SQL(private val sqlMessage: SQLAlert) {
                                         context.removeFragment("NEGYESCIKKEK")
                                     }
                                     builder.setNegativeButton("Nem") { _, _ ->
-
+                                        context.hideSystemUI()
+                                    }
+                                    builder.setOnCancelListener {
+                                        context.hideSystemUI()
                                     }
                                     builder.create()
                                     builder.show().getButton(DialogInterface.BUTTON_POSITIVE)
