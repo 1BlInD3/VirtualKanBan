@@ -24,9 +24,10 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="35dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/pocakszin4"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:background="@color/pocakszin4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -37,10 +38,10 @@
             android:layout_marginStart="6dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="6dp"
-            android:text="6. Kiszedésre váró igénykonténerek"
-            android:textColor="@android:color/white"
             android:focusable="false"
             android:focusableInTouchMode="false"
+            android:text="6. Kiszedésre váró igénykonténerek"
+            android:textColor="@android:color/white"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
