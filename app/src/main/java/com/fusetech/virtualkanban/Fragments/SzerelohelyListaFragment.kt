@@ -23,6 +23,7 @@ class SzerelohelyListaFragment : Fragment() {
 
     private var recycler : RecyclerView? = null
     private var myView: View? = null
+    private val mySzereloList: ArrayList<SzerelohelyItem> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +31,8 @@ class SzerelohelyListaFragment : Fragment() {
     ): View? {
         myView = inflater.inflate(R.layout.fragment_szerelohely_lista, container, false)
         recycler = myView?.recyclerHely
-        recycler?.adapter = SzerelohelyItemAdapter(kihelyezesItems)
+        mySzereloList.clear()
+        recycler?.adapter = SzerelohelyItemAdapter(mySzereloList)
         recycler?.layoutManager = GridLayoutManager(myView?.context,3)
         recycler?.setHasFixedSize(true)
         recycler?.isFocusable = false
@@ -44,7 +46,7 @@ class SzerelohelyListaFragment : Fragment() {
         //kihelyezesItems.clear()
         val lista : ArrayList<SzerelohelyItem>? = arguments?.getSerializable("KILISTA") as ArrayList<SzerelohelyItem>
         for (i in 0 until lista?.size!!){
-            kihelyezesItems.add(SzerelohelyItem(lista[i].szerelohely))
+            mySzereloList.add(SzerelohelyItem(lista[i].szerelohely))
         }
        recycler?.adapter?.notifyDataSetChanged()
     }

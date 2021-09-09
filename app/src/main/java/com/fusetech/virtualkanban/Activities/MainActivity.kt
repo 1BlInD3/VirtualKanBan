@@ -198,6 +198,7 @@ class MainActivity : AppCompatActivity(),
         var sz0x: String = ""
         var wifiInfo: String = ""
         lateinit var path: File
+        var szallito = ""
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -791,6 +792,12 @@ class MainActivity : AppCompatActivity(),
                 Toast.makeText(this, "Scanner unavailable", Toast.LENGTH_SHORT).show()
             }
         }
+        if(getFragment("KIHELYEZES")){
+            CoroutineScope(IO).launch {
+                sql.getContainersFromVehicle(szallito,this@MainActivity)
+            }
+        }
+        //if(getFragment())
     }
 
     override fun onPause() {

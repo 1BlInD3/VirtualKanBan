@@ -176,10 +176,7 @@ class IgenyKontenerKiszedese : Fragment() {
     }
 
     override fun onPause() {
-        szallitoText?.setText("")
-        szallitoText?.isFocusable = true
-        szallitoText?.isFocusableInTouchMode = true
-        szallitoText?.requestFocus()
+        MainActivity.szallito = szallitoText?.text?.trim().toString()
         super.onPause()
     }
 }
