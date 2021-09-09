@@ -155,7 +155,8 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
                         myList[i].statusz,
                         myList[i].unit,
                         myList[i].id,
-                        myList[i].kontener_id
+                        myList[i].kontener_id,
+                        myList[i].balance
                     )
                 )
             }

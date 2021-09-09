@@ -57,7 +57,16 @@ class KontenerbenLezarasAdapter(var kontenerCikkLezaras: ArrayList<KontenerbenLe
             holder.intRem.setTextColor(Color.parseColor("#000000"))
             holder.igeny.setTextColor(Color.parseColor("#000000"))
             holder.mozgas.setTextColor(Color.parseColor("#000000"))
-        } else {
+        } else if (kontenerCikkLezaras[position].statusz < 2 && kontenerCikkLezaras[position].balance == 0.0){
+            holder.itemView.setBackgroundResource(R.drawable.text_red_selector)
+            holder.cikkszam.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.megj1.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.megj2.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.intRem.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.igeny.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.mozgas.setTextColor(Color.parseColor("#FFFFFF"))
+        }
+        else {
             holder.itemView.setBackgroundResource(R.drawable.text_white_selector)
             holder.cikkszam.setTextColor(Color.parseColor("#000000"))
             holder.megj1.setTextColor(Color.parseColor("#000000"))

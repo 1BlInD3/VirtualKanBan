@@ -24,20 +24,29 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private const val TAG = "IgenyKontnerKiszedesCik"
 
-class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClickListener{
+class IgenyKontnerKiszedesCikk : Fragment(), KontenerbenLezarasAdapter.onItemClickListener {
     private var param1: String? = null
     private var param2: String? = null
-    private var recycler : RecyclerView? = null
-    private  var tovabbBtn: Button?= null
-    private  var visszaBtn: Button?= null
-    private  var kontenerNev: TextView?= null
-    private  var progress: ProgressBar?= null
-    private  var cikkAdatok: KiszedesAdatok?= null
-    private  var mainActivity: MainActivity?= null
+    private var recycler: RecyclerView? = null
+    private var tovabbBtn: Button? = null
+    private var visszaBtn: Button? = null
+    private var kontenerNev: TextView? = null
+    private var progress: ProgressBar? = null
+    private var cikkAdatok: KiszedesAdatok? = null
+    private var mainActivity: MainActivity? = null
     private var myView: View? = null
 
-    interface KiszedesAdatok{
-        fun cikkAdatok(cikk: String?, megj1: String?, megj2: String?, intrem: String?, igeny: Double, unit: String?, id: Int, kontnerNumber: Int)
+    interface KiszedesAdatok {
+        fun cikkAdatok(
+            cikk: String?,
+            megj1: String?,
+            megj2: String?,
+            intrem: String?,
+            igeny: Double,
+            unit: String?,
+            id: Int,
+            kontnerNumber: Int
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,14 +74,14 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         kontenerNev?.text = arguments?.getString("NEGYESNEV")
         tovabbBtn?.text = getString(R.string.tovabb)
         tovabbBtn?.visibility = View.GONE
-        recycler?.adapter = KontenerbenLezarasAdapter(cikkItem4,this)
+        recycler?.adapter = KontenerbenLezarasAdapter(cikkItem4, this)
         recycler?.layoutManager = LinearLayoutManager(myView?.context)
         recycler?.setHasFixedSize(true)
         loadData()
         recycler?.adapter?.notifyDataSetChanged()
         recycler?.requestFocus()
-        visszaBtn?.setOnClickListener{
-            if(mainActivity?.isWifiConnected()!!){
+        visszaBtn?.setOnClickListener {
+            if (mainActivity?.isWifiConnected()!!) {
                 MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
                 myView = null
                 recycler = null
@@ -82,8 +91,8 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
                 kontenerNev = null
                 progress = null
                 cikkAdatok = null
-               // mainActivity?.loadMenuFragment(true)
-               // mainActivity?.igenyKontenerKiszedes()
+                // mainActivity?.loadMenuFragment(true)
+                // mainActivity?.igenyKontenerKiszedes()
                 mainActivity?.removeFragment("NEGYESCIKKEK")
                 mainActivity?.igenyKontenerKiszedes()
                 //mainActivity?.igenyKontenerKiszedes()
@@ -92,10 +101,10 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
                 //mainAcitivity?.menuFragment = null
 
                 //mainActivity?.loadMenuFragment(true)
-               // mainActivity?.loadKoztes()
-               // mainActivity?.loadIgenyKontenerKiszedes()
+                // mainActivity?.loadKoztes()
+                // mainActivity?.loadIgenyKontenerKiszedes()
                 mainActivity = null
-            }else{
+            } else {
                 mainActivity?.setAlert("")
             }
         }
@@ -116,35 +125,60 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
 
     override fun onItemClick(position: Int) {
         //mainAcitivity?.igenyKontenerKiszedesCikkKiszedes = IgenyKontenerKiszedesCikkKiszedes() //ezt a kettőt máshol kéne meghívni
-        cikkAdatok?.cikkAdatok(cikkItem4[position].cikkszam,cikkItem4[position].megjegyzes1,cikkItem4[position].megjegyzes2,
-        cikkItem4[position].intrem,cikkItem4[position].igeny.toString().toDouble(),cikkItem4[position].unit,cikkItem4[position].id,cikkItem4[position].kontener_id)
-        if(mainActivity?.isWifiConnected()!!){
+        cikkAdatok?.cikkAdatok(
+            cikkItem4[position].cikkszam,
+            cikkItem4[position].megjegyzes1,
+            cikkItem4[position].megjegyzes2,
+            cikkItem4[position].intrem,
+            cikkItem4[position].igeny.toString().toDouble(),
+            cikkItem4[position].unit,
+            cikkItem4[position].id,
+            cikkItem4[position].kontener_id
+        )
+        if (mainActivity?.isWifiConnected()!!) {
             MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
         }
-       /* myView = null
-        recycler = null
-        recycler?.adapter = null
-        tovabbBtn = null
-        visszaBtn = null
-        kontenerNev = null
-        progress = null
-        cikkAdatok = null
-       // mainAcitivity?.removeFragment("NEGYESCIKKEK") // meg ezt
-        mainAcitivity = null*/
+        /* myView = null
+         recycler = null
+         recycler?.adapter = null
+         tovabbBtn = null
+         visszaBtn = null
+         kontenerNev = null
+         progress = null
+         cikkAdatok = null
+        // mainAcitivity?.removeFragment("NEGYESCIKKEK") // meg ezt
+         mainAcitivity = null*/
 
     }
-    private fun loadData(){
+
+    private fun loadData() {
         cikkItem4.clear()
-        val myList: ArrayList<KontenerbenLezarasItem> = arguments?.getSerializable("NEGYESCIKKEK") as ArrayList<KontenerbenLezarasItem>
-        for(i in 0 until myList.size){
-            cikkItem4.add(KontenerbenLezarasItem(myList[i].cikkszam,myList[i].megjegyzes1,myList[i].megjegyzes2,myList[i].intrem,myList[i].igeny,myList[i].kiadva,myList[i].statusz,myList[i].unit,myList[i].id,myList[i].kontener_id))
+        val myList: ArrayList<KontenerbenLezarasItem> =
+            arguments?.getSerializable("NEGYESCIKKEK") as ArrayList<KontenerbenLezarasItem>
+        for (i in 0 until myList.size) {
+            cikkItem4.add(
+                KontenerbenLezarasItem(
+                    myList[i].cikkszam,
+                    myList[i].megjegyzes1,
+                    myList[i].megjegyzes2,
+                    myList[i].intrem,
+                    myList[i].igeny,
+                    myList[i].kiadva,
+                    myList[i].statusz,
+                    myList[i].unit,
+                    myList[i].id,
+                    myList[i].kontener_id,
+                    myList[i].balance
+                )
+            )
         }
     }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        cikkAdatok = if(context is KiszedesAdatok){
+        cikkAdatok = if (context is KiszedesAdatok) {
             context
-        }else{
+        } else {
             throw RuntimeException(context.toString() + "must implement")
         }
     }
@@ -153,10 +187,12 @@ class IgenyKontnerKiszedesCikk : Fragment(),KontenerbenLezarasAdapter.onItemClic
         super.onResume()
         recycler?.requestFocus()
     }
-    fun setProgressBarOff(){
+
+    fun setProgressBarOff() {
         progress?.visibility = View.GONE
     }
-    fun setProgressBarOn(){
+
+    fun setProgressBarOn() {
         progress?.visibility = View.VISIBLE
     }
 

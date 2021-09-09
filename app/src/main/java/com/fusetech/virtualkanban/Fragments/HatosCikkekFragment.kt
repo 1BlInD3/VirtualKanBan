@@ -119,7 +119,8 @@ class HatosCikkekFragment : Fragment(), KontenerbenLezarasAdapter.onItemClickLis
                         myList[i].statusz,
                         myList[i].unit,
                         myList[i].id,
-                        myList[i].kontener_id
+                        myList[i].kontener_id,
+                        myList[i].balance
                     )
                 )
             }

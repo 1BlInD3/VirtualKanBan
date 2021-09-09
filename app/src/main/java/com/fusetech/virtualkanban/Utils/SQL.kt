@@ -851,6 +851,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     val unit = resultSet.getString("Unit")
                     val id = resultSet.getInt("id")
                     val kontenerId = resultSet.getInt("kontener_id")
+                    val balance = resultSet.getDouble("StockBalance")
                     kontenerCikkLezar.add(
                         KontenerbenLezarasItem(
                             cikk,
@@ -862,7 +863,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                             status,
                             unit,
                             id,
-                            kontenerId
+                            kontenerId,
+                            balance
                         )
                     )
                 } while (resultSet.next())
@@ -1321,7 +1323,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 statement2.executeUpdate()
                 Log.d(TAG, "checkIfContainerIsOpen: Sikeres update")
                 val statment3 =
-                    connection.prepareStatement(res.getString(R.string.igenyKontenerLezarasCikkLezaras))
+                    connection.prepareStatement(res.getString(R.string.kontenerCikkAdatok))
                 statment3.setInt(1, kontener.toInt())
                 statment3.setString(2, dolgKod)
                 val resultSet1 = statment3.executeQuery()
@@ -1350,6 +1352,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         val unit = resultSet1.getString("Unit")
                         val id = resultSet1.getInt("id")
                         val kontenerId = resultSet1.getInt("kontener_id")
+                        val balance = resultSet1.getDouble("StockBalance")
                         konteneresCikkek.add(
                             KontenerbenLezarasItem(
                                 cikk,
@@ -1361,7 +1364,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                                 status,
                                 unit,
                                 id,
-                                kontenerId
+                                kontenerId,
+                                balance
                             )
                         )
                     } while (resultSet1.next())
@@ -1496,6 +1500,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     val unit = resultSet.getString("Unit")
                     val id = resultSet.getInt("id")
                     val kontenerId = resultSet.getInt("kontener_id")
+                    val balance = resultSet.getDouble("StockBalance")
                     kontenerCikkLezar.add(
                         KontenerbenLezarasItem(
                             cikk,
@@ -1507,7 +1512,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                             status,
                             unit,
                             id,
-                            kontenerId
+                            kontenerId,
+                            balance
                         )
                     )
                 } while (resultSet.next())
@@ -2221,16 +2227,16 @@ class SQL(private val sqlMessage: SQLAlert) {
                 }
             } else {
                 sz0x = code
-                //val myList: ArrayList<SzerelohelyItem> = ArrayList()
+                val myList: ArrayList<SzerelohelyItem> = ArrayList()
                 do {
                     val szerelohely = resultSet.getString("termeles_rakhely")
-                    kihelyezesItems.add(SzerelohelyItem(szerelohely.uppercase(Locale.ROOT)))
+                    myList.add(SzerelohelyItem(szerelohely.uppercase(Locale.ROOT)))
                 } while (resultSet.next())
                 CoroutineScope(Dispatchers.Main).launch {
                     progress.visibility = View.GONE
                 }
                 val bundle = Bundle()
-                bundle.putSerializable("KILISTA", kihelyezesItems)
+                bundle.putSerializable("KILISTA", myList)
                 fragment.arguments = bundle
                 context.supportFragmentManager.beginTransaction()
                     .replace(R.id.kihelyezesFrame, fragment, "KIHELYEZESLISTA").commit()
@@ -2486,6 +2492,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     val unit = resultSet.getString("Unit")
                     val id = resultSet.getInt("id")
                     val kontenerId = resultSet.getInt("kontener_id")
+                    val balance = resultSet.getDouble("StockBalance")
                     tobbletCikkek.add(
                         KontenerbenLezarasItem(
                             cikk,
@@ -2497,7 +2504,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                             status,
                             unit,
                             id,
-                            kontenerId
+                            kontenerId,
+                            balance
                         )
                     )
                 } while (resultSet.next())
@@ -2717,6 +2725,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     val unit = resultSet.getString("Unit")
                     val id = resultSet.getInt("id")
                     val kontenerId = resultSet.getInt("kontener_id")
+                    val balance = resultSet.getDouble("StockBalance")
                     tobbletCikkek.add(
                         KontenerbenLezarasItem(
                             cikk1,
@@ -2728,7 +2737,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                             status,
                             unit,
                             id,
-                            kontenerId
+                            kontenerId,
+                            balance
                         )
                     )
                 } while (resultSet.next())
