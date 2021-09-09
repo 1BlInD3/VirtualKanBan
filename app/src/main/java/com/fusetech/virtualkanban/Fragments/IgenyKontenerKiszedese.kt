@@ -14,6 +14,7 @@ import com.fusetech.virtualkanban.activities.MainActivity.Companion.kihelyezesIt
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.sz0x
 import com.fusetech.virtualkanban.dataItems.SzerelohelyItem
 import com.fusetech.virtualkanban.R
+import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedese.*
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedese.view.*
 
 private const val ARG_PARAM1 = "param1"
@@ -166,5 +167,19 @@ class IgenyKontenerKiszedese : Fragment() {
         }else if(szerelohely?.hasFocus()!!){
             szerelohely?.setText("")
         }
+    }
+    fun afterOnPause(){
+        szerelohely?.setText("")
+        szerelohely?.isFocusable = true
+        szerelohely?.isFocusableInTouchMode = true
+        szerelohely?.requestFocus()
+    }
+
+    override fun onPause() {
+        szallitoText?.setText("")
+        szallitoText?.isFocusable = true
+        szallitoText?.isFocusableInTouchMode = true
+        szallitoText?.requestFocus()
+        super.onPause()
     }
 }

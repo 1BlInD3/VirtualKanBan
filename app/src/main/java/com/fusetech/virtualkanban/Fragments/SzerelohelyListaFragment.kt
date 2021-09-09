@@ -14,6 +14,7 @@ import com.fusetech.virtualkanban.dataItems.SzerelohelyItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_szerelohely_lista.view.*
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.kihelyezesItems
+import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedese.*
 
 private const val TAG = "SzerelohelyListaFragmen"
 
@@ -34,16 +35,15 @@ class SzerelohelyListaFragment : Fragment() {
         recycler?.setHasFixedSize(true)
         recycler?.isFocusable = false
         recycler?.isFocusableInTouchMode = false
-        getData()
 
         return myView
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun getData(){
-        kihelyezesItems.clear()
-        val lista : ArrayList<SzerelohelyItem> = arguments?.getSerializable("KILISTA") as ArrayList<SzerelohelyItem>
-        for (i in 0 until lista.size){
+        //kihelyezesItems.clear()
+        val lista : ArrayList<SzerelohelyItem>? = arguments?.getSerializable("KILISTA") as ArrayList<SzerelohelyItem>
+        for (i in 0 until lista?.size!!){
             kihelyezesItems.add(SzerelohelyItem(lista[i].szerelohely))
         }
        recycler?.adapter?.notifyDataSetChanged()
@@ -56,5 +56,10 @@ class SzerelohelyListaFragment : Fragment() {
         recycler = null
         recycler?.adapter = null
         
+    }
+
+    override fun onResume() {
+        getData()
+        super.onResume()
     }
 }

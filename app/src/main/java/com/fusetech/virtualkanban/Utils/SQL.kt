@@ -22,6 +22,7 @@ import com.fusetech.virtualkanban.activities.MainActivity.Companion.mainUrl
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.backupURL
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.endPoint
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.dolgKod
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.kihelyezesItems
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.path
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.wifiInfo
 import com.fusetech.virtualkanban.dataItems.*
@@ -1643,8 +1644,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                             do {
                                 val balance = resultSet3.getString("BalanceQty").toDouble()
                                 val binNumber = resultSet3.getString("BinNumber")
-                                val unit = resultSet3.getString("Unit")
-                                message += "$balance\t$unit\t\t$binNumber\n"
+                                val unit1 = resultSet3.getString("Unit")
+                                message += "$balance\t$unit1\t\t$binNumber\n"
                             }while (resultSet3.next())
                             CoroutineScope(Dispatchers.Main).launch { //ide kell írni hogy ha nincs a készleten zárja le nullával
                                 val builder = AlertDialog.Builder(context)
@@ -1775,8 +1776,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                             do {
                                 val balance = resultSet3.getString("BalanceQty").toDouble()
                                 val binNumber = resultSet3.getString("BinNumber")
-                                val unit = resultSet3.getString("Unit")
-                                message += "$balance\t$unit\t\t$binNumber\n"
+                                val unit1 = resultSet3.getString("Unit")
+                                message += "$balance\t$unit1\t\t$binNumber\n"
                             } while (resultSet3.next())
                             CoroutineScope(Dispatchers.Main).launch {
                                 val builder = AlertDialog.Builder(context)
@@ -2208,16 +2209,16 @@ class SQL(private val sqlMessage: SQLAlert) {
                 }
             } else {
                 sz0x = code
-                val myList: ArrayList<SzerelohelyItem> = ArrayList()
+                //val myList: ArrayList<SzerelohelyItem> = ArrayList()
                 do {
                     val szerelohely = resultSet.getString("termeles_rakhely")
-                    myList.add(SzerelohelyItem(szerelohely.uppercase(Locale.ROOT)))
+                    kihelyezesItems.add(SzerelohelyItem(szerelohely.uppercase(Locale.ROOT)))
                 } while (resultSet.next())
                 CoroutineScope(Dispatchers.Main).launch {
                     progress.visibility = View.GONE
                 }
                 val bundle = Bundle()
-                bundle.putSerializable("KILISTA", myList)
+                bundle.putSerializable("KILISTA", kihelyezesItems)
                 fragment.arguments = bundle
                 context.supportFragmentManager.beginTransaction()
                     .replace(R.id.kihelyezesFrame, fragment, "KIHELYEZESLISTA").commit()

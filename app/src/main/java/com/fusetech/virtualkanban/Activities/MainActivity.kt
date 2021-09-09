@@ -800,6 +800,7 @@ class MainActivity : AppCompatActivity(),
         kontenerList.clear()
         listIgenyItems.clear()
         polcLocation?.clear()*/
+        kihelyezesItems.clear()
         polcItems.clear()
         cikkItems.clear()
         Log.d(TAG, "onDestroy: ")
