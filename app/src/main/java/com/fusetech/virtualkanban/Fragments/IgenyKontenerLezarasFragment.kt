@@ -67,12 +67,6 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         exitBtn?.isFocusable = true
         progress = child?.konteneresProgress
         setProgressBarOff()
-        childRecycler = child?.child_recycler
-        childRecycler?.adapter = KontenerAdapter(kontenerList, this)
-        childRecycler?.layoutManager = LinearLayoutManager(child?.context)
-        childRecycler?.setHasFixedSize(true)
-        kontenerList.clear()
-        loadData()
 
         exitBtn?.setOnClickListener {
             Log.d(TAG, "onButtonPressed")
@@ -81,6 +75,17 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         }
 
         return myView
+    }
+
+    override fun onResume() {
+        childRecycler = child?.child_recycler
+        childRecycler?.adapter = KontenerAdapter(kontenerList, this)
+        childRecycler?.layoutManager = LinearLayoutManager(child?.context)
+        childRecycler?.setHasFixedSize(true)
+        kontenerList.clear()
+        loadData()
+        super.onResume()
+        childRecycler?.adapter?.notifyDataSetChanged()
     }
 
     companion object {
@@ -157,7 +162,7 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
         dataFrame = null
         childRecycler = null
         childRecycler?.adapter = null
-        igenyKontener = null
+        //igenyKontener = null
         exitBtn = null
         progress = null
         mainActivity?.igenyKiszedesFragment = null

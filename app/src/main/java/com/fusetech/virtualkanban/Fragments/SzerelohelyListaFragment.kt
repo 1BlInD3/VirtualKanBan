@@ -14,7 +14,6 @@ import com.fusetech.virtualkanban.dataItems.SzerelohelyItem
 import com.fusetech.virtualkanban.R
 import kotlinx.android.synthetic.main.fragment_szerelohely_lista.view.*
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.kihelyezesItems
-import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedese.*
 
 private const val TAG = "SzerelohelyListaFragmen"
 

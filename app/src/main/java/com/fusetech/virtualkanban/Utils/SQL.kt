@@ -22,7 +22,6 @@ import com.fusetech.virtualkanban.activities.MainActivity.Companion.mainUrl
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.backupURL
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.endPoint
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.dolgKod
-import com.fusetech.virtualkanban.activities.MainActivity.Companion.kihelyezesItems
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.path
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.wifiInfo
 import com.fusetech.virtualkanban.dataItems.*
@@ -1663,7 +1662,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                                 builder.setPositiveButton("Igen") { _, _ ->
                                     val email = Email()
                                     CoroutineScope(Dispatchers.IO).launch {
-                                        email.sendEmail("KanBan@fusetech.hu","keszlet.modositas@fusetech.hu","Meghiúsult kiszolgálás","A $cikk nincs a 02 raktárban, viszont megtalálhatók: \n$message")
+                                        email.sendEmail("KanBan@fusetech.hu","keszlet.modositas@fusetech.hu","Meghiúsult kiszolgálás","A $cikk\t$megj1\t$megj2\t$intrem\tnincs a 02 raktárban, viszont megtalálhatók: \n$message")
                                         context.checkIfContainerIsDone(
                                             kontnerNumber.toString(),
                                             id.toString(),
@@ -1801,7 +1800,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                                 builder.setPositiveButton("Igen") { _, _ ->
                                     val email = Email()
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    email.sendEmail("KanBan@fusetech.hu","keszlet.modositas@fusetech.hu","Meghiúsult kiszolgálás","A $cikk nincs a 02 raktárban, viszont megtalálhatók: \n$message")
+                                    email.sendEmail("KanBan@fusetech.hu","keszlet.modositas@fusetech.hu","Meghiúsult kiszolgálás","A $cikk\t$megj1\t$megj2\t$intrem\tnincs a 02 raktárban, viszont megtalálhatók: \n$message")
                                     context.checkIfContainerIsDone(
                                             kontnerNumber.toString(),
                                             id.toString(),

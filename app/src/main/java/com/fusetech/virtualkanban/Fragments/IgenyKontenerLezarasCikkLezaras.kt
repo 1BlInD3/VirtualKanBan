@@ -83,7 +83,6 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
         kontenerNev?.text = ""
         loadData()
         recycler?.adapter?.notifyDataSetChanged()
-        recycler?.requestFocus()
 
         exitBtn?.setOnClickListener {
             exitBtn?.isFocusable = true
@@ -109,6 +108,8 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
                 setProgressBarOn()
                 mainActivity?.closeContainerAndItem()
                 kontItem.clear()
+              //  mainActivity?.removeFragment("CIKKLEZARASFRAGMENT")
+              //  mainActivity?.removeFragment("IGENYLEZARAS")
                 mainActivity?.loadMenuFragment(true)
             }else{
                 mainActivity?.setAlert("A wifi nincs bekapcsolva")
@@ -121,6 +122,11 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
         }
 
         return myView
+    }
+
+    override fun onResume() {
+        super.onResume()
+        recycler?.requestFocus()
     }
 
     fun onTimeout() {
