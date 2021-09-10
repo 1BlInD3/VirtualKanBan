@@ -1436,9 +1436,11 @@ class MainActivity : AppCompatActivity(),
         //super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == EXTERNAL_STORAGE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "El van fogadva", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this, "El van fogadva", Toast.LENGTH_SHORT).show()
+                Log.d(TAG, "onRequestPermissionsResult: El van fogadva")
             } else {
-                Toast.makeText(this, "Nincs elfogadva", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this, "Nincs elfogadva", Toast.LENGTH_SHORT).show()
+                Log.d(TAG, "onRequestPermissionsResult: Nincs elfogadva")
             }
         }
     }

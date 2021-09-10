@@ -32,7 +32,7 @@ class LoginFragment : Fragment() {
         cancelBtn = myView?.cancelButton!!
         mainActivity  = activity as MainActivity
         mainActivity?.startExitTimer()
-        progressBar?.requestFocus()
+        idTxt?.requestFocus()
         cancelBtn?.setOnClickListener{
             mainActivity?.finishAndRemoveTask()
         }
