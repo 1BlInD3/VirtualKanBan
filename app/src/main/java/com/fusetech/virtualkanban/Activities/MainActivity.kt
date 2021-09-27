@@ -168,6 +168,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var myTimer: CountDownTimer
     private lateinit var exitTimer: CountDownTimer
     var hatosFragment: HatosCikkekFragment? = null
+    private var raktarkoziFragment: RaktarkoziMozgasFragment? = null
     private lateinit var logoutWhenCharging: BroadcastReceiver
     var loadFragment: LoadFragment? = null
     var a = 0
@@ -535,6 +536,13 @@ class MainActivity : AppCompatActivity(),
         Log.d(TAG, "cancelExitTimer: megállt")
     }
 
+    fun loadRaktarkozi() {
+        raktarkoziFragment = RaktarkoziMozgasFragment()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.frame_container, raktarkoziFragment!!, "RAKTARKOZI").addToBackStack(null)
+            .commit()
+    }
+
     fun loadLoginFragment() {
         loginFragment = LoginFragment()
         supportFragmentManager.beginTransaction()
@@ -760,6 +768,9 @@ class MainActivity : AppCompatActivity(),
                         wifiInfo = getMacAndSignalStrength()
                     }
                 }  //9
+                56 -> {
+                    loadRaktarkozi()
+                }
             }
         } else if (getMenuFragment()) {
             when (keyCode) {
@@ -797,9 +808,9 @@ class MainActivity : AppCompatActivity(),
                 Toast.makeText(this, "Scanner unavailable", Toast.LENGTH_SHORT).show()
             }
         }
-        if(getFragment("KIHELYEZES")){
+        if (getFragment("KIHELYEZES")) {
             CoroutineScope(IO).launch {
-                sql.getContainersFromVehicle(szallito,this@MainActivity)
+                sql.getContainersFromVehicle(szallito, this@MainActivity)
             }
         }
         //if(getFragment())
@@ -1479,13 +1490,14 @@ class MainActivity : AppCompatActivity(),
     }
 
     fun isWifiConnected(): Boolean {
-        try{
+        try {
             return connManager.getNetworkCapabilities(connManager.activeNetwork)
                 ?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)!!
-        }catch (e: java.lang.Exception){
+        } catch (e: java.lang.Exception) {
             return false
         }
     }
+
     fun hideSystemUI() {
         // Set the IMMERSIVE flag.
         // Set the content to appear under the system bars so that the content
@@ -1495,7 +1507,7 @@ class MainActivity : AppCompatActivity(),
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-               // or View.SYSTEM_UI_FLAG_FULLSCREEN
+                // or View.SYSTEM_UI_FLAG_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
 }
