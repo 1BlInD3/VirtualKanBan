@@ -107,13 +107,18 @@ class MainActivity : AppCompatActivity(),
     * 8-as opció
     * a 4-es opcióhoz hasonló, csak a 02-es raktár polcaira helyezi vissza a cikkeket
 
+
+      Új opció
+
+        a kiindulási polcot leolvassuk. Felugrik egy ablak, és rákérdez, hogy az egész polcot szeretnéd-e mozgatni. Ha igen akkor csak a cél polcot kéri, különben a cikkeket kell kiválasztani egyesévekl
+     */
+
     /*
         HA többször akarunk kivenni, akkor kérdezze meg hogy üres-e a polc vagy nem,
         csak így kell kivenni. HA üres akkor küldjön emailt, a polccal levett mennyiséggel és a polc mennyiséggel
 
 
         Többlet dedikált gomb: Polchely kell legyen benne és nulla legyen a polcchleyen lévő mennyiség. VAn többlet m az x polcon? megadás után email. x polcon cikkszámoadatok, ennyivel több volt Mennyi többletmennyiség maradt a polcon?.
-     */
      */
     val EXTERNAL_STORAGE = 101
     private var manager: AidcManager? = null
