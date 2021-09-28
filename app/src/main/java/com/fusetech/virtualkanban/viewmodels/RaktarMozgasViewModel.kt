@@ -33,8 +33,10 @@ constructor(
     private val retro: RetrofitFunctions
 ) : ViewModel() {
     var mozgasListener: MozgasListener? = null
-    var celRaktar = "BRAZ"
+    var celRaktar = ""
     var kiinduloRakhely = ""
+    var yesClicked = false
+    var position: Int? = null
     private var adatok = MutableLiveData<ArrayList<PolcItems>>()
 
     fun getItems(): LiveData<ArrayList<PolcItems>> {
@@ -84,7 +86,17 @@ constructor(
     fun checkPolc(code: String){
         CoroutineScope(IO).launch {
             if(sql.isPolc(code)){
-                mozgasListener?.setSend()
+                mozgasListener?.setPolcText(code)
+                if(yesClicked){
+                    mozgasListener?.setSend()
+                    yesClicked = false
+                }else{
+                    if(position!! >= 0){
+                        mozgasListener?.sendOneByOne(position!!)
+                    }else{
+                        mozgasListener?.message("Nincs kiválasztva az elem")
+                    }
+                }
             }
         }
     }

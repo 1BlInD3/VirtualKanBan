@@ -56,6 +56,7 @@ class MozgasResult : Fragment(),MozgasAdapter.CurrentSelection,MozgasListener {
         binding.raktarCelMozgas.visibility = View.VISIBLE
         binding.raktarCelMozgas.requestFocus()
         binding.raktarCelMozgas.selectAll()
+        viewModel.position = position
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -76,10 +77,9 @@ class MozgasResult : Fragment(),MozgasAdapter.CurrentSelection,MozgasListener {
                     builder.setTitle("Mozgatás")
                     builder.setMessage("Az egész polcot át szeretnéd mozgatni?")
                     builder.setPositiveButton("Igen"){_,_->
-                        for (i in 0 until viewModel.getItems().value!!.size){
-                            save.saveFile(viewModel.getItems().value!![i].mCikk,viewModel.getItems().value!![i].mMennyiseg,viewModel.kiinduloRakhely,viewModel.celRaktar,"02","02")
-                        }
-                        showMe("Mind kész",requireContext())
+                        binding.raktarCelMozgas.visibility = View.VISIBLE
+                        binding.raktarCelMozgas.requestFocus()
+                        viewModel.yesClicked = true
                     }
                     builder.setNegativeButton("Nem"){_,_ ->
                         initRecycler()
@@ -118,10 +118,25 @@ class MozgasResult : Fragment(),MozgasAdapter.CurrentSelection,MozgasListener {
     }
 
     override fun message(message: String) {
-        TODO("Not yet implemented")
+        showMe(message,requireContext())
     }
 
     override fun setSend() {
+        for (i in 0 until viewModel.getItems().value!!.size){
+            save.saveFile(viewModel.getItems().value!![i].mCikk,viewModel.getItems().value!![i].mMennyiseg,viewModel.kiinduloRakhely,viewModel.celRaktar,"02","02")
+        }
+        CoroutineScope(Main).launch {
+            showMe("Mind kész",requireContext())
+        }
+    }
 
+    override fun sendOneByOne(position: Int) {
+           save.saveFile(viewModel.getItems().value!![position].mCikk,viewModel.getItems().value!![position].mMennyiseg,viewModel.kiinduloRakhely,viewModel.celRaktar,"02","02")
+    }
+
+    override fun setPolcText(code: String) {
+        CoroutineScope(Main).launch {
+            binding.raktarCelMozgas.setText(code)
+        }
     }
 }
