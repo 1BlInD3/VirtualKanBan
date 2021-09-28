@@ -123,7 +123,7 @@ class MozgasResult : Fragment(),MozgasAdapter.CurrentSelection,MozgasListener {
 
     override fun setSend() {
         for (i in 0 until viewModel.getItems().value!!.size){
-            save.saveFile(viewModel.getItems().value!![i].mCikk,viewModel.getItems().value!![i].mMennyiseg,viewModel.kiinduloRakhely,viewModel.celRaktar,"02","02")
+            save.saveFile(viewModel.getItems().value!![i].mCikk.trim(),viewModel.getItems().value!![i].mMennyiseg,viewModel.kiinduloRakhely,viewModel.celRaktar,"02","02")
         }
         CoroutineScope(Main).launch {
             showMe("Mind kész",requireContext())
@@ -131,7 +131,7 @@ class MozgasResult : Fragment(),MozgasAdapter.CurrentSelection,MozgasListener {
     }
 
     override fun sendOneByOne(position: Int) {
-           save.saveFile(viewModel.getItems().value!![position].mCikk,viewModel.getItems().value!![position].mMennyiseg,viewModel.kiinduloRakhely,viewModel.celRaktar,"02","02")
+           save.saveFile(viewModel.getItems().value!![position].mCikk.trim(),viewModel.getItems().value!![position].mMennyiseg,viewModel.kiinduloRakhely,viewModel.celRaktar,"02","02")
     }
 
     override fun setPolcText(code: String) {

@@ -26,13 +26,14 @@ class MozgasAdapter(private var myPolcItems: ArrayList<PolcItems>, val listener:
             val position = absoluteAdapterPosition
             if(position!=RecyclerView.NO_POSITION){
                 listener.onCurrentClick(position)
+                itemView.isSelected = !itemView.isSelected
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PolcItemViewHolder {
         val itemView =
-            LayoutInflater.from(parent.context).inflate(R.layout.polc_view, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.polc_view_2, parent, false)
         return PolcItemViewHolder(itemView)
     }
 

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/text_white_selector">
+
+
+    <TextView
+        android:id="@+id/cikkszamHeader"
+        android:layout_width="80dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="2dp"
+        android:maxLines="1"
+        android:paddingStart="10dp"
+        android:paddingEnd="5dp"
+        android:textAlignment="textEnd"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="ELSO SOR" />
+
+    <TextView
+        android:id="@+id/polcText"
+        android:layout_width="80dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="2dp"
+        android:maxLines="1"
+        android:paddingStart="10dp"
+        android:paddingEnd="5dp"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/cikkszamHeader"
+        app:layout_constraintTop_toTopOf="@+id/cikkszamHeader"
+        tools:text="ELSO SOR" />
+
+    <TextView
+        android:id="@+id/cikkszam"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="2dp"
+        android:maxLines="1"
+        android:paddingStart="10dp"
+        android:paddingEnd="5dp"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/polcText"
+        app:layout_constraintTop_toTopOf="@+id/polcText" />
+
+    <TextView
+        android:id="@+id/desc1Header"
+        android:layout_width="180dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="2dp"
+        android:maxLines="1"
+        android:paddingStart="10dp"
+        android:paddingEnd="5dp"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/cikkszam"
+        app:layout_constraintTop_toTopOf="@+id/cikkszam" />
+
+    <TextView
+        android:id="@+id/megnevezes2"
+        android:layout_width="180dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="2dp"
+        android:maxLines="1"
+        android:paddingStart="10dp"
+        android:paddingEnd="5dp"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/desc1Header"
+        app:layout_constraintTop_toTopOf="@+id/cikkszam" />
+
+    <TextView
+        android:id="@+id/mennyisegHeader"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="2dp"
+        android:maxLines="1"
+        android:paddingStart="10dp"
+        android:paddingEnd="5dp"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/megnevezes2"
+        app:layout_constraintTop_toTopOf="@+id/megnevezes2" />
+
+    <TextView
+        android:id="@+id/megjegyzesHeader"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="2dp"
+        android:maxLines="1"
+        android:paddingStart="10dp"
+        android:paddingEnd="5dp"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/mennyisegHeader"
+        app:layout_constraintTop_toTopOf="@+id/mennyisegHeader" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
