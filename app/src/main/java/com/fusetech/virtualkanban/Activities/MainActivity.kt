@@ -42,10 +42,11 @@ import android.net.wifi.WifiManager
 import java.io.File
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import dagger.hilt.android.AndroidEntryPoint
 
 
 private const val TAG = "MainActivity"
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(),
     BarcodeListener,
     CikklekerdezesFragment.SetItemOrBinManually,
@@ -60,7 +61,8 @@ class MainActivity : AppCompatActivity(),
     SQL.SQLAlert,
     TobbletKontenerCikkekFragment.Tobblet,
     RetrofitFunctions.Trigger,
-    HatosCikkekFragment.Hatos {
+    HatosCikkekFragment.Hatos,
+    RaktarkoziMozgasFragment.LoadResult{
     /*
     // 1es opció pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
@@ -181,7 +183,7 @@ class MainActivity : AppCompatActivity(),
         const val connectionString =
             "jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
         lateinit var res: Resources
-
+        var zarolt = false
         @SuppressLint("StaticFieldLeak")
         lateinit var progress: ProgressBar
         val kihelyezesItems: ArrayList<SzerelohelyItem> = ArrayList()
@@ -680,6 +682,13 @@ class MainActivity : AppCompatActivity(),
                 }
                 getFragment("CIKKEKPOLCRA") -> {
                     tobbletCikkekPolcra?.setCode(barcodeData)
+                }
+                getFragment("MOZGAS") ->{
+                    val fragment = supportFragmentManager.findFragmentByTag("MOZGAS")
+                    (fragment as MozgasResult).setText(barcodeData)
+                }
+                getFragment("RAKTARKOZI") ->{
+                    raktarkoziFragment?.getCode(barcodeData)
                 }
             }
             myTimer.start()
@@ -1509,5 +1518,13 @@ class MainActivity : AppCompatActivity(),
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 // or View.SYSTEM_UI_FLAG_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+    }
+
+    override fun loadPolcItems(code: String) {
+        val bundle = Bundle()
+        bundle.putString("KIINDULAS",code)
+        val mozgasFragment = MozgasResult()
+        mozgasFragment.arguments = bundle
+        supportFragmentManager.beginTransaction().replace(R.id.resultFrame,mozgasFragment,"MOZGAS").commit()
     }
 }

@@ -5,12 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.fusetech.virtualkanban.dataItems.PolcItems
 import com.fusetech.virtualkanban.R
+import com.fusetech.virtualkanban.dataItems.PolcItems
 import kotlinx.android.synthetic.main.polc_view.view.*
 
-class PolcItemAdapter (private var myPolcItems : ArrayList<PolcItems>): RecyclerView.Adapter<PolcItemAdapter.PolcItemViewHolder>() {
-    class PolcItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+class MozgasAdapter(private var myPolcItems: ArrayList<PolcItems>, val listener: CurrentSelection) :
+    RecyclerView.Adapter<MozgasAdapter.PolcItemViewHolder>() {
+    inner class PolcItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val mennyisegText: TextView = itemView.cikkszamHeader
         val unitText: TextView = itemView.polcText
         val megnevezes1Text: TextView = itemView.desc1Header
@@ -18,10 +19,20 @@ class PolcItemAdapter (private var myPolcItems : ArrayList<PolcItems>): Recycler
         val intRemText: TextView = itemView.mennyisegHeader
         val allapotText: TextView = itemView.megjegyzesHeader
         val cikkszamText: TextView = itemView.cikkszam
+        init {
+            itemView.setOnClickListener(this)
+        }
+        override fun onClick(v: View?) {
+            val position = absoluteAdapterPosition
+            if(position!=RecyclerView.NO_POSITION){
+                listener.onCurrentClick(position)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PolcItemViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.polc_view,parent,false)
+        val itemView =
+            LayoutInflater.from(parent.context).inflate(R.layout.polc_view, parent, false)
         return PolcItemViewHolder(itemView)
     }
 
@@ -36,6 +47,10 @@ class PolcItemAdapter (private var myPolcItems : ArrayList<PolcItems>): Recycler
         holder.cikkszamText.text = currentItem.mCikk
     }
 
-    override fun getItemCount()= myPolcItems.size
+    override fun getItemCount() = myPolcItems.size
+
+    interface CurrentSelection{
+        fun onCurrentClick(position: Int)
+    }
 
 }
