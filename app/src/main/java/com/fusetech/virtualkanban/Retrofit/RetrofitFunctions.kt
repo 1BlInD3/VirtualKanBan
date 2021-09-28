@@ -17,7 +17,7 @@ import kotlin.Exception
 
 private const val TAG = "RetrofitFunctions"
 
-class RetrofitFunctions(val trigger: Trigger) {
+class RetrofitFunctions() {
 
     interface Trigger{
         fun triggerError()
@@ -73,7 +73,7 @@ class RetrofitFunctions(val trigger: Trigger) {
         } catch (e: Exception) {
             Log.d(TAG, "getConfigDetails: CATCH ÁG")
             Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + "getConfig"}")
-            trigger.triggerError()
+            //trigger.triggerError()
         }
     }
 }

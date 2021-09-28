@@ -38,7 +38,7 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
         supportActionBar?.hide()
-        val retro = RetrofitFunctions(this)
+        val retro = RetrofitFunctions()
         progress = progressBar3
         this.window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION

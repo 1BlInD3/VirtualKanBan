@@ -43,6 +43,10 @@ import java.io.File
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.Date
+import kotlin.random.Random
+import kotlin.random.Random.Default.nextInt
 
 
 private const val TAG = "MainActivity"
@@ -60,9 +64,10 @@ class MainActivity : AppCompatActivity(),
     IgenyKontenerKiszedesCikkKiszedes.SendXmlData,
     SQL.SQLAlert,
     TobbletKontenerCikkekFragment.Tobblet,
-    RetrofitFunctions.Trigger,
+   // RetrofitFunctions.Trigger,
     HatosCikkekFragment.Hatos,
-    RaktarkoziMozgasFragment.LoadResult{
+    RaktarkoziMozgasFragment.LoadResult,
+    MozgasResult.FileSave{
     /*
     // 1es opció pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
@@ -158,7 +163,7 @@ class MainActivity : AppCompatActivity(),
     val listIgenyItems: ArrayList<IgenyItem> = ArrayList()
     val xml = XML()
     val save = SaveFile()
-    val retro = RetrofitFunctions(this)
+    val retro = RetrofitFunctions()
     private val sql = SQL(this)
     var kihelyezes: IgenyKontenerKiszedese? = null
     var kihelyezesFragmentLista: KihelyezesListaFragment? = null
@@ -1401,10 +1406,6 @@ class MainActivity : AppCompatActivity(),
         sql.closeItemAndCheckContainer(cikk, kontener, this@MainActivity)
     }
 
-    override fun triggerError() {
-        Log.d(TAG, "triggerError: ")
-    }
-
     fun removeFragment(fragment1: String) {
         val fragment = supportFragmentManager.findFragmentByTag(fragment1)
         if (fragment != null) supportFragmentManager.beginTransaction().remove(fragment)
@@ -1526,5 +1527,25 @@ class MainActivity : AppCompatActivity(),
         val mozgasFragment = MozgasResult()
         mozgasFragment.arguments = bundle
         supportFragmentManager.beginTransaction().replace(R.id.resultFrame,mozgasFragment,"MOZGAS").commit()
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    override fun saveFile(
+        cikk: String,
+        mennyiseg: Double,
+        kiinduloPolc: String,
+        celPolc: String,
+        rbol: String,
+        rba: String
+    ){
+        val path = getExternalFilesDir(null)
+        val name = SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + Random.nextInt(
+            0,
+            10000
+        ) + ".xml"
+       if(getFragment("MOZGAS")){
+           val fragment = supportFragmentManager.findFragmentByTag("MOZGAS")
+           (fragment as MozgasResult).getFileFromActivity(File(path,name),cikk, mennyiseg, kiinduloPolc, celPolc, rbol, rba)
+       }
     }
 }
