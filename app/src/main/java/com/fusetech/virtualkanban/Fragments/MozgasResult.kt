@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.fusetech.mobilleltarkotlin.showMe
 import com.fusetech.virtualkanban.R
+import com.fusetech.virtualkanban.activities.MainActivity
 import com.fusetech.virtualkanban.adapters.MozgasAdapter
 import com.fusetech.virtualkanban.databinding.FragmentMozgasResultBinding
 import com.fusetech.virtualkanban.viewmodels.RaktarMozgasViewModel
@@ -48,14 +50,19 @@ class MozgasResult : Fragment(),MozgasAdapter.CurrentSelection {
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
-        kiindulasRakhely = arguments?.getString("KIINDULAS")!!
+        viewModel.kiinduloRakhely = arguments?.getString("KIINDULAS")!!
         CoroutineScope(IO).launch {
-            viewModel.loadItems(kiindulasRakhely)
+            viewModel.loadItems(viewModel.kiinduloRakhely)
             CoroutineScope(Main).launch {
-                initRecycler()
-                viewModel.getItems().observe(viewLifecycleOwner,{
-                    binding.mozgasRecycler.adapter?.notifyDataSetChanged()
-                })
+                if(MainActivity.zarolt){
+                    showMe("Van zárolt",requireContext())
+                    initRecycler()
+                    viewModel.getItems().observe(viewLifecycleOwner,{
+                        binding.mozgasRecycler.adapter?.notifyDataSetChanged()
+                    })
+                }else{
+                    showMe("${viewModel.getItems().value!!.size}",requireContext())
+                }
             }
         }
     }

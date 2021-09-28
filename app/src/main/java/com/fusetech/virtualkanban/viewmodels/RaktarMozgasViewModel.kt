@@ -13,6 +13,7 @@ class RaktarMozgasViewModel
 @Inject
 constructor(private val sql: SqlLogic) : ViewModel() {
     var celRaktar = ""
+    var kiinduloRakhely = ""
     private var adatok =  MutableLiveData<ArrayList<PolcItems>>()
 
     fun getItems(): LiveData<ArrayList<PolcItems>> {
@@ -20,5 +21,10 @@ constructor(private val sql: SqlLogic) : ViewModel() {
     }
     fun loadItems(code: String){
         adatok = sql.polcResultQuery(code)
+    }
+    fun scalaSend(){
+        for (i in 0 until getItems().value!!.size){
+
+        }
     }
 }
