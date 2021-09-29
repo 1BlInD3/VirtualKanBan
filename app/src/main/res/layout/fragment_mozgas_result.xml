@@ -208,12 +208,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             android:text="Cél rakhely megadása : "
             android:textColor="@android:color/black"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/horizontalView" />
+            app:layout_constraintTop_toBottomOf="@+id/cikkTomb" />
 
         <EditText
             android:id="@+id/raktarCelMozgas"
@@ -233,8 +233,52 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView46" />
 
+        <TextView
+            android:id="@+id/cikkTomb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="13dp"
+            android:text="@={viewModel.cikkTomb}"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horizontalView" />
 
+        <TextView
+            android:id="@+id/mennyisegTomb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:text="@={viewModel.mennyisegTomb}"
+            app:layout_constraintStart_toEndOf="@+id/cikkTomb"
+            app:layout_constraintTop_toTopOf="@+id/cikkTomb" />
 
+        <TextView
+            android:id="@+id/textView47"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:text="@={viewModel.unit}"
+            app:layout_constraintStart_toEndOf="@+id/mennyisegTomb"
+            app:layout_constraintTop_toTopOf="@+id/mennyisegTomb" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="132dp"
+            android:background="@drawable/blue_button_select"
+            android:text="Befejezés"
+            android:onClick="@{viewModel::befejezesClick}"
+            android:textColor="@android:color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horizontalView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

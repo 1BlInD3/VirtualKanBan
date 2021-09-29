@@ -2,6 +2,7 @@ package com.fusetech.virtualkanban.viewmodels
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,6 +38,10 @@ constructor(
     var kiinduloRakhely = ""
     var yesClicked = false
     private var adatok = MutableLiveData<ArrayList<PolcItems>>()
+    val valasztasLista: ArrayList<PolcItems> = ArrayList()
+    var cikkTomb = "03011001"
+    var mennyisegTomb = "500"
+    var unit = ""
 
     fun getItems(): LiveData<ArrayList<PolcItems>> {
         return adatok
@@ -100,5 +105,56 @@ constructor(
                 }
             }
         }
+    }
+    fun arrayAddOrDelete(position: Int){
+        when {
+            valasztasLista.size == 0 -> {
+                valasztasLista.add(
+                    PolcItems(
+                        getItems().value!![position].mMennyiseg,
+                        getItems().value!![position].mEgyseg,
+                        "",
+                        "",
+                        "",
+                        "Szabad",
+                        getItems().value!![position].mCikk.trim()
+                    )
+                )
+            }
+            contains(getItems().value!![position].mCikk) -> {
+                Log.d("MOZGAS", "tartalmaz")
+                for(i in 0 until valasztasLista.size){
+                    if(valasztasLista[i].mCikk == getItems().value!![position].mCikk){
+                        valasztasLista.remove(valasztasLista[i])
+                        Log.d("MOZGAS", "onCurrentClick: Törölve")
+                    }
+                }
+            }
+            else -> {
+                valasztasLista.add(
+                    PolcItems(
+                        getItems().value!![position].mMennyiseg,
+                        getItems().value!![position].mEgyseg,
+                        "",
+                        "",
+                        "",
+                        "Szabad",
+                        getItems().value!![position].mCikk.trim()
+                    )
+                )
+            }
+        }
+        Log.d("MOZGAS", "onCurrentClick sima: $valasztasLista")
+    }
+    private fun contains(cikk: String): Boolean{
+        for(i in 0 until valasztasLista.size){
+            if(valasztasLista[i].mCikk == cikk){
+                return true
+            }
+        }
+        return false
+    }
+    fun befejezesClick(view: View){
+        mozgasListener?.whenButtonIsClicked()
     }
 }

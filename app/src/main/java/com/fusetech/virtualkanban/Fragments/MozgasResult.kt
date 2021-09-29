@@ -17,7 +17,6 @@ import com.fusetech.mobilleltarkotlin.showMe
 import com.fusetech.virtualkanban.R
 import com.fusetech.virtualkanban.activities.MainActivity
 import com.fusetech.virtualkanban.adapters.MozgasAdapter
-import com.fusetech.virtualkanban.dataItems.PolcItems
 import com.fusetech.virtualkanban.databinding.FragmentMozgasResultBinding
 import com.fusetech.virtualkanban.interfaces.MozgasListener
 import com.fusetech.virtualkanban.viewmodels.RaktarMozgasViewModel
@@ -27,6 +26,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import java.io.File
+import kotlin.math.log
 
 @AndroidEntryPoint
 class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener {
@@ -34,7 +34,6 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
     val viewModel: RaktarMozgasViewModel by viewModels()
     private lateinit var binding: FragmentMozgasResultBinding
     private lateinit var save: FileSave
-    private var valasztasLista: ArrayList<PolcItems> = ArrayList()
 
     interface FileSave {
         fun saveFile(
@@ -56,6 +55,11 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
         binding.viewModel = viewModel
         binding.raktarCelMozgas.visibility = View.GONE
         viewModel.mozgasListener = this
+        binding.button.visibility = View.GONE
+        binding.cikkTomb.visibility = View.GONE
+        binding.mennyisegTomb.visibility = View.GONE
+        binding.textView46.visibility = View.GONE
+        binding.textView47.visibility = View.GONE
         return binding.root
     }
 
@@ -66,41 +70,8 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
     }
 
     override fun onCurrentClick(position: Int) {
-        binding.raktarCelMozgas.visibility = View.VISIBLE
-        if (valasztasLista.size == 0) {
-            valasztasLista.add(
-                PolcItems(
-                    viewModel.getItems().value!![position].mMennyiseg,
-                    "",
-                    "",
-                    "",
-                    "",
-                    "Szabad",
-                    viewModel.getItems().value!![position].mCikk.trim()
-                )
-            )
-        } else if (contains(viewModel.getItems().value!![position].mCikk)) {
-            Log.d("MOZGAS", "tartalmaz")
-            for(i in 0 until valasztasLista.size){
-                if(valasztasLista[i].mCikk == viewModel.getItems().value!![position].mCikk){
-                    valasztasLista.remove(valasztasLista[i])
-                    Log.d("MOZGAS", "onCurrentClick: Törölve")
-                }
-            }
-        } else{
-            valasztasLista.add(
-                PolcItems(
-                    viewModel.getItems().value!![position].mMennyiseg,
-                    "",
-                    "",
-                    "",
-                    "",
-                    "Szabad",
-                    viewModel.getItems().value!![position].mCikk.trim()
-                )
-            )
-        }
-        Log.d("MOZGAS", "onCurrentClick sima: $valasztasLista")
+        binding.button.visibility = View.VISIBLE
+        viewModel.arrayAddOrDelete(position)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -131,7 +102,7 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
                             binding.mozgasRecycler.adapter?.notifyDataSetChanged()
                         })
                         binding.mozgasRecycler.requestFocus()
-                        valasztasLista.clear()
+                        viewModel.valasztasLista.clear()
                     }
                     builder.setOnCancelListener {
                         initRecycler()
@@ -202,12 +173,23 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
             binding.raktarCelMozgas.setText(code)
         }
     }
-    private fun contains(cikk: String): Boolean{
-        for(i in 0 until valasztasLista.size){
-            if(valasztasLista[i].mCikk == cikk){
-                return true
-            }
-        }
-        return false
+
+    override fun whenButtonIsClicked() {
+        binding.button.visibility = View.GONE
+        binding.textView46.visibility = View.VISIBLE
+        binding.cikkTomb.visibility = View.VISIBLE
+        binding.mennyisegTomb.visibility = View.VISIBLE
+        binding.raktarCelMozgas.visibility = View.VISIBLE
+        binding.textView47.visibility = View.VISIBLE
+        binding.raktarCelMozgas.requestFocus()
+        binding.mozgasRecycler.visibility = View.GONE
+        binding.cikkTomb.text = viewModel.valasztasLista[0].mCikk
+        binding.mennyisegTomb.text = viewModel.valasztasLista[0].mMennyiseg.toString()
+        binding.textView47.text = viewModel.valasztasLista[0].mEgyseg
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("MOZGAS", "onStop: ${viewModel.valasztasLista}")
     }
 }

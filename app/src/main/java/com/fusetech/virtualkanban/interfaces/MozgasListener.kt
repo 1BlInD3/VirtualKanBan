@@ -5,4 +5,5 @@ interface MozgasListener {
     fun setSend()
     fun sendOneByOne()
     fun setPolcText(code: String)
+    fun whenButtonIsClicked()
 }
