@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,8 +26,10 @@ class MozgasAdapter(private var myPolcItems: ArrayList<PolcItems>, val listener:
         override fun onClick(v: View?) {
             val position = absoluteAdapterPosition
             if(position!=RecyclerView.NO_POSITION){
-                listener.onCurrentClick(position)
-                itemView.isSelected = !itemView.isSelected
+                if(myPolcItems[position].mAllapot=="Szabad"){
+                    listener.onCurrentClick(position)
+                    itemView.isSelected = !itemView.isSelected
+                }
             }
         }
     }
@@ -46,6 +49,18 @@ class MozgasAdapter(private var myPolcItems: ArrayList<PolcItems>, val listener:
         holder.intRemText.text = currentItem.mIntRem
         holder.allapotText.text = currentItem.mAllapot
         holder.cikkszamText.text = currentItem.mCikk
+        if(myPolcItems[position].mAllapot=="Szabad"){
+            holder.itemView.setBackgroundResource(R.drawable.text_white_selector)
+        }else{
+            holder.itemView.setBackgroundResource(R.drawable.text_red_selector)
+            holder.mennyisegText.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.unitText.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.megnevezes1Text.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.megnevezes2Text.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.intRemText.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.allapotText.setTextColor(Color.parseColor("#FFFFFF"))
+            holder.cikkszamText.setTextColor(Color.parseColor("#FFFFFF"))
+        }
     }
 
     override fun getItemCount() = myPolcItems.size

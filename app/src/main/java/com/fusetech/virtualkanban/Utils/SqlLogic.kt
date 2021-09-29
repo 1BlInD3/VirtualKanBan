@@ -49,10 +49,11 @@ class SqlLogic {
                             resultSet.getString("Description2"),
                             resultSet.getString("IntRem"),
                             resultSet.getString("QcCategory"),
-                            resultSet.getString("StockItem")
+                            resultSet.getString("StockItem").trim()
                         )
                     )
                 } while (resultSet.next())
+                polc.add(PolcItems(666.0,"db","meg1","meg2","intrem","nemszabad","03011001"))
                 myList.postValue(polc)
                 for(i in 0 until polc.size){
                     Log.d("SQLlogic", "polcResultQuery: ${polc[i].mAllapot}")

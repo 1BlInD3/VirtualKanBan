@@ -42,6 +42,7 @@ import android.net.wifi.WifiManager
 import java.io.File
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.view.WindowInsetsController
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -1519,6 +1520,14 @@ class MainActivity : AppCompatActivity(),
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 // or View.SYSTEM_UI_FLAG_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        //this.window.setDecorFitsSystemWindows(false)
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if(hasFocus){
+            hideSystemUI()
+        }
     }
 
     override fun loadPolcItems(code: String) {

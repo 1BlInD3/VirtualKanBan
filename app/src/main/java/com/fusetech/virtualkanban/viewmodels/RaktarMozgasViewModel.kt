@@ -36,7 +36,6 @@ constructor(
     var celRaktar = ""
     var kiinduloRakhely = ""
     var yesClicked = false
-    var position: Int? = null
     private var adatok = MutableLiveData<ArrayList<PolcItems>>()
 
     fun getItems(): LiveData<ArrayList<PolcItems>> {
@@ -48,7 +47,15 @@ constructor(
     }
 
     @SuppressLint("SimpleDateFormat")
-    fun sendToScala(file: File,cikk: String, mennyiseg: Double, kiinduloPolc: String, celPolc: String, rbol: String, rba: String) {
+    fun sendToScala(
+        file: File,
+        cikk: String,
+        mennyiseg: Double,
+        kiinduloPolc: String,
+        celPolc: String,
+        rbol: String,
+        rba: String
+    ) {
         val currentDate = SimpleDateFormat("yyyy-MM-dd").format(Date())
         save.saveFile(
             file,
@@ -83,19 +90,13 @@ constructor(
         }
     }
 
-    fun checkPolc(code: String){
+    fun checkPolc(code: String) {
         CoroutineScope(IO).launch {
-            if(sql.isPolc(code)){
+            if (sql.isPolc(code)) {
                 mozgasListener?.setPolcText(code)
-                if(yesClicked){
+                if (yesClicked) {
                     mozgasListener?.setSend()
                     yesClicked = false
-                }else{
-                    if(position!! >= 0){
-                        mozgasListener?.sendOneByOne(position!!)
-                    }else{
-                        mozgasListener?.message("Nincs kiválasztva az elem")
-                    }
                 }
             }
         }
