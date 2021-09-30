@@ -102,6 +102,8 @@ constructor(
                 if (yesClicked) {
                     mozgasListener?.setSend()
                     yesClicked = false
+                }else{
+                    mozgasListener?.sendOneByOne()
                 }
             }
         }

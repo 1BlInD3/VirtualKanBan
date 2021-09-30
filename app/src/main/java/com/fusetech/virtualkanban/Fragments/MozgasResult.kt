@@ -60,6 +60,7 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
         binding.mennyisegTomb.visibility = View.GONE
         binding.textView46.visibility = View.GONE
         binding.textView47.visibility = View.GONE
+        binding.constraintLayout6.visibility = View.GONE
         return binding.root
     }
 
@@ -165,7 +166,32 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
     }
 
     override fun sendOneByOne() {
-        //save.saveFile(viewModel.getItems().value!![position].mCikk.trim(),viewModel.getItems().value!![position].mMennyiseg,viewModel.kiinduloRakhely,viewModel.celRaktar,"02","02")
+        CoroutineScope(Main).launch {
+            if (viewModel.valasztasLista.size > 0) {
+                save.saveFile(
+                    viewModel.valasztasLista[0].mCikk.trim(),
+                    viewModel.valasztasLista[0].mMennyiseg,
+                    viewModel.kiinduloRakhely,
+                    viewModel.celRaktar,
+                    "02",
+                    "02"
+                )
+                viewModel.valasztasLista.removeAt(0)
+                if(viewModel.valasztasLista.size > 0){
+                    binding.cikkTomb.text = viewModel.valasztasLista[0].mCikk
+                    binding.mennyisegTomb.text = viewModel.valasztasLista[0].mMennyiseg.toString()
+                    binding.textView47.text = viewModel.valasztasLista[0].mEgyseg
+                }else if (viewModel.valasztasLista.size == 0){
+                    CoroutineScope(Main).launch {
+                        showMe("Készen van az összes", requireContext())
+                    }
+                }
+            } else {
+                CoroutineScope(Main).launch {
+                    showMe("Készen van az összes", requireContext())
+                }
+            }
+        }
     }
 
     override fun setPolcText(code: String) {
@@ -181,6 +207,7 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
         binding.mennyisegTomb.visibility = View.VISIBLE
         binding.raktarCelMozgas.visibility = View.VISIBLE
         binding.textView47.visibility = View.VISIBLE
+        binding.constraintLayout6.visibility = View.VISIBLE
         binding.raktarCelMozgas.requestFocus()
         binding.mozgasRecycler.visibility = View.GONE
         binding.cikkTomb.text = viewModel.valasztasLista[0].mCikk
