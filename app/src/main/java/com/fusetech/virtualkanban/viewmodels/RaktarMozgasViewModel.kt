@@ -126,9 +126,13 @@ constructor(
             contains(getItems().value!![position].mCikk) -> {
                 Log.d("MOZGAS", "tartalmaz")
                 for(i in 0 until valasztasLista.size){
-                    if(valasztasLista[i].mCikk == getItems().value!![position].mCikk){
-                        valasztasLista.remove(valasztasLista[i])
-                        Log.d("MOZGAS", "onCurrentClick: Törölve")
+                    try{
+                        if(valasztasLista[i].mCikk == getItems().value!![position].mCikk){
+                            valasztasLista.remove(valasztasLista[i])
+                            Log.d("MOZGAS", "onCurrentClick: Törölve")
+                        }
+                    }catch (e: Exception){
+                        Log.d("DELETETAG", "arrayAddOrDelete: ${e}")
                     }
                 }
             }

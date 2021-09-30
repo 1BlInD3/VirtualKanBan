@@ -48,10 +48,6 @@ class RaktarkoziMozgasFragment : Fragment(), MozgasAdapter.CurrentSelection, Rak
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
-         /*viewModel.getItems().observe(viewLifecycleOwner, {
-            binding.mozgasRecycler.adapter?.notifyDataSetChanged()
-        })*/
-
     }
 
     override fun sendCode(message: String) {
@@ -86,5 +82,8 @@ class RaktarkoziMozgasFragment : Fragment(), MozgasAdapter.CurrentSelection, Rak
         }else{
             throw Exception("Must implement")
         }
+    }
+    fun removeBin(){
+        binding.raktarPolcMozgas.setText("")
     }
 }

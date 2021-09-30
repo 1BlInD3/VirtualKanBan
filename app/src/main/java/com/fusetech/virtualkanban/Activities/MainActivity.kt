@@ -42,15 +42,13 @@ import android.net.wifi.WifiManager
 import java.io.File
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.view.WindowInsetsController
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Date
 import kotlin.random.Random
-import kotlin.random.Random.Default.nextInt
-
 
 private const val TAG = "MainActivity"
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(),
     BarcodeListener,
@@ -65,10 +63,10 @@ class MainActivity : AppCompatActivity(),
     IgenyKontenerKiszedesCikkKiszedes.SendXmlData,
     SQL.SQLAlert,
     TobbletKontenerCikkekFragment.Tobblet,
-   // RetrofitFunctions.Trigger,
+    // RetrofitFunctions.Trigger,
     HatosCikkekFragment.Hatos,
     RaktarkoziMozgasFragment.LoadResult,
-    MozgasResult.FileSave{
+    MozgasResult.FileSave {
     /*
     // 1es opció pont beviszem a cikket, és megnézi hogy van e a tranzit raktárban (3as raktár)szabad(ha zárolt akkor szól, ha nincs akkor szól)
     //ha van és szabad is, nézzük meg hogy hol vannak ilyenek FIFO szerint, vagy választ a listából, vagy felvisz egy újat, lehetőség ha nem fér fel rá és
@@ -190,6 +188,7 @@ class MainActivity : AppCompatActivity(),
             "jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10"
         lateinit var res: Resources
         var zarolt = false
+
         @SuppressLint("StaticFieldLeak")
         lateinit var progress: ProgressBar
         val kihelyezesItems: ArrayList<SzerelohelyItem> = ArrayList()
@@ -689,11 +688,11 @@ class MainActivity : AppCompatActivity(),
                 getFragment("CIKKEKPOLCRA") -> {
                     tobbletCikkekPolcra?.setCode(barcodeData)
                 }
-                getFragment("MOZGAS") ->{
+                getFragment("MOZGAS") -> {
                     val fragment = supportFragmentManager.findFragmentByTag("MOZGAS")
                     (fragment as MozgasResult).setText(barcodeData)
                 }
-                getFragment("RAKTARKOZI") ->{
+                getFragment("RAKTARKOZI") -> {
                     raktarkoziFragment?.getCode(barcodeData)
                 }
             }
@@ -1525,17 +1524,18 @@ class MainActivity : AppCompatActivity(),
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if(hasFocus){
+        if (hasFocus) {
             hideSystemUI()
         }
     }
 
     override fun loadPolcItems(code: String) {
         val bundle = Bundle()
-        bundle.putString("KIINDULAS",code)
+        bundle.putString("KIINDULAS", code)
         val mozgasFragment = MozgasResult()
         mozgasFragment.arguments = bundle
-        supportFragmentManager.beginTransaction().replace(R.id.resultFrame,mozgasFragment,"MOZGAS").commit()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.resultFrame, mozgasFragment, "MOZGAS").commit()
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -1546,15 +1546,36 @@ class MainActivity : AppCompatActivity(),
         celPolc: String,
         rbol: String,
         rba: String
-    ){
+    ) {
         val path = getExternalFilesDir(null)
         val name = SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + Random.nextInt(
             0,
             10000
         ) + ".xml"
-       if(getFragment("MOZGAS")){
-           val fragment = supportFragmentManager.findFragmentByTag("MOZGAS")
-           (fragment as MozgasResult).getFileFromActivity(File(path,name),cikk, mennyiseg, kiinduloPolc, celPolc, rbol, rba)
-       }
+        if (getFragment("MOZGAS")) {
+            val fragment = supportFragmentManager.findFragmentByTag("MOZGAS")
+            (fragment as MozgasResult).getFileFromActivity(
+                File(path, name),
+                cikk,
+                mennyiseg,
+                kiinduloPolc,
+                celPolc,
+                rbol,
+                rba
+            )
+        }
+    }
+
+    override fun ujPolcFelvetele() {
+        if (getFragment("MOZGAS")) {
+            val fragment = supportFragmentManager.findFragmentByTag("MOZGAS")
+            if (fragment != null) {
+                supportFragmentManager.beginTransaction().remove(fragment).commit()
+                if (getFragment("RAKTARKOZI")) {
+                    val fragment1 = supportFragmentManager.findFragmentByTag("RAKTARKOZI")
+                    (fragment1 as RaktarkoziMozgasFragment).removeBin()
+                }
+            }
+        }
     }
 }

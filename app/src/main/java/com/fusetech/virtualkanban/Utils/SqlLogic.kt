@@ -53,7 +53,7 @@ class SqlLogic {
                         )
                     )
                 } while (resultSet.next())
-                polc.add(PolcItems(666.0,"db","meg1","meg2","intrem","nemszabad","03011001"))
+               // polc.add(PolcItems(666.0,"db","meg1","meg2","intrem","nemszabad","03011001"))
                 myList.postValue(polc)
                 for(i in 0 until polc.size){
                     Log.d("SQLlogic", "polcResultQuery: ${polc[i].mAllapot}")

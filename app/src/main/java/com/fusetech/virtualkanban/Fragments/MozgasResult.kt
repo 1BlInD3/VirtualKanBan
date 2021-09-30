@@ -26,7 +26,6 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import java.io.File
-import kotlin.math.log
 
 @AndroidEntryPoint
 class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener {
@@ -44,6 +43,7 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
             rbol: String,
             rba: String
         )
+        fun ujPolcFelvetele()
     }
 
     override fun onCreateView(
@@ -82,9 +82,11 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
         CoroutineScope(IO).launch {
             viewModel.loadItems(viewModel.kiinduloRakhely)
             CoroutineScope(Main).launch {
+                binding.mozgasLoadProgress.visibility = View.GONE
                 if (MainActivity.zarolt) {
-                    showMe("Van zárolt", requireContext())
+                    //showMe("Van zárolt", requireContext())
                     initRecycler()
+                    binding.mozgasRecycler.requestFocus()
                     viewModel.getItems().observe(viewLifecycleOwner, {
                         binding.mozgasRecycler.adapter?.notifyDataSetChanged()
                     })
@@ -150,6 +152,9 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
     }
 
     override fun setSend() {
+        CoroutineScope(Main).launch {
+            binding.mozgasLoadProgress.visibility = View.VISIBLE
+        }
         for (i in 0 until viewModel.getItems().value!!.size) {
             save.saveFile(
                 viewModel.getItems().value!![i].mCikk.trim(),
@@ -162,11 +167,20 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
         }
         CoroutineScope(Main).launch {
             showMe("Mind kész", requireContext())
+            binding.cikkTomb.text = ""
+            binding.mennyisegTomb.text = ""
+            binding.textView47.text = ""
+            binding.raktarCelMozgas.setText("")
+            binding.textView46.visibility = View.GONE
+            binding.constraintLayout6.visibility = View.GONE
+            binding.mozgasLoadProgress.visibility = View.GONE
+            save.ujPolcFelvetele()
         }
     }
 
     override fun sendOneByOne() {
         CoroutineScope(Main).launch {
+            binding.mozgasLoadProgress.visibility = View.VISIBLE
             if (viewModel.valasztasLista.size > 0) {
                 save.saveFile(
                     viewModel.valasztasLista[0].mCikk.trim(),
@@ -184,11 +198,20 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
                 }else if (viewModel.valasztasLista.size == 0){
                     CoroutineScope(Main).launch {
                         showMe("Készen van az összes", requireContext())
+                        binding.cikkTomb.text = ""
+                        binding.mennyisegTomb.text = ""
+                        binding.textView47.text = ""
+                        binding.raktarCelMozgas.setText("")
+                        binding.textView46.visibility = View.GONE
+                        binding.constraintLayout6.visibility = View.GONE
+                        save.ujPolcFelvetele()
                     }
                 }
+                binding.mozgasLoadProgress.visibility = View.GONE
             } else {
                 CoroutineScope(Main).launch {
                     showMe("Készen van az összes", requireContext())
+                    binding.mozgasLoadProgress.visibility = View.GONE
                 }
             }
         }
