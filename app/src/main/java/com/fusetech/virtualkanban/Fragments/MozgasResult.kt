@@ -85,11 +85,15 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
                 binding.mozgasLoadProgress.visibility = View.GONE
                 if (MainActivity.zarolt) {
                     //showMe("Van zárolt", requireContext())
-                    initRecycler()
-                    binding.mozgasRecycler.requestFocus()
-                    viewModel.getItems().observe(viewLifecycleOwner, {
-                        binding.mozgasRecycler.adapter?.notifyDataSetChanged()
-                    })
+                        try{
+                            initRecycler()
+                            binding.mozgasRecycler.requestFocus()
+                            viewModel.getItems().observe(viewLifecycleOwner, {
+                                binding.mozgasRecycler.adapter?.notifyDataSetChanged()
+                            })
+                        }catch (e: Exception){
+                            showMe("Nem sikerült az adatokat betölteni, próbáld újra",requireContext())
+                        }
                 } else {
                     val builder = AlertDialog.Builder(requireContext())
                     builder.setTitle("Mozgatás")
@@ -100,18 +104,26 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
                         viewModel.yesClicked = true
                     }
                     builder.setNegativeButton("Nem") { _, _ ->
-                        initRecycler()
-                        viewModel.getItems().observe(viewLifecycleOwner, {
-                            binding.mozgasRecycler.adapter?.notifyDataSetChanged()
-                        })
-                        binding.mozgasRecycler.requestFocus()
-                        viewModel.valasztasLista.clear()
+                        try{
+                            initRecycler()
+                            viewModel.getItems().observe(viewLifecycleOwner, {
+                                binding.mozgasRecycler.adapter?.notifyDataSetChanged()
+                            })
+                            binding.mozgasRecycler.requestFocus()
+                            viewModel.valasztasLista.clear()
+                        }catch (e: Exception){
+                            showMe("Nem sikerült az adatokat betölteni, próbáld újra",requireContext())
+                        }
                     }
                     builder.setOnCancelListener {
-                        initRecycler()
-                        viewModel.getItems().observe(viewLifecycleOwner, {
-                            binding.mozgasRecycler.adapter?.notifyDataSetChanged()
-                        })
+                        try{
+                            initRecycler()
+                            viewModel.getItems().observe(viewLifecycleOwner, {
+                                binding.mozgasRecycler.adapter?.notifyDataSetChanged()
+                            })
+                        }catch (e: Exception){
+                            showMe("Nem sikerült az adatokat betölteni, próbáld újra",requireContext())
+                        }
                     }
                     builder.create()
                     builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
@@ -224,18 +236,23 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
     }
 
     override fun whenButtonIsClicked() {
-        binding.button.visibility = View.GONE
-        binding.textView46.visibility = View.VISIBLE
-        binding.cikkTomb.visibility = View.VISIBLE
-        binding.mennyisegTomb.visibility = View.VISIBLE
-        binding.raktarCelMozgas.visibility = View.VISIBLE
-        binding.textView47.visibility = View.VISIBLE
-        binding.constraintLayout6.visibility = View.VISIBLE
-        binding.raktarCelMozgas.requestFocus()
-        binding.mozgasRecycler.visibility = View.GONE
-        binding.cikkTomb.text = viewModel.valasztasLista[0].mCikk
-        binding.mennyisegTomb.text = viewModel.valasztasLista[0].mMennyiseg.toString()
-        binding.textView47.text = viewModel.valasztasLista[0].mEgyseg
+        if(viewModel.valasztasLista.size>0){
+            binding.button.visibility = View.GONE
+            binding.textView46.visibility = View.VISIBLE
+            binding.cikkTomb.visibility = View.VISIBLE
+            binding.mennyisegTomb.visibility = View.VISIBLE
+            binding.raktarCelMozgas.visibility = View.VISIBLE
+            binding.textView47.visibility = View.VISIBLE
+            binding.constraintLayout6.visibility = View.VISIBLE
+            binding.raktarCelMozgas.requestFocus()
+            binding.mozgasRecycler.visibility = View.GONE
+            binding.cikkTomb.text = viewModel.valasztasLista[0].mCikk
+            binding.mennyisegTomb.text = viewModel.valasztasLista[0].mMennyiseg.toString()
+            binding.textView47.text = viewModel.valasztasLista[0].mEgyseg
+        }
+        else{
+            showMe("Jelölj ki legalább egy tételt!",requireContext())
+        }
     }
 
     override fun onStop() {

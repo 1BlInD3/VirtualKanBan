@@ -401,6 +401,12 @@ class MainActivity : AppCompatActivity(),
                     getFragment("ELLENOR") -> {
                         loadLoginFragment()
                     }
+                    getFragment("MOZGAS") -> {
+                        loadLoginFragment()
+                    }
+                    getFragment("RAKTARKOZI") -> {
+                        loadLoginFragment()
+                    }
                     else -> {
                         //loadLoginFragment()
                         Log.d(TAG, "onFinish: ELSE")
@@ -783,8 +789,12 @@ class MainActivity : AppCompatActivity(),
                     }
                 }  //9
                 56 -> {
+                    menuFragment?.rakhelyClick()
                     loadRaktarkozi()
-                }
+                    if (isWifiConnected()) {
+                        wifiInfo = getMacAndSignalStrength()
+                    }
+                } // .
             }
         } else if (getMenuFragment()) {
             when (keyCode) {

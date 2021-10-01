@@ -105,6 +105,8 @@ constructor(
                 }else{
                     mozgasListener?.sendOneByOne()
                 }
+            }else{
+                mozgasListener?.message("Nem polcot olvastál le")
             }
         }
     }

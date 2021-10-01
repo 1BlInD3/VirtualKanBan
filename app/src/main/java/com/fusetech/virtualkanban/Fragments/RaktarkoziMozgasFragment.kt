@@ -40,7 +40,6 @@ class RaktarkoziMozgasFragment : Fragment(), MozgasAdapter.CurrentSelection, Rak
         return binding.root
     }
 
-
     override fun onCurrentClick(position: Int) {
 
     }

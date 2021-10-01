@@ -29,6 +29,7 @@ class MenuFragment : Fragment() {
     private  var mainActivity: MainActivity?= null
     private  var menuProgress: ProgressBar?= null
     private  var kilepes: Button?= null
+    private var rakhely: Button?= null
 
 
     private var myView: View? = null
@@ -56,6 +57,7 @@ class MenuFragment : Fragment() {
         tobbletKihelyez = myView?.tobbletKihelyezes!!
         cikkLekerdezes = myView?.cikkLekerdezes!!
         menuProgress = myView?.menu_progress!!
+        rakhely = myView?.raktarkoziButton!!
         kilepes = myView?.kilepesMenuButton!!
         mainActivity?.cancelExitTimer()
         setMenuProgressOff()
@@ -76,6 +78,8 @@ class MenuFragment : Fragment() {
             tobbletOssze?.setBackgroundResource(R.drawable.disabled)
             tobbletKihelyez?.isEnabled = false
             tobbletKihelyez?.setBackgroundResource(R.drawable.disabled)
+            rakhely?.isEnabled = false
+            rakhely?.setBackgroundResource(R.drawable.disabled)
         }
 
         polcHelyezes?.setOnClickListener {
@@ -126,6 +130,11 @@ class MenuFragment : Fragment() {
             mainActivity?.removeFragment("MENU")
             mainActivity?.menuFragment = null
             mainActivity?.finishAndRemoveTask()
+        }
+        rakhely?.setOnClickListener{
+            if(rakhely?.isEnabled!!){
+                mainActivity?.loadRaktarkozi()
+            }
         }
         return myView
     }
@@ -209,5 +218,8 @@ class MenuFragment : Fragment() {
     }
     fun kilepesClick(){
         kilepes?.requestFocus()
+    }
+    fun rakhelyClick(){
+        rakhely?.requestFocus()
     }
 }
