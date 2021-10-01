@@ -20,7 +20,7 @@ constructor(private val sql: SqlLogic) : ViewModel() {
     fun getData(code: String) {
         raktarMozgas?.setProgressOn()
         CoroutineScope(IO).launch {
-            if (sql.isPolc(code)) {
+            if (sql.isPolc02(code)) {
                 CoroutineScope(Main).launch {
                     raktarMozgas?.setText(code)
                     raktarMozgas?.setProgressOff()
@@ -28,11 +28,10 @@ constructor(private val sql: SqlLogic) : ViewModel() {
                 }
             } else {
                 CoroutineScope(Main).launch {
-                    raktarMozgas?.sendCode("Polcot olvass be!")
+                    raktarMozgas?.sendCode("Raktári polcot olvass be!")
                     raktarMozgas?.setProgressOff()
                 }
             }
         }
-
     }
 }

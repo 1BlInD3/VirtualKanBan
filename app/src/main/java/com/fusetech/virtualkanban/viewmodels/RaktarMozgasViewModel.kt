@@ -97,7 +97,7 @@ constructor(
 
     fun checkPolc(code: String) {
         CoroutineScope(IO).launch {
-            if (sql.isPolc(code)) {
+            if (sql.isPolc02(code)) {
                 mozgasListener?.setPolcText(code)
                 if (yesClicked) {
                     mozgasListener?.setSend()
@@ -106,7 +106,9 @@ constructor(
                     mozgasListener?.sendOneByOne()
                 }
             }else{
-                mozgasListener?.message("Nem polcot olvastál le")
+                CoroutineScope(Main).launch {
+                    mozgasListener?.message("Nem raktári polcot olvastál le")
+                }
             }
         }
     }
