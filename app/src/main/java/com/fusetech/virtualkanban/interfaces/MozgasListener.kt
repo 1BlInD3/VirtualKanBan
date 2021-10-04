@@ -6,4 +6,7 @@ interface MozgasListener {
     fun sendOneByOne()
     fun setPolcText(code: String)
     fun whenButtonIsClicked()
+    fun setProgressOn()
+    fun setProgressOff()
+    fun highlightText()
 }

@@ -78,12 +78,14 @@ constructor(
         Log.d("IOTHREAD", "sendXmlData: ${Thread.currentThread().name}")
         try {
             retro.retrofitGet(file, MainActivity.endPoint)
+            mozgasListener?.highlightText()
         } catch (e: Exception) {
             try {
                 val a = MainActivity.mainUrl
                 MainActivity.mainUrl = MainActivity.backupURL
                 retro.retrofitGet(file, MainActivity.endPoint)
                 MainActivity.mainUrl = a
+                mozgasListener?.setPolcText("")
             } catch (e: Exception) {
                 CoroutineScope(Main).launch {
                     //writeLog(e.stackTraceToString(), "arg1 $cikkszam arg2 $polchely arg3 $mennyisege arg4 $rbol arg5 $rba arg6 $polchelyre")
@@ -97,6 +99,9 @@ constructor(
 
     fun checkPolc(code: String) {
         CoroutineScope(IO).launch {
+            CoroutineScope(Main).launch {
+                mozgasListener?.setProgressOn()
+            }
             if (sql.isPolc02(code)) {
                 mozgasListener?.setPolcText(code)
                 if (yesClicked) {
@@ -105,13 +110,18 @@ constructor(
                 }else{
                     mozgasListener?.sendOneByOne()
                 }
+                CoroutineScope(Main).launch {
+                    mozgasListener?.setProgressOff()
+                }
             }else{
                 CoroutineScope(Main).launch {
                     mozgasListener?.message("Nem raktári polcot olvastál le")
+                    mozgasListener?.setProgressOff()
                 }
             }
         }
     }
+
     fun arrayAddOrDelete(position: Int){
         when {
             valasztasLista.size == 0 -> {

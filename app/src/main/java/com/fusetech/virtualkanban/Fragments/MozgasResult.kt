@@ -255,6 +255,18 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
         }
     }
 
+    override fun setProgressOn() {
+        binding.mozgasLoadProgress.visibility = View.VISIBLE
+    }
+
+    override fun setProgressOff() {
+        binding.mozgasLoadProgress.visibility = View.GONE
+    }
+
+    override fun highlightText() {
+        binding.raktarCelMozgas.selectAll()
+    }
+
     override fun onStop() {
         super.onStop()
         Log.d("MOZGAS", "onStop: ${viewModel.valasztasLista}")
