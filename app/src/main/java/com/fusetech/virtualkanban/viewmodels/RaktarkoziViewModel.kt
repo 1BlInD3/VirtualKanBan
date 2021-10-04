@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.viewmodels
 
+import android.view.View
 import androidx.lifecycle.ViewModel
 import com.fusetech.virtualkanban.interfaces.RaktarMozgas
 import com.fusetech.virtualkanban.utils.SqlLogic
@@ -33,5 +34,8 @@ constructor(private val sql: SqlLogic) : ViewModel() {
                 }
             }
         }
+    }
+    fun clearPolc(view: View){
+        raktarMozgas?.setText("")
     }
 }

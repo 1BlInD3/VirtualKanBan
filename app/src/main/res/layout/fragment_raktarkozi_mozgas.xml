@@ -50,6 +50,8 @@
             android:hint="Kérem a polc kódját"
             android:padding="4dp"
             android:text="@={viewModel.raktar}"
+            android:onClick="@{viewModel::clearPolc}"
+            android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />

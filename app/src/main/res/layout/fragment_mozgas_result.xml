@@ -238,6 +238,7 @@
             android:inputType="textPersonName"
             android:padding="4dp"
             android:text="@={viewModel.celRaktar}"
+            android:onClick="@{viewModel::clearPolc}"
             android:hint="Cél rakhely"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.504"
@@ -305,7 +306,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 </layout>

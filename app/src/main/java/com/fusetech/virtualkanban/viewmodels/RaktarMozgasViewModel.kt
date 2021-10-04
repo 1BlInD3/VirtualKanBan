@@ -167,4 +167,7 @@ constructor(
     fun befejezesClick(view: View){
         mozgasListener?.whenButtonIsClicked()
     }
+    fun clearPolc(view: View){
+        mozgasListener?.setPolcText("")
+    }
 }

@@ -8,22 +8,6 @@ import java.sql.Connection
 import java.sql.DriverManager
 
 class SqlLogic {
-    fun isPolc(code: String): Boolean {
-        var polc = false
-        val connection: Connection
-        Class.forName("net.sourceforge.jtds.jdbc.Driver")
-        try {
-            connection = DriverManager.getConnection(MainActivity.url)
-            val statement =
-                connection.prepareStatement("SELECT WarehouseID, BinNumber, InternalName, BinDescript2 FROM [ScaCompDB].[dbo].VF_SC360300_StockBinNo left outer join [ScaCompDB].[dbo].VF_SC230300_WarehouseInfo ON WarehouseID = Warehouse where BinNumber = ?")
-            statement.setString(1, code)
-            val resultSet = statement.executeQuery()
-            polc = resultSet.next()
-        } catch (e: Exception) {
-            Log.d("sql", "isPolc: ")
-        }
-        return polc
-    }
     fun isPolc02(code: String): Boolean {
         var polc = false
         val connection: Connection
