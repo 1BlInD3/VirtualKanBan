@@ -146,7 +146,7 @@ constructor(
                             Log.d("MOZGAS", "onCurrentClick: Törölve")
                         }
                     }catch (e: Exception){
-                        Log.d("DELETETAG", "arrayAddOrDelete: ${e}")
+                        Log.d("DELETETAG", "arrayAddOrDelete: $e")
                     }
                 }
             }
