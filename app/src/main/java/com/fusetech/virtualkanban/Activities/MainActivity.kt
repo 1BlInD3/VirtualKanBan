@@ -287,6 +287,7 @@ class MainActivity : AppCompatActivity(),
             }
 
             override fun onFinish() {
+                Log.d(TAG, "onFinish: EXITTIMER")
                 loginFragment?.clearLeak()
                 finishAndRemoveTask()
             }
@@ -402,13 +403,15 @@ class MainActivity : AppCompatActivity(),
                         loadLoginFragment()
                     }
                     getFragment("MOZGAS") -> {
-                        loadLoginFragment()
+                        Log.d(TAG, "onFinish: MOZGASFRAGMENT")
+                        //loadLoginFragment()
                     }
                     getFragment("RAKTARKOZI") -> {
+                        Log.d(TAG, "onFinish: RAKTARKOZIFRAGMENT")
                         loadLoginFragment()
                     }
                     else -> {
-                        //loadLoginFragment()
+                        loadLoginFragment()
                         Log.d(TAG, "onFinish: ELSE")
                     }
                 }

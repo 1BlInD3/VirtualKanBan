@@ -73,6 +73,9 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
     override fun onCurrentClick(position: Int) {
         binding.button.visibility = View.VISIBLE
         viewModel.arrayAddOrDelete(position)
+        if(viewModel.getItems().value?.size==1){
+            binding.button.requestFocus()
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

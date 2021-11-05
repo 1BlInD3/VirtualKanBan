@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/text_white_selector">
-
 
     <TextView
         android:id="@+id/cikkszamHeader"
@@ -71,7 +70,7 @@
         android:id="@+id/megnevezes2"
         android:layout_width="180dp"
         android:layout_height="30dp"
-        android:layout_marginStart="2dp"
+        android:layout_marginStart="10dp"
         android:maxLines="1"
         android:paddingStart="10dp"
         android:paddingEnd="5dp"
@@ -99,7 +98,7 @@
         android:id="@+id/megjegyzesHeader"
         android:layout_width="100dp"
         android:layout_height="30dp"
-        android:layout_marginStart="2dp"
+        android:layout_marginStart="8dp"
         android:maxLines="1"
         android:paddingStart="10dp"
         android:paddingEnd="5dp"
@@ -111,3 +110,4 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
