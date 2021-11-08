@@ -42,6 +42,9 @@ import android.net.wifi.WifiManager
 import java.io.File
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -1526,12 +1529,13 @@ class MainActivity : AppCompatActivity(),
         // Set the content to appear under the system bars so that the content
         // doesn't resize when the system bars hide and show.
 
-        this.window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                // or View.SYSTEM_UI_FLAG_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowInsetsControllerCompat(window, frame_container).let { controller ->
+            //controller.hide(WindowInsetsCompat.Type.systemBars())
+            controller.hide(WindowInsetsCompat.Type.navigationBars())
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
         //this.window.setDecorFitsSystemWindows(false)
     }
 
@@ -1590,5 +1594,15 @@ class MainActivity : AppCompatActivity(),
                 }
             }
         }
+    }
+
+    override fun deleteResult() {
+        /*if(getFragment("MOZGAS")){
+            val fragment = supportFragmentManager.findFragmentByTag("MOZGAS")
+            if(fragment != null){
+                supportFragmentManager.beginTransaction().remove(fragment).commit()
+
+            }
+        }*/
     }
 }
