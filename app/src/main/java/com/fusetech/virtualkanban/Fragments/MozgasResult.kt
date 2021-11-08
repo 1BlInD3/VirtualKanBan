@@ -88,48 +88,56 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
                 binding.mozgasLoadProgress.visibility = View.GONE
                 if (MainActivity.zarolt) {
                     //showMe("Van zárolt", requireContext())
-                        try{
-                            initRecycler()
-                            binding.mozgasRecycler.requestFocus()
-                            viewModel.getItems().observe(viewLifecycleOwner, {
-                                binding.mozgasRecycler.adapter?.notifyDataSetChanged()
-                            })
-                        }catch (e: Exception){
-                            showMe("Nem sikerült az adatokat betölteni, próbáld újra",requireContext())
-                        }
+                    try{
+                        initRecycler()
+                        binding.mozgasRecycler.requestFocus()
+                        viewModel.getItems().observe(viewLifecycleOwner, {
+                            binding.mozgasRecycler.adapter?.notifyDataSetChanged()
+                        })
+                    }catch (e: Exception){
+                        showMe("Nem sikerült az adatokat betölteni, próbáld újra",requireContext())
+                        save.ujPolcFelvetele()
+                    }
                 } else {
-                    val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle("Mozgatás")
-                    builder.setMessage("Az egész polcot át szeretnéd mozgatni?")
-                    builder.setPositiveButton("Igen") { _, _ ->
-                        binding.raktarCelMozgas.visibility = View.VISIBLE
-                        binding.raktarCelMozgas.requestFocus()
-                        viewModel.yesClicked = true
-                    }
-                    builder.setNegativeButton("Nem") { _, _ ->
-                        try{
-                            initRecycler()
-                            viewModel.getItems().observe(viewLifecycleOwner, {
-                                binding.mozgasRecycler.adapter?.notifyDataSetChanged()
-                            })
-                            binding.mozgasRecycler.requestFocus()
-                            viewModel.valasztasLista.clear()
-                        }catch (e: Exception){
-                            showMe("Nem sikerült az adatokat betölteni, próbáld újra",requireContext())
+                    if(!viewModel.getItems().value?.get(0)?.mCikk.isNullOrEmpty()){
+                        val builder = AlertDialog.Builder(requireContext())
+                        builder.setTitle("Mozgatás")
+                        builder.setMessage("Az egész polcot át szeretnéd mozgatni?")
+                        builder.setPositiveButton("Igen") { _, _ ->
+                            binding.raktarCelMozgas.visibility = View.VISIBLE
+                            binding.raktarCelMozgas.requestFocus()
+                            viewModel.yesClicked = true
                         }
-                    }
-                    builder.setOnCancelListener {
-                        try{
-                            initRecycler()
-                            viewModel.getItems().observe(viewLifecycleOwner, {
-                                binding.mozgasRecycler.adapter?.notifyDataSetChanged()
-                            })
-                        }catch (e: Exception){
-                            showMe("Nem sikerült az adatokat betölteni, próbáld újra",requireContext())
+                        builder.setNegativeButton("Nem") { _, _ ->
+                            try{
+                                initRecycler()
+                                viewModel.getItems().observe(viewLifecycleOwner, {
+                                    binding.mozgasRecycler.adapter?.notifyDataSetChanged()
+                                })
+                                binding.mozgasRecycler.requestFocus()
+                                viewModel.valasztasLista.clear()
+                            }catch (e: Exception){
+                                showMe("Nem sikerült az adatokat betölteni, próbáld újra",requireContext())
+                                save.ujPolcFelvetele()
+                            }
                         }
+                        builder.setOnCancelListener {
+                            try{
+                                initRecycler()
+                                viewModel.getItems().observe(viewLifecycleOwner, {
+                                    binding.mozgasRecycler.adapter?.notifyDataSetChanged()
+                                })
+                            }catch (e: Exception){
+                                showMe("Nem sikerült az adatokat betölteni, próbáld újra",requireContext())
+                                save.ujPolcFelvetele()
+                            }
+                        }
+                        builder.create()
+                        builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
+                    }else{
+                        showMe("A ${viewModel.kiinduloRakhely} polc üres",requireContext())
+                        save.ujPolcFelvetele()
                     }
-                    builder.create()
-                    builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
                 }
             }
         }

@@ -29,6 +29,7 @@ class MozgasAdapter(private var myPolcItems: ArrayList<PolcItems>, val listener:
                 if(myPolcItems[position].mAllapot=="Szabad"){
                     listener.onCurrentClick(position)
                     itemView.isSelected = !itemView.isSelected
+
                 }
             }
         }
@@ -69,4 +70,11 @@ class MozgasAdapter(private var myPolcItems: ArrayList<PolcItems>, val listener:
         fun onCurrentClick(position: Int)
     }
 
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
 }
