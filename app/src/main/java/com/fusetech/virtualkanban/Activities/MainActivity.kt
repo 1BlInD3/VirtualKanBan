@@ -197,16 +197,15 @@ class MainActivity : AppCompatActivity(),
         val tobbletItem: ArrayList<KontenerbenLezarasItem> = ArrayList()
         val tempLocations: ArrayList<PolcLocation> = ArrayList()
         val tobbletKontener: ArrayList<KontenerItem> = ArrayList()
-        var mainUrl = "http://10.0.1.69:8030/"
+        var mainUrl = "http://10.0.2.149:8030/"
         var backupURL = "http://10.0.1.199:8030/"
         var endPoint = """"""
         var logPath = ""
         var timeOut = 0L
         var hasRight = false
+        var fusetech = ""
 
-        //var szallitoJarmu: ArrayList<String> = ArrayList()
-        // var ellenorzoKod: ArrayList<String> = ArrayList()
-        var szallitoMap: HashMap<String, String> = HashMap()
+        var szallitoMap: HashMap<String, List<String>> = HashMap()
         var dolgKod: String = ""// vissza ide
         var sz0x: String = ""
         var wifiInfo: String = ""
@@ -231,8 +230,9 @@ class MainActivity : AppCompatActivity(),
         Log.d("MYBUNDLE", "onCreate: $logPath")
         timeOut = bundle.getLong("timeOut")
         Log.d("MYBUNDLE", "onCreate: $timeOut")
-        szallitoMap = bundle.getSerializable("szallitoMap") as HashMap<String, String>
-        Log.d("MYBUNDLE", "onCreate: ${szallitoMap.get("SZ01")}")
+        szallitoMap = bundle.getSerializable("szallitoMap") as HashMap<String, List<String>>
+        Log.d("MYBUNDLE", "onCreate: ${szallitoMap}")
+        fusetech = bundle.getString("fusetech")!!
         /*szallitoJarmu = bundle.getStringArrayList("szallitoJarmu")!!
         Log.d("MYBUNDLE", "onCreate: $szallitoJarmu")
         ellenorzoKod = bundle.getStringArrayList("ellenorzokod")!!
