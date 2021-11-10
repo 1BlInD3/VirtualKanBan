@@ -131,7 +131,6 @@ class MainActivity : AppCompatActivity(),
     private var barcodeReader: BarcodeReader? = null
     private var barcodeData: String = ""
     var loginFragment: LoginFragment? = null
-
     private lateinit var connection: Connection
     var cikkItems: ArrayList<CikkItems> = ArrayList()
     var polcItems: ArrayList<PolcItems> = ArrayList()
@@ -141,8 +140,6 @@ class MainActivity : AppCompatActivity(),
     var igenyKiszedesFragment: IgenyKontenerKiszedesFragment? = null
     var polcResultFragment: PolcResultFragment? = null
     var cikkResultFragment: CikkResultFragment? = null
-
-    //var igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
     private lateinit var igenyKiszedesCikk: IgenyKontnerKiszedesCikk
     var igenyKiszedesCikkLezaras: IgenyKontenerLezarasCikkLezaras? = null
     var kiszedesreVaroIgenyFragment: KiszedesreVaroIgenyFragment? = null
