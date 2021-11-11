@@ -302,6 +302,7 @@ class MainActivity : AppCompatActivity(),
                     getFragment("MENU") -> {
                         menuFragment = null
                         loadLoginFragment()
+                        Log.d(TAG, "onFinish: MENU")
                     }
                     getFragment("LOGIN") -> {
                         Log.d(TAG, "onFinish: Loginhoz vissza")

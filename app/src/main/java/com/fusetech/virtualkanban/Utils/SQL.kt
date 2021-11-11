@@ -178,16 +178,11 @@ class SQL(private val sqlMessage: SQLAlert) {
                 val statement1: PreparedStatement =
                     connection.prepareStatement(res.getString(R.string.raktarCheck))
                 statement1.setString(1, code)
+                statement1.setString(2,MainActivity.fusetech)
                 val resultSet1: ResultSet = statement1.executeQuery()
                 if (!resultSet1.next()) {
                     val statement2 = connection.prepareStatement(res.getString(R.string.emptyBins))
-                    val digits: String = if(MainActivity.fusetech == "1"){
-                        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    }else{
-                        MainActivity.fusetech
-                    }
-                    statement2.setString(1,"[$digits]%")
-                    //statement2.setString(1,"ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+                    statement2.setString(1,MainActivity.fusetech)
                     val resultSet2 = statement2.executeQuery()
                     if (!resultSet2.next()) {
                         CoroutineScope(Dispatchers.Main).launch {
@@ -215,12 +210,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         myItems.add(PolcLocation(binNumber, balanceQty.toString()))
                     } while (resultSet1.next())
                     val statement3 = connection.prepareStatement(res.getString(R.string.emptyBins))
-                    val digits :String = if(MainActivity.fusetech == "1"){
-                        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    }else{
-                        MainActivity.fusetech
-                    }
-                    statement3.setString(1,"[$digits]%")
+                    statement3.setString(1,MainActivity.fusetech)
                     val resultSet3 = statement3.executeQuery()
                     if (!resultSet3.next()) {
                         CoroutineScope(Dispatchers.Main).launch {
@@ -518,6 +508,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             val statement = connection.prepareStatement(res.getString(R.string.is01))
             statement.setString(1, code)
             statement.setString(2, "01")
+            statement.setString(3, MainActivity.fusetech)
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -559,6 +550,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             val statement = connection.prepareStatement(res.getString(R.string.is01))
             statement.setString(1, code)
             statement.setString(2, "01")
+            statement.setString(3, MainActivity.fusetech)
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -1621,6 +1613,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     val statement2 =
                         connection.prepareStatement(res.getString(R.string.raktarCheck))
                     statement2.setString(1, cikk)
+                    statement2.setString(2,MainActivity.fusetech)
                     val resultSet2 = statement2.executeQuery()
                     if (!resultSet2.next()) {
                         val statement3 = connection.prepareStatement(res.getString(R.string.cikkSomewhere))
@@ -1759,6 +1752,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     val statement2 =
                         connection.prepareStatement(res.getString(R.string.raktarCheck))
                     statement2.setString(1, cikk)
+                    statement2.setString(2,MainActivity.fusetech)
                     val resultSet2 = statement2.executeQuery()
                     if (!resultSet2.next()) {
                         val statement3 = connection.prepareStatement(res.getString(R.string.cikkSomewhere))
@@ -2590,15 +2584,11 @@ class SQL(private val sqlMessage: SQLAlert) {
             val connection = DriverManager.getConnection(connectionString)
             val statement = connection.prepareStatement(res.getString(R.string.raktarCheck))
             statement.setString(1, cikkszam)
+            statement.setString(2,MainActivity.fusetech)
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 val statement1 = connection.prepareStatement(res.getString(R.string.emptyBins))
-                val digits: String = if(MainActivity.fusetech == "1"){
-                    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                }else{
-                    MainActivity.fusetech
-                }
-                statement1.setString(1,"[$digits]%")
+                statement1.setString(1,MainActivity.fusetech)
                 val resultSet1 = statement1.executeQuery()
                 if (!resultSet1.next()) {
                     CoroutineScope(Dispatchers.Main).launch {
@@ -2639,12 +2629,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     raktarBin.add(PolcLocation(binNumber, mennyiseg2.toString()))
                 } while (resultSet.next())
                 val statement3 = connection.prepareStatement(res.getString(R.string.emptyBins))
-                val digits : String = if(MainActivity.fusetech == "1"){
-                    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                }else{
-                    MainActivity.fusetech
-                }
-                statement3.setString(1,"[$digits]%")
+                statement3.setString(1,MainActivity.fusetech)
                 val resultSet3 = statement3.executeQuery()
                 if (!resultSet3.next()) {
                     CoroutineScope(Dispatchers.Main).launch {
