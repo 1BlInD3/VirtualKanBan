@@ -767,6 +767,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             connection = DriverManager.getConnection(url)
             val statement =
                 connection.prepareStatement(res.getString(R.string.igenyKontenerLezarasKontenerBeolvas))
+            statement.setString(1,MainActivity.fusetech)
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 Log.d(TAG, "loadIgenyLezaras: Nincs ilyen konténer")
@@ -1238,6 +1239,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             connection = DriverManager.getConnection(url)
             val statement =
                 connection.prepareStatement(res.getString(R.string.igenyKontenerKiszedese))
+            statement.setString(1,MainActivity.fusetech)
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -1419,6 +1421,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             connection = DriverManager.getConnection(url)
             val statement =
                 connection.prepareStatement(res.getString(R.string.igenyKontenerKiszedese))
+            statement.setString(1,MainActivity.fusetech)
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -2397,11 +2400,13 @@ class SQL(private val sqlMessage: SQLAlert) {
             val connection: Connection = DriverManager.getConnection(connectionString)
             val statement =
                 connection.prepareStatement(res.getString(R.string.tobbletKontenerLista))
+            statement.setString(1,MainActivity.fusetech)
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     if (context.menuFragment != null) {
                         context.menuFragment?.setMenuProgressOff()
+                        context.setAlert("Nincs többlet konténer")
                     } else {
                         progress.visibility = View.GONE
                     }

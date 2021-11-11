@@ -246,7 +246,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                     email.sendEmail(
                                         "KanBan@fusetech.hu",
                                         "keszlet.modositas@fusetech.hu",
-                                        "Készletkorrekció",
+                                        "TESZT_____Készletkorrekció",
                                         "A(z) ${polc!!.text} polcon mennyiségi eltérést észleltem. A Scala szerint ${
                                             getPolcValue(polc!!.text.trim().toString())
                                         } ${unit!!.text.trim()} volt rajta\nValójában ${
@@ -315,7 +315,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                         email.sendEmail(
                             "KanBan@fusetech.hu",
                             "keszlet.modositas@fusetech.hu",
-                            "Üres polc bejelentés",
+                            "TESZT_____Üres polc bejelentés",
                             "A ${polc?.text?.trim()} elvileg üres. A Scala szerint ${
                                 getPolcValue(polc?.text?.trim().toString())
                             } ${unit?.text?.trim()} van rajta "
@@ -351,7 +351,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                             email.sendEmail(
                                 "KanBan@fusetech.hu",
                                 "keszlet.modositas@fusetech.hu",
-                                "Készletkorrekció",
+                                "TESZT____Készletkorrekció",
                                 "A(z) ${polc!!.text} polcon mennyiségi eltérést észleltem. A Scala szerint ${
                                     getPolcValue(polc!!.text.trim().toString())
                                 } ${unit!!.text.trim()} volt rajta.\nValójában ${

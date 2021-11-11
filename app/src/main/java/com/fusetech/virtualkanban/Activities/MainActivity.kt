@@ -907,7 +907,7 @@ class MainActivity : AppCompatActivity(),
                 val statement =
                     connection.prepareStatement(resources.getString(R.string.updateContainerStatus))
                 statement.setInt(1, 2)
-                statement.setString(2, sz0x)//JSON ból a szállítójármű
+                statement.setString(2, sz0x)
                 statement.setString(3, dolgKod)//ide kell a bejelentkezős kód
                 statement.setString(4, kontener)
                 statement.executeUpdate()
