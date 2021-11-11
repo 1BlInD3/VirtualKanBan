@@ -6,7 +6,7 @@ class UploadConfig(
     val endPoint: String,
     val logPath: String,
     val timeOut: Int,
-    val macAddress: HashMap<String,List<String>>
+    val ipAddress: HashMap<String,String>
 ) {
 
 }

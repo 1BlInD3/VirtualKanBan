@@ -202,7 +202,7 @@ class MainActivity : AppCompatActivity(),
         var hasRight = false
         var fusetech = ""
 
-        var szallitoMap: HashMap<String, List<String>> = HashMap()
+        var szallitoMap: HashMap<String, String> = HashMap()
         var dolgKod: String = ""// vissza ide
         var sz0x: String = ""
         var wifiInfo: String = ""
@@ -227,7 +227,7 @@ class MainActivity : AppCompatActivity(),
         Log.d("MYBUNDLE", "onCreate: $logPath")
         timeOut = bundle.getLong("timeOut")
         Log.d("MYBUNDLE", "onCreate: $timeOut")
-        szallitoMap = bundle.getSerializable("szallitoMap") as HashMap<String, List<String>>
+        szallitoMap = bundle.getSerializable("szallitoMap") as HashMap<String, String>
         Log.d("MYBUNDLE", "onCreate: ${szallitoMap}")
         fusetech = bundle.getString("fusetech")!!
         /*szallitoJarmu = bundle.getStringArrayList("szallitoJarmu")!!

@@ -249,6 +249,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 connection.prepareStatement(res.getString(R.string.containerCheck))
             isContainer.setString(1, id)
             isContainer.setInt(2, 0)
+            isContainer.setString(3,MainActivity.fusetech)
             val containerResult = isContainer.executeQuery()
             if (!containerResult.next()) {
                 Log.d(TAG, "containerManagement: Nincs konténer")
@@ -263,13 +264,15 @@ class SQL(private val sqlMessage: SQLAlert) {
                 try {
                     Log.d(TAG, "containerManagement: Betöltöm az adatot")
                     val getName =
-                        connection.prepareStatement(res.getString(R.string.containerCheck))
+                        connection.prepareStatement(res.getString(R.string.containerCheck2))
                     getName.setString(1, id)
                     getName.setInt(2, 0)
-                    val getNameResult = isContainer.executeQuery()
+                   // getName.setString(3,MainActivity.fusetech)
+                    val getNameResult = getName.executeQuery()// isContainer volt
                     if (!getNameResult.next()) {
                         CoroutineScope(Dispatchers.Main).launch {
                             context.setAlert("Valami nagy hiba van")
+                            context.menuFragment?.setMenuProgressOff()
                         }
                     } else {
                         var nullasKontener: String = getNameResult.getInt("id").toString()
@@ -371,6 +374,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 connection.prepareStatement(res.getString(R.string.containerCheck))
             isContainer.setString(1, id)
             isContainer.setInt(2, 6)
+            isContainer.setString(3,MainActivity.fusetech)
             val containerResult = isContainer.executeQuery()
             if (!containerResult.next()) {
                 Log.d(TAG, "containerManagement: Nincs konténer")
@@ -388,6 +392,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         connection.prepareStatement(res.getString(R.string.containerCheck))
                     getName.setString(1, id)
                     getName.setInt(2, 6)
+                    getName.setString(3,MainActivity.fusetech)
                     val getNameResult = isContainer.executeQuery()
                     if (!getNameResult.next()) {
                         CoroutineScope(Dispatchers.Main).launch {
