@@ -389,14 +389,14 @@ class SQL(private val sqlMessage: SQLAlert) {
                 try {
                     Log.d(TAG, "containerManagement: Betöltöm az adatot")
                     val getName =
-                        connection.prepareStatement(res.getString(R.string.containerCheck))
+                        connection.prepareStatement(res.getString(R.string.containerCheck2))
                     getName.setString(1, id)
                     getName.setInt(2, 6)
-                    getName.setString(3,MainActivity.fusetech)
-                    val getNameResult = isContainer.executeQuery()
+                    val getNameResult = getName.executeQuery()
                     if (!getNameResult.next()) {
                         CoroutineScope(Dispatchers.Main).launch {
                             context.setAlert("Valami nagy hiba van")
+                            context.menuFragment?.setMenuProgressOff()
                         }
                     } else {
                         var nullasKontener: String = getNameResult.getInt("id").toString()
