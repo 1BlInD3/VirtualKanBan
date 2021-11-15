@@ -11,6 +11,7 @@ import com.fusetech.virtualkanban.activities.SplashScreen.Companion.mainUrl
 import com.fusetech.virtualkanban.activities.SplashScreen.Companion.backupURL
 import com.fusetech.virtualkanban.activities.SplashScreen.Companion.endPoint
 import com.fusetech.virtualkanban.activities.SplashScreen.Companion.ipAddress
+import com.fusetech.virtualkanban.activities.SplashScreen.Companion.itAccess
 import com.fusetech.virtualkanban.activities.SplashScreen.Companion.logPath
 import com.fusetech.virtualkanban.activities.SplashScreen.Companion.timeOut
 import kotlin.Exception
@@ -70,6 +71,8 @@ class RetrofitFunctions() {
             Log.d(TAG, "getConfigDetails: $ellenorzoKod")*/
             ipAddress = response.body()!!.ipAddress
             Log.d(TAG, "getConfigDetails: $ipAddress")
+            itAccess = response.body()!!.itAccess
+            Log.d(TAG, "getConfigDetails: $itAccess")
         } catch (e: Exception) {
             Log.d(TAG, "getConfigDetails: CATCH ÁG ${e.stackTraceToString()}")
             Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + "getConfig"}")

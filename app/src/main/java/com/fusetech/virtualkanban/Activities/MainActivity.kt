@@ -42,6 +42,9 @@ import android.net.wifi.WifiManager
 import java.io.File
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -63,7 +66,6 @@ class MainActivity : AppCompatActivity(),
     IgenyKontenerKiszedesCikkKiszedes.SendXmlData,
     SQL.SQLAlert,
     TobbletKontenerCikkekFragment.Tobblet,
-    // RetrofitFunctions.Trigger,
     HatosCikkekFragment.Hatos,
     RaktarkoziMozgasFragment.LoadResult,
     MozgasResult.FileSave {
@@ -195,13 +197,14 @@ class MainActivity : AppCompatActivity(),
         val tempLocations: ArrayList<PolcLocation> = ArrayList()
         val tobbletKontener: ArrayList<KontenerItem> = ArrayList()
         var mainUrl = "http://10.0.1.69:8030/"
+        //var mainUrl = "http://10.0.2.149:8030/"
         var backupURL = "http://10.0.1.199:8030/"
         var endPoint = """"""
         var logPath = ""
         var timeOut = 0L
         var hasRight = false
         var fusetech = ""
-
+        var itLoginCodes: ArrayList<String> = ArrayList()
         var szallitoMap: HashMap<String, String> = HashMap()
         var dolgKod: String = ""// vissza ide
         var sz0x: String = ""
@@ -215,7 +218,6 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
         val bundle: Bundle = intent.extras!!
         connManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-        //wifi = connManager.getNetworkCapabilities(connManager.activeNetwork)?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
         Log.d(TAG, "FIFI: $wifi")
         mainUrl = bundle.getString("main")!!
         Log.d("MYBUNDLE", "onCreate: $mainUrl")
@@ -228,19 +230,15 @@ class MainActivity : AppCompatActivity(),
         timeOut = bundle.getLong("timeOut")
         Log.d("MYBUNDLE", "onCreate: $timeOut")
         szallitoMap = bundle.getSerializable("szallitoMap") as HashMap<String, String>
-        Log.d("MYBUNDLE", "onCreate: ${szallitoMap}")
+        Log.d("MYBUNDLE", "onCreate: $szallitoMap")
         fusetech = bundle.getString("fusetech")!!
-        /*szallitoJarmu = bundle.getStringArrayList("szallitoJarmu")!!
-        Log.d("MYBUNDLE", "onCreate: $szallitoJarmu")
-        ellenorzoKod = bundle.getStringArrayList("ellenorzokod")!!
-        Log.d("MYBUNDLE", "onCreate: $ellenorzoKod")*/
+        itLoginCodes = (bundle.getSerializable("it") as ArrayList<String>?)!!
+        Log.d(TAG, "onCreate: LOGIN CODES $itLoginCodes")
         res = resources
         path = getExternalFilesDir(null)!!
-        // mFile = File(path,name)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
         igenyFragment = IgenyKontenerOsszeallitasFragment.newInstance("", "")
-        //igenyKiszedesFragment = IgenyKontenerKiszedesFragment()
         polcHelyezesFragment = PolcraHelyezesFragment()
         szallitoJarmuFragment = SzallitoJartmuFragment()
         ellenorzoKodFragment = EllenorzoKodFragment()
@@ -402,7 +400,7 @@ class MainActivity : AppCompatActivity(),
                     }
                     getFragment("MOZGAS") -> {
                         Log.d(TAG, "onFinish: MOZGASFRAGMENT")
-                        //loadLoginFragment()
+                        loadLoginFragment()
                     }
                     getFragment("RAKTARKOZI") -> {
                         Log.d(TAG, "onFinish: RAKTARKOZIFRAGMENT")
@@ -524,6 +522,12 @@ class MainActivity : AppCompatActivity(),
                                 finishAndRemoveTask()
                             }
                             getFragment("CIKK") -> { // 9-1
+                                finishAndRemoveTask()
+                            }
+                            getFragment("MOZGAS") -> {
+                                finishAndRemoveTask()
+                            }
+                            getFragment("RAKTARKOZI") -> {
                                 finishAndRemoveTask()
                             }
                         }
@@ -796,6 +800,14 @@ class MainActivity : AppCompatActivity(),
                         wifiInfo = getMacAndSignalStrength()
                     }
                 } // .
+                131 -> {
+                    if (loginContains(dolgKod)) {
+                        fusetech = when (fusetech) {
+                            "1" -> "2"
+                            else -> "1"
+                        }
+                    }
+                }
             }
         } else if (getMenuFragment()) {
             when (keyCode) {
@@ -823,6 +835,17 @@ class MainActivity : AppCompatActivity(),
         return super.onKeyUp(keyCode, event)
     }
 
+    private fun loginContains(login: String) : Boolean{
+        if(login != ""){
+            for (i in 0 until itLoginCodes.size){
+                if(itLoginCodes[i] == login){
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
     override fun onResume() {
         super.onResume()
         if (barcodeReader != null) {
@@ -843,11 +866,6 @@ class MainActivity : AppCompatActivity(),
 
     override fun onPause() {
         super.onPause()
-        /*myList.clear()
-        kontener1List.clear()
-        kontenerList.clear()
-        listIgenyItems.clear()
-        polcLocation?.clear()*/
         kihelyezesItems.clear()
         polcItems.clear()
         cikkItems.clear()
@@ -1493,7 +1511,7 @@ class MainActivity : AppCompatActivity(),
                 for (b in macBytes) {
                     res1.append(String.format("%02X:", b))
                 }
-                if (res1.length > 0) {
+                if (res1.isNotEmpty()) {
                     res1.deleteCharAt(res1.length - 1)
                 }
                 return res1.toString()
@@ -1520,17 +1538,13 @@ class MainActivity : AppCompatActivity(),
     }
 
     fun hideSystemUI() {
-        // Set the IMMERSIVE flag.
-        // Set the content to appear under the system bars so that the content
-        // doesn't resize when the system bars hide and show.
-
-        this.window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                // or View.SYSTEM_UI_FLAG_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
-        //this.window.setDecorFitsSystemWindows(false)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowInsetsControllerCompat(window, frame_container).let { controller ->
+            //controller.hide(WindowInsetsCompat.Type.systemBars())
+            controller.hide(WindowInsetsCompat.Type.navigationBars())
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
