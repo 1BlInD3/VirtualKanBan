@@ -197,6 +197,7 @@ class MainActivity : AppCompatActivity(),
         val tempLocations: ArrayList<PolcLocation> = ArrayList()
         val tobbletKontener: ArrayList<KontenerItem> = ArrayList()
         var mainUrl = "http://10.0.1.69:8030/"
+
         //var mainUrl = "http://10.0.2.149:8030/"
         var backupURL = "http://10.0.1.199:8030/"
         var endPoint = """"""
@@ -802,9 +803,23 @@ class MainActivity : AppCompatActivity(),
                 } // .
                 131 -> {
                     if (loginContains(dolgKod)) {
-                        fusetech = when (fusetech) {
-                            "1" -> "2"
-                            else -> "1"
+                        when (fusetech) {
+                            "1" -> {
+                                fusetech = "2"
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Raktár utcába vagyunk",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            else -> {
+                                fusetech = "1"
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Guba Sándorba vagyunk",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     }
                 }
@@ -835,10 +850,10 @@ class MainActivity : AppCompatActivity(),
         return super.onKeyUp(keyCode, event)
     }
 
-    private fun loginContains(login: String) : Boolean{
-        if(login != ""){
-            for (i in 0 until itLoginCodes.size){
-                if(itLoginCodes[i] == login){
+    private fun loginContains(login: String): Boolean {
+        if (login != "") {
+            for (i in 0 until itLoginCodes.size) {
+                if (itLoginCodes[i] == login) {
                     return true
                 }
             }
@@ -861,7 +876,6 @@ class MainActivity : AppCompatActivity(),
                 sql.getContainersFromVehicle(szallito, this@MainActivity)
             }
         }
-        //if(getFragment())
     }
 
     override fun onPause() {
@@ -1032,9 +1046,9 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    override fun sendBinCode(code: String) {
+    override fun sendBinCode(code: String, kontener: String) {
         CoroutineScope(IO).launch {
-            sql.check01(code, this@MainActivity)
+            sql.check01(code, this@MainActivity, kontener)
         }
     }
 

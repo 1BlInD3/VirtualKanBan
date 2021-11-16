@@ -50,7 +50,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
     private var kilepButton: Button? = null
 
     interface SendBinCode {
-        fun sendBinCode(code: String)
+        fun sendBinCode(code: String, kontener: String)
         fun sendDetails(
             cikkszam: String,
             mennyiseg: Double,
@@ -124,7 +124,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         polcTextIgeny?.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
         setProgressBarOff()
         polcTextIgeny?.setOnClickListener {
-            sendBinCode.sendBinCode(polcTextIgeny?.text.toString())
+            sendBinCode.sendBinCode(polcTextIgeny?.text.toString(),kontenerText?.text.toString())
             if(mainActivity?.isWifiConnected()!!){
                 MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
             }
@@ -383,7 +383,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         }
         if (polcTextIgeny?.text?.isEmpty()!!) {
             polcTextIgeny?.setText(code)
-            sendBinCode.sendBinCode(code)
+            sendBinCode.sendBinCode(code,kontenerText?.text.toString())
         } else if(cikkItem_igeny?.text?.isEmpty()!!){
             cikkItem_igeny?.setText(code)
             mainActivity?.isItem(code)
