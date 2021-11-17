@@ -306,7 +306,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     polc?.requestFocus()
                     bejelentes?.visibility = View.GONE
                 }
-            } else if (mennyiseg?.text?.trim().toString().toDouble() == 0.0) {
+            } else if (mennyiseg?.text?.trim().toString().isNotEmpty() && mennyiseg?.text?.trim().toString().toDouble() == 0.0) {
                 val builder = AlertDialog.Builder(myView?.context!!)
                 builder.setTitle("Üres polc?")
                 builder.setMessage("A ${polc?.text?.trim()} polc valóban üres?")

@@ -1070,9 +1070,9 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    override fun sendBinCode2(code: String) {
+    override fun sendBinCode2(code: String, kontener: String) {
         CoroutineScope(IO).launch {
-            sql.checkCode02(code, this@MainActivity)
+            sql.checkCode02(code, this@MainActivity, kontener)
         }
     }
 

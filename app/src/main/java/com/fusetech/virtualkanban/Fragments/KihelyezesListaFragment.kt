@@ -66,6 +66,7 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
             kihelyezes?.setBackgroundResource(R.drawable.disabled)
             kihelyezes?.isEnabled = false
             mainActivity?.kihelyezes?.progressBarOn()
+            Log.d(TAG, "onCreateView: $myList")
             try {
                 var a = 0
                 CoroutineScope(IO).launch {

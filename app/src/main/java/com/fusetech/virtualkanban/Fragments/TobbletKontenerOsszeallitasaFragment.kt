@@ -55,7 +55,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
     private var id = ""
 
     interface SendBinCode2 {
-        fun sendBinCode2(code: String)
+        fun sendBinCode2(code: String, kontener: String)
         fun sendDetails2(
             cikkszam: String,
             mennyiseg: Double,
@@ -125,7 +125,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         polcTextIgeny?.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
         setProgressBarOff()
         polcTextIgeny?.setOnClickListener {
-            sendBinCode2.sendBinCode2(polcTextIgeny?.text.toString())
+            sendBinCode2.sendBinCode2(polcTextIgeny?.text.toString(), kontenerText?.text.toString())
         }
         cikkItem_igeny?.setOnClickListener {
             if(mainActivity?.isWifiConnected()!!){
@@ -423,7 +423,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                 MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
             }
             //polcTextIgeny.setText(code)
-            sendBinCode2.sendBinCode2(code)
+            sendBinCode2.sendBinCode2(code,kontenerText?.text.toString())
         } else {
             if(mainActivity?.isWifiConnected()!!){
                 MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!

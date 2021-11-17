@@ -385,6 +385,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 insertContainer.setInt(2, 6)
                 insertContainer.setInt(3, 2)
                 insertContainer.setString(4, "01")
+                insertContainer.setString(5,MainActivity.fusetech)
                 insertContainer.executeUpdate()
                 Log.d(TAG, "containerManagement: Konténer létrehozva")
                 try {
@@ -393,13 +394,14 @@ class SQL(private val sqlMessage: SQLAlert) {
                         connection.prepareStatement(res.getString(R.string.containerCheck2))
                     getName.setString(1, id)
                     getName.setInt(2, 6)
-                    val getNameResult = getName.executeQuery()
+                    val getNameResult = isContainer.executeQuery()
                     if (!getNameResult.next()) {
                         CoroutineScope(Dispatchers.Main).launch {
                             context.setAlert("Valami nagy hiba van")
                             context.menuFragment?.setMenuProgressOff()
                         }
                     } else {
+                        val ajdee = getNameResult.getInt("id")
                         var nullasKontener: String = getNameResult.getInt("id").toString()
                         val kontId: String = getNameResult.getInt("id").toString()
                         var zeroString = ""
@@ -413,8 +415,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         val updateContainer =
                             connection.prepareStatement(res.getString(R.string.updateContainerValue))
                         updateContainer.setString(1, nullasKontener)
-                        updateContainer.setString(2, id)
-                        updateContainer.setInt(3, 6)
+                        updateContainer.setInt(2, ajdee)
                         updateContainer.executeUpdate()
                         Log.d(TAG, "containerManagement: visszaírtam a konténer értéket")
                         val bundle = Bundle()
@@ -480,6 +481,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     bundle.putSerializable("TOBBLET", context.listIgenyItems)
                     bundle.putString("KONTENER", context.kontener)
                     bundle.putString("TERMRAKH", rakhely)
+                    bundle.putString("KID",id1)
                     context.tobbletOsszeallitasFragment.arguments = bundle
                     context.supportFragmentManager.beginTransaction()
                         .replace(
@@ -544,7 +546,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         }
     }
 
-    fun checkCode02(code: String, context: MainActivity) {
+    fun checkCode02(code: String, context: MainActivity, kontener: String) {
         val connection: Connection
         CoroutineScope(Dispatchers.Main).launch {
             progress.visibility = View.VISIBLE
@@ -567,8 +569,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 val statement1 =
                     connection.prepareStatement(res.getString(R.string.updateBin))
                 statement1.setString(1, code)
-                statement1.setString(2, dolgKod)
-                statement1.setString(3, "6")
+                statement1.setString(2,kontener)
                 statement1.executeUpdate()
                 CoroutineScope(Dispatchers.Main).launch {
                     context.tobbletOsszeallitasFragment.setFocusToItem(code)
