@@ -62,11 +62,11 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
         recycler?.setHasFixedSize(true)
         myList.clear()
         getData()
+        Log.d(TAG, "onCreateView: ${myList}")
         kihelyezes?.setOnClickListener {
             kihelyezes?.setBackgroundResource(R.drawable.disabled)
             kihelyezes?.isEnabled = false
             mainActivity?.kihelyezes?.progressBarOn()
-            Log.d(TAG, "onCreateView: $myList")
             try {
                 var a = 0
                 CoroutineScope(IO).launch {
@@ -92,16 +92,20 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
                         }
                     }
                     if (a == myList.size) {
-                        val list: ArrayList<String> = ArrayList()
                         val kontenerList: ArrayList<String> = ArrayList()
                         for(i in 0 until myList.size){
                            kontenerList.add(myList[i].kontenerID.toString())
                         }
-                        val unique : Set<String> = HashSet<String>(kontenerList)
+                        val list = kontenerList.distinct() as ArrayList<String>
+                        Log.d(TAG, "onCreateView: $list")
+                        for (i in 0 until list.size){
+                            mainActivity?.closeItem(list[i])
+                        }
+                        /*val unique : Set<String> = HashSet<String>(kontenerList)
                         for (code in unique){
                             mainActivity?.closeItem(code)
                         //list.add(kontenerList.stream().distinct().collect(Collectors.toList()).toString())
-                        }
+                        }*/
                       /*  for (temp in hset) {
                             println(temp)
                         }*/

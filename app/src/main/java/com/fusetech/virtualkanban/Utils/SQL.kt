@@ -2372,8 +2372,12 @@ class SQL(private val sqlMessage: SQLAlert) {
                 context.kihelyezes?.progressBarOff()
                 context.kihelyezes?.onBack()
                 context.kihelyezesFragmentLista = null
-                context.removeFragment("KIHELYEZESITEMS")
-                context.getContainerList(sz0x)
+                CoroutineScope(Dispatchers.IO).launch {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        context.removeFragment("KIHELYEZESITEMS")
+                        context.getContainerList(sz0x)
+                    }
+                }
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
