@@ -197,7 +197,6 @@ class MainActivity : AppCompatActivity(),
         val tempLocations: ArrayList<PolcLocation> = ArrayList()
         val tobbletKontener: ArrayList<KontenerItem> = ArrayList()
         var mainUrl = "http://10.0.1.69:8030/"
-
         //var mainUrl = "http://10.0.2.149:8030/"
         var backupURL = "http://10.0.1.199:8030/"
         var endPoint = """"""
@@ -822,7 +821,7 @@ class MainActivity : AppCompatActivity(),
                             }
                         }
                     }
-                }
+                }//f1
             }
         } else if (getMenuFragment()) {
             when (keyCode) {

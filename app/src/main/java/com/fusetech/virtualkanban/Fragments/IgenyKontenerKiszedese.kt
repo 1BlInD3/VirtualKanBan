@@ -14,7 +14,6 @@ import com.fusetech.virtualkanban.activities.MainActivity.Companion.kihelyezesIt
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.sz0x
 import com.fusetech.virtualkanban.dataItems.SzerelohelyItem
 import com.fusetech.virtualkanban.R
-import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedese.*
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedese.view.*
 
 private const val ARG_PARAM1 = "param1"
@@ -96,13 +95,13 @@ class IgenyKontenerKiszedese : Fragment() {
             szerelohely?.isFocusable = true
             szerelohely?.isFocusableInTouchMode = true
             szerelohely?.requestFocus()
-            mainActivity?.getContainerList(code)
+            mainActivity?.getContainerList(code.uppercase())
         }else{
-            if(isCodeInList(code)){
+            if(isCodeInList(code.uppercase())){
                 szerelohely?.setText(code)
                 szerelohely?.isFocusable = false
                 szerelohely?.isFocusableInTouchMode = false
-                mainActivity?.loadKihelyezesItems(code)
+                mainActivity?.loadKihelyezesItems(code.uppercase())
             }else{
                 mainActivity?.setAlert("A $code vonalkód nincs a listában!")
             }
@@ -119,9 +118,8 @@ class IgenyKontenerKiszedese : Fragment() {
         szerelohely?.isFocusable = false
         szerelohely?.isFocusableInTouchMode = false
     }
-    fun isCodeInList(code: String): Boolean{
-        val bool = kihelyezesItems.contains(SzerelohelyItem(code))
-        return bool
+    private fun isCodeInList(code: String): Boolean {
+        return kihelyezesItems.contains(SzerelohelyItem(code))
     }
     fun exit(){
         kilep?.requestFocus()
@@ -168,12 +166,12 @@ class IgenyKontenerKiszedese : Fragment() {
             szerelohely?.setText("")
         }
     }
-    fun afterOnPause(){
+    /*fun afterOnPause(){
         szerelohely?.setText("")
         szerelohely?.isFocusable = true
         szerelohely?.isFocusableInTouchMode = true
         szerelohely?.requestFocus()
-    }
+    }*/
 
     override fun onPause() {
         MainActivity.szallito = szallitoText?.text?.trim().toString()

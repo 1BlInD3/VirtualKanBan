@@ -22,7 +22,6 @@ class SzerelohelyListaFragment : Fragment() {
 
     private var recycler : RecyclerView? = null
     private var myView: View? = null
-    //private val mySzereloList: ArrayList<SzerelohelyItem> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +29,6 @@ class SzerelohelyListaFragment : Fragment() {
     ): View? {
         myView = inflater.inflate(R.layout.fragment_szerelohely_lista, container, false)
         recycler = myView?.recyclerHely
-       // mySzereloList.clear()
         recycler?.adapter = SzerelohelyItemAdapter(kihelyezesItems)
         recycler?.layoutManager = GridLayoutManager(myView?.context,3)
         recycler?.setHasFixedSize(true)
