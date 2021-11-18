@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.fusetech.virtualkanban.activities.MainActivity
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.celBin
 import com.fusetech.virtualkanban.dataItems.PolcItems
 import com.fusetech.virtualkanban.interfaces.MozgasListener
 import com.fusetech.virtualkanban.retrofit.RetrofitFunctions
@@ -61,7 +62,12 @@ constructor(
         rbol: String,
         rba: String
     ) {
+        // CoroutineScope(IO).launch {
         val currentDate = SimpleDateFormat("yyyy-MM-dd").format(Date())
+        Log.d("IOTHREAD", kiinduloPolc)
+        Log.d("IOTHREAD", rbol)
+        Log.d("IOTHREAD", rba)
+        Log.d("IOTHREAD", celPolc)
         save.saveFile(
             file,
             xml.createXml(
@@ -74,18 +80,23 @@ constructor(
                 celPolc,
                 MainActivity.dolgKod
             ) // ez lesz másik xml ha kész lesz
+
         )
-        Log.d("IOTHREAD", "sendXmlData: ${Thread.currentThread().name}")
+        Log.d("IOTHREAD", "XML 2")
         try {
+            // CoroutineScope(IO).launch {
             retro.retrofitGet(file, MainActivity.endPoint)
             mozgasListener?.highlightText()
+            Log.d("IOTHREAD", "sendXmlData: ${Thread.currentThread().name} +3")
+            // }
         } catch (e: Exception) {
             try {
+                Log.d("KULDES", "sendToScala: $e")
                 val a = MainActivity.mainUrl
                 MainActivity.mainUrl = MainActivity.backupURL
                 retro.retrofitGet(file, MainActivity.endPoint)
                 MainActivity.mainUrl = a
-                mozgasListener?.setPolcText("")
+                //mozgasListener?.setPolcText("")
             } catch (e: Exception) {
                 CoroutineScope(Main).launch {
                     //writeLog(e.stackTraceToString(), "arg1 $cikkszam arg2 $polchely arg3 $mennyisege arg4 $rbol arg5 $rba arg6 $polchelyre")
@@ -96,6 +107,7 @@ constructor(
             }
         }
     }
+    //}
 
     fun checkPolc(code: String) {
         CoroutineScope(IO).launch {
@@ -107,13 +119,13 @@ constructor(
                 if (yesClicked) {
                     mozgasListener?.setSend()
                     yesClicked = false
-                }else{
+                } else {
                     mozgasListener?.sendOneByOne()
                 }
                 CoroutineScope(Main).launch {
                     mozgasListener?.setProgressOff()
                 }
-            }else{
+            } else {
                 CoroutineScope(Main).launch {
                     mozgasListener?.message("Nem raktári polcot olvastál le")
                     mozgasListener?.setProgressOff()
@@ -122,7 +134,7 @@ constructor(
         }
     }
 
-    fun arrayAddOrDelete(position: Int){
+    fun arrayAddOrDelete(position: Int) {
         when {
             valasztasLista.size == 0 -> {
                 valasztasLista.add(
@@ -139,13 +151,13 @@ constructor(
             }
             contains(getItems().value!![position].mCikk) -> {
                 Log.d("MOZGAS", "tartalmaz")
-                for(i in 0 until valasztasLista.size){
-                    try{
-                        if(valasztasLista[i].mCikk == getItems().value!![position].mCikk){
+                for (i in 0 until valasztasLista.size) {
+                    try {
+                        if (valasztasLista[i].mCikk == getItems().value!![position].mCikk) {
                             valasztasLista.remove(valasztasLista[i])
                             Log.d("MOZGAS", "onCurrentClick: Törölve")
                         }
-                    }catch (e: Exception){
+                    } catch (e: Exception) {
                         Log.d("DELETETAG", "arrayAddOrDelete: $e")
                     }
                 }
@@ -166,18 +178,21 @@ constructor(
         }
         Log.d("MOZGAS", "onCurrentClick sima: $valasztasLista")
     }
-    private fun contains(cikk: String): Boolean{
-        for(i in 0 until valasztasLista.size){
-            if(valasztasLista[i].mCikk == cikk){
+
+    private fun contains(cikk: String): Boolean {
+        for (i in 0 until valasztasLista.size) {
+            if (valasztasLista[i].mCikk == cikk) {
                 return true
             }
         }
         return false
     }
-    fun befejezesClick(view: View){
+
+    fun befejezesClick(view: View) {
         mozgasListener?.whenButtonIsClicked()
     }
-    fun clearPolc(view: View){
+
+    fun clearPolc(view: View) {
         mozgasListener?.setPolcText("")
     }
 }

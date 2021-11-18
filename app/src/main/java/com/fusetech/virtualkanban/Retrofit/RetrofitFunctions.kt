@@ -28,7 +28,7 @@ class RetrofitFunctions() {
         val response = SendAPI().getTest().execute()
         val res: String = response.body()!!.message.trim()
         if (res == "OK") {
-            Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + res}")
+           // Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + res}")
             uploadXml(file, path)
         }
     }
@@ -41,7 +41,7 @@ class RetrofitFunctions() {
             RequestBody.create(MediaType.parse("multipart/form-data"), "xml a kutyurol")
         ).execute()
         val xmlRes = xmlResponse.body()!!.message.trim()
-        Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + xmlRes}")
+        //Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + xmlRes}")
         if (xmlRes == "success") {
             isSentTranzit = true
             isSent = true

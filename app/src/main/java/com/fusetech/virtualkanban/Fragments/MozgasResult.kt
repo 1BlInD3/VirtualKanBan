@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.fusetech.mobilleltarkotlin.showMe
 import com.fusetech.virtualkanban.R
 import com.fusetech.virtualkanban.activities.MainActivity
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.celBin
 import com.fusetech.virtualkanban.adapters.MozgasAdapter
 import com.fusetech.virtualkanban.databinding.FragmentMozgasResultBinding
 import com.fusetech.virtualkanban.interfaces.MozgasListener
@@ -43,6 +44,7 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
             rbol: String,
             rba: String
         )
+
         fun ujPolcFelvetele()
     }
 
@@ -73,7 +75,7 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
     override fun onCurrentClick(position: Int) {
         binding.button.visibility = View.VISIBLE
         viewModel.arrayAddOrDelete(position)
-        if(viewModel.getItems().value?.size==1){
+        if (viewModel.getItems().value?.size == 1) {
             binding.button.requestFocus()
         }
     }
@@ -88,18 +90,18 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
                 binding.mozgasLoadProgress.visibility = View.GONE
                 if (MainActivity.zarolt) {
                     //showMe("Van zárolt", requireContext())
-                    try{
+                    try {
                         initRecycler()
                         binding.mozgasRecycler.requestFocus()
                         viewModel.getItems().observe(viewLifecycleOwner, {
                             binding.mozgasRecycler.adapter?.notifyDataSetChanged()
                         })
-                    }catch (e: Exception){
-                        showMe("Nem sikerült az adatokat betölteni, próbáld újra",requireContext())
+                    } catch (e: Exception) {
+                        showMe("Nem sikerült az adatokat betölteni, próbáld újra", requireContext())
                         save.ujPolcFelvetele()
                     }
                 } else {
-                    if(!viewModel.getItems().value?.get(0)?.mCikk.isNullOrEmpty()){
+                    if (!viewModel.getItems().value?.get(0)?.mCikk.isNullOrEmpty()) {
                         val builder = AlertDialog.Builder(requireContext())
                         builder.setTitle("Mozgatás")
                         builder.setMessage("Az egész polcot át szeretnéd mozgatni?")
@@ -109,33 +111,39 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
                             viewModel.yesClicked = true
                         }
                         builder.setNegativeButton("Nem") { _, _ ->
-                            try{
+                            try {
                                 initRecycler()
                                 viewModel.getItems().observe(viewLifecycleOwner, {
                                     binding.mozgasRecycler.adapter?.notifyDataSetChanged()
                                 })
                                 binding.mozgasRecycler.requestFocus()
                                 viewModel.valasztasLista.clear()
-                            }catch (e: Exception){
-                                showMe("Nem sikerült az adatokat betölteni, próbáld újra",requireContext())
+                            } catch (e: Exception) {
+                                showMe(
+                                    "Nem sikerült az adatokat betölteni, próbáld újra",
+                                    requireContext()
+                                )
                                 save.ujPolcFelvetele()
                             }
                         }
                         builder.setOnCancelListener {
-                            try{
+                            try {
                                 initRecycler()
                                 viewModel.getItems().observe(viewLifecycleOwner, {
                                     binding.mozgasRecycler.adapter?.notifyDataSetChanged()
                                 })
-                            }catch (e: Exception){
-                                showMe("Nem sikerült az adatokat betölteni, próbáld újra",requireContext())
+                            } catch (e: Exception) {
+                                showMe(
+                                    "Nem sikerült az adatokat betölteni, próbáld újra",
+                                    requireContext()
+                                )
                                 save.ujPolcFelvetele()
                             }
                         }
                         builder.create()
                         builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
-                    }else{
-                        showMe("A ${viewModel.kiinduloRakhely} polc üres",requireContext())
+                    } else {
+                        showMe("A ${viewModel.kiinduloRakhely} polc üres", requireContext())
                         save.ujPolcFelvetele()
                     }
                 }
@@ -165,9 +173,11 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
         rbol: String,
         rba: String
     ) {
-        CoroutineScope(IO).launch {
-            viewModel.sendToScala(file, cikk, mennyiseg, kiinduloPolc, celPolc, rbol, rba)
-        }
+            CoroutineScope(IO).launch {
+                celBin = celPolc
+                Log.d("IOTHREAD", "getFileFromActivity: ${Thread.currentThread().name} +2")
+                viewModel.sendToScala(file, cikk, mennyiseg, kiinduloPolc, celPolc, rbol, rba)
+            }
     }
 
     override fun message(message: String) {
@@ -175,29 +185,31 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
     }
 
     override fun setSend() {
-        CoroutineScope(Main).launch {
-            binding.mozgasLoadProgress.visibility = View.VISIBLE
-        }
-        for (i in 0 until viewModel.getItems().value!!.size) {
-            save.saveFile(
-                viewModel.getItems().value!![i].mCikk.trim(),
-                viewModel.getItems().value!![i].mMennyiseg,
-                viewModel.kiinduloRakhely,
-                viewModel.celRaktar,
-                "02",
-                "02"
-            )
-        }
-        CoroutineScope(Main).launch {
-            showMe("Mind kész", requireContext())
-            binding.cikkTomb.text = ""
-            binding.mennyisegTomb.text = ""
-            binding.textView47.text = ""
-            binding.raktarCelMozgas.setText("")
-            binding.textView46.visibility = View.GONE
-            binding.constraintLayout6.visibility = View.GONE
-            binding.mozgasLoadProgress.visibility = View.GONE
-            save.ujPolcFelvetele()
+            CoroutineScope(Main).launch {
+                binding.mozgasLoadProgress.visibility = View.VISIBLE
+            for (i in 0 until viewModel.getItems().value!!.size) {
+                Log.d("IOTHREAD", "setSend: ${Thread.currentThread().name} +1")
+                save.saveFile(
+                    viewModel.getItems().value!![i].mCikk.trim(),
+                    viewModel.getItems().value!![i].mMennyiseg,
+                    viewModel.kiinduloRakhely,
+                    viewModel.celRaktar,
+                    "02",
+                    "02"
+                )
+            }
+
+            CoroutineScope(Main).launch {
+                showMe("Mind kész", requireContext())
+                binding.cikkTomb.text = ""
+                binding.mennyisegTomb.text = ""
+                binding.textView47.text = ""
+                binding.raktarCelMozgas.setText("")
+                binding.textView46.visibility = View.GONE
+                binding.constraintLayout6.visibility = View.GONE
+                binding.mozgasLoadProgress.visibility = View.GONE
+                save.ujPolcFelvetele()
+            }
         }
     }
 
@@ -214,11 +226,11 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
                     "02"
                 )
                 viewModel.valasztasLista.removeAt(0)
-                if(viewModel.valasztasLista.size > 0){
+                if (viewModel.valasztasLista.size > 0) {
                     binding.cikkTomb.text = viewModel.valasztasLista[0].mCikk
                     binding.mennyisegTomb.text = viewModel.valasztasLista[0].mMennyiseg.toString()
                     binding.textView47.text = viewModel.valasztasLista[0].mEgyseg
-                }else if (viewModel.valasztasLista.size == 0){
+                } else if (viewModel.valasztasLista.size == 0) {
                     CoroutineScope(Main).launch {
                         showMe("Készen van az összes", requireContext())
                         binding.cikkTomb.text = ""
@@ -247,7 +259,7 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
     }
 
     override fun whenButtonIsClicked() {
-        if(viewModel.valasztasLista.size>0){
+        if (viewModel.valasztasLista.size > 0) {
             binding.button.visibility = View.GONE
             binding.textView46.visibility = View.VISIBLE
             binding.cikkTomb.visibility = View.VISIBLE
@@ -260,9 +272,8 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
             binding.cikkTomb.text = viewModel.valasztasLista[0].mCikk
             binding.mennyisegTomb.text = viewModel.valasztasLista[0].mMennyiseg.toString()
             binding.textView47.text = viewModel.valasztasLista[0].mEgyseg
-        }
-        else{
-            showMe("Jelölj ki legalább egy tételt!",requireContext())
+        } else {
+            showMe("Jelölj ki legalább egy tételt!", requireContext())
         }
     }
 
@@ -275,7 +286,9 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
     }
 
     override fun highlightText() {
-        binding.raktarCelMozgas.selectAll()
+        CoroutineScope(Main).launch {
+            binding.raktarCelMozgas.selectAll()
+        }
     }
 
     override fun onStop() {

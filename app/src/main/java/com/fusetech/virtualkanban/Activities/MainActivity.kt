@@ -211,6 +211,7 @@ class MainActivity : AppCompatActivity(),
         var wifiInfo: String = ""
         lateinit var path: File
         var szallito = ""
+        var celBin = ""
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -1592,6 +1593,7 @@ class MainActivity : AppCompatActivity(),
         ) + ".xml"
         if (getFragment("MOZGAS")) {
             val fragment = supportFragmentManager.findFragmentByTag("MOZGAS")
+            Log.d("IOTHREAD", "saveFile: 1,5")
             (fragment as MozgasResult).getFileFromActivity(
                 File(path, name),
                 cikk,

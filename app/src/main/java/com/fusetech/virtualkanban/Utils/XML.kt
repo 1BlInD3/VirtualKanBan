@@ -1,9 +1,11 @@
 package com.fusetech.virtualkanban.utils
 
+import android.util.Log
 import java.util.*
 
 class XML {
-    fun createXml(datum: String, mennyiseg: Double?, cikk: String, raktarbol: String, polcrol: String?, raktarba: String, polcra: String, dolgkod: String): String{
+    fun createXml(datum: String, mennyiseg: Double?, cikk: String, raktarbol: String, polcrol: String?, raktarba: String, polcra: String?, dolgkod: String): String{
+        Log.d("IOTHREAD", "XML")
         val xmlTemplate = ("<msg:Msg xsi:schemaLocation='http://Epicor.com/Message/2.0 http://scshost/schemas/epicor/ScalaMessage.xsd' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:msg='http://Epicor.com/Message/2.0'>" +
                 "<msg:Hdr>" +
                 "<msg:Sender>" +
@@ -20,10 +22,10 @@ class XML {
                 "<dta:Qty>" + mennyiseg + "</dta:Qty>" +
                 "<dta:StockCode>" + cikk + "</dta:StockCode>" +
                 "<dta:WhCodeFrom>"+ raktarbol +"</dta:WhCodeFrom>" +
-                "<dta:BinCodeFrom>" + polcrol?.toUpperCase(Locale.ROOT) + "</dta:BinCodeFrom>" +
+                "<dta:BinCodeFrom>" + polcrol!!.uppercase() + "</dta:BinCodeFrom>" +
                 "<dta:WhCodeTo>" + raktarba +"</dta:WhCodeTo>" +
-                "<dta:BinCodeTo>" + polcra.toUpperCase(Locale.ROOT) + "</dta:BinCodeTo>" +
-                "<dta:Ref>"+ dolgkod.toUpperCase(Locale.ROOT) + "</dta:Ref>" +
+                "<dta:BinCodeTo>" + polcra!!.uppercase() + "</dta:BinCodeTo>" +
+                "<dta:Ref>"+ dolgkod.uppercase() + "</dta:Ref>" +
                 //"<dta:OrdNum>" + MRend.Trim() + "</dta:OrdNum>" +
                 "<dta:Note>TM</dta:Note>" +
                 "</dta:Movement>" +
