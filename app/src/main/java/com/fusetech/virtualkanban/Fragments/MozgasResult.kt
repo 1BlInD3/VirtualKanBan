@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.fusetech.mobilleltarkotlin.showMe
 import com.fusetech.virtualkanban.R
 import com.fusetech.virtualkanban.activities.MainActivity
-import com.fusetech.virtualkanban.activities.MainActivity.Companion.celBin
 import com.fusetech.virtualkanban.adapters.MozgasAdapter
 import com.fusetech.virtualkanban.databinding.FragmentMozgasResultBinding
 import com.fusetech.virtualkanban.interfaces.MozgasListener
@@ -174,7 +173,6 @@ class MozgasResult : Fragment(), MozgasAdapter.CurrentSelection, MozgasListener 
         rba: String
     ) {
             CoroutineScope(IO).launch {
-                celBin = celPolc
                 Log.d("IOTHREAD", "getFileFromActivity: ${Thread.currentThread().name} +2")
                 viewModel.sendToScala(file, cikk, mennyiseg, kiinduloPolc, celPolc, rbol, rba)
             }

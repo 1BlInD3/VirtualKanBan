@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.fusetech.virtualkanban.activities.MainActivity
-import com.fusetech.virtualkanban.activities.MainActivity.Companion.celBin
 import com.fusetech.virtualkanban.dataItems.PolcItems
 import com.fusetech.virtualkanban.interfaces.MozgasListener
 import com.fusetech.virtualkanban.retrofit.RetrofitFunctions

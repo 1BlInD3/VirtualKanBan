@@ -211,7 +211,6 @@ class MainActivity : AppCompatActivity(),
         var wifiInfo: String = ""
         lateinit var path: File
         var szallito = ""
-        var celBin = ""
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
