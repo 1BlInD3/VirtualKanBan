@@ -2606,6 +2606,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         progress.visibility = View.GONE
                     }
                 } else {
+                   // raktarBin.add(PolcLocation("STD02","0"))
                     do {
                         val binNumber = resultSet1.getString("BinNumber")
                         raktarBin.add(PolcLocation(binNumber, "0"))
@@ -2633,6 +2634,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         .commit()
                 }
             } else {
+                //raktarBin.add(PolcLocation("STD02","0"))
                 do {
                     val binNumber = resultSet.getString("BinNumber")
                     val mennyiseg2 = resultSet.getDouble("BalanceQty")
@@ -2647,6 +2649,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         progress.visibility = View.GONE
                     }
                 } else {
+                    //raktarBin.add(PolcLocation("STD02","0"))
                     do {
                         val binNumber = resultSet3.getString("BinNumber")
                         raktarBin.add(PolcLocation(binNumber, "0"))

@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/polcNameText"
-        android:layout_width="60dp"
+        android:layout_width="64dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:paddingStart="10dp"
@@ -22,7 +22,7 @@
 
     <TextView
         android:id="@+id/dbTxt"
-        android:layout_width="94dp"
+        android:layout_width="90dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
         android:maxLines="1"

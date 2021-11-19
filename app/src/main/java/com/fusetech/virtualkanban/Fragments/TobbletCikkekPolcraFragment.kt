@@ -15,6 +15,7 @@ import com.fusetech.virtualkanban.activities.MainActivity.Companion.tempLocation
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.progress
 import com.fusetech.virtualkanban.fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
 import com.fusetech.virtualkanban.R
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.fusetech
 import kotlinx.android.synthetic.main.fragment_tobblet_cikkek_polcra.view.*
 import com.fusetech.virtualkanban.adapters.PolcLocationAdapter
 import com.fusetech.virtualkanban.dataItems.PolcLocation
@@ -139,12 +140,23 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
 
     @SuppressLint("NotifyDataSetChanged")
     private fun loadData() {
+        var a = 0
         tempLocations.clear()
         val myList: ArrayList<PolcLocation> =
             arguments?.getSerializable("LOCATIONBIN") as ArrayList<PolcLocation>
         if (myList.size > 0) {
             for (i in 0 until myList.size) {
                 tempLocations.add(PolcLocation(myList[i].polc, myList[i].mennyiseg))
+            }
+            for (i in 0 until tempLocations.size){
+                if(tempLocations[i].polc == "STD02"){
+                    a++
+                }
+            }
+            if(a == 0 && fusetech == "1"){
+                tempLocations.add(PolcLocation("STD02","0"))
+            }else if(a == 0 && fusetech == "2"){
+                tempLocations.add(PolcLocation("2STD02","0"))
             }
             recyclerView?.adapter?.notifyDataSetChanged()
         }

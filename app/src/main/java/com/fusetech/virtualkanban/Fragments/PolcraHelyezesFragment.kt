@@ -20,6 +20,7 @@ import com.fusetech.virtualkanban.activities.MainActivity
 import com.fusetech.virtualkanban.adapters.PolcLocationAdapter
 import com.fusetech.virtualkanban.dataItems.PolcLocation
 import com.fusetech.virtualkanban.R
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.fusetech
 import kotlinx.android.synthetic.main.fragment_polcra_helyezes.*
 import kotlinx.android.synthetic.main.fragment_polcra_helyezes.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -124,6 +125,8 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                 cikkText?.selectAll()
                 CoroutineScope(IO).launch {
                     sendCode?.sendCode(cikkText?.text?.trim().toString())
+                    addSTD02()
+                    recycler?.adapter?.notifyDataSetChanged()
                 }
             }
             if(mainActivity?.isWifiConnected()!!){
@@ -266,6 +269,20 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
             }
         }
         return myView as View
+    }
+
+    private fun addSTD02() {
+        var a = 0
+        for(i in 0 until myItems.size){
+            if(myItems[i].polc == "STD02"){
+                a++
+            }
+        }
+        if(a == 0 && fusetech == "1"){
+            myItems.add(PolcLocation("STD02","0"))
+        }else if (a == 0 && fusetech == "2"){
+            myItems.add(PolcLocation("2STD02","0"))
+        }
     }
 
     fun setTextViews(
