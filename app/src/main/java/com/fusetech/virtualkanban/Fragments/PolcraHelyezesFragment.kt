@@ -126,7 +126,9 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
                 CoroutineScope(IO).launch {
                     sendCode?.sendCode(cikkText?.text?.trim().toString())
                     addSTD02()
-                    recycler?.adapter?.notifyDataSetChanged()
+                    CoroutineScope(Main).launch {
+                        recycler?.adapter?.notifyDataSetChanged()
+                    }
                 }
             }
             if(mainActivity?.isWifiConnected()!!){
@@ -274,7 +276,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
     private fun addSTD02() {
         var a = 0
         for(i in 0 until myItems.size){
-            if(myItems[i].polc == "STD02"){
+            if(myItems[i].polc?.trim() == "STD02"){
                 a++
             }
         }

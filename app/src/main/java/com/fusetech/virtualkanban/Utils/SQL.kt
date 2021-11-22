@@ -2414,6 +2414,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     } else {
                         progress.visibility = View.GONE
                     }
+                    context.loadMenuFragment(true)
                 }
             } else {
                 tobbletKontener.clear()
@@ -2492,6 +2493,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Nincsenek elemek")
+                    context.loadMenuFragment(true)
                     /*if (context.tobbletKontenerKihelyzeseFragment != null) {
                         context.tobbletKontenerKihelyzeseFragment?.setProgressBar8Off()
                     } else {

@@ -149,7 +149,7 @@ class TobbletCikkekPolcraFragment : Fragment(), PolcLocationAdapter.PolcItemClic
                 tempLocations.add(PolcLocation(myList[i].polc, myList[i].mennyiseg))
             }
             for (i in 0 until tempLocations.size){
-                if(tempLocations[i].polc == "STD02"){
+                if(tempLocations[i].polc?.trim() == "STD02"){
                     a++
                 }
             }

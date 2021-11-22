@@ -316,7 +316,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                             "KanBan@fusetech.hu",
                             "keszlet.modositas@fusetech.hu",
                             "TESZT_____Üres polc bejelentés",
-                            "A ${polc?.text?.trim()} elvileg üres. A Scala szerint ${
+                            "A ${polc?.text?.trim()} elvileg üres. A Scala szerint a ${cikkEdit?.text.toString().trim()} cikkből ${
                                 getPolcValue(polc?.text?.trim().toString())
                             } ${unit?.text?.trim()} van rajta "
                         )
@@ -489,7 +489,26 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     }
 
     override fun polcItemClick(position: Int) {
+        val qty = getPolcValue(polc!!.text.trim().toString())
         Log.d(TAG, "polcItemClick: MEGNYOMTAM")
+        if(cikkEdit?.text.toString().isNotEmpty() && polc?.text.toString().trim().isNotEmpty()){
+            val builder = AlertDialog.Builder(myView!!.context)
+            builder.setTitle("Figyelem")
+            builder.setMessage("A ${cikkEdit?.text.toString().trim()} cikk nincs a ${polc?.text.toString().trim()} polcon?")
+            builder.setPositiveButton("Igen"){_,_ ->
+                CoroutineScope(IO).launch {
+                    email.sendEmail("KanBan@fusetech.hu",
+                        "keszlet.modositas@fusetech.hu",
+                        "TESZT_____Készletkorrekció",
+                        "A ${polc?.text.toString().trim()} polcon a ${cikkEdit?.text.toString().trim()} cikk $qty ${unit!!.text.trim()} nem található")
+                }
+                removeFromList(polc?.text.toString().trim())
+            }
+            builder.setNegativeButton("Nem"){_,_ ->
+            }
+            builder.create()
+            builder.show()
+        }
     }
 
     fun setBin(polcName: String) {
