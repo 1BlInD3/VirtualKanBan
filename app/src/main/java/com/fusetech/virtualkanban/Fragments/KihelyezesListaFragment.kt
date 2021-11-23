@@ -22,8 +22,6 @@ import kotlinx.coroutines.launch
 import com.fusetech.virtualkanban.fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.sz0x
 import java.lang.Exception
-import java.util.HashSet
-import java.util.stream.Collectors
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -62,7 +60,7 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
         recycler?.setHasFixedSize(true)
         myList.clear()
         getData()
-        Log.d(TAG, "onCreateView: ${myList}")
+        Log.d(TAG, "onCreateView: $myList")
         kihelyezes?.setOnClickListener {
             kihelyezes?.setBackgroundResource(R.drawable.disabled)
             kihelyezes?.isEnabled = false
@@ -96,7 +94,7 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
                         for(i in 0 until myList.size){
                            kontenerList.add(myList[i].kontenerID.toString())
                         }
-                        val list = kontenerList.distinct() as ArrayList<String>
+                        val list = kontenerList.distinct()
                         Log.d(TAG, "onCreateView: $list")
                         for (i in 0 until list.size){
                             mainActivity?.closeItem(list[i])

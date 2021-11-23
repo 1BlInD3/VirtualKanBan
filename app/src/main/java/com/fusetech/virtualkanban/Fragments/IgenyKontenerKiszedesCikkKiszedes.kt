@@ -490,19 +490,22 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
 
     override fun polcItemClick(position: Int) {
         val qty = getPolcValue(polc!!.text.trim().toString())
+        val bin = polc?.text.toString().trim()
+        val cikk = cikkEdit?.text.toString().trim()
+        val unity = unit!!.text.trim()
         Log.d(TAG, "polcItemClick: MEGNYOMTAM")
         if(cikkEdit?.text.toString().isNotEmpty() && polc?.text.toString().trim().isNotEmpty()){
             val builder = AlertDialog.Builder(myView!!.context)
             builder.setTitle("Figyelem")
-            builder.setMessage("A ${cikkEdit?.text.toString().trim()} cikk nincs a ${polc?.text.toString().trim()} polcon?")
+            builder.setMessage("A $cikk cikk nincs a $bin polcon?")
             builder.setPositiveButton("Igen"){_,_ ->
                 CoroutineScope(IO).launch {
                     email.sendEmail("KanBan@fusetech.hu",
                         "keszlet.modositas@fusetech.hu",
                         "TESZT_____Készletkorrekció",
-                        "A ${polc?.text.toString().trim()} polcon a ${cikkEdit?.text.toString().trim()} cikk $qty ${unit!!.text.trim()} nem található")
+                        "A $bin polcon a $cikk cikk $qty $unity nem található")
                 }
-                removeFromList(polc?.text.toString().trim())
+                removeFromList(bin)
             }
             builder.setNegativeButton("Nem"){_,_ ->
             }
