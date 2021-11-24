@@ -1063,6 +1063,30 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    override fun setJavit2(kontener: String) {
+        CoroutineScope(IO).launch {
+            sql.contenerJavit(kontener)
+        }
+    }
+
+    override fun setRakhelyTetel2(kontener: Int, code: String) {
+        CoroutineScope(IO).launch {
+            sql.tetelJavit(kontener,code)
+        }
+    }
+
+    override fun setJavit(kontener: String) {
+        CoroutineScope(IO).launch {
+            sql.contenerJavit(kontener)
+        }
+    }
+
+    override fun setRakhelyTetel(kontener: Int, code: String) {
+        CoroutineScope(IO).launch {
+            sql.tetelJavit(kontener,code)
+        }
+    }
+
     override fun closeContainer(statusz: Int, datum: String, kontener: String) {
         CoroutineScope(IO).launch {
             sql.closeContainerSql(statusz, datum, this@MainActivity, kontener)

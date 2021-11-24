@@ -246,4 +246,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
 
+    <Button
+        android:id="@+id/javitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="40dp"
+        android:background="@drawable/blue_button_select"
+        android:text="Javítás"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/cikk_igeny"
+        app:layout_constraintStart_toEndOf="@+id/bin_igeny"
+        app:layout_constraintTop_toBottomOf="@+id/container_igeny"
+        app:layout_constraintVertical_bias="0.533" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

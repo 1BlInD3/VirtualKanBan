@@ -236,6 +236,34 @@ class SQL(private val sqlMessage: SQLAlert) {
         }
     }
 
+    fun contenerJavit(kontener: String){
+        val connection: Connection
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try {
+            connection = DriverManager.getConnection(connectionString)
+            val result = connection.prepareStatement(res.getString(R.string.javitPolc))
+            result.setNull(1,Types.INTEGER)
+            result.setString(2,kontener)
+            result.executeUpdate()
+        }catch (e: Exception){
+            Log.d(TAG, "contenerJavit: ${e.stackTraceToString()}")
+        }
+    }
+
+    fun tetelJavit(kontener: Int,code: String){
+        val connection: Connection
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try {
+            connection = DriverManager.getConnection(connectionString)
+            val result = connection.prepareStatement(res.getString(R.string.javitTetel))
+            result.setString(1,code)
+            result.setInt(2,kontener)
+            result.executeUpdate()
+        }catch (e: Exception){
+            Log.d(TAG, "contenerJavit: ${e.stackTraceToString()}")
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////
     fun containerManagement(id: String, context: MainActivity) {
         val connection: Connection
@@ -324,6 +352,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     val bundle1 = Bundle()
                     bundle1.putString("KONTENER", context.kontener)
                     bundle1.putString("TERMRAKH", rakhely)
+                    bundle1.putInt("ID",id1)
                     context.igenyFragment.arguments = bundle1
                     context.supportFragmentManager.beginTransaction()
                         .replace(R.id.frame_container, context.igenyFragment, "IGENY")
@@ -343,6 +372,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     bundle.putSerializable("IGENY", context.listIgenyItems)
                     bundle.putString("KONTENER", context.kontener)
                     bundle.putString("TERMRAKH", rakhely)
+                    bundle.putInt("ID",id1)
                     context.igenyFragment.arguments = bundle
                     context.supportFragmentManager.beginTransaction()
                         .replace(R.id.frame_container, context.igenyFragment, "IGENY")

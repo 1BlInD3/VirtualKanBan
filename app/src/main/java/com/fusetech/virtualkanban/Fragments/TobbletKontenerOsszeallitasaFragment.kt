@@ -52,6 +52,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
     private  var kilepButton: Button? = null
     private var myView : View? = null
     private  var recyclerView: RecyclerView? = null
+    private var javitButton: Button? = null
     private var id = ""
 
     interface SendBinCode2 {
@@ -63,7 +64,8 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             unit: String,
             kontener: String
         )
-
+        fun setJavit(kontener: String)
+        fun setRakhelyTetel(kontener: Int,code: String)
         fun closeContainer2(statusz: Int, datum: String, kontener: String)
     }
 
@@ -90,6 +92,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         unit_igeny2 = myView?.tunit_igeny
         cikkItem_igeny = myView?.tcikk_igeny
         mennyiseg_igeny2 = myView?.tmennyiseg_igeny
+        javitButton = myView?.javitTobblet
         mennyiseg_igeny2?.isFocusable = false
         mennyiseg_igeny2?.isFocusableInTouchMode = false
         cikkItem_igeny?.isFocusable = false
@@ -140,6 +143,13 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                 mennyiseg_igeny2?.isFocusable = false
                 mennyiseg_igeny2?.isFocusableInTouchMode = false
             }*/
+        }
+        javitButton?.setOnClickListener {
+            val kontener = kontenerText?.text
+            if(kontener != ""){
+                sendBinCode2.setJavit(kontener.toString())
+            }
+            polcTextIgeny?.setText("")
         }
         mennyiseg_igeny2?.setOnClickListener {
             if(mainActivity?.isWifiConnected()!!){
@@ -255,6 +265,8 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                             }
                             mainActivity?.loadMenuFragment(true)
                         } else {
+                            val code = polcTextIgeny?.text
+                            sendBinCode2.setRakhelyTetel(id.toInt(),code.toString())
                             sendBinCode2.closeContainer2(7, currentDateAndTime,id)
                             CoroutineScope(Main).launch {
                                 //setProgressBarOff()

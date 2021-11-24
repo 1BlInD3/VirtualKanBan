@@ -48,6 +48,8 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
     private var mennyiseg_igeny2: EditText? = null
     private var lezarButton: Button? = null
     private var kilepButton: Button? = null
+    private var javitButton: Button? = null
+    private var id1: Int = 0
 
     interface SendBinCode {
         fun sendBinCode(code: String, kontener: String)
@@ -58,7 +60,8 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
             unit: String,
             kontener: String
         )
-
+        fun setJavit2(kontener: String)
+        fun setRakhelyTetel2(kontener: Int,code: String)
         fun closeContainer(statusz: Int, datum: String, kontener: String)
     }
 
@@ -92,6 +95,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         unit_igeny2 = myView?.unit_igeny
         cikkItem_igeny = myView?.cikk_igeny
         mennyiseg_igeny2 = myView?.mennyiseg_igeny
+        javitButton = myView?.javitButton
         mennyiseg_igeny2?.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(9, 2))
         mennyiseg_igeny2?.isFocusable = false
         mennyiseg_igeny2?.isFocusableInTouchMode = false
@@ -206,6 +210,8 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
                     mainActivity?.loadMenuFragment(true)
                     Log.d(TAG, "onCreateView: lezártam az üreset")
                 } else {
+                    val code = polcTextIgeny?.text
+                    sendBinCode.setRakhelyTetel2(id1,code.toString())
                     sendBinCode.closeContainer(
                         1,
                         currentDateAndTime,
@@ -223,6 +229,15 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
                 MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
             }
         }
+
+        javitButton?.setOnClickListener{
+            val kontener = kontenerText?.text
+            if(kontener != ""){
+                sendBinCode.setJavit2(kontener.toString())
+            }
+            polcTextIgeny?.setText("")
+        }
+
         return myView
     }
 
@@ -343,12 +358,20 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         super.onResume()
         kontenerText?.text = arguments?.getString("KONTENER")
         polcTextIgeny?.setText(arguments?.getString("TERMRAKH"))
+        id1 = requireArguments().getInt("ID")
         if(polcTextIgeny!!.text.isNotEmpty()){
             polcTextIgeny?.isFocusable = false
             polcTextIgeny?.isFocusableInTouchMode = false
             cikkItem_igeny?.isFocusable = true
             cikkItem_igeny?.isFocusableInTouchMode = true
             cikkItem_igeny?.requestFocus()
+            try {
+                igenyReveresed.clear()
+                getDataFromList()
+            } catch (e: Exception) {
+                Toast.makeText(myView?.context, "Nincs felvett tétel", Toast.LENGTH_SHORT).show()
+            }
+        }else{
             try {
                 igenyReveresed.clear()
                 getDataFromList()
