@@ -336,8 +336,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                     do {
                         val cikk = loadIgenyListResult.getString("cikkszam")
                         val megjegyzes = loadIgenyListResult.getString("megjegyzes")
-                        val darabszam = loadIgenyListResult.getString("igenyelt_mennyiseg")
-                        context.listIgenyItems.add(IgenyItem(cikk, megjegyzes, darabszam))
+                        val darabszam = loadIgenyListResult.getDouble("igenyelt_mennyiseg")
+                        context.listIgenyItems.add(IgenyItem(cikk, megjegyzes, darabszam.toString()))
                     } while (loadIgenyListResult.next())
                     val bundle = Bundle()
                     bundle.putSerializable("IGENY", context.listIgenyItems)
@@ -474,8 +474,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                     do {
                         val cikk = loadIgenyListResult.getString("cikkszam")
                         val megjegyzes = loadIgenyListResult.getString("megjegyzes")
-                        val darabszam = loadIgenyListResult.getString("igenyelt_mennyiseg")
-                        context.listIgenyItems.add(IgenyItem(cikk, megjegyzes, darabszam))
+                        val darabszam = loadIgenyListResult.getDouble("igenyelt_mennyiseg")
+                        context.listIgenyItems.add(IgenyItem(cikk, megjegyzes, darabszam.toString()))
                     } while (loadIgenyListResult.next())
                     val bundle = Bundle()
                     bundle.putSerializable("TOBBLET", context.listIgenyItems)

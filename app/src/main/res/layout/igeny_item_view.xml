@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/cikkszam_igeny"
-        android:layout_width="100dp"
+        android:layout_width="120dp"
         android:layout_height="match_parent"
         android:maxLines="1"
         android:layout_marginStart="2dp"
@@ -39,12 +39,15 @@
         android:id="@+id/mert_igeny"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:maxLength="9"
-        android:paddingStart="4dp"
         android:layout_marginStart="2dp"
+        android:maxLength="9"
+        android:paddingStart="2dp"
+        android:paddingEnd="20dp"
         android:text="mért.egys"
+        android:textAlignment="textEnd"
         android:textColor="@android:color/black"
         android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/megjegyzes_igeny_view"
         app:layout_constraintTop_toTopOf="parent" />
 
