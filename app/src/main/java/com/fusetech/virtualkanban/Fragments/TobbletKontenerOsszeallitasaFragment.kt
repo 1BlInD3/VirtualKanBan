@@ -105,7 +105,6 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         )
         kontenerText?.text = arguments?.getString("KONTENER")
         polcTextIgeny?.setText(arguments?.getString("TERMRAKH"))
-        id = arguments?.getString("KID")!!
         Log.d(TAG, "onCreateView: ${arguments?.getString("KONTENER")}")
         Log.d(TAG, "onCreateView: ${arguments?.getString("TERMRAKH")}")
         setBinFocusOn()
@@ -148,6 +147,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             val kontener = kontenerText?.text
             if(kontener != ""){
                 sendBinCode2.setJavit(kontener.toString())
+                polcTextIgeny?.requestFocus()
             }
             polcTextIgeny?.setText("")
         }
@@ -402,9 +402,18 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         super.onResume()
         kontenerText?.text = arguments?.getString("KONTENER")
         polcTextIgeny?.setText(arguments?.getString("TERMRAKH"))
+        id = arguments?.getString("KID")!!
         if (polcTextIgeny!!.text.isNotEmpty()) {
             cikkItem_igeny?.isFocusable = true
             cikkItem_igeny?.requestFocus()
+        }
+        else{
+            try {
+                igenyReveresed.clear()
+                getDataFromList()
+            } catch (e: Exception) {
+                Toast.makeText(myView?.context, "Nincs felvett tétel", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

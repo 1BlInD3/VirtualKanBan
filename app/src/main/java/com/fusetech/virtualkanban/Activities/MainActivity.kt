@@ -232,6 +232,7 @@ class MainActivity : AppCompatActivity(),
         szallitoMap = bundle.getSerializable("szallitoMap") as HashMap<String, String>
         Log.d("MYBUNDLE", "onCreate: $szallitoMap")
         fusetech = bundle.getString("fusetech")!!
+        Toast.makeText(this, "fusetech = $fusetech", Toast.LENGTH_SHORT).show()
         itLoginCodes = (bundle.getSerializable("it") as ArrayList<String>?)!!
         Log.d(TAG, "onCreate: LOGIN CODES $itLoginCodes")
         res = resources
@@ -293,6 +294,7 @@ class MainActivity : AppCompatActivity(),
                 //Some code
                 a++
                 //Toast.makeText(this@MainActivity, "$a", Toast.LENGTH_SHORT).show()
+                Log.d(TAG, "onMainTick: $a")
             }
 
             override fun onFinish() {

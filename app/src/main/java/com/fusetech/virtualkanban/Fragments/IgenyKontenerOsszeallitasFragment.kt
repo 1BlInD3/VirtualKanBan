@@ -234,6 +234,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
             val kontener = kontenerText?.text
             if(kontener != ""){
                 sendBinCode.setJavit2(kontener.toString())
+                polcTextIgeny?.requestFocus()
             }
             polcTextIgeny?.setText("")
         }

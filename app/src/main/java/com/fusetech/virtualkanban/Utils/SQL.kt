@@ -1333,7 +1333,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         }
     }
 
-    fun checkIfContainerIsOpen(
+    fun checkIfContainerIsOpen(   ///////////////////////////////////4-1
         kontener: String,
         context: MainActivity
     ) {////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1586,7 +1586,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         }
     }
 
-    fun cikkAdataokSql(
+    fun cikkAdataokSql(/////////////////////////////////4-2
         cikk: String?,
         megj1: String?,
         megj2: String?,

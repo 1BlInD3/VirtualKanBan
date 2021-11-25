@@ -584,10 +584,10 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+
         Log.d(TAG, "onDestroyView: LEFUTOTT")
         clearLeak()
-
+        super.onDestroyView()
     }
 
     fun clearLeak() {

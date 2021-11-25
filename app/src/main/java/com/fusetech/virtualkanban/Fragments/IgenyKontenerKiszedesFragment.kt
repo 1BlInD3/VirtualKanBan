@@ -165,7 +165,7 @@ class IgenyKontenerKiszedesFragment : Fragment(), KontenerAdapter.onKontenerClic
         childRecycler?.adapter = null
         progress = null
         exit3Btn = null
-        mainActivity!!.igenyKiszedesFragment = null
+        mainActivity?.igenyKiszedesFragment = null
         mainActivity = null
         horizontalScrollView = null
     }
