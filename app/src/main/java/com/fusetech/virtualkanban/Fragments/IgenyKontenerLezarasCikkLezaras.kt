@@ -107,7 +107,7 @@ class IgenyKontenerLezarasCikkLezaras : Fragment(), KontenerbenLezarasAdapter.on
                 exitBtn?.isEnabled = false
                 setProgressBarOn()
                 mainActivity?.closeContainerAndItem()
-                kontItem.clear()
+                //kontItem.clear()
               //  mainActivity?.removeFragment("CIKKLEZARASFRAGMENT")
               //  mainActivity?.removeFragment("IGENYLEZARAS")
                 mainActivity?.loadMenuFragment(true)

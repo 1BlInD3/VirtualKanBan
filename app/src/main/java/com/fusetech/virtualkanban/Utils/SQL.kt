@@ -53,6 +53,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     connection.prepareStatement(res.getString(R.string.deleteEmptyRaktarTetel))
                 statement.setString(1, konenerTetelId)
                 statement.executeUpdate()
+                connection.close()
             } catch (e: Exception) {
                 sqlMessage.sendMessage("Hiba van az üres letörlésénél")
                 writeLog(e.stackTraceToString(), "arg1 $konenerTetelId")
@@ -115,10 +116,12 @@ class SQL(private val sqlMessage: SQLAlert) {
                         save.readLog(File(context.getExternalFilesDir(null), "LOG.txt"))
                     )
                     File(context.getExternalFilesDir(null), "LOG.txt").delete()
+                    connection.close()
                 }
             } catch (e: Exception) {
                 context.setAlert("$e")
                 writeLog(e.stackTraceToString(), "arg1 $code")
+                connection.close()
 
             }
         } catch (e: Exception) {
@@ -223,6 +226,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         } while (resultSet3.next())
                         context.polcHelyezesFragment.reload()
                     }
+                    connection.close()
                     context.polcHelyezesFragment.reload()
                 }
             }
@@ -245,6 +249,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             result.setNull(1,Types.INTEGER)
             result.setString(2,kontener)
             result.executeUpdate()
+            connection.close()
         }catch (e: Exception){
             Log.d(TAG, "contenerJavit: ${e.stackTraceToString()}")
         }
@@ -259,6 +264,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             result.setString(1,code)
             result.setInt(2,kontener)
             result.executeUpdate()
+            connection.close()
         }catch (e: Exception){
             Log.d(TAG, "contenerJavit: ${e.stackTraceToString()}")
         }
@@ -383,6 +389,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     }
                 }
                 //context.listIgenyItems.clear()
+                connection.close()
             }
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
@@ -526,6 +533,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     }
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Valahol baj van $e")
@@ -565,6 +573,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     context.igenyFragment.setProgressBarOff()
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             Log.d(TAG, "check01: $e")
             CoroutineScope(Dispatchers.Main).launch {
@@ -606,6 +615,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     progress.visibility = View.GONE
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             Log.d(TAG, "check01: $e")
             CoroutineScope(Dispatchers.Main).launch {
@@ -643,6 +653,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 progress.visibility = View.GONE
             }
+            connection.close()
         } catch (e: Exception) {
             Log.d(TAG, "uploadItem: $e")
             CoroutineScope(Dispatchers.Main).launch {
@@ -682,6 +693,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 progress.visibility = View.GONE
                 context.tobbletOsszeallitasFragment.setAfterUpdate()
             }
+            connection.close()
         } catch (e: Exception) {
             Log.d(TAG, "uploadItem: $e")
             CoroutineScope(Dispatchers.Main).launch {
@@ -710,6 +722,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement1.setString(2, kontener)
             try {
                 statement1.executeUpdate()
+                connection.close()
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("Sikeres konténer lezárás!")
                     context.igenyFragment.setProgressBarOff()
@@ -717,6 +730,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 }
                 context.loadMenuFragment(true)
             } catch (e: Exception) {
+                connection.close()
                 Log.d(TAG, "closeContainerSql: $e")
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("A cikk státuszok felülírásánál hiba lépett fel, gyere az IT-re")
@@ -760,10 +774,12 @@ class SQL(private val sqlMessage: SQLAlert) {
                     progress.visibility = View.VISIBLE
                 }
                 statement1.executeUpdate()
+                connection.close()
                 CoroutineScope(Dispatchers.Main).launch {
                     progress.visibility = View.GONE
                 }
             } catch (e: Exception) {
+                connection.close()
                 Log.d(TAG, "closeContainerSql: $e")
                 CoroutineScope(Dispatchers.Main).launch {
                     context.setAlert("A cikk státuszok felülírásánál hiba lépett fel, gyere az IT-re")
@@ -841,6 +857,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     }
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             Log.d(TAG, "loadIgenyLezaras: $e")
             CoroutineScope(Dispatchers.Main).launch {
@@ -926,6 +943,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 }
                 //kontenerCikkLezar.clear()
             }
+            connection.close()
         } catch (e: Exception) {
             Log.d(TAG, "loadKontenerCikkek: $e")
             CoroutineScope(Dispatchers.Main).launch {
@@ -1035,6 +1053,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         .replace(R.id.cikk_container, context.polcResultFragment!!, "PRF").commit()
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             Log.d(TAG, "$e")
             context.loadFragment = LoadFragment.newInstance("A feldolgozás során hiba lépett fel")
@@ -1173,6 +1192,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     context.igenyFragment.setFocusToQuantity()
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             Log.d(TAG, "checkItem: $e")
             CoroutineScope(Dispatchers.Main).launch {
@@ -1242,6 +1262,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     context.tobbletOsszeallitasFragment.setFocusToQuantity()
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             Log.d(TAG, "checkItem: $e")
             CoroutineScope(Dispatchers.Main).launch {
@@ -1319,6 +1340,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     }
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             Log.d(TAG, "loadIgenyKiszedes: $e")
             writeLog(e.stackTraceToString(), "loadIgenyKiszedes")
@@ -1424,6 +1446,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     }
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Hiba a négyescikkek betöltésénél")
@@ -1488,6 +1511,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     context.menuFragment = null
                 }
             }
+            connection.close()
         }catch (e: Exception) {
             Log.d(TAG, "loadIgenyKiszedes: $e")
             writeLog(e.stackTraceToString(), "loadKiszedesreVaro")
@@ -1576,6 +1600,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     progress.visibility = View.GONE
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             writeLog(e.stackTraceToString(), "arg1 $kontener_id")
             Log.d(TAG, "loadKontenerCikkek: $e")
@@ -1909,6 +1934,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     progress.visibility = View.GONE
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Cikk adatok hiba")
@@ -1952,6 +1978,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     }
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Probléma a nevekkel $e")
@@ -2001,6 +2028,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     }
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Ellenőrző kódnál hiba")
@@ -2062,6 +2090,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     }
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Probléma a konténer ellenőrzésével $e")
@@ -2087,6 +2116,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 progress.visibility = View.GONE
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Nem tudom az átvevőt kinullázni")
@@ -2113,6 +2143,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 progress.visibility = View.GONE
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Probléma a tétel 3-ra írásával")
@@ -2141,6 +2172,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.setString(4, polc)
             statement.executeUpdate()
             context.igenyKontenerKiszedesCikkKiszedes?.isSaved = true
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Probléma a ratar_tetel feltöltésnél")
@@ -2167,6 +2199,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 progress.visibility = View.GONE
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("CikkUpdateHiba")
@@ -2187,6 +2220,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.setString(2, kontener_id)
             statement.executeUpdate()
             Log.d(TAG, "updateCikkAndKontener: Cikkek lezárva")
+            connection.close()
         } catch (e: Exception) {
             Log.d(TAG, "updateCikkAndKontener: $e")
             CoroutineScope(Dispatchers.Main).launch {
@@ -2212,6 +2246,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             loadIgenyLezaras(context)
             Log.d(TAG, "updateCikkAndKontener: Konténer lezárva")
             context.lezarandoKontener = ""
+            connection.close()
         } catch (e: Exception) {
             Log.d(TAG, "updateKontener: $e")
             CoroutineScope(Dispatchers.Main).launch {
@@ -2243,6 +2278,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     progress.visibility = View.GONE
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Probléma")
@@ -2286,6 +2322,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 context.supportFragmentManager.beginTransaction()
                     .replace(R.id.kihelyezesFrame, fragment, "KIHELYEZESLISTA").commit()
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Nem lehetett a kihelyezéslistát megnyitni")
@@ -2352,6 +2389,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     "KIHELYEZESITEMS"
                 ).commit()
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Probléma a kihelyezésnél")
@@ -2375,6 +2413,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 progress.visibility = View.GONE
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Probléma a cikkek lezárásánál")
@@ -2409,6 +2448,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     }
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Konténer lezárás hiba")
@@ -2483,6 +2523,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 }
                 //context.menuFragment = null
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Többlet konténer elemek hiba")
@@ -2577,6 +2618,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     )
                     .commit()
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("8as nem tudta lezárni a konténert és megnyitni a másikat")
@@ -2596,6 +2638,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.setString(2, code)
             statement.executeUpdate()
             context.loadTobbletKontenerKihelyezes()
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Hiba a visszaíráskor")
@@ -2705,6 +2748,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     .replace(R.id.frame_container, context.tobbletCikkekPolcra!!, "CIKKEKPOLCRA")
                     .commit()
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Open nyolcas hiba")
@@ -2736,6 +2780,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     context.tobbletCikkekPolcra?.progrssOff()
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("A polc ellenőrzésénél hiba lépett fel")
@@ -2813,6 +2858,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     )
                     .commit()
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Visszaírási hiba")

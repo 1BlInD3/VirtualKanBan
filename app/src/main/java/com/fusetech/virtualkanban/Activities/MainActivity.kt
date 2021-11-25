@@ -956,6 +956,7 @@ class MainActivity : AppCompatActivity(),
                     progress.visibility = View.GONE
                 }
             }
+            connection.close()
         } catch (e: Exception) {
             CoroutineScope(Main).launch {
                 setAlert("Probléma a feltöltésben!\n $e")
@@ -1037,6 +1038,7 @@ class MainActivity : AppCompatActivity(),
             CoroutineScope(Main).launch {
                 progress.visibility = View.GONE
             }
+            connection.close()
             return resultSet.next()
         } catch (e: Exception) {
             CoroutineScope(Main).launch {
@@ -1161,6 +1163,7 @@ class MainActivity : AppCompatActivity(),
             if (chechIfPolcHasChanged(lezarandoKontener)) {
                 updateCikk(lezarandoKontener)
                 updateKontener(lezarandoKontener)
+                kontItem.clear()
             } else {
                 igenyKontenerCheck()
                 CoroutineScope(Main).launch {

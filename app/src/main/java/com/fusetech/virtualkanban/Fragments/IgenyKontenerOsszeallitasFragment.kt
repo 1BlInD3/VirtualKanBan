@@ -140,53 +140,55 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
             }
         }
         mennyiseg_igeny2?.setOnClickListener {
-            igenyList.add(
-                IgenyItem(
-                    cikkItem_igeny?.text.toString().trim(), megjegyzes1_igeny?.text.toString().trim(),
-                    mennyiseg_igeny2?.text.toString().trim()
-                )
-            )
-            if (igenyList.size == 1) {
-                igenyReveresed.clear()
-                igenyReveresed.add(
+            if(cikkItem_igeny!!.text.isNotEmpty() && polcTextIgeny!!.text.isNotEmpty()){
+                igenyList.add(
                     IgenyItem(
-                        igenyList[0].cikkszam,
-                        igenyList[0].megnevezes,
-                        igenyList[0].mennyiseg
+                        cikkItem_igeny?.text.toString().trim(), megjegyzes1_igeny?.text.toString().trim(),
+                        mennyiseg_igeny2?.text.toString().trim()
                     )
                 )
-                recyclerView?.adapter?.notifyDataSetChanged()
-            } else if (igenyList.size > 1) {
-                igenyReveresed.clear()
-                for (i in igenyList.size downTo 1) {
+                if (igenyList.size == 1) {
+                    igenyReveresed.clear()
                     igenyReveresed.add(
                         IgenyItem(
-                            igenyList[i - 1].cikkszam,
-                            igenyList[i - 1].megnevezes,
-                            igenyList[i - 1].mennyiseg
+                            igenyList[0].cikkszam,
+                            igenyList[0].megnevezes,
+                            igenyList[0].mennyiseg
                         )
                     )
+                    recyclerView?.adapter?.notifyDataSetChanged()
+                } else if (igenyList.size > 1) {
+                    igenyReveresed.clear()
+                    for (i in igenyList.size downTo 1) {
+                        igenyReveresed.add(
+                            IgenyItem(
+                                igenyList[i - 1].cikkszam,
+                                igenyList[i - 1].megnevezes,
+                                igenyList[i - 1].mennyiseg
+                            )
+                        )
+                    }
+                    recyclerView?.adapter?.notifyDataSetChanged()
                 }
-                recyclerView?.adapter?.notifyDataSetChanged()
-            }
-            sendBinCode.sendDetails(
-                cikkItem_igeny?.text.toString().trim(), mennyiseg_igeny2?.text.toString().toDouble(),
-                polcTextIgeny?.text.toString().trim(), unit_igeny2?.text.toString(),
-                konti!!
-            )
-            cikkItem_igeny?.isFocusable = true
-            cikkItem_igeny?.isFocusableInTouchMode = true
-            cikkItem_igeny?.setText("")
-            cikkItem_igeny?.requestFocus()
-            mennyiseg_igeny2?.setText("")
-            mennyiseg_igeny2?.isFocusable = false
-            mennyiseg_igeny2?.isFocusableInTouchMode = false
-            megjegyzes2_igeny2?.text = ""
-            intrem_igeny2?.text = ""
-            unit_igeny2?.text = ""
-            megjegyzes1_igeny?.text = ""
-            if(mainActivity?.isWifiConnected()!!){
-                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+                sendBinCode.sendDetails(
+                    cikkItem_igeny?.text.toString().trim(), mennyiseg_igeny2?.text.toString().toDouble(),
+                    polcTextIgeny?.text.toString().trim(), unit_igeny2?.text.toString(),
+                    konti!!
+                )
+                cikkItem_igeny?.isFocusable = true
+                cikkItem_igeny?.isFocusableInTouchMode = true
+                cikkItem_igeny?.setText("")
+                cikkItem_igeny?.requestFocus()
+                mennyiseg_igeny2?.setText("")
+                mennyiseg_igeny2?.isFocusable = false
+                mennyiseg_igeny2?.isFocusableInTouchMode = false
+                megjegyzes2_igeny2?.text = ""
+                intrem_igeny2?.text = ""
+                unit_igeny2?.text = ""
+                megjegyzes1_igeny?.text = ""
+                if(mainActivity?.isWifiConnected()!!){
+                    MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+                }
             }
         }
 
