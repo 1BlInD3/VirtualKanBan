@@ -2437,23 +2437,26 @@ class SQL(private val sqlMessage: SQLAlert) {
             statement.setInt(2, 5)
             statement.setInt(3, code.toInt())
             statement.executeUpdate()
-            CoroutineScope(Dispatchers.Main).launch {
-                context.kihelyezes?.progressBarOff()
-                context.kihelyezes?.onBack()
-                context.kihelyezesFragmentLista = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        context.removeFragment("KIHELYEZESITEMS")
-                        context.getContainerList(sz0x)
-                    }
-                }
-            }
             connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Konténer lezárás hiba")
                 context.kihelyezes?.progressBarOff()
                 writeLog(e.stackTraceToString(), "arg1 $code")
+            }
+        }
+    }
+
+    fun closeReloadContainer(context: MainActivity){
+        CoroutineScope(Dispatchers.Main).launch {
+            context.kihelyezes?.progressBarOff()
+            context.kihelyezes?.onBack()
+            context.kihelyezesFragmentLista = null
+            CoroutineScope(Dispatchers.IO).launch {
+                CoroutineScope(Dispatchers.Main).launch {
+                    context.removeFragment("KIHELYEZESITEMS")
+                    context.getContainerList(sz0x)
+                }
             }
         }
     }

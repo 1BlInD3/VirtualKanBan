@@ -126,6 +126,11 @@ class MainActivity : AppCompatActivity(),
         csak így kell kivenni. HA üres akkor küldjön emailt, a polccal levett mennyiséggel és a polc mennyiséggel
 
 
+
+        AZ 5ÖS KIHELYEZÉS MÉG MINDIG NEM JÓL MŰKÖDIK, HA TÖBB KONTÉNER VAN UGYAN AZON A NÉVEN
+
+
+
         Többlet dedikált gomb: Polchely kell legyen benne és nulla legyen a polcchleyen lévő mennyiség. VAn többlet m az x polcon? megadás után email. x polcon cikkszámoadatok, ennyivel több volt Mennyi többletmennyiség maradt a polcon?.
      */
     val EXTERNAL_STORAGE = 101
@@ -1309,6 +1314,10 @@ class MainActivity : AppCompatActivity(),
 
     fun closeItem(code: String) {
         sql.closeContainer(code, this@MainActivity)
+    }
+
+    fun checkCloseContainer(){
+        sql.closeReloadContainer(this@MainActivity)
     }
 
     fun setContainerStatusAndGetItems(kontener_id: String?) {

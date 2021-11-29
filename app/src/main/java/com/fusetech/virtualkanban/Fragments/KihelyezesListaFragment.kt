@@ -99,6 +99,7 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
                         for (i in 0 until list.size){
                             mainActivity?.closeItem(list[i])
                         }
+                        mainActivity?.checkCloseContainer()
                         /*val unique : Set<String> = HashSet<String>(kontenerList)
                         for (code in unique){
                             mainActivity?.closeItem(code)

@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.konteneres_view.view.*
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+private const val TAG = "IgenyKontenerLezarasFra"
 
 @Suppress("UNCHECKED_CAST")
 class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClickListener {
@@ -33,7 +34,6 @@ class IgenyKontenerLezarasFragment : Fragment(), KontenerAdapter.onKontenerClick
     private var param2: String? = null
     private var mainActivity: MainActivity? = null
     private var igenyKontener: IgenyKontnerLezaras? = null
-    private val TAG = "IgenyKontenerLezarasFra"
     private var exitBtn: Button? = null
     private var progress: ProgressBar? = null
     private var myView : View? = null
