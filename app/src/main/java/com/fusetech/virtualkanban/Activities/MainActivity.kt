@@ -202,6 +202,7 @@ class MainActivity : AppCompatActivity(),
         val tempLocations: ArrayList<PolcLocation> = ArrayList()
         val tobbletKontener: ArrayList<KontenerItem> = ArrayList()
         var mainUrl = "http://10.0.1.69:8030/"
+
         //var mainUrl = "http://10.0.2.149:8030/"
         var backupURL = "http://10.0.1.199:8030/"
         var endPoint = """"""
@@ -420,7 +421,7 @@ class MainActivity : AppCompatActivity(),
                 }
             }
         }
-        myTimer.start()
+        //myTimer.start()
         val mIntent = IntentFilter()
         mIntent.addAction(Intent.ACTION_POWER_CONNECTED)
         //mIntent.addAction(Intent.ACTION_POWER_DISCONNECTED)
@@ -714,7 +715,7 @@ class MainActivity : AppCompatActivity(),
                     raktarkoziFragment?.getCode(barcodeData)
                 }
             }
-            myTimer.start()
+            //myTimer.start()
             wifiInfo = getMacAndSignalStrength()
         }
     }
@@ -852,7 +853,7 @@ class MainActivity : AppCompatActivity(),
         } else if (getFragment("TOBBLET")) {
             tobbletOsszeallitasFragment.deleteFocused()
         }
-        myTimer.start()
+        //myTimer.start()
         return super.onKeyUp(keyCode, event)
     }
 
@@ -1080,7 +1081,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun setRakhelyTetel2(kontener: Int, code: String) {
         CoroutineScope(IO).launch {
-            sql.tetelJavit(kontener,code)
+            sql.tetelJavit(kontener, code)
         }
     }
 
@@ -1092,7 +1093,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun setRakhelyTetel(kontener: Int, code: String) {
         CoroutineScope(IO).launch {
-            sql.tetelJavit(kontener,code)
+            sql.tetelJavit(kontener, code)
         }
     }
 
@@ -1316,7 +1317,7 @@ class MainActivity : AppCompatActivity(),
         sql.closeContainer(code, this@MainActivity)
     }
 
-    fun checkCloseContainer(){
+    fun checkCloseContainer() {
         sql.closeReloadContainer(this@MainActivity)
     }
 

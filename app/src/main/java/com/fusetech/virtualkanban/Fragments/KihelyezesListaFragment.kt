@@ -100,17 +100,6 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
                             mainActivity?.closeItem(list[i])
                         }
                         mainActivity?.checkCloseContainer()
-                        /*val unique : Set<String> = HashSet<String>(kontenerList)
-                        for (code in unique){
-                            mainActivity?.closeItem(code)
-                        //list.add(kontenerList.stream().distinct().collect(Collectors.toList()).toString())
-                        }*/
-                      /*  for (temp in hset) {
-                            println(temp)
-                        }*/
-                        /*for (i in 0 until list.size){
-
-                        }*/
                         Log.d(TAG, "Minden cikk lefutott")
                     }
                 }

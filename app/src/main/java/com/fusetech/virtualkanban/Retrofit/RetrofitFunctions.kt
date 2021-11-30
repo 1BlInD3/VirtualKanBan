@@ -10,6 +10,7 @@ import com.fusetech.virtualkanban.fragments.PolcraHelyezesFragment.Companion.isS
 import com.fusetech.virtualkanban.activities.SplashScreen.Companion.mainUrl
 import com.fusetech.virtualkanban.activities.SplashScreen.Companion.backupURL
 import com.fusetech.virtualkanban.activities.SplashScreen.Companion.endPoint
+import com.fusetech.virtualkanban.activities.SplashScreen.Companion.further
 import com.fusetech.virtualkanban.activities.SplashScreen.Companion.ipAddress
 import com.fusetech.virtualkanban.activities.SplashScreen.Companion.itAccess
 import com.fusetech.virtualkanban.activities.SplashScreen.Companion.logPath
@@ -76,6 +77,7 @@ class RetrofitFunctions() {
         } catch (e: Exception) {
             Log.d(TAG, "getConfigDetails: CATCH ÁG ${e.stackTraceToString()}")
             Log.d("IOTHREAD", "onResponse: ${Thread.currentThread().name + "getConfig"}")
+            further = false
             //trigger.triggerError()
         }
     }

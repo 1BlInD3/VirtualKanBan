@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -32,12 +33,11 @@ private const val TAG = "SplashScreen"
 
 class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
 
-    private var further = true
     private lateinit var progress: ProgressBar
     var fusetech = ""
 
     companion object {
-       // var mainUrl = "http://10.0.2.149:8030/"
+        // var mainUrl = "http://10.0.2.149:8030/"
         var mainUrl = "http://10.0.1.69:8030/"
         var backupURL = "http://10.0.1.199:8030/"
         var endPoint = """"""
@@ -45,6 +45,7 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
         var timeOut = 1L
         var ipAddress: HashMap<String, String> = HashMap()
         var itAccess: ArrayList<String> = ArrayList()
+        var further = true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,6 +73,10 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
                     //intent.put("it", itAccess)
                     startActivity(intent)
                     finish()
+                } else {
+                    CoroutineScope(Main).launch {
+                        setSplashAlert()
+                    }
                 }
             }
         } catch (e: Exception) {

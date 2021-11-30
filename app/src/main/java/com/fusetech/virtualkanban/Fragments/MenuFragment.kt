@@ -129,6 +129,7 @@ class MenuFragment : Fragment() {
         kilepes?.setOnClickListener {
             mainActivity?.removeFragment("MENU")
             mainActivity?.menuFragment = null
+            mainActivity?.cancelExitTimer()
             mainActivity?.finishAndRemoveTask()
         }
         rakhely?.setOnClickListener{
