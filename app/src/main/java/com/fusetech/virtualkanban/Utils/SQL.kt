@@ -23,6 +23,7 @@ import com.fusetech.virtualkanban.activities.MainActivity.Companion.backupURL
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.endPoint
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.dolgKod
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.path
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.sz01KiszedesDate
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.wifiInfo
 import com.fusetech.virtualkanban.dataItems.*
 import com.fusetech.virtualkanban.fragments.*
@@ -2345,6 +2346,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             val statement =
                 connection.prepareStatement(res.getString(R.string.igenyKontenerKihelyezesElemekLista))
             statement.setString(1, code)
+            statement.setString(2, sz01KiszedesDate)
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -2359,8 +2361,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                     val megj1 = resultSet.getString("Description1")
                     val megj2 = resultSet.getString("Description2")
                     val intrem = resultSet.getString("InternRem1")
-                    val igenyelve =
-                        resultSet.getString("igenyelt_mennyiseg") + " " + resultSet.getString("Unit")
+                    val igeny = resultSet.getDouble("igenyelt_mennyiseg")
+                    val igenyelve = igeny.toString() + " " + resultSet.getString("Unit")
                     val kiadva = resultSet.getInt("mozgatott_mennyiseg")
                     val kontenerID = resultSet.getInt("kontener_id")
                     myList.add(
@@ -2431,7 +2433,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             }
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             val connection: Connection = DriverManager.getConnection(connectionString)
-            val statement = connection.prepareStatement(res.getString(R.string.kontenerKiszedve))
+            val statement = connection.prepareStatement(res.getString(R.string.kontenerKihelyezve))
             val datum = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
             statement.setString(1, datum)
             statement.setInt(2, 5)

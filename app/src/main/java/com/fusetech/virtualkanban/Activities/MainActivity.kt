@@ -217,6 +217,7 @@ class MainActivity : AppCompatActivity(),
         var wifiInfo: String = ""
         lateinit var path: File
         var szallito = ""
+        var sz01KiszedesDate = ""
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

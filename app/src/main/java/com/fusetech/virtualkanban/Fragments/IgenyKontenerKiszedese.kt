@@ -1,5 +1,6 @@
 package com.fusetech.virtualkanban.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,7 +15,10 @@ import com.fusetech.virtualkanban.activities.MainActivity.Companion.kihelyezesIt
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.sz0x
 import com.fusetech.virtualkanban.dataItems.SzerelohelyItem
 import com.fusetech.virtualkanban.R
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.sz01KiszedesDate
 import kotlinx.android.synthetic.main.fragment_igeny_kontener_kiszedese.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -84,6 +88,7 @@ class IgenyKontenerKiszedese : Fragment() {
         return myView
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun setCode(code: String){
         if(mainActivity?.isWifiConnected()!!){
             MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
@@ -96,6 +101,7 @@ class IgenyKontenerKiszedese : Fragment() {
             szerelohely?.isFocusableInTouchMode = true
             szerelohely?.requestFocus()
             mainActivity?.getContainerList(code.uppercase())
+            sz01KiszedesDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
         }else{
             if(isCodeInList(code.uppercase())){
                 szerelohely?.setText(code)

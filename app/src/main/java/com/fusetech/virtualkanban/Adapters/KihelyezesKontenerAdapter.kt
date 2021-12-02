@@ -16,9 +16,10 @@ class KihelyezesKontenerAdapter(val lista: ArrayList<KihelyezesKontenerElemek>, 
         val cikkszam = itemView.textView33
         val megj1 = itemView.textView34
         val megj2 = itemView.textView38
-        val intrem = itemView.textView36
-        val igeny = itemView.textView37
+        val intrem = itemView.textView37
+        val igeny = itemView.textView36
         val kiadva = itemView.textView35
+
 
         init {
             itemView.setOnClickListener(this)
@@ -70,5 +71,13 @@ class KihelyezesKontenerAdapter(val lista: ArrayList<KihelyezesKontenerElemek>, 
 
     interface KihelyezesListener{
         fun kihelyezesClick(pos: Int)
+    }
+
+    override fun getItemId(position: Int): Long {
+        return super.getItemId(position)
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return super.getItemViewType(position)
     }
 }
