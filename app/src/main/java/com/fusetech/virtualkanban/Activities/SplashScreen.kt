@@ -52,6 +52,7 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
         supportActionBar?.hide()
+        further = true
         val retro = RetrofitFunctions()
         progress = progressBar3
         try {

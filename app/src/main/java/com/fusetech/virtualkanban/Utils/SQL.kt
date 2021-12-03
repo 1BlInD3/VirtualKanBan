@@ -2300,6 +2300,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             val statement =
                 connection.prepareStatement(res.getString(R.string.igenyKontenerKihelyezesLista))
             statement.setString(1, code)
+            statement.setString(2, sz01KiszedesDate)
             val resultSet = statement.executeQuery()
             if (!resultSet.next()) {
                 CoroutineScope(Dispatchers.Main).launch {

@@ -94,6 +94,7 @@ class IgenyKontenerKiszedese : Fragment() {
             MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
         }
         if(szallitoText!!.text.isEmpty()){
+            sz01KiszedesDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
             szallitoText?.setText(code)
             szallitoText?.isFocusable = false
             szallitoText?.isFocusableInTouchMode = false
@@ -101,7 +102,6 @@ class IgenyKontenerKiszedese : Fragment() {
             szerelohely?.isFocusableInTouchMode = true
             szerelohely?.requestFocus()
             mainActivity?.getContainerList(code.uppercase())
-            sz01KiszedesDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
         }else{
             if(isCodeInList(code.uppercase())){
                 szerelohely?.setText(code)

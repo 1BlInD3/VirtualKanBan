@@ -52,12 +52,12 @@ class KihelyezesKontenerAdapter(val lista: ArrayList<KihelyezesKontenerElemek>, 
             holder.kiadva.setTextColor(Color.parseColor("#FFFFFF"))
         } else {
             holder.itemView.setBackgroundResource(R.drawable.text_white_selector)
-            /*holder.cikkszam.setBackgroundResource(R.drawable.text_white_selector)
-            holder.megj1.setBackgroundResource(R.drawable.text_white_selector)
-            holder.megj2.setBackgroundResource(R.drawable.text_white_selector)
-            holder.intrem.setBackgroundResource(R.drawable.text_white_selector)
-            holder.igeny.setBackgroundResource(R.drawable.text_white_selector)
-            holder.kiadva.setBackgroundResource(R.drawable.text_white_selector)*/
+            holder.cikkszam.setTextColor(Color.parseColor("#000000"))
+            holder.megj1.setTextColor(Color.parseColor("#000000"))
+            holder.megj2.setTextColor(Color.parseColor("#000000"))
+            holder.intrem.setTextColor(Color.parseColor("#000000"))
+            holder.igeny.setTextColor(Color.parseColor("#000000"))
+            holder.kiadva.setTextColor(Color.parseColor("#000000"))
         }
         holder.cikkszam.text = currentItem.vonalkod
         holder.megj1.text = currentItem.megjegyzes1
