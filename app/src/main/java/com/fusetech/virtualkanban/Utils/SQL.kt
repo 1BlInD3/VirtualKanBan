@@ -22,6 +22,7 @@ import com.fusetech.virtualkanban.activities.MainActivity.Companion.mainUrl
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.backupURL
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.endPoint
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.dolgKod
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.emailMessage
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.path
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.sz01KiszedesDate
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.wifiInfo
@@ -1397,6 +1398,11 @@ class SQL(private val sqlMessage: SQLAlert) {
                         //setAlert("A konténer üres")
                         progress.visibility = View.GONE
                     }
+                    if(emailMessage?.isNotEmpty()!!) {
+                        val email = Email()
+                        email.sendEmail("KanBan@fusetech.hu","keszlet.modositas@fusetech.hu","Meghiúsult kiszolgálás",emailMessage!!)
+                        emailMessage = ""
+                    }
                     //context.igenyKiszedesFragment?.destroy()
                     context.ellenorzoKodFragment = EllenorzoKodFragment()
                     context.supportFragmentManager.beginTransaction()
@@ -1731,10 +1737,11 @@ class SQL(private val sqlMessage: SQLAlert) {
                                 builder.setTitle("Nincs készleten")
                                 builder.setMessage("Nincs raktárkészleten az adott cikk, ezért ez 0 mennyiséggel lezárásra kerül.\nFolytatja?")
                                 builder.setPositiveButton("Igen") { _, _ ->
-                                    val email = Email()
+                                    //val email = Email()
                                     CoroutineScope(Dispatchers.IO).launch {
-                                        email.sendEmail("KanBan@fusetech.hu","keszlet.modositas@fusetech.hu","Meghiúsult kiszolgálás","A $cikk\t$megj1\t$megj2\t$intrem\tnincs a 02 raktárban, viszont megtalálhatók: \n$message")
-                                        context.checkIfContainerIsDone(
+                                        //email.sendEmail("KanBan@fusetech.hu","keszlet.modositas@fusetech.hu","Meghiúsult kiszolgálás","A $cikk\t$megj1\t$megj2\t$intrem\tnincs a 02 raktárban, viszont megtalálhatók: \n$message")
+                                        emailMessage += "A $cikk\t$megj1\t$megj2\t$intrem\tnincs a 02 raktárban, viszont megtalálhatók: \n$message\n"
+                                            context.checkIfContainerIsDone(
                                             kontnerNumber.toString(),
                                             id.toString(),
                                             "02",
@@ -1870,9 +1877,10 @@ class SQL(private val sqlMessage: SQLAlert) {
                                 builder.setTitle("Nincs készleten")
                                 builder.setMessage("Nincs raktárkészleten az adott cikk, ezért ez 0 mennyiséggel lezárásra kerül.\nFolytatja?")
                                 builder.setPositiveButton("Igen") { _, _ ->
-                                    val email = Email()
+                                //    val email = Email()
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    email.sendEmail("KanBan@fusetech.hu","keszlet.modositas@fusetech.hu","Meghiúsult kiszolgálás","A $cikk\t$megj1\t$megj2\t$intrem\tnincs a 02 raktárban, viszont megtalálhatók: \n$message")
+                                    emailMessage += "A $cikk\t$megj1\t$megj2\t$intrem\tnincs a 02 raktárban, viszont megtalálhatók: \n$message\n"
+                                   // email.sendEmail("KanBan@fusetech.hu","keszlet.modositas@fusetech.hu","Meghiúsult kiszolgálás","A $cikk\t$megj1\t$megj2\t$intrem\tnincs a 02 raktárban, viszont megtalálhatók: \n$message")
                                     context.checkIfContainerIsDone(
                                             kontnerNumber.toString(),
                                             id.toString(),

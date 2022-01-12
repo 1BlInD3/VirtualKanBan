@@ -1,6 +1,7 @@
 package com.fusetech.virtualkanban.adapters
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,6 +44,7 @@ class KihelyezesKontenerAdapter(val lista: ArrayList<KihelyezesKontenerElemek>, 
     override fun onBindViewHolder(holder: KihelyezesViewHolder, position: Int) {
         val currentItem = lista[position]
         if (lista[position].kiadva == 0) {
+            Log.d("BVH", "onBindViewHolder: PIROS")
             holder.itemView.setBackgroundResource(R.drawable.text_red_selector)
             holder.cikkszam.setTextColor(Color.parseColor("#FFFFFF"))
             holder.megj1.setTextColor(Color.parseColor("#FFFFFF"))
@@ -51,6 +53,7 @@ class KihelyezesKontenerAdapter(val lista: ArrayList<KihelyezesKontenerElemek>, 
             holder.igeny.setTextColor(Color.parseColor("#FFFFFF"))
             holder.kiadva.setTextColor(Color.parseColor("#FFFFFF"))
         } else {
+            Log.d("BVH", "onBindViewHolder: FEHÉR")
             holder.itemView.setBackgroundResource(R.drawable.text_white_selector)
             holder.cikkszam.setTextColor(Color.parseColor("#000000"))
             holder.megj1.setTextColor(Color.parseColor("#000000"))

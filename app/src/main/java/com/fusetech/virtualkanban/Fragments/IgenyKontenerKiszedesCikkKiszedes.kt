@@ -246,7 +246,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                     email.sendEmail(
                                         "KanBan@fusetech.hu",
                                         "keszlet.modositas@fusetech.hu",
-                                        "TESZT_____Készletkorrekció",
+                                        "Készletkorrekció",
                                         "A(z) ${polc!!.text} polcon mennyiségi eltérést észleltem. A Scala szerint ${
                                             getPolcValue(polc!!.text.trim().toString())
                                         } ${unit!!.text.trim()} volt rajta\nValójában ${
@@ -315,7 +315,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                         email.sendEmail(
                             "KanBan@fusetech.hu",
                             "keszlet.modositas@fusetech.hu",
-                            "TESZT_____Üres polc bejelentés",
+                            "Üres polc bejelentés",
                             "A ${polc?.text?.trim()} elvileg üres. A Scala szerint a ${cikkEdit?.text.toString().trim()} cikkből ${
                                 getPolcValue(polc?.text?.trim().toString())
                             } ${unit?.text?.trim()} van rajta "
@@ -351,7 +351,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                             email.sendEmail(
                                 "KanBan@fusetech.hu",
                                 "keszlet.modositas@fusetech.hu",
-                                "TESZT____Készletkorrekció",
+                                "Készletkorrekció",
                                 "A(z) ${polc!!.text} polcon mennyiségi eltérést észleltem. A Scala szerint ${
                                     getPolcValue(polc!!.text.trim().toString())
                                 } ${unit!!.text.trim()} volt rajta.\nValójában ${
@@ -502,7 +502,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                 CoroutineScope(IO).launch {
                     email.sendEmail("KanBan@fusetech.hu",
                         "keszlet.modositas@fusetech.hu",
-                        "TESZT_____Készletkorrekció",
+                        "Készletkorrekció",
                         "A $bin polcon a $cikk cikk $qty $unity nem található")
                 }
                 removeFromList(bin)

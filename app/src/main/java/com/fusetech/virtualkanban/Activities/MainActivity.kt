@@ -218,6 +218,7 @@ class MainActivity : AppCompatActivity(),
         lateinit var path: File
         var szallito = ""
         var sz01KiszedesDate = ""
+        var emailMessage: String? = ""
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

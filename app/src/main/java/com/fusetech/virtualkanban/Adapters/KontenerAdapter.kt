@@ -2,6 +2,7 @@ package com.fusetech.virtualkanban.adapters
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +38,7 @@ class KontenerAdapter(var kontenerItem: ArrayList<KontenerItem>, val listener: o
     override fun onBindViewHolder(holder: KontenerHolder, position: Int) {
         val currentItem = kontenerItem[position]
         if(kontenerItem[position].status == 2 || kontenerItem[position].status == 8){
+            Log.d("BVH", "onBindViewHolder: KONTÉNERES")
             holder.itemView.setBackgroundResource(R.drawable.text_blue_selector)
             holder.kontenerText.setTextColor(Color.parseColor("#FFFFFF"))
             holder.polcText.setTextColor(Color.parseColor("#FFFFFF"))

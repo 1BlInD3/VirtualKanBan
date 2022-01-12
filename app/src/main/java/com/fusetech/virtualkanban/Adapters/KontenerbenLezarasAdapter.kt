@@ -2,6 +2,7 @@ package com.fusetech.virtualkanban.adapters
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,6 +59,7 @@ class KontenerbenLezarasAdapter(var kontenerCikkLezaras: ArrayList<KontenerbenLe
             holder.igeny.setTextColor(Color.parseColor("#000000"))
             holder.mozgas.setTextColor(Color.parseColor("#000000"))
         } else if (kontenerCikkLezaras[position].statusz < 2 && kontenerCikkLezaras[position].balance == 0.0){
+            Log.d("BVH", "onBindViewHolder: PIROS_JÓ")
             holder.itemView.setBackgroundResource(R.drawable.text_red_selector)
             holder.cikkszam.setTextColor(Color.parseColor("#FFFFFF"))
             holder.megj1.setTextColor(Color.parseColor("#FFFFFF"))
