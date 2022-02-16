@@ -135,6 +135,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         }
         cikkItem_igeny?.setOnClickListener {
             mainActivity?.isItem(cikkItem_igeny?.text.toString())
+            disableItemText()
             if(mainActivity?.isWifiConnected()!!){
                 MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
             }
@@ -411,6 +412,7 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
             polcTextIgeny?.setText(code)
             sendBinCode.sendBinCode(code,kontenerText?.text.toString())
         } else if(cikkItem_igeny?.text?.isEmpty()!!){
+            disableItemText()
             cikkItem_igeny?.setText(code)
             mainActivity?.isItem(code)
         }else{
@@ -446,5 +448,11 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
         if(polcTextIgeny?.hasFocus()!!){
             polcTextIgeny?.setText("")
         }
+    }
+    fun disableItemText(){
+        cikkItem_igeny?.isEnabled = false
+    }
+    fun enableItemText(){
+        cikkItem_igeny?.isEnabled = true
     }
 }

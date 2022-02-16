@@ -130,6 +130,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             sendBinCode2.sendBinCode2(polcTextIgeny?.text.toString(), kontenerText?.text.toString())
         }
         cikkItem_igeny?.setOnClickListener {
+            disableItemText()
             if(mainActivity?.isWifiConnected()!!){
                 MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
             }
@@ -450,6 +451,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                 MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
             }
             cikkItem_igeny?.setText(code)
+            disableItemText()
             mainActivity?.isItem2(code, polcTextIgeny!!.text.trim().toString())
         }
     }
@@ -506,5 +508,11 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         if(polcTextIgeny?.hasFocus()!!){
             polcTextIgeny?.setText("")
         }
+    }
+    fun disableItemText(){
+        cikkItem_igeny?.isEnabled = false
+    }
+    fun enableItemText(){
+        cikkItem_igeny?.isEnabled = true
     }
 }

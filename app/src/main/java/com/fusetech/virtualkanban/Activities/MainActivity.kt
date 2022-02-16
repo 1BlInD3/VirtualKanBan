@@ -1046,7 +1046,7 @@ class MainActivity : AppCompatActivity(),
             CoroutineScope(Main).launch {
                 progress.visibility = View.GONE
             }
-            connection.close()
+            //connection.close()
             return resultSet.next()
         } catch (e: Exception) {
             CoroutineScope(Main).launch {
@@ -1593,7 +1593,7 @@ class MainActivity : AppCompatActivity(),
 
     fun hideSystemUI() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        WindowInsetsControllerCompat(window, frame_container).let { controller ->
+        WindowInsetsControllerCompat(window,frame_container).let { controller ->
             //controller.hide(WindowInsetsCompat.Type.systemBars())
             controller.hide(WindowInsetsCompat.Type.navigationBars())
             controller.systemBarsBehavior =

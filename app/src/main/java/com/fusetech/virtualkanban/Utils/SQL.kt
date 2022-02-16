@@ -1168,12 +1168,14 @@ class SQL(private val sqlMessage: SQLAlert) {
                 if (!resultSet1.next()) {
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("Nincs ilyen cikk a rendszerben $code")
+                        context.igenyFragment.enableItemText()
                         context.igenyFragment.setProgressBarOff()
                         context.igenyFragment.setFocusToItem()
                     }
                 } else {
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("A $code cikknek nincs mennyisége a rendszerben")
+                        context.igenyFragment.enableItemText()
                         context.igenyFragment.setProgressBarOff()
                         context.igenyFragment.setFocusToItem()
                     }
@@ -1190,6 +1192,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         intremIgeny,
                         unitIgeny
                     )
+                    context.igenyFragment.enableItemText()
                     context.igenyFragment.setProgressBarOff()
                     context.igenyFragment.setFocusToQuantity()
                 }
@@ -1198,6 +1201,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         } catch (e: Exception) {
             Log.d(TAG, "checkItem: $e")
             CoroutineScope(Dispatchers.Main).launch {
+                context.igenyFragment.enableItemText()
                 context.igenyFragment.setProgressBarOff()
                 context.igenyFragment.setFocusToItem()
                 context.setAlert("Hiba történt a cikk ellenőrzés közben")
@@ -1228,6 +1232,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("A $code cikk nincs sem a polcon sem a termelésben")
                         context.tobbletOsszeallitasFragment.setCikkszamBlank()
+                        context.tobbletOsszeallitasFragment.enableItemText()
                         progress.visibility = View.GONE
                         context.tobbletOsszeallitasFragment.setFocusToItem(bin)
                     }
@@ -1245,6 +1250,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         context.setAlert("A cikk ezeken a polcokon található a termelésben: \n\n$message")
                         context.tobbletOsszeallitasFragment.setCikkszamBlank()
                         progress.visibility = View.GONE
+                        context.tobbletOsszeallitasFragment.enableItemText()
                         context.tobbletOsszeallitasFragment.setFocusToItem(bin)
                     }
                 }
@@ -1260,6 +1266,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                         intremIgeny,
                         unitIgeny
                     )
+                    context.tobbletOsszeallitasFragment.enableItemText()
                     progress.visibility = View.GONE
                     context.tobbletOsszeallitasFragment.setFocusToQuantity()
                 }
@@ -1269,6 +1276,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             Log.d(TAG, "checkItem: $e")
             CoroutineScope(Dispatchers.Main).launch {
                 progress.visibility = View.GONE
+                context.tobbletOsszeallitasFragment.enableItemText()
                 context.setAlert("Nincs hálózati kapcsolat?")
                 writeLog(e.stackTraceToString(), "arg1 $code arg2 $bin")
             }
