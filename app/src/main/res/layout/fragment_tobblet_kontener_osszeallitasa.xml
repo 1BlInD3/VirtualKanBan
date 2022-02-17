@@ -154,7 +154,7 @@
         android:id="@+id/ttextView19"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="35dp"
         android:text="Mennyiség"
         android:textColor="@android:color/black"
         android:textSize="16sp"
@@ -168,7 +168,7 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/editbuttn"
         android:ems="10"
         android:inputType="numberDecimal"
@@ -181,7 +181,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="35dp"
         android:textColor="@android:color/black"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -258,5 +258,18 @@
         app:layout_constraintStart_toEndOf="@+id/tbin_igeny"
         app:layout_constraintTop_toBottomOf="@+id/tcontainer_igeny"
         app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/maxErtek"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="TextView"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tintrem_igeny" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

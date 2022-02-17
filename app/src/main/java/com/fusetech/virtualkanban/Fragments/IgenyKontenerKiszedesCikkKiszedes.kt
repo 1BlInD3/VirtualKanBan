@@ -213,6 +213,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             }
         }
         mennyiseg?.setOnClickListener {
+            lezar?.isVisible = false
             isUpdated = false
             if (mennyiseg?.text?.trim().toString().isNotEmpty() && mennyiseg?.text?.trim()
                     .toString().toDouble() > 0
@@ -224,6 +225,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     if (bejelentes?.visibility == View.VISIBLE) {
                         mainActivity?.setAlert("A jelentéshez nyomd meg hosszan a megafon ikont!")
                     } else {
+                        mennyiseg?.isEnabled = true
                         mainActivity?.setAlert("Túl sok ennyit nem vehetsz ki erről a polcról")
                         mennyiseg?.selectAll()
                     }
@@ -266,6 +268,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                         bejelentes?.visibility = View.GONE
                                         mainActivity?.setAlert("E-mail elküldve\n A polc már nincs a listában")
                                         MainActivity.progress.visibility = View.GONE
+                                        mennyiseg?.isEnabled = true
                                     }
                                 } catch (e: Exception) {
                                     mainActivity?.setAlert("HIánynál fellépett a probléma\n $e")
@@ -288,15 +291,18 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                         polc?.requestFocus()
                         bejelentes?.visibility = View.GONE
                         mainActivity?.hideSystemUI()
+                        mennyiseg?.isEnabled = true
                     }
                     builder.setOnCancelListener {
                         mainActivity?.hideSystemUI()
+                        mennyiseg?.isEnabled = true
                     }
                     builder.create()
                     builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
 
                 } else {
                     sendLogic()
+                    mennyiseg?.isEnabled = true
                     mennyiseg?.setText("")
                     mennyiseg?.isFocusable = false
                     mennyiseg?.isFocusableInTouchMode = false
@@ -328,6 +334,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     mainActivity?.hideSystemUI()
                 }
                 builder.setNegativeButton("Nem") { _, _ ->
+                    mennyiseg?.isEnabled = true
                     mainActivity?.hideSystemUI()
                 }
                 builder.setOnCancelListener {
@@ -339,6 +346,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
             if (mainActivity?.isWifiConnected()!!) {
                 MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
             }
+            lezar?.isEnabled = true
         }
         bejelentes?.setOnLongClickListener {
             if (mennyiseg?.text?.trim().toString().isNotEmpty() && mennyiseg?.text?.trim()
@@ -846,6 +854,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                         }
                     }
                     locationRecycler?.adapter?.notifyDataSetChanged()
+                    lezar?.isVisible = true
                 }
             }
             CoroutineScope(Main).launch {

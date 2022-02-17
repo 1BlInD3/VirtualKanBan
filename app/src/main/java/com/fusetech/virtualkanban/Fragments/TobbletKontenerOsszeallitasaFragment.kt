@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.fusetech.virtualkanban.fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
 import android.widget.*
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fusetech.virtualkanban.activities.MainActivity
@@ -43,6 +44,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
     private  var polcTextIgeny: EditText? = null
     private  var megjegyzes1_igeny: TextView? = null
     private  var megjegyzes2_igeny2: TextView? = null
+    private  var maxErtek: TextView? = null
     private  var intrem_igeny2: TextView? = null
     private  var unit_igeny2: TextView? = null
     private  var mainActivity: MainActivity? = null
@@ -54,6 +56,8 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
     private  var recyclerView: RecyclerView? = null
     private var javitButton: Button? = null
     private var id = ""
+    private var maxQty: Double = 0.0
+    private var template: Double = 0.0
 
     interface SendBinCode2 {
         fun sendBinCode2(code: String, kontener: String)
@@ -86,6 +90,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         kontenerText = myView?.tcontainer_igeny
         progressBar = myView?.tprogressBar_igeny
         polcTextIgeny = myView?.tbin_igeny
+        maxErtek = myView?.maxErtek
         megjegyzes1_igeny = myView?.tmegjegyzes_igeny
         megjegyzes2_igeny2 = myView?.tmegjegyzes2_igeny
         intrem_igeny2 = myView?.tintrem_igeny
@@ -124,12 +129,19 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         megjegyzes2_igeny2?.text = ""
         intrem_igeny2?.text = ""
         unit_igeny2?.text = ""
+        maxErtek?.text = ""
         polcTextIgeny?.filters = arrayOf<InputFilter>(InputFilter.AllCaps())
         setProgressBarOff()
         polcTextIgeny?.setOnClickListener {
             sendBinCode2.sendBinCode2(polcTextIgeny?.text.toString(), kontenerText?.text.toString())
         }
         cikkItem_igeny?.setOnClickListener {
+
+            if(igenyList.size>0) {
+                template =
+                    cikkszamMennyisegEllenorzo(igenyList, cikkItem_igeny?.text.toString().trim())
+                //Toast.makeText(requireContext(), "$template", Toast.LENGTH_SHORT).show()
+            }
             disableItemText()
             if(mainActivity?.isWifiConnected()!!){
                 MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
@@ -156,58 +168,76 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             if(mainActivity?.isWifiConnected()!!){
                 MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
             }
-            if(cikkItem_igeny?.text?.isNotEmpty()!! && mennyiseg_igeny2?.text?.trim().toString().toDouble() > 0){
-                val konti = kontenerText!!.text.trim().substring(4, kontenerText!!.text.trim().length)
-                igenyList.add(
-                    IgenyItem(
-                        cikkItem_igeny?.text.toString().trim(), megjegyzes1_igeny!!.text.toString().trim(),
-                        mennyiseg_igeny2?.text.toString().trim()
-                    )
-                )
-                if (igenyList.size == 1) {
-                    igenyReveresed.clear()
-                    igenyReveresed.add(
+            if(mennyiseg_igeny2?.text?.trim().toString().toDouble() <= maxQty) {
+
+                if (cikkItem_igeny?.text?.isNotEmpty()!! && mennyiseg_igeny2?.text?.trim()
+                        .toString().toDouble() > 0
+                ) {
+                   /* maxQty -= mennyiseg_igeny2?.text?.trim().toString().toDouble()
+                    maxErtek?.text = "$maxQty"*/
+                    val konti =
+                        kontenerText!!.text.trim().substring(4, kontenerText!!.text.trim().length)
+                    igenyList.add(
                         IgenyItem(
-                            igenyList[0].cikkszam,
-                            igenyList[0].megnevezes,
-                            igenyList[0].mennyiseg
+                            cikkItem_igeny?.text.toString().trim(),
+                            megjegyzes1_igeny!!.text.toString().trim(),
+                            mennyiseg_igeny2?.text.toString().trim()
                         )
                     )
-                    recyclerView?.adapter?.notifyDataSetChanged()
-                    cikkItem_igeny?.isFocusable = true
-                    cikkItem_igeny?.isFocusableInTouchMode = true
-                    cikkItem_igeny?.requestFocus()
-                    cikkItem_igeny?.selectAll()
-                } else if (igenyList.size > 1) {
-                    igenyReveresed.clear()
-                    for (i in igenyList.size downTo 1) {
+                    if (igenyList.size == 1) {
+                        igenyReveresed.clear()
                         igenyReveresed.add(
                             IgenyItem(
-                                igenyList[i - 1].cikkszam,
-                                igenyList[i - 1].megnevezes,
-                                igenyList[i - 1].mennyiseg
+                                igenyList[0].cikkszam,
+                                igenyList[0].megnevezes,
+                                igenyList[0].mennyiseg
                             )
                         )
+                        recyclerView?.adapter?.notifyDataSetChanged()
+                        cikkItem_igeny?.isFocusable = true
+                        cikkItem_igeny?.isFocusableInTouchMode = true
+                        cikkItem_igeny?.requestFocus()
+                        cikkItem_igeny?.selectAll()
+                    } else if (igenyList.size > 1) {
+                        igenyReveresed.clear()
+                        for (i in igenyList.size downTo 1) {
+                            igenyReveresed.add(
+                                IgenyItem(
+                                    igenyList[i - 1].cikkszam,
+                                    igenyList[i - 1].megnevezes,
+                                    igenyList[i - 1].mennyiseg
+                                )
+                            )
+                        }
+                        recyclerView?.adapter?.notifyDataSetChanged()
+                        cikkItem_igeny?.isFocusable = true
+                        cikkItem_igeny?.isFocusableInTouchMode = true
+                        cikkItem_igeny?.requestFocus()
+                        cikkItem_igeny?.selectAll()
                     }
-                    recyclerView?.adapter?.notifyDataSetChanged()
-                    cikkItem_igeny?.isFocusable = true
-                    cikkItem_igeny?.isFocusableInTouchMode = true
-                    cikkItem_igeny?.requestFocus()
-                    cikkItem_igeny?.selectAll()
+                    sendBinCode2.sendDetails2(
+                        cikkItem_igeny?.text.toString().trim(),
+                        mennyiseg_igeny2?.text.toString().toDouble(),
+                        polcTextIgeny?.text.toString().trim(),
+                        unit_igeny2?.text.toString(),
+                        konti
+                    )
+                } else {
+                    mainActivity?.setAlert("Rendes mennyiséget vigyél fel!")
+                    mennyiseg_igeny2?.isFocusable = true
+                    mennyiseg_igeny2?.isFocusableInTouchMode = true
+                    cikkItem_igeny?.isFocusable = false
+                    cikkItem_igeny?.isFocusableInTouchMode = false
+                    mennyiseg_igeny2?.selectAll()
+                    //mennyiseg_igeny2?.requestFocus()
                 }
-                sendBinCode2.sendDetails2(
-                    cikkItem_igeny?.text.toString().trim(), mennyiseg_igeny2?.text.toString().toDouble(),
-                    polcTextIgeny?.text.toString().trim(), unit_igeny2?.text.toString(),
-                    konti
-                )
             }else{
-                mainActivity?.setAlert("Rendes mennyiséget vigyél fel!")
+                mainActivity?.setAlert("Többet akarsz kivenni mint a polcon lévő mennyiség")
                 mennyiseg_igeny2?.isFocusable = true
                 mennyiseg_igeny2?.isFocusableInTouchMode = true
                 cikkItem_igeny?.isFocusable = false
                 cikkItem_igeny?.isFocusableInTouchMode = false
                 mennyiseg_igeny2?.selectAll()
-                //mennyiseg_igeny2?.requestFocus()
             }
         }
 
@@ -304,6 +334,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         igenyList.clear()
         megjegyzes1_igeny?.text = ""
         megjegyzes2_igeny2?.text = ""
+        maxErtek?.text = ""
         mennyiseg_igeny2?.setText("")
         TextKeyListener.clear(mennyiseg_igeny2!!.text)
         mennyiseg_igeny2?.isEnabled = false
@@ -360,11 +391,19 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         }
     }
 
-    fun setInfo(megj: String, megj2: String, intRem: String, unit: String) {
+    fun setInfo(megj: String, megj2: String, intRem: String, unit: String, max: Double) {
+        //val a = "$intRem\nMax kivehető mennyiség = $max"
+        if(template >= 0){
+            maxQty = max
+            maxQty -= template
+        }else{
+            maxQty = max
+        }
         megjegyzes1_igeny?.text = megj
         megjegyzes2_igeny2?.text = megj2
         intrem_igeny2?.text = intRem
         unit_igeny2?.text = unit
+        maxErtek?.text = "Max kivehető = $maxQty"
     }
 
     override fun igenyClick(position: Int) {
@@ -394,6 +433,10 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                         igenyReveresed[i - 1].megnevezes, igenyReveresed[i - 1].mennyiseg
                     )
                 )
+            }
+            val cikklist: ArrayList<String> = ArrayList()
+            for(i in 0 until igenyList.size){
+                cikklist.add(igenyList[i].cikkszam.trim())
             }
             recyclerView!!.adapter?.notifyDataSetChanged()
         }
@@ -468,6 +511,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         polcTextIgeny = null
         megjegyzes1_igeny = null
         megjegyzes2_igeny2 = null
+        maxErtek = null
         intrem_igeny2 = null
         unit_igeny2 = null
         mainActivity = null
@@ -498,6 +542,7 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
         intrem_igeny2?.text = ""
         unit_igeny2?.text = ""
         megjegyzes1_igeny?.text = ""
+        maxErtek?.text = ""
     }
     /*fun setAfterCheck(){
         mennyiseg_igeny2?.isFocusable = true
@@ -514,5 +559,20 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
     }
     fun enableItemText(){
         cikkItem_igeny?.isEnabled = true
+    }
+    fun disableLezaras(){
+        lezarButton?.isVisible = false
+    }
+    fun enableLezaras(){
+        lezarButton?.isVisible = true
+    }
+    private fun cikkszamMennyisegEllenorzo(list: ArrayList<IgenyItem>, cikkszam: String): Double{
+        var max = 0.0
+        for (i in 0 until list.size){
+            if(list[i].cikkszam.trim() == cikkszam.trim()){
+                max += list[i].mennyiseg.trim().toDouble()
+            }
+        }
+        return max
     }
 }

@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.view.isVisible
 import com.fusetech.virtualkanban.activities.MainActivity
 import com.fusetech.virtualkanban.R
 import kotlinx.coroutines.CoroutineScope
@@ -549,6 +550,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         val connection: Connection
         CoroutineScope(Dispatchers.Main).launch {
             context.igenyFragment.setProgressBarOn()
+            context.igenyFragment.disableLezaras()
         }
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -563,6 +565,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     context.setAlert("A polc nem a 01 raktárban található")
                     context.igenyFragment.setBinFocusOn()
                     context.igenyFragment.setProgressBarOff()
+                    context.igenyFragment.enableLezaras()
                 }
             } else {
                 val statement1 =
@@ -573,6 +576,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 CoroutineScope(Dispatchers.Main).launch {
                     context.igenyFragment.setFocusToItem()
                     context.igenyFragment.setProgressBarOff()
+                    context.igenyFragment.enableLezaras()
                 }
             }
             connection.close()
@@ -581,6 +585,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.igenyFragment.setBinFocusOn()
                 context.igenyFragment.setProgressBarOff()
+                context.igenyFragment.enableLezaras()
                 context.setAlert("HIba történt a tranzit ellenőrzésekor")
                 writeLog(e.stackTraceToString(), "arg1 $code")
             }
@@ -1215,6 +1220,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         CoroutineScope(Dispatchers.Main).launch {
             //context.tobbletOsszeallitasFragment.setProgressBarOn()
             progress.visibility = View.VISIBLE
+            context.tobbletOsszeallitasFragment.disableLezaras()
         }
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -1232,6 +1238,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("A $code cikk nincs sem a polcon sem a termelésben")
                         context.tobbletOsszeallitasFragment.setCikkszamBlank()
+                        context.tobbletOsszeallitasFragment.enableLezaras()
                         context.tobbletOsszeallitasFragment.enableItemText()
                         progress.visibility = View.GONE
                         context.tobbletOsszeallitasFragment.setFocusToItem(bin)
@@ -1250,11 +1257,13 @@ class SQL(private val sqlMessage: SQLAlert) {
                         context.setAlert("A cikk ezeken a polcokon található a termelésben: \n\n$message")
                         context.tobbletOsszeallitasFragment.setCikkszamBlank()
                         progress.visibility = View.GONE
+                        context.tobbletOsszeallitasFragment.enableLezaras()
                         context.tobbletOsszeallitasFragment.enableItemText()
                         context.tobbletOsszeallitasFragment.setFocusToItem(bin)
                     }
                 }
             } else {
+                val maxErtek = resultSet.getDouble("BalanceQty")
                 val megjegyzesIgeny: String = resultSet.getString("Description1")
                 val megjegyzes2Igeny: String = resultSet.getString("Description2")
                 val intremIgeny: String = resultSet.getString("IntRem")
@@ -1264,8 +1273,10 @@ class SQL(private val sqlMessage: SQLAlert) {
                         megjegyzesIgeny,
                         megjegyzes2Igeny,
                         intremIgeny,
-                        unitIgeny
+                        unitIgeny,
+                        maxErtek
                     )
+                    context.tobbletOsszeallitasFragment.enableLezaras()
                     context.tobbletOsszeallitasFragment.enableItemText()
                     progress.visibility = View.GONE
                     context.tobbletOsszeallitasFragment.setFocusToQuantity()
@@ -1276,6 +1287,7 @@ class SQL(private val sqlMessage: SQLAlert) {
             Log.d(TAG, "checkItem: $e")
             CoroutineScope(Dispatchers.Main).launch {
                 progress.visibility = View.GONE
+                context.tobbletOsszeallitasFragment.enableLezaras()
                 context.tobbletOsszeallitasFragment.enableItemText()
                 context.setAlert("Nincs hálózati kapcsolat?")
                 writeLog(e.stackTraceToString(), "arg1 $code arg2 $bin")
