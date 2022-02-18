@@ -203,34 +203,38 @@ class IgenyKontenerOsszeallitasFragment : Fragment(), IgenyItemAdapter.IgenyItem
             }
         }
         lezarButton?.setOnClickListener {
-            if (igenyReveresed.size > 0) {
-                setProgressBarOn()
-                val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
-                Log.d(TAG, "onCreateView: $currentDateAndTime")
-                if (polcTextIgeny?.text?.isEmpty()!! && igenyReveresed.size == 0) {
-                    sendBinCode.closeContainer(5, currentDateAndTime, konti!!)
-                    setProgressBarOff()
-                    clearAll()
-                    mainActivity?.loadMenuFragment(true)
-                    Log.d(TAG, "onCreateView: lezártam az üreset")
+            if(polcTextIgeny!!.text.isNotEmpty()){
+                if (igenyReveresed.size > 0) {
+                    setProgressBarOn()
+                    val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+                    Log.d(TAG, "onCreateView: $currentDateAndTime")
+                    if (polcTextIgeny?.text?.isEmpty()!! && igenyReveresed.size == 0) {
+                        sendBinCode.closeContainer(5, currentDateAndTime, konti!!)
+                        setProgressBarOff()
+                        clearAll()
+                        mainActivity?.loadMenuFragment(true)
+                        Log.d(TAG, "onCreateView: lezártam az üreset")
+                    } else {
+                        val code = polcTextIgeny?.text
+                        sendBinCode.setRakhelyTetel2(id1,code.toString())
+                        sendBinCode.closeContainer(
+                            1,
+                            currentDateAndTime,
+                            konti!!
+                        ) // ezt 1esre kéne átírni
+                        //setProgressBarOff()
+                        //clearAll()
+                        //mainActivity.loadMenuFragment(true)
+                        Log.d(TAG, "onCreateView: lezártam amibe volt adat")
+                    }
                 } else {
-                    val code = polcTextIgeny?.text
-                    sendBinCode.setRakhelyTetel2(id1,code.toString())
-                    sendBinCode.closeContainer(
-                        1,
-                        currentDateAndTime,
-                        konti!!
-                    ) // ezt 1esre kéne átírni
-                    //setProgressBarOff()
-                    //clearAll()
-                    //mainActivity.loadMenuFragment(true)
-                    Log.d(TAG, "onCreateView: lezártam amibe volt adat")
+                    mainActivity?.setAlert("Nincsenek tételek a konténerben")
                 }
-            } else {
-                mainActivity?.setAlert("Nincsenek tételek a konténerben")
-            }
-            if(mainActivity?.isWifiConnected()!!){
-                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+                if(mainActivity?.isWifiConnected()!!){
+                    MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+                }
+            }else{
+                mainActivity?.setAlert("Nem lehet a polc üres!!!")
             }
         }
 

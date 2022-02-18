@@ -731,6 +731,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         val cikk = cikkEdit!!.text.trim().toString()
         val d = kontenerNumber!!.text.trim().toString()
         val k = kontenerIDKiszedes.text.trim().toString()
+        mennyiseg?.isEnabled = false
         CoroutineScope(IO).launch {
             CoroutineScope(Main).launch {
                 progress?.visibility = View.VISIBLE
@@ -855,6 +856,7 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     }
                     locationRecycler?.adapter?.notifyDataSetChanged()
                     lezar?.isVisible = true
+                    mennyiseg?.isEnabled = true
                 }
             }
             CoroutineScope(Main).launch {

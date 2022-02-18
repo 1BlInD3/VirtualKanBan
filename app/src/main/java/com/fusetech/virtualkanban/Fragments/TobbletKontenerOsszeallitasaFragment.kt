@@ -262,61 +262,63 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             }*/
         }
         lezarButton?.setOnClickListener {
-            if (igenyReveresed.size > 0) {
-                val polc = polcTextIgeny!!.text.trim().toString()
-                //setProgressBarOn()
-                val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
-                var a = 0
-                CoroutineScope(IO).launch {
-                    for (i in 0 until igenyReveresed.size) {
-                        isSent = false
-                        if (igenyReveresed[i].mennyiseg.toDouble() != 0.0) {
-                            async {
-                                mainActivity?.sendKihelyezesXmlData(
-                                    igenyReveresed[i].cikkszam, polc,
-                                    igenyReveresed[i].mennyiseg.toDouble(),
-                                    "01",
-                                    "21",
-                                    "BE"
-                                )
-                            }.await()
-                            if (isSent) {
-                                a++
+            if(polcTextIgeny!!.text.isNotEmpty()){
+                if (igenyReveresed.size > 0) {
+                    val polc = polcTextIgeny!!.text.trim().toString()
+                    //setProgressBarOn()
+                    val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+                    var a = 0
+                    CoroutineScope(IO).launch {
+                        for (i in 0 until igenyReveresed.size) {
+                            isSent = false
+                            if (igenyReveresed[i].mennyiseg.toDouble() != 0.0) {
+                                async {
+                                    mainActivity?.sendKihelyezesXmlData(
+                                        igenyReveresed[i].cikkszam, polc,
+                                        igenyReveresed[i].mennyiseg.toDouble(),
+                                        "01",
+                                        "21",
+                                        "BE"
+                                    )
+                                }.await()
+                                if (isSent) {
+                                    a++
+                                }
                             }
                         }
-                    }
-                    if (a == igenyReveresed.size) {
-                        Log.d(TAG, "onCreateView: $currentDateAndTime")
-                        if (polcTextIgeny!!.text.isEmpty() && igenyReveresed.size == 0) {
-                            sendBinCode2.closeContainer2(7, currentDateAndTime,id)
-                            CoroutineScope(Main).launch {
-                                //setProgressBarOff()
-                                clearAll()
-                                Log.d(TAG, "onCreateView: lezártam az üreset")
+                        if (a == igenyReveresed.size) {
+                            Log.d(TAG, "onCreateView: $currentDateAndTime")
+                            if (polcTextIgeny!!.text.isEmpty() && igenyReveresed.size == 0) {
+                                sendBinCode2.closeContainer2(7, currentDateAndTime,id)
+                                CoroutineScope(Main).launch {
+                                    //setProgressBarOff()
+                                    clearAll()
+                                    Log.d(TAG, "onCreateView: lezártam az üreset")
+                                }
+                                mainActivity?.loadMenuFragment(true)
+                            } else {
+                                val code = polcTextIgeny?.text
+                                sendBinCode2.setRakhelyTetel(id.toInt(),code.toString())
+                                sendBinCode2.closeContainer2(7, currentDateAndTime,id)
+                                CoroutineScope(Main).launch {
+                                    //setProgressBarOff()
+                                    clearAll()
+                                    Log.d(TAG, "onCreateView: lezártam amibe volt adat")
+                                }
+                                mainActivity?.loadMenuFragment(true)
                             }
-                            mainActivity?.loadMenuFragment(true)
                         } else {
-                            val code = polcTextIgeny?.text
-                            sendBinCode2.setRakhelyTetel(id.toInt(),code.toString())
-                            sendBinCode2.closeContainer2(7, currentDateAndTime,id)
                             CoroutineScope(Main).launch {
-                                //setProgressBarOff()
-                                clearAll()
-                                Log.d(TAG, "onCreateView: lezártam amibe volt adat")
+                                mainActivity?.setAlert("Nem teljes a siker, nem mindegyik cikk van lezárva")
                             }
-                            mainActivity?.loadMenuFragment(true)
-                        }
-                    } else {
-                        CoroutineScope(Main).launch {
-                            mainActivity?.setAlert("Nem teljes a siker, nem mindegyik cikk van lezárva")
                         }
                     }
+                } else {
+                    mainActivity?.setAlert("Nem vettél fel cikkeket")
                 }
-            } else {
-                mainActivity?.setAlert("Nem vettél fel cikkeket")
-            }
-            if(mainActivity?.isWifiConnected()!!){
-                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+                if(mainActivity?.isWifiConnected()!!){
+                    MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
+                }
             }
         }
         return myView

@@ -1720,7 +1720,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                                             "02",
                                             ""
                                         )
-                                        context.updateItemStatus(id.toString(), 3)
+                                        context.updateItemStatus(id.toString(), 5)
                                         context.updateItemAtvevo(id.toString())
                                         context.checkIfContainerIsDone(
                                             kontnerNumber.toString(),
@@ -1767,7 +1767,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                                             "02",
                                             ""
                                         )
-                                        context.updateItemStatus(id.toString(), 3)
+                                        context.updateItemStatus(id.toString(), 5)
                                         context.updateItemAtvevo(id.toString())
                                         context.checkIfContainerIsDone(
                                             kontnerNumber.toString(),
@@ -1860,7 +1860,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                                             "02",
                                             ""
                                         )
-                                        context.updateItemStatus(id.toString(), 3)
+                                        context.updateItemStatus(id.toString(), 5)
                                         context.updateItemAtvevo(id.toString())
                                         context.checkIfContainerIsDone(
                                             kontnerNumber.toString(),
@@ -1907,7 +1907,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                                             "02",
                                             ""
                                         )
-                                        context.updateItemStatus(id.toString(), 3)
+                                        context.updateItemStatus(id.toString(), 5)
                                         context.updateItemAtvevo(id.toString())
                                         context.checkIfContainerIsDone(
                                             kontnerNumber.toString(),
