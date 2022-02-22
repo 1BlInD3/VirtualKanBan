@@ -202,7 +202,7 @@ class MainActivity : AppCompatActivity(),
         val tempLocations: ArrayList<PolcLocation> = ArrayList()
         val tobbletKontener: ArrayList<KontenerItem> = ArrayList()
         var mainUrl = "http://10.0.1.69:8030/"
-
+        val tobbletCikkekArray: ArrayList<tobblet> = ArrayList()
         //var mainUrl = "http://10.0.2.149:8030/"
         var backupURL = "http://10.0.1.199:8030/"
         var endPoint = """"""
@@ -1125,6 +1125,14 @@ class MainActivity : AppCompatActivity(),
 
     override fun closeContainer2(statusz: Int, datum: String, kontener: String) {
         sql.closeContainerSql7(statusz, datum, this@MainActivity, kontener)
+    }
+
+    override fun itemCloseOneByOne(id: String, status: Int): Boolean {
+        return sql.closeItemByItem(id,status)
+    }
+
+    override fun getItemId(id: String) {
+        sql.getItemIdList(id)
     }
 
     fun isItem(code: String) {

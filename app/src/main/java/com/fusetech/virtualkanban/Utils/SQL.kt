@@ -26,6 +26,7 @@ import com.fusetech.virtualkanban.activities.MainActivity.Companion.dolgKod
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.emailMessage
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.path
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.sz01KiszedesDate
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.tobbletCikkekArray
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.wifiInfo
 import com.fusetech.virtualkanban.dataItems.*
 import com.fusetech.virtualkanban.fragments.*
@@ -252,6 +253,9 @@ class SQL(private val sqlMessage: SQLAlert) {
             result.setNull(1,Types.INTEGER)
             result.setString(2,kontener)
             result.executeUpdate()
+            val result1 = connection.prepareStatement("""DELETE FROM [leltar].[dbo].[kontener_tetel] WHERE kontener_id = ?""")
+            result1.setString(1,kontener)
+            result1.executeUpdate()
             connection.close()
         }catch (e: Exception){
             Log.d(TAG, "contenerJavit: ${e.stackTraceToString()}")
@@ -403,7 +407,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         }
     }
 
-    fun containerManagement7(id: String, context: MainActivity) {
+    fun containerManagement7(id: String, context: MainActivity) { //7-1
         val connection: Connection
         Class.forName("net.sourceforge.jtds.jdbc.Driver")
         try {
@@ -772,7 +776,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                 context.setAlert("Sikeres konténer lezárás!")
                 progress.visibility = View.GONE
             }
-            val statement1 =
+         /*   val statement1 =
                 connection.prepareStatement(res.getString(R.string.updateItemStatus))
             statement1.setInt(1, statusz)
             statement1.setString(2, kontener)
@@ -793,7 +797,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     progress.visibility = View.GONE
                     writeLog(e.stackTraceToString(), "arg1 $statusz arg2 $datum arg3 $kontener")
                 }
-            }
+            }*/
         } catch (e: Exception) {
             Log.d(TAG, "closeContainerSql: $e")
             CoroutineScope(Dispatchers.Main).launch {
@@ -801,6 +805,20 @@ class SQL(private val sqlMessage: SQLAlert) {
                 writeLog(e.stackTraceToString(), "arg1 $statusz arg2 $datum arg3 $kontener")
                 context.setAlert("Hiba történt a feldolgozás során")
             }
+        }
+    }
+
+    fun closeItemByItem(id: String, status: Int): Boolean {
+        val connection: Connection = DriverManager.getConnection(connectionString)
+        Class.forName("net.sourceforge.jtds.jdbc.Driver")
+        try {
+            val statement = connection.prepareStatement("""UPDATE [leltar].[dbo].[kontener_tetel] SET statusz = ? where id = ?""")
+            statement.setInt(1,status)
+            statement.setString(2,id)
+            statement.executeUpdate()
+            return true
+        }catch (e: Exception){
+            return false
         }
     }
 
@@ -1667,302 +1685,314 @@ class SQL(private val sqlMessage: SQLAlert) {
                     progress.visibility = View.GONE
                 }
             } else {
-                val listOfBin: ArrayList<PolcLocation> = ArrayList()
-                val statement1 =
-                    connection.prepareStatement(res.getString(R.string.cikkUpdate))
-                statement1.setInt(1, 2)
-                statement1.setString(2, dolgKod)
-                statement1.setInt(3, id)
-                statement1.executeUpdate()
-                val tempPolcLocations: ArrayList<PolcLocation> = ArrayList()
-                val statement6 =
-                    connection.prepareStatement(res.getString(R.string.fillArray))
-                statement6.setInt(1, id)
-                val resultSet6 = statement6.executeQuery()
-                if (!resultSet6.next()) {
-                    Log.d(TAG, "cikkAdatok: nincsenek ilyen rekordok")
-                    CoroutineScope(Dispatchers.Main).launch {
-                        progress.visibility = View.GONE
-                    }
-                } else {
-                    do {
-                        val bin = resultSet6.getString("kiado_rakhely")
-                        val sum = resultSet6.getString("mozgatott_mennyiseg")
-                        tempPolcLocations.add(PolcLocation(bin, sum))
-                    } while (resultSet6.next())
-                }
-                //ide kell hogy megnézze mi van a raktar_kontenerben
-                val statement5 =
-                    connection.prepareStatement(res.getString(R.string.raktarTetelIdeiglenes))
-                statement5.setInt(1, id)
-                val resultSet5 = statement5.executeQuery()
-                if (!resultSet5.next()) {
-                    //HA NINCS AZ ÁTMENETI ADATTÁBLÁBA ÉRTÉK
-                    val statement2 =
-                        connection.prepareStatement(res.getString(R.string.raktarCheck))
-                    statement2.setString(1, cikk)
-                    statement2.setString(2,MainActivity.fusetech)
-                    val resultSet2 = statement2.executeQuery()
-                    if (!resultSet2.next()) {
-                        val statement3 = connection.prepareStatement(res.getString(R.string.cikkSomewhere))
-                        statement3.setString(1,cikk)
-                        val resultSet3 = statement3.executeQuery()
-                        if(!resultSet3.next()){
-                            CoroutineScope(Dispatchers.Main).launch {
-                                val builder = AlertDialog.Builder(context)
-                                builder.setTitle("Nincs készleten")
-                                builder.setMessage("Nincs raktárkészleten az adott cikk, ezért ez 0 mennyiséggel lezárásra kerül.\nFolytatja?")
-                                builder.setPositiveButton("Igen") { _, _ ->
-                                    CoroutineScope(Dispatchers.IO).launch {
-                                        context.checkIfContainerIsDone(
-                                            kontnerNumber.toString(),
-                                            id.toString(),
-                                            "02",
-                                            ""
-                                        )
-                                        context.updateItemStatus(id.toString(), 5)
-                                        context.updateItemAtvevo(id.toString())
-                                        context.checkIfContainerIsDone(
-                                            kontnerNumber.toString(),
-                                            id.toString(),
-                                            "02",
-                                            ""
-                                        )
-                                        context.loadKoztes()
-                                        context.checkIfContainerStatus(kontnerNumber.toString())
-                                        context.removeFragment("NEGYESCIKKEK")
-                                    }
-                                }
-                                builder.setNegativeButton("Nem") { _, _ ->
-                                    context.hideSystemUI()
-                                }
-                                builder.setOnCancelListener {
-                                    context.hideSystemUI()
-                                }
-                                builder.create()
-                                builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
-                                //context.setAlert("Nincs készleten")
-                                progress.visibility = View.GONE
-                            }
-                        }else{
-                            var message = ""
-                            do {
-                                val balance = resultSet3.getString("BalanceQty").toDouble()
-                                val binNumber = resultSet3.getString("BinNumber")
-                                val unit1 = resultSet3.getString("Unit")
-                                message += "$balance\t$unit1\t\t$binNumber\n"
-                            }while (resultSet3.next())
-                            CoroutineScope(Dispatchers.Main).launch { //ide kell írni hogy ha nincs a készleten zárja le nullával
-                                val builder = AlertDialog.Builder(context)
-                                builder.setTitle("Nincs készleten")
-                                builder.setMessage("Nincs raktárkészleten az adott cikk, ezért ez 0 mennyiséggel lezárásra kerül.\nFolytatja?")
-                                builder.setPositiveButton("Igen") { _, _ ->
-                                    //val email = Email()
-                                    CoroutineScope(Dispatchers.IO).launch {
-                                        //email.sendEmail("KanBan@fusetech.hu","keszlet.modositas@fusetech.hu","Meghiúsult kiszolgálás","A $cikk\t$megj1\t$megj2\t$intrem\tnincs a 02 raktárban, viszont megtalálhatók: \n$message")
-                                        emailMessage += "A $cikk\t$megj1\t$megj2\t$intrem\tnincs a 02 raktárban, viszont megtalálhatók: \n$message\n"
-                                            context.checkIfContainerIsDone(
-                                            kontnerNumber.toString(),
-                                            id.toString(),
-                                            "02",
-                                            ""
-                                        )
-                                        context.updateItemStatus(id.toString(), 5)
-                                        context.updateItemAtvevo(id.toString())
-                                        context.checkIfContainerIsDone(
-                                            kontnerNumber.toString(),
-                                            id.toString(),
-                                            "02",
-                                            ""
-                                        )
-                                        context.loadKoztes()
-                                        context.checkIfContainerStatus(kontnerNumber.toString())
-                                        context.removeFragment("NEGYESCIKKEK")
-                                    }
-                                }
-                                builder.setNegativeButton("Nem") { _, _ ->
-                                    context.hideSystemUI()
-                                }
-                                builder.setOnCancelListener {
-                                    context.hideSystemUI()
-                                }
-                                builder.create()
-                                builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus()
-                                //context.setAlert("Nincs készleten")
-                                progress.visibility = View.GONE
-                            }
+                val status = resultSet.getInt("statusz")
+                if(status < 2) {
+                    val listOfBin: ArrayList<PolcLocation> = ArrayList()
+                    val statement1 =
+                        connection.prepareStatement(res.getString(R.string.cikkUpdate))
+                    statement1.setInt(1, 2)
+                    statement1.setString(2, dolgKod)
+                    statement1.setInt(3, id)
+                    statement1.executeUpdate()
+                    val tempPolcLocations: ArrayList<PolcLocation> = ArrayList()
+                    val statement6 =
+                        connection.prepareStatement(res.getString(R.string.fillArray))
+                    statement6.setInt(1, id)
+                    val resultSet6 = statement6.executeQuery()
+                    if (!resultSet6.next()) {
+                        Log.d(TAG, "cikkAdatok: nincsenek ilyen rekordok")
+                        CoroutineScope(Dispatchers.Main).launch {
+                            progress.visibility = View.GONE
                         }
+                    } else {
+                        do {
+                            val bin = resultSet6.getString("kiado_rakhely")
+                            val sum = resultSet6.getString("mozgatott_mennyiseg")
+                            tempPolcLocations.add(PolcLocation(bin, sum))
+                        } while (resultSet6.next())
+                    }
+                    //ide kell hogy megnézze mi van a raktar_kontenerben
+                    val statement5 =
+                        connection.prepareStatement(res.getString(R.string.raktarTetelIdeiglenes))
+                    statement5.setInt(1, id)
+                    val resultSet5 = statement5.executeQuery()
+                    if (!resultSet5.next()) {
+                        //HA NINCS AZ ÁTMENETI ADATTÁBLÁBA ÉRTÉK
+                        val statement2 =
+                            connection.prepareStatement(res.getString(R.string.raktarCheck))
+                        statement2.setString(1, cikk)
+                        statement2.setString(2, MainActivity.fusetech)
+                        val resultSet2 = statement2.executeQuery()
+                        if (!resultSet2.next()) {
+                            val statement3 =
+                                connection.prepareStatement(res.getString(R.string.cikkSomewhere))
+                            statement3.setString(1, cikk)
+                            val resultSet3 = statement3.executeQuery()
+                            if (!resultSet3.next()) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    val builder = AlertDialog.Builder(context)
+                                    builder.setTitle("Nincs készleten")
+                                    builder.setMessage("Nincs raktárkészleten az adott cikk, ezért ez 0 mennyiséggel lezárásra kerül.\nFolytatja?")
+                                    builder.setPositiveButton("Igen") { _, _ ->
+                                        CoroutineScope(Dispatchers.IO).launch {
+                                            context.checkIfContainerIsDone(
+                                                kontnerNumber.toString(),
+                                                id.toString(),
+                                                "02",
+                                                ""
+                                            )
+                                            context.updateItemStatus(id.toString(), 5)
+                                            context.updateItemAtvevo(id.toString())
+                                            context.checkIfContainerIsDone(
+                                                kontnerNumber.toString(),
+                                                id.toString(),
+                                                "02",
+                                                ""
+                                            )
+                                            context.loadKoztes()
+                                            context.checkIfContainerStatus(kontnerNumber.toString())
+                                            context.removeFragment("NEGYESCIKKEK")
+                                        }
+                                    }
+                                    builder.setNegativeButton("Nem") { _, _ ->
+                                        context.hideSystemUI()
+                                    }
+                                    builder.setOnCancelListener {
+                                        context.hideSystemUI()
+                                    }
+                                    builder.create()
+                                    builder.show().getButton(DialogInterface.BUTTON_POSITIVE)
+                                        .requestFocus()
+                                    //context.setAlert("Nincs készleten")
+                                    progress.visibility = View.GONE
+                                }
+                            } else {
+                                var message = ""
+                                do {
+                                    val balance = resultSet3.getString("BalanceQty").toDouble()
+                                    val binNumber = resultSet3.getString("BinNumber")
+                                    val unit1 = resultSet3.getString("Unit")
+                                    message += "$balance\t$unit1\t\t$binNumber\n"
+                                } while (resultSet3.next())
+                                CoroutineScope(Dispatchers.Main).launch { //ide kell írni hogy ha nincs a készleten zárja le nullával
+                                    val builder = AlertDialog.Builder(context)
+                                    builder.setTitle("Nincs készleten")
+                                    builder.setMessage("Nincs raktárkészleten az adott cikk, ezért ez 0 mennyiséggel lezárásra kerül.\nFolytatja?")
+                                    builder.setPositiveButton("Igen") { _, _ ->
+                                        //val email = Email()
+                                        CoroutineScope(Dispatchers.IO).launch {
+                                            //email.sendEmail("KanBan@fusetech.hu","keszlet.modositas@fusetech.hu","Meghiúsult kiszolgálás","A $cikk\t$megj1\t$megj2\t$intrem\tnincs a 02 raktárban, viszont megtalálhatók: \n$message")
+                                            emailMessage += "A $cikk\t$megj1\t$megj2\t$intrem\tnincs a 02 raktárban, viszont megtalálhatók: \n$message\n"
+                                            context.checkIfContainerIsDone(
+                                                kontnerNumber.toString(),
+                                                id.toString(),
+                                                "02",
+                                                ""
+                                            )
+                                            context.updateItemStatus(id.toString(), 5)
+                                            context.updateItemAtvevo(id.toString())
+                                            context.checkIfContainerIsDone(
+                                                kontnerNumber.toString(),
+                                                id.toString(),
+                                                "02",
+                                                ""
+                                            )
+                                            context.loadKoztes()
+                                            context.checkIfContainerStatus(kontnerNumber.toString())
+                                            context.removeFragment("NEGYESCIKKEK")
+                                        }
+                                    }
+                                    builder.setNegativeButton("Nem") { _, _ ->
+                                        context.hideSystemUI()
+                                    }
+                                    builder.setOnCancelListener {
+                                        context.hideSystemUI()
+                                    }
+                                    builder.create()
+                                    builder.show().getButton(DialogInterface.BUTTON_POSITIVE)
+                                        .requestFocus()
+                                    //context.setAlert("Nincs készleten")
+                                    progress.visibility = View.GONE
+                                }
+                            }
 
+                        } else {
+                            context.igenyKontenerKiszedesCikkKiszedes =
+                                IgenyKontenerKiszedesCikkKiszedes()
+                            val myList: ArrayList<PolcLocation> = ArrayList()
+                            do {
+                                val polc = resultSet2.getString("BinNumber")
+                                val mennyiseg = resultSet2.getDouble("BalanceQty").toString()
+                                myList.add(PolcLocation(polc, mennyiseg))
+                            } while (resultSet2.next())
+                            val bundle = Bundle()
+                            bundle.putString("K_CIKK", cikk)
+                            bundle.putString("K_MEGJ1", megj1)
+                            bundle.putString("K_MEGJ2", megj2)
+                            bundle.putString("K_INT", intrem)
+                            bundle.putDouble("K_IGENY", igeny)
+                            bundle.putString("K_UNIT", unit)
+                            bundle.putInt("K_KONTENER", kontnerNumber)
+                            bundle.putInt("K_ID", id)
+                            bundle.putSerializable("K_LIST", myList)
+                            bundle.putSerializable("K_POLC", listOfBin)
+                            bundle.putSerializable("K_TOMB", tempPolcLocations)
+                            context.igenyKontenerKiszedesCikkKiszedes?.arguments = bundle
+                            context.supportFragmentManager.beginTransaction().replace(
+                                R.id.frame_container,
+                                context.igenyKontenerKiszedesCikkKiszedes!!,
+                                "KISZEDESCIKK"
+                            ).commit()
+                        }
+                        CoroutineScope(Dispatchers.Main).launch {
+                            progress.visibility = View.GONE
+                        }
                     } else {
                         context.igenyKontenerKiszedesCikkKiszedes =
                             IgenyKontenerKiszedesCikkKiszedes()
-                        val myList: ArrayList<PolcLocation> = ArrayList()
+                        //HA VAN AZ ÁTMENETI ADATTÁBLÁBA ÉRTÉK
+                        var a = 0.0
                         do {
-                            val polc = resultSet2.getString("BinNumber")
-                            val mennyiseg = resultSet2.getDouble("BalanceQty").toString()
-                            myList.add(PolcLocation(polc, mennyiseg))
-                        } while (resultSet2.next())
-                        val bundle = Bundle()
-                        bundle.putString("K_CIKK", cikk)
-                        bundle.putString("K_MEGJ1", megj1)
-                        bundle.putString("K_MEGJ2", megj2)
-                        bundle.putString("K_INT", intrem)
-                        bundle.putDouble("K_IGENY", igeny)
-                        bundle.putString("K_UNIT", unit)
-                        bundle.putInt("K_KONTENER", kontnerNumber)
-                        bundle.putInt("K_ID", id)
-                        bundle.putSerializable("K_LIST", myList)
-                        bundle.putSerializable("K_POLC", listOfBin)
-                        bundle.putSerializable("K_TOMB", tempPolcLocations)
-                        context.igenyKontenerKiszedesCikkKiszedes?.arguments = bundle
-                        context.supportFragmentManager.beginTransaction().replace(
-                            R.id.frame_container,
-                            context.igenyKontenerKiszedesCikkKiszedes!!,
-                            "KISZEDESCIKK"
-                        ).commit()
+                            a += resultSet5.getDouble("mozgatott_mennyiseg")
+                            listOfBin.add(
+                                PolcLocation(
+                                    resultSet5.getString("kiado_rakhely"),
+                                    resultSet5.getDouble("mozgatott_mennyiseg").toString()
+                                )
+                            )
+                        } while (resultSet5.next())
+                        val ujIgeny = igeny - a
+                        val statement2 =
+                            connection.prepareStatement(res.getString(R.string.raktarCheck))
+                        statement2.setString(1, cikk)
+                        statement2.setString(2, MainActivity.fusetech)
+                        val resultSet2 = statement2.executeQuery()
+                        if (!resultSet2.next()) {
+                            val statement3 =
+                                connection.prepareStatement(res.getString(R.string.cikkSomewhere))
+                            statement3.setString(1, cikk)
+                            val resultSet3 = statement3.executeQuery()
+                            if (!resultSet3.next()) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    val builder = AlertDialog.Builder(context)
+                                    builder.setTitle("Nincs készleten")
+                                    builder.setMessage("Nincs raktárkészleten az adott cikk, ezért ez 0 mennyiséggel lezárásra kerül.\nFolytatja?")
+                                    builder.setPositiveButton("Igen") { _, _ ->
+                                        CoroutineScope(Dispatchers.IO).launch {
+                                            context.checkIfContainerIsDone(
+                                                kontnerNumber.toString(),
+                                                id.toString(),
+                                                "02",
+                                                ""
+                                            )
+                                            context.updateItemStatus(id.toString(), 5)
+                                            context.updateItemAtvevo(id.toString())
+                                            context.checkIfContainerIsDone(
+                                                kontnerNumber.toString(),
+                                                id.toString(),
+                                                "02",
+                                                ""
+                                            )
+                                            context.loadKoztes()
+                                            context.checkIfContainerStatus(kontnerNumber.toString())
+                                            context.removeFragment("NEGYESCIKKEK")
+                                        }
+                                        builder.setNegativeButton("Nem") { _, _ ->
+                                            context.hideSystemUI()
+                                        }
+                                        builder.setOnCancelListener {
+                                            context.hideSystemUI()
+                                        }
+                                        builder.create()
+                                        builder.show().getButton(DialogInterface.BUTTON_POSITIVE)
+                                            .requestFocus()
+                                    } // ide kell írni hogy zárja le nullával automatikusan
+                                    progress.visibility = View.GONE
+                                }
+                            } else {
+                                var message = ""
+                                do {
+                                    val balance = resultSet3.getString("BalanceQty").toDouble()
+                                    val binNumber = resultSet3.getString("BinNumber")
+                                    val unit1 = resultSet3.getString("Unit")
+                                    message += "$balance\t$unit1\t\t$binNumber\n"
+                                } while (resultSet3.next())
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    val builder = AlertDialog.Builder(context)
+                                    builder.setTitle("Nincs készleten")
+                                    builder.setMessage("Nincs raktárkészleten az adott cikk, ezért ez 0 mennyiséggel lezárásra kerül.\nFolytatja?")
+                                    builder.setPositiveButton("Igen") { _, _ ->
+                                        //    val email = Email()
+                                        CoroutineScope(Dispatchers.IO).launch {
+                                            emailMessage += "A $cikk\t$megj1\t$megj2\t$intrem\tnincs a 02 raktárban, viszont megtalálhatók: \n$message\n"
+                                            // email.sendEmail("KanBan@fusetech.hu","keszlet.modositas@fusetech.hu","Meghiúsult kiszolgálás","A $cikk\t$megj1\t$megj2\t$intrem\tnincs a 02 raktárban, viszont megtalálhatók: \n$message")
+                                            context.checkIfContainerIsDone(
+                                                kontnerNumber.toString(),
+                                                id.toString(),
+                                                "02",
+                                                ""
+                                            )
+                                            context.updateItemStatus(id.toString(), 5)
+                                            context.updateItemAtvevo(id.toString())
+                                            context.checkIfContainerIsDone(
+                                                kontnerNumber.toString(),
+                                                id.toString(),
+                                                "02",
+                                                ""
+                                            )
+                                            context.loadKoztes()
+                                            context.checkIfContainerStatus(kontnerNumber.toString())
+                                            context.removeFragment("NEGYESCIKKEK")
+                                        }
+                                        builder.setNegativeButton("Nem") { _, _ ->
+                                            context.hideSystemUI()
+                                        }
+                                        builder.setOnCancelListener {
+                                            context.hideSystemUI()
+                                        }
+                                        builder.create()
+                                        builder.show().getButton(DialogInterface.BUTTON_POSITIVE)
+                                            .requestFocus()
+                                    } // ide kell írni hogy zárja le nullával automatikusan
+                                    progress.visibility = View.GONE
+                                }
+                            }
+                        } else {
+                            val myList: ArrayList<PolcLocation> = ArrayList()
+                            do {
+                                val polc = resultSet2.getString("BinNumber")
+                                val mennyiseg = resultSet2.getDouble("BalanceQty").toString()
+                                myList.add(PolcLocation(polc, mennyiseg))
+                            } while (resultSet2.next())
+                            val bundle = Bundle()
+                            bundle.putString("K_CIKK", cikk)
+                            bundle.putString("K_MEGJ1", megj1)
+                            bundle.putString("K_MEGJ2", megj2)
+                            bundle.putString("K_INT", intrem)
+                            bundle.putDouble("K_IGENY", ujIgeny)
+                            bundle.putString("K_UNIT", unit)
+                            bundle.putInt("K_KONTENER", kontnerNumber)
+                            bundle.putInt("K_ID", id)
+                            bundle.putSerializable("K_LIST", myList)
+                            bundle.putSerializable("K_POLC", listOfBin)
+                            bundle.putSerializable("K_TOMB", tempPolcLocations)
+                            context.igenyKontenerKiszedesCikkKiszedes?.arguments = bundle
+                            context.supportFragmentManager.beginTransaction().replace(
+                                R.id.frame_container,
+                                context.igenyKontenerKiszedesCikkKiszedes!!,
+                                "KISZEDESCIKK"
+                            ).commit()
+                        }
                     }
                     CoroutineScope(Dispatchers.Main).launch {
                         progress.visibility = View.GONE
                     }
-                } else {
-                    context.igenyKontenerKiszedesCikkKiszedes = IgenyKontenerKiszedesCikkKiszedes()
-                    //HA VAN AZ ÁTMENETI ADATTÁBLÁBA ÉRTÉK
-                    var a = 0.0
-                    do {
-                        a += resultSet5.getDouble("mozgatott_mennyiseg")
-                        listOfBin.add(
-                            PolcLocation(
-                                resultSet5.getString("kiado_rakhely"),
-                                resultSet5.getDouble("mozgatott_mennyiseg").toString()
-                            )
-                        )
-                    } while (resultSet5.next())
-                    val ujIgeny = igeny - a
-                    val statement2 =
-                        connection.prepareStatement(res.getString(R.string.raktarCheck))
-                    statement2.setString(1, cikk)
-                    statement2.setString(2,MainActivity.fusetech)
-                    val resultSet2 = statement2.executeQuery()
-                    if (!resultSet2.next()) {
-                        val statement3 = connection.prepareStatement(res.getString(R.string.cikkSomewhere))
-                        statement3.setString(1,cikk)
-                        val resultSet3 = statement3.executeQuery()
-                        if(!resultSet3.next()){
-                            CoroutineScope(Dispatchers.Main).launch {
-                                val builder = AlertDialog.Builder(context)
-                                builder.setTitle("Nincs készleten")
-                                builder.setMessage("Nincs raktárkészleten az adott cikk, ezért ez 0 mennyiséggel lezárásra kerül.\nFolytatja?")
-                                builder.setPositiveButton("Igen") { _, _ ->
-                                    CoroutineScope(Dispatchers.IO).launch {
-                                        context.checkIfContainerIsDone(
-                                            kontnerNumber.toString(),
-                                            id.toString(),
-                                            "02",
-                                            ""
-                                        )
-                                        context.updateItemStatus(id.toString(), 5)
-                                        context.updateItemAtvevo(id.toString())
-                                        context.checkIfContainerIsDone(
-                                            kontnerNumber.toString(),
-                                            id.toString(),
-                                            "02",
-                                            ""
-                                        )
-                                        context.loadKoztes()
-                                        context.checkIfContainerStatus(kontnerNumber.toString())
-                                        context.removeFragment("NEGYESCIKKEK")
-                                    }
-                                    builder.setNegativeButton("Nem") { _, _ ->
-                                        context.hideSystemUI()
-                                    }
-                                    builder.setOnCancelListener {
-                                       context.hideSystemUI()
-                                    }
-                                    builder.create()
-                                    builder.show().getButton(DialogInterface.BUTTON_POSITIVE)
-                                        .requestFocus()
-                                } // ide kell írni hogy zárja le nullával automatikusan
-                                progress.visibility = View.GONE
-                            }
-                        }else {
-                            var message = ""
-                            do {
-                                val balance = resultSet3.getString("BalanceQty").toDouble()
-                                val binNumber = resultSet3.getString("BinNumber")
-                                val unit1 = resultSet3.getString("Unit")
-                                message += "$balance\t$unit1\t\t$binNumber\n"
-                            } while (resultSet3.next())
-                            CoroutineScope(Dispatchers.Main).launch {
-                                val builder = AlertDialog.Builder(context)
-                                builder.setTitle("Nincs készleten")
-                                builder.setMessage("Nincs raktárkészleten az adott cikk, ezért ez 0 mennyiséggel lezárásra kerül.\nFolytatja?")
-                                builder.setPositiveButton("Igen") { _, _ ->
-                                //    val email = Email()
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    emailMessage += "A $cikk\t$megj1\t$megj2\t$intrem\tnincs a 02 raktárban, viszont megtalálhatók: \n$message\n"
-                                   // email.sendEmail("KanBan@fusetech.hu","keszlet.modositas@fusetech.hu","Meghiúsult kiszolgálás","A $cikk\t$megj1\t$megj2\t$intrem\tnincs a 02 raktárban, viszont megtalálhatók: \n$message")
-                                    context.checkIfContainerIsDone(
-                                            kontnerNumber.toString(),
-                                            id.toString(),
-                                            "02",
-                                            ""
-                                        )
-                                        context.updateItemStatus(id.toString(), 5)
-                                        context.updateItemAtvevo(id.toString())
-                                        context.checkIfContainerIsDone(
-                                            kontnerNumber.toString(),
-                                            id.toString(),
-                                            "02",
-                                            ""
-                                        )
-                                        context.loadKoztes()
-                                        context.checkIfContainerStatus(kontnerNumber.toString())
-                                        context.removeFragment("NEGYESCIKKEK")
-                                    }
-                                    builder.setNegativeButton("Nem") { _, _ ->
-                                        context.hideSystemUI()
-                                    }
-                                    builder.setOnCancelListener {
-                                        context.hideSystemUI()
-                                    }
-                                    builder.create()
-                                    builder.show().getButton(DialogInterface.BUTTON_POSITIVE)
-                                        .requestFocus()
-                                } // ide kell írni hogy zárja le nullával automatikusan
-                                progress.visibility = View.GONE
-                            }
-                        }
-                    } else {
-                        val myList: ArrayList<PolcLocation> = ArrayList()
-                        do {
-                            val polc = resultSet2.getString("BinNumber")
-                            val mennyiseg = resultSet2.getDouble("BalanceQty").toString()
-                            myList.add(PolcLocation(polc, mennyiseg))
-                        } while (resultSet2.next())
-                        val bundle = Bundle()
-                        bundle.putString("K_CIKK", cikk)
-                        bundle.putString("K_MEGJ1", megj1)
-                        bundle.putString("K_MEGJ2", megj2)
-                        bundle.putString("K_INT", intrem)
-                        bundle.putDouble("K_IGENY", ujIgeny)
-                        bundle.putString("K_UNIT", unit)
-                        bundle.putInt("K_KONTENER", kontnerNumber)
-                        bundle.putInt("K_ID", id)
-                        bundle.putSerializable("K_LIST", myList)
-                        bundle.putSerializable("K_POLC", listOfBin)
-                        bundle.putSerializable("K_TOMB", tempPolcLocations)
-                        context.igenyKontenerKiszedesCikkKiszedes?.arguments = bundle
-                        context.supportFragmentManager.beginTransaction().replace(
-                            R.id.frame_container,
-                            context.igenyKontenerKiszedesCikkKiszedes!!,
-                            "KISZEDESCIKK"
-                        ).commit()
+                }else{
+                    CoroutineScope(Dispatchers.Main).launch {
+                        context.setAlert("Valaki már fogja a cikket")
                     }
                 }
-                CoroutineScope(Dispatchers.Main).launch {
-                    progress.visibility = View.GONE
-                }
-            }
+            }////////////////////////////////////////////ez az else bezáró kell nekem
             connection.close()
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
@@ -2794,6 +2824,30 @@ class SQL(private val sqlMessage: SQLAlert) {
         }
     }
 
+    fun getItemIdList(id: String) {
+        try{
+            tobbletCikkekArray.clear()
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            val connection = DriverManager.getConnection(url)
+            val statement = connection.prepareStatement("""SELECT [id],[cikkszam],[igenyelt_mennyiseg],[termeles_rakhely] FROM [leltar].[dbo].[kontener_tetel] WHERE kontener_id = ? AND statusz = 6 ORDER BY id desc""")
+            statement.setString(1,id)
+            val resultSet = statement.executeQuery()
+            if(!resultSet.next()){
+                Log.d(TAG, "getItemIdList: nem jó")
+            }else{
+                do{
+                    val id1 = resultSet.getString("id")
+                    val cikk = resultSet.getString("cikkszam")
+                    val mennyiseg = resultSet.getDouble("igenyelt_mennyiseg")
+                    val hely = resultSet.getString("termeles_rakhely")
+                    tobbletCikkekArray.add(tobblet(id1,cikk,hely,mennyiseg))
+                }while (resultSet.next())
+            }
+        }catch (e: Exception){
+            Log.d(TAG, "getItemIdList: $e")
+        }
+    }
+
     fun checkBinIn02(code: String, context: MainActivity) {
         try {
             CoroutineScope(Dispatchers.Main).launch {
@@ -2916,4 +2970,5 @@ class SQL(private val sqlMessage: SQLAlert) {
                 """.trimMargin()
         )
     }
+
 }

@@ -20,7 +20,9 @@ import com.fusetech.virtualkanban.activities.MainActivity
 import com.fusetech.virtualkanban.adapters.IgenyItemAdapter
 import com.fusetech.virtualkanban.dataItems.IgenyItem
 import com.fusetech.virtualkanban.R
+import com.fusetech.virtualkanban.activities.MainActivity.Companion.tobbletCikkekArray
 import kotlinx.android.synthetic.main.fragment_tobblet_kontener_osszeallitasa.view.*
+import kotlinx.android.synthetic.main.polc_view_2.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -66,11 +68,13 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             mennyiseg: Double,
             term_rakhely: String,
             unit: String,
-            kontener: String
+            kontener: String,
         )
         fun setJavit(kontener: String)
         fun setRakhelyTetel(kontener: Int,code: String)
         fun closeContainer2(statusz: Int, datum: String, kontener: String)
+        fun itemCloseOneByOne(id: String, status: Int): Boolean
+        fun getItemId(id: String)
     }
 
     @SuppressLint("SimpleDateFormat", "NotifyDataSetChanged")
@@ -160,6 +164,10 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
             val kontener = kontenerText?.text
             if(kontener != ""){
                 sendBinCode2.setJavit(kontener.toString())
+                igenyList.clear()
+                igenyReveresed.clear()
+                cikkItem_igeny?.setText("")
+                recyclerView?.adapter?.notifyDataSetChanged()
                 polcTextIgeny?.requestFocus()
             }
             polcTextIgeny?.setText("")
@@ -268,25 +276,33 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                     //setProgressBarOn()
                     val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
                     var a = 0
+                    var b = 0
                     CoroutineScope(IO).launch {
-                        for (i in 0 until igenyReveresed.size) {
-                            isSent = false
-                            if (igenyReveresed[i].mennyiseg.toDouble() != 0.0) {
-                                async {
-                                    mainActivity?.sendKihelyezesXmlData(
-                                        igenyReveresed[i].cikkszam, polc,
-                                        igenyReveresed[i].mennyiseg.toDouble(),
-                                        "01",
-                                        "21",
-                                        "BE"
-                                    )
-                                }.await()
-                                if (isSent) {
-                                    a++
+                        sendBinCode2.getItemId(id)
+                        if(tobbletCikkekArray.size>0){
+                            for (i in 0 until tobbletCikkekArray.size) {
+                                isSent = false
+                                if (tobbletCikkekArray[i].mennyiseg.toDouble() != 0.0) {
+                                    b++
+                                    async {
+                                        mainActivity?.sendKihelyezesXmlData(
+                                            tobbletCikkekArray[i].cikk,
+                                            polc,
+                                            tobbletCikkekArray[i].mennyiseg.toDouble(),
+                                            "01",
+                                            "21",
+                                            "BE"
+                                        )
+                                    }.await()
+                                    if (isSent) {
+                                        if(sendBinCode2.itemCloseOneByOne(tobbletCikkekArray[i].id,7)){
+                                            a++
+                                        }
+                                    }
                                 }
                             }
                         }
-                        if (a == igenyReveresed.size) {
+                        if (a == b) {
                             Log.d(TAG, "onCreateView: $currentDateAndTime")
                             if (polcTextIgeny!!.text.isEmpty() && igenyReveresed.size == 0) {
                                 sendBinCode2.closeContainer2(7, currentDateAndTime,id)
@@ -309,7 +325,9 @@ class TobbletKontenerOsszeallitasaFragment : Fragment(), IgenyItemAdapter.IgenyI
                             }
                         } else {
                             CoroutineScope(Main).launch {
-                                mainActivity?.setAlert("Nem teljes a siker, nem mindegyik cikk van lezárva")
+                                clearAll()
+                                mainActivity?.loadMenuFragment(true)
+                                mainActivity?.setAlert("Nem teljes a siker, nem mindegyik cikk van lezárva, nem lehet a konténert lezárni, lépj be megint")
                             }
                         }
                     }
