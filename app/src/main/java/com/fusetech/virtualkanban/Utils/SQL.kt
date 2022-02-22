@@ -1987,7 +1987,7 @@ class SQL(private val sqlMessage: SQLAlert) {
                     CoroutineScope(Dispatchers.Main).launch {
                         progress.visibility = View.GONE
                     }
-                }else{
+               }else{
                     CoroutineScope(Dispatchers.Main).launch {
                         context.setAlert("Valaki már fogja a cikket")
                     }
