@@ -2431,7 +2431,7 @@ class SQL(private val sqlMessage: SQLAlert) {
         }
     }
 
-    fun closeCikkek(code: Int, context: MainActivity) {
+    fun closeCikkek(code: Int, context: MainActivity): Boolean {
         try {
             CoroutineScope(Dispatchers.Main).launch {
                 progress.visibility = View.VISIBLE
@@ -2445,12 +2445,14 @@ class SQL(private val sqlMessage: SQLAlert) {
                 progress.visibility = View.GONE
             }
             connection.close()
+            return true
         } catch (e: Exception) {
             CoroutineScope(Dispatchers.Main).launch {
                 context.setAlert("Probléma a cikkek lezárásánál")
                 progress.visibility = View.GONE
                 writeLog(e.stackTraceToString(), "arg1 $code")
             }
+            return false
         }
     }
 

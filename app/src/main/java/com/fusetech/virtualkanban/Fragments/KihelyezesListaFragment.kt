@@ -21,6 +21,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import com.fusetech.virtualkanban.fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.sz0x
+import kotlinx.coroutines.Dispatchers.Main
 import java.lang.Exception
 
 private const val ARG_PARAM1 = "param1"
@@ -67,10 +68,12 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
             mainActivity?.kihelyezes?.progressBarOn()
             try {
                 var a = 0
+                var b = 0
                 CoroutineScope(IO).launch {
                     for (i in 0 until myList.size) {
                         isSent = false
                         if (myList[i].kiadva != 0) {
+                            b++
                             async {
                                 mainActivity?.sendKihelyezesXmlData(
                                     myList[i].vonalkod,
@@ -82,14 +85,15 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
                                 )
                             }.await()
                             if (isSent) {
-                                mainActivity?.updateCikkAfterSend(myList[i].id)
-                                a++
+                                if(mainActivity!!.updateCikkAfterSend(myList[i].id)){
+                                    a++
+                                }
                             }
-                        }else{
+                        }/*else{
                             a++
-                        }
+                        }*/
                     }
-                    if (a == myList.size) {
+                    if (a == b) {
                         val kontenerList: ArrayList<String> = ArrayList()
                         for(i in 0 until myList.size){
                            kontenerList.add(myList[i].kontenerID.toString())
@@ -101,6 +105,11 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
                         }
                         mainActivity?.checkCloseContainer()
                         Log.d(TAG, "Minden cikk lefutott")
+                    }else{
+                        mainActivity?.checkCloseContainer()
+                        CoroutineScope(Main).launch {
+                            mainActivity?.setAlert("Maradt tétel a konténerbe, lépj bele megint")
+                        }
                     }
                 }
             } catch (e: Exception) {

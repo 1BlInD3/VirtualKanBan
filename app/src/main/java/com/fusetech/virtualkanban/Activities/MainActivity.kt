@@ -1311,8 +1311,8 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    fun updateCikkAfterSend(code: Int) {
-        sql.closeCikkek(code, this@MainActivity)
+    fun updateCikkAfterSend(code: Int): Boolean {
+       return sql.closeCikkek(code, this@MainActivity)
     }
 
     fun closeItem(code: String) {
