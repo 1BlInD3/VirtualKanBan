@@ -1686,7 +1686,8 @@ class SQL(private val sqlMessage: SQLAlert) {
                 }
             } else {
                 val status = resultSet.getInt("statusz")
-                if(status < 2) {
+                val atvevo: String? = resultSet.getString("atvevo")
+                if((atvevo?.trim() == dolgKod.trim() && status == 2) || status < 2) {
                     val listOfBin: ArrayList<PolcLocation> = ArrayList()
                     val statement1 =
                         connection.prepareStatement(res.getString(R.string.cikkUpdate))

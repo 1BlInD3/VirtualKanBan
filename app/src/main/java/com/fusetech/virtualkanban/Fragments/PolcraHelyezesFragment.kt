@@ -103,6 +103,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
 
         ujCikk?.setOnClickListener {
             cikkText?.setText("")
+            cikkText?.isEnabled = true
             mennyisegText?.setText("")
             tranzitQtyText?.text = ""
             megjegyzes1Text?.text = ""
@@ -123,6 +124,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
         cikkText?.setOnClickListener {
             if (cikkText?.text?.isNotBlank()!!) {
                 cikkText?.selectAll()
+                cikkText?.isEnabled = false
                 CoroutineScope(IO).launch {
                     sendCode?.sendCode(cikkText?.text?.trim().toString())
                     addSTD02()
@@ -449,6 +451,7 @@ class PolcraHelyezesFragment : Fragment(), PolcLocationAdapter.PolcItemClickList
     }
 
     fun setCikkNumberBack() {
+        cikkText?.isEnabled = true
         cikkText?.setText("")
         cikkText?.requestFocus()
     }

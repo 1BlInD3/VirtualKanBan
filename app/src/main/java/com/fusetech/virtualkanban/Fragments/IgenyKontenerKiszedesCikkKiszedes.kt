@@ -271,11 +271,15 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                                         mennyiseg?.isEnabled = true
                                     }
                                 } catch (e: Exception) {
-                                    mainActivity?.setAlert("HIánynál fellépett a probléma\n $e")
+                                    CoroutineScope(Main).launch {
+                                        mainActivity?.setAlert("HIánynál fellépett a probléma\n $e")
+                                    }
                                 }
 
                             } else {
-                                mainActivity?.setAlert("Nem sikerült a nevet megszereezni")
+                                CoroutineScope(Main).launch {
+                                    mainActivity?.setAlert("Nem sikerült a nevet megszereezni")
+                                }
                             }
                         }
                         mainActivity?.hideSystemUI()
@@ -731,7 +735,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         val cikk = cikkEdit!!.text.trim().toString()
         val d = kontenerNumber!!.text.trim().toString()
         val k = kontenerIDKiszedes.text.trim().toString()
-        mennyiseg?.isEnabled = false
+        CoroutineScope(Main).launch {
+            mennyiseg?.isEnabled = false
+        }
         CoroutineScope(IO).launch {
             CoroutineScope(Main).launch {
                 progress?.visibility = View.VISIBLE
