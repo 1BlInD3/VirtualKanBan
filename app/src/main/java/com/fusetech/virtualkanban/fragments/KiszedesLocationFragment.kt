@@ -1,0 +1,49 @@
+package com.fusetech.virtualkanban.fragments
+
+import android.os.Bundle
+import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.fusetech.virtualkanban.adapters.PolcLocationAdapter
+import com.fusetech.virtualkanban.dataItems.PolcLocation
+import com.fusetech.virtualkanban.R
+
+class KiszedesLocationFragment : Fragment(), PolcLocationAdapter.PolcItemClickListener {
+
+    private val myLocations: ArrayList<PolcLocation> = ArrayList()
+    private lateinit var recycler: RecyclerView
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_polc_location, container, false)
+        val child = layoutInflater.inflate(R.layout.polc_location_header,null)
+        val frameLayout: FrameLayout = view.findViewById(R.id.myFrameLayout)
+        frameLayout.addView(child)
+        recycler = view.findViewById(R.id.polcRecycler)
+        recycler.adapter = PolcLocationAdapter(myLocations,this)
+        recycler.layoutManager = LinearLayoutManager(view.context)
+        recycler.setHasFixedSize(true)
+        loadData()
+        recycler.adapter?.notifyDataSetChanged()
+        return view
+    }
+
+    private fun loadData(){
+        myLocations.clear()
+        val myLocationList: ArrayList<PolcLocation> = arguments?.getSerializable("K_LOCATION") as ArrayList<PolcLocation>
+        for(i in 0 until myLocationList.size){
+            myLocations.add(PolcLocation(myLocationList[i].polc,myLocationList[i].mennyiseg))
+        }
+    }
+
+    override fun polcItemClick(position: Int) {
+        Log.d("KiszedesLocationFragment", "polcItemClick: ")
+    }
+}
