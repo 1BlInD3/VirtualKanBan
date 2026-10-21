@@ -314,7 +314,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                     polc?.requestFocus()
                     bejelentes?.visibility = View.GONE
                 }
-            } else if (mennyiseg?.text?.trim().toString().isNotEmpty() && mennyiseg?.text?.trim().toString().toDouble() == 0.0) {
+            } else if (mennyiseg?.text?.trim().toString().isNotEmpty() && mennyiseg?.text?.trim()
+                    .toString().toDouble() == 0.0
+            ) {
                 val builder = AlertDialog.Builder(myView?.context!!)
                 builder.setTitle("Üres polc?")
                 builder.setMessage("A ${polc?.text?.trim()} polc valóban üres?")
@@ -324,7 +326,9 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
                             "KanBan@mersen.com",
                             "ml_keszlet-modositas.kpv@mersen.com",
                             "Üres polc bejelentés",
-                            "A ${polc?.text?.trim()} elvileg üres. A Scala szerint a ${cikkEdit?.text.toString().trim()} cikkből ${
+                            "A ${polc?.text?.trim()} elvileg üres. A Scala szerint a ${
+                                cikkEdit?.text.toString().trim()
+                            } cikkből ${
                                 getPolcValue(polc?.text?.trim().toString())
                             } ${unit?.text?.trim()} van rajta "
                         )
@@ -504,20 +508,22 @@ class IgenyKontenerKiszedesCikkKiszedes : Fragment(), PolcLocationAdapter.PolcIt
         val cikk = cikkEdit?.text.toString().trim()
         val unity = unit!!.text.trim()
         Log.d(TAG, "polcItemClick: MEGNYOMTAM")
-        if(cikkEdit?.text.toString().isNotEmpty() && polc?.text.toString().trim().isNotEmpty()){
+        if (cikkEdit?.text.toString().isNotEmpty() && polc?.text.toString().trim().isNotEmpty()) {
             val builder = AlertDialog.Builder(myView!!.context)
             builder.setTitle("Figyelem")
             builder.setMessage("A $cikk cikk nincs a $bin polcon?")
-            builder.setPositiveButton("Igen"){_,_ ->
+            builder.setPositiveButton("Igen") { _, _ ->
                 CoroutineScope(IO).launch {
-                    email.sendEmail("KanBan@mersen.com",
+                    email.sendEmail(
+                        "KanBan@mersen.com",
                         "ml_keszlet-modositas.kpv@mersen.com",
                         "Készletkorrekció",
-                        "A $bin polcon a $cikk cikk $qty $unity nem található")
+                        "A $bin polcon a $cikk cikk $qty $unity nem található"
+                    )
                 }
                 removeFromList(bin)
             }
-            builder.setNegativeButton("Nem"){_,_ ->
+            builder.setNegativeButton("Nem") { _, _ ->
             }
             builder.create()
             builder.show()

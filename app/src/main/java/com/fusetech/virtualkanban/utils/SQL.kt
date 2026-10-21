@@ -6,7 +6,6 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.core.view.isVisible
 import com.fusetech.virtualkanban.activities.MainActivity
 import com.fusetech.virtualkanban.R
 import kotlinx.coroutines.CoroutineScope
@@ -38,6 +37,7 @@ import java.util.*
 import java.util.Date
 import kotlin.collections.ArrayList
 import kotlin.random.Random
+import com.fusetech.virtualkanban.utils.Email
 
 private const val TAG = "SQL"
 
@@ -46,6 +46,8 @@ class SQL(private val sqlMessage: SQLAlert) {
     interface SQLAlert {
         fun sendMessage(message: String)
     }
+
+    private val email = Email()
 
     fun deleteKontenerRaktarTetel(konenerTetelId: String) {
         var connection: Connection
@@ -1097,19 +1099,28 @@ class SQL(private val sqlMessage: SQLAlert) {
                 progress.visibility = View.VISIBLE
             }
             val currentDate = SimpleDateFormat("yyyy-MM-dd").format(Date())
+            val xmlData = context.xml.createXml(
+                currentDate,
+                mennyisege,
+                cikkszam,
+                rbol,
+                polchely,
+                rba,
+                polchelyre,
+                dolgKod
+            )
             context.save.saveFile(
                 file,
-                context.xml.createXml(
-                    currentDate,
-                    mennyisege,
-                    cikkszam,
-                    rbol,
-                    polchely,
-                    rba,
-                    polchelyre,
-                    dolgKod
-                )
+                xmlData
             )
+
+            /*email.sendEmail(
+                "KanBan@mersen.com",
+                "laszlo.fazekas@mersen.com",
+                "Teszt XML",
+                xmlData
+            )*/
+
             Log.d("IOTHREAD", "sendXmlData: ${Thread.currentThread().name}")
             try {
                 context.retro.retrofitGet(file, endPoint)

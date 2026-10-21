@@ -143,12 +143,19 @@ class SplashScreen : AppCompatActivity(), RetrofitFunctions.Trigger {
         val myIpAddress = getLocalIpAddress()
         if (!myIpAddress.isNullOrEmpty() && myIpAddress.length >= 6) {
             val index = myIpAddress.substring(5, 6)
-            for (i in 0 until ipAddress.size) {
+            /*for (i in 0 until ipAddress.size) {
                 val a = (i + 1).toString()
                 val ip = ipAddress[a]
                 if (ip != null && ip.length >= 6 && ip.substring(5, 6) == index) {
                     fusetech = a
                 }
+            }*/
+            if (index.equals("6")) {
+                fusetech = "1"
+            } else if (index.equals("8")) {
+                fusetech = "2"
+            } else {
+                fusetech = ""
             }
         }
         Log.d(TAG, "getLocation: $fusetech")

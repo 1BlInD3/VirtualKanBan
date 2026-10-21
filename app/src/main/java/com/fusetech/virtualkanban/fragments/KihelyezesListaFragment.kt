@@ -20,7 +20,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import com.fusetech.virtualkanban.fragments.IgenyKontenerKiszedesCikkKiszedes.Companion.isSent
 import com.fusetech.virtualkanban.activities.MainActivity.Companion.sz0x
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.withContext
 import java.lang.Exception
 
 private const val ARG_PARAM1 = "param1"
@@ -65,33 +67,31 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
             kihelyezes?.setBackgroundResource(R.drawable.disabled)
             kihelyezes?.isEnabled = false
             mainActivity?.kihelyezes?.progressBarOn()
-            try {
-                var a = 0
-                var b = 0
-                CoroutineScope(IO).launch {
+
+            CoroutineScope(IO).launch {
+                try {
+                    var a = 0
+                    var b = 0
                     for (i in 0 until myList.size) {
                         isSent = false
                         if (myList[i].kiadva != 0) {
                             b++
-                            async {
-                                mainActivity?.sendKihelyezesXmlData(
-                                    myList[i].vonalkod,
-                                    sz0x,
-                                    myList[i].kiadva.toDouble(),
-                                    "21",
-                                    "01",
-                                    szerelohely!!
-                                )
-                            }.await()
+                            mainActivity?.sendKihelyezesXmlData(
+                                myList[i].vonalkod,
+                                sz0x,
+                                myList[i].kiadva.toDouble(),
+                                "21",
+                                "01",
+                                szerelohely!!
+                            )
                             if (isSent) {
-                                if(mainActivity!!.updateCikkAfterSend(myList[i].id)){
+                                if (mainActivity!!.updateCikkAfterSend(myList[i].id)) {
                                     a++
                                 }
                             }
-                        }/*else{
-                            a++
-                        }*/
+                        }
                     }
+
                     if (a == b) {
                         val kontenerList: ArrayList<String> = ArrayList()
                         for(i in 0 until myList.size){
@@ -104,22 +104,26 @@ class KihelyezesListaFragment : Fragment(), KihelyezesKontenerAdapter.Kihelyezes
                         }
                         mainActivity?.checkCloseContainer()
                         Log.d(TAG, "Minden cikk lefutott")
-                    }else{
+                    } else {
                         mainActivity?.checkCloseContainer()
-                        CoroutineScope(Main).launch {
-                            mainActivity?.setAlert("Maradt tétel a konténerbe, lépj bele megint")
+                        withContext(Dispatchers.Main) {
+                            mainActivity?.setAlert("Maradt tétel a konténerben, lépj bele megint")
+                        }
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        mainActivity?.setAlert("${e.message}")
+                    }
+                } finally {
+                    withContext(Dispatchers.Main) {
+                        mainActivity?.kihelyezes?.progressBarOff()
+                        kihelyezes?.isEnabled = true
+                        kihelyezes?.setBackgroundResource(R.drawable.blue_button_select)
+                        if (mainActivity?.isWifiConnected()!!){
+                            MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
                         }
                     }
                 }
-            } catch (e: Exception) {
-                mainActivity?.setAlert("${e.printStackTrace()}")
-                mainActivity?.kihelyezes?.progressBarOff()
-                kihelyezes?.isEnabled = true
-            }
-            mainActivity?.kihelyezes?.progressBarOff()
-            kihelyezes?.isEnabled = true
-            if(mainActivity?.isWifiConnected()!!){
-                MainActivity.wifiInfo = mainActivity?.getMacAndSignalStrength()!!
             }
         }
         return myView

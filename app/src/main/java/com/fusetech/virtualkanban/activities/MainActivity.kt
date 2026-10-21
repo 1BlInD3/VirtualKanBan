@@ -201,11 +201,11 @@ class MainActivity : AppCompatActivity(),
         val tobbletItem: ArrayList<KontenerbenLezarasItem> = ArrayList()
         val tempLocations: ArrayList<PolcLocation> = ArrayList()
         val tobbletKontener: ArrayList<KontenerItem> = ArrayList()
-        var mainUrl = "http://rds:8030/"
+        var mainUrl = "http://rds:8050/"
         //var mainUrl = "http://192.168.1.9:8030/"
         val tobbletCikkekArray: ArrayList<tobblet> = ArrayList()
         //var mainUrl = "http://10.0.2.149:8030/"
-        var backupURL = "http://rds:8030/"
+        var backupURL = "http://rds:8050/"
         var endPoint = """"""
         var logPath = ""
         var timeOut = 0L
